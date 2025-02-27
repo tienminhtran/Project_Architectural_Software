@@ -20,3 +20,6 @@ spring:
         format_sql: true
         dialect: org.hibernate.dialect.MariaDBDialect
     open-in-view: true
+
+jwt:
+  signedKey: "f9b66dcaa8de84de41ce8cd90c993ccec08d988839c077b547ec321553a8054ca9d5ff90d4e5786bb029ff4fc253c36ceb46c7fdfe1e5429a23f7c7a0aba1001"
