@@ -47,7 +47,6 @@ public class UserRequest {
 
     @NotNull(message = "Nhập ngày tháng năm sinh!")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
-    @JsonProperty("firstname")
     LocalDate dob;
 
     boolean active = false;
