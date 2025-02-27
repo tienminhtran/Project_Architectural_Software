@@ -6,6 +6,8 @@
 
 package vn.edu.iuh.fit.services;
 
+import org.springframework.validation.BindingResult;
+import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 
 /*
@@ -15,4 +17,7 @@ import vn.edu.iuh.fit.dtos.response.UserResponse;
  */
 public interface UserService {
     UserResponse getUserByUsername(String username);
+
+    UserResponse createUser(UserRequest userRequest, BindingResult result);
+    public UserResponse findById(Long id);
 }
