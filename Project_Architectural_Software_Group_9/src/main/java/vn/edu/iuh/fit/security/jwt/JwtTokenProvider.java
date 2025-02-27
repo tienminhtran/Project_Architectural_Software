@@ -31,11 +31,11 @@ public class JwtTokenProvider {
     // Create a secure key for signing
     SecretKey key = Keys.hmacShaKeyFor(SIGNER_KEY.getBytes());
     // Thoi gian co hieu uc cua token
-    // 30 phut
-    private final long jwt_exp = 1800000;
+    private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 30; // 30 phút
+    private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 7; // 7 ngày
 
     // tao jwt tu thong tin user
-    public String generateJwtToken(CustomUserDetails userDetails) {
+    public String generateJwtToken(CustomUserDetails userDetails, long jwt_exp) {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwt_exp);
 
@@ -46,6 +46,16 @@ public class JwtTokenProvider {
                 .setExpiration(expiryDate)
                 .signWith(key) // Use the secure key
                 .compact();
+    }
+
+    // Tao access token
+    public String generateAccessToken(CustomUserDetails userDetails) {
+        return generateJwtToken(userDetails, ACCESS_TOKEN_EXPIRATION);
+    }
+
+    // Tao refresh token
+    public String generateRefreshToken(CustomUserDetails userDetails) {
+        return generateJwtToken(userDetails, REFRESH_TOKEN_EXPIRATION);
     }
 
     // Lay thong tin user tu jwt

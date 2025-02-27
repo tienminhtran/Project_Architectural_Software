@@ -27,10 +27,10 @@ public class AuthResponse implements Serializable {
     private String RefreshToken;
     private String TokenType;
 
-    public AuthResponse(String jwt) {
-        this.AccessToken = jwt;
-        this.ExpiresIn = 3600;
-        this.RefreshToken = jwt;
+    public AuthResponse(String accessToken, String refreshToken) {
+        this.AccessToken = accessToken;
+        this.ExpiresIn = 1000 * 60 * 30;
+        this.RefreshToken = refreshToken;
         this.TokenType = "Bearer";
     }
 }
