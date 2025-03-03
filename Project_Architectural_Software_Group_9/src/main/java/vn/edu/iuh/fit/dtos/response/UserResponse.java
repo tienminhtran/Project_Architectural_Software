@@ -4,13 +4,14 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.edu.iuh.fit.entities.User;
 
 import java.io.Serializable;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 /**
- * DTO for {@link vn.edu.iuh.fit.entities.User}
+ * DTO for {@link User}
  */
 @Data
 @NoArgsConstructor

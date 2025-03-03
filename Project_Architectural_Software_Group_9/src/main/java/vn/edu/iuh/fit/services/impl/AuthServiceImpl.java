@@ -6,17 +6,27 @@
 
 package vn.edu.iuh.fit.services.impl;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.fit.dtos.request.AuthRequest;
-import vn.edu.iuh.fit.dtos.response.AuthResponse;
+import vn.edu.iuh.fit.dtos.response.UserResponse;
+import vn.edu.iuh.fit.entities.RefreshToken;
+import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.security.CustomUserDetails;
 import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
+import vn.edu.iuh.fit.dtos.request.AuthRequest;
+import vn.edu.iuh.fit.dtos.response.AuthResponse;
 import vn.edu.iuh.fit.services.AuthService;
+import vn.edu.iuh.fit.services.RefreshService;
+
+import java.util.List;
+import java.util.Optional;
+import java.util.stream.Collectors;
 
 /*
  * @description:
@@ -31,6 +41,18 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private AuthenticationManager authenticationManager;
+
+    @Autowired
+    private RefreshService refreshService;
+
+    @Autowired
+    private ModelMapper modelMapper;
+
+    // entity to dto
+    private UserResponse convertToDto(User user) {
+        return modelMapper.map(user, UserResponse.class);
+    }
+
     @Override
     public AuthResponse authenticate(AuthRequest authRequest) {
         // Xác thực thông tin người dùng Request
@@ -43,8 +65,35 @@ public class AuthServiceImpl implements AuthService {
 
         // Generate a JWT token
         String accessToken = jwtTokenProvider.generateAccessToken((CustomUserDetails) authentication.getPrincipal());
-        String refreshToken = jwtTokenProvider.generateRefreshToken((CustomUserDetails) authentication.getPrincipal());
+        RefreshToken refreshToken = refreshService.createRefreshToken((CustomUserDetails) authentication.getPrincipal());
 
-        return new AuthResponse(accessToken, refreshToken);
+        // Set roles
+         List<String> roles = ((CustomUserDetails) authentication.getPrincipal())
+                 .getAuthorities()
+                 .stream()
+                 .map(GrantedAuthority::getAuthority)
+                 .collect(Collectors.toList());
+
+
+        return new AuthResponse(accessToken, refreshToken.getToken(), roles);
+    }
+
+    @Override
+    public AuthResponse refreshToken(String refreshToken) {
+        Optional<RefreshToken> refreshTokenEntity = refreshService.findByToken(refreshToken);
+        if(refreshTokenEntity.isEmpty() || !refreshService.validateRefreshToken(refreshToken)) {
+            return null;
+        }
+        User user = refreshTokenEntity.get().getUser();
+        CustomUserDetails customUserDetails = new CustomUserDetails(this.convertToDto(user));
+        List<String> roles = customUserDetails
+                .getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        String newAccessToken = jwtTokenProvider.generateAccessToken(customUserDetails);
+
+        return new AuthResponse(newAccessToken, refreshToken, roles);
     }
 }

@@ -8,16 +8,16 @@ package vn.edu.iuh.fit.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
-import lombok.AccessLevel;
-import lombok.RequiredArgsConstructor;
-import lombok.experimental.FieldDefaults;
-import lombok.experimental.NonFinal;
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import vn.edu.iuh.fit.security.CustomUserDetails;
 
 import javax.crypto.SecretKey;
 import java.util.Date;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 /*
  * @description:
@@ -29,6 +29,7 @@ public class JwtTokenProvider {
 
     protected String SIGNER_KEY = "f9b66dcaa8de84de41ce8cd90c993ccec08d988839c077b547ec321553a8054ca9d5ff90d4e5786bb029ff4fc253c36ceb46c7fdfe1e5429a23f7c7a0aba1001";
     // Create a secure key for signing
+    // HMAC-SHA256
     SecretKey key = Keys.hmacShaKeyFor(SIGNER_KEY.getBytes());
     // Thoi gian co hieu uc cua token
     private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 30; // 30 phút
@@ -39,13 +40,18 @@ public class JwtTokenProvider {
         Date now = new Date();
         Date expiryDate = new Date(now.getTime() + jwt_exp);
 
+        Map<String, Object> claims = new HashMap<>();
+        claims.put("roles", userDetails.getAuthorities().stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList()));
         // Build the JWT
         return Jwts.builder()
+                .setClaims(claims)
                 .setSubject(userDetails.getUsername())
                 .setIssuedAt(now)
                 .setExpiration(expiryDate)
                 .signWith(key) // Use the secure key
-                .compact();
+                .compact(); // Build the JWT
     }
 
     // Tao access token
@@ -59,6 +65,16 @@ public class JwtTokenProvider {
     }
 
     // Lay thong tin user tu jwt
+    public List<String> getRolesFromJWT (String token) {
+        Claims claims = Jwts.parserBuilder()
+                .setSigningKey(key)
+                .build()
+                .parseClaimsJws(token)
+                .getBody();
+        return claims.get("roles", List.class);
+
+    }
+
     public String getUserNameFromJWT (String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)

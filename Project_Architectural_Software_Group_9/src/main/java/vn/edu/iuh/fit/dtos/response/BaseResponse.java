@@ -18,7 +18,7 @@ import lombok.*;
 @AllArgsConstructor
 @Builder
 public class BaseResponse<T> {
-    private T data;
-    private boolean success;
-    private String code;
+    private String status;
+    private String message;
+    private T response;
 }

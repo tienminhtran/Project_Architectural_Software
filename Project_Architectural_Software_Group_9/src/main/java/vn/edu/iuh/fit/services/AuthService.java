@@ -14,8 +14,8 @@ package vn.edu.iuh.fit.services;
 
 import vn.edu.iuh.fit.dtos.request.AuthRequest;
 import vn.edu.iuh.fit.dtos.response.AuthResponse;
-import vn.edu.iuh.fit.security.CustomUserDetails;
 
 public interface AuthService {
     public AuthResponse authenticate(AuthRequest authRequest);
+    public AuthResponse refreshToken(String refreshToken);
 }
