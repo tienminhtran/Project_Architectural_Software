@@ -3,11 +3,12 @@ package vn.edu.iuh.fit.dtos.response;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
+import vn.edu.iuh.fit.entities.Role;
 
 import java.io.Serializable;
 
 /**
- * DTO for {@link vn.edu.iuh.fit.entities.Role}
+ * DTO for {@link Role}
  */
 @Data
 @NoArgsConstructor

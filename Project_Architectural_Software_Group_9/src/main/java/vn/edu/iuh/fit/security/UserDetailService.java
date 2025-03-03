@@ -7,14 +7,12 @@
 package vn.edu.iuh.fit.security;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.authentication.BadCredentialsException;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.fit.dtos.response.UserResponse;
-import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.services.UserService;
+import vn.edu.iuh.fit.dtos.response.UserResponse;
 
 /*
  * @description:
