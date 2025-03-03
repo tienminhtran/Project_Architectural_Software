@@ -1,5 +1,5 @@
 /**
- * @ (#) AuthController.java      2/27/2025
+ * @ (#) AuthRestController.java      2/27/2025
  * <p>
  * Copyright (c) 2025 IUH. All rights reserved
  */
@@ -7,13 +7,10 @@
 package vn.edu.iuh.fit.controllers;
 
 import jakarta.validation.Valid;
+import org.apache.coyote.Response;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.security.authentication.AuthenticationManager;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -23,8 +20,7 @@ import vn.edu.iuh.fit.dtos.request.AuthRequest;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.AuthResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
-import vn.edu.iuh.fit.security.CustomUserDetails;
-import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
+import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.services.AuthService;
 import vn.edu.iuh.fit.services.UserService;
 
@@ -38,7 +34,7 @@ import java.util.Map;
  */
 @RestController
 @RequestMapping("/api/v1/auth")
-public class AuthController {
+public class AuthRestController {
 
 
     @Autowired
@@ -74,9 +70,35 @@ public class AuthController {
         }
     }
 
+    @PostMapping("/refresh")
+    public ResponseEntity<Map<String, Object>> refresh(@RequestBody Map<String, String> request, BindingResult bindingResult) {
+        Map<String, Object> response = new LinkedHashMap<String, Object>();
+
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> errors = new LinkedHashMap<String, Object>();
+
+            bindingResult.getFieldErrors().stream().forEach(result -> {
+                errors.put(result.getField(), result.getDefaultMessage());
+            });
+
+            System.out.println(bindingResult);
+            response.put("status", HttpStatus.BAD_REQUEST.value());
+            response.put("errors", errors);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        } else {
+            String refreshToken = request.get("refreshToken");
+            AuthResponse authResponse = authService.refreshToken(refreshToken);
+
+            // Return the token in the response
+            response.put("status", HttpStatus.OK.value());
+            response.put("token", authResponse);
+            return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@Valid @RequestBody UserRequest authRequest,
-                                                BindingResult bindingResult) {
+                                                BindingResult bindingResult) throws UserAlreadyExistsException {
         Map<String, Object> response = new LinkedHashMap<String, Object>();
 
         if (bindingResult.hasErrors()) {

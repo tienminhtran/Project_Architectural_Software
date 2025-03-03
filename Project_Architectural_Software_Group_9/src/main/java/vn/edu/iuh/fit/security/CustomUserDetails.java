@@ -16,6 +16,7 @@ import vn.edu.iuh.fit.dtos.response.UserResponse;
 
 import java.util.Collection;
 import java.util.Collections;
+import java.util.List;
 
 /*
  * @description:
@@ -23,7 +24,6 @@ import java.util.Collections;
  * @date: 2/27/2025
  */
 @Data
-@AllArgsConstructor
 public class CustomUserDetails implements UserDetails {
     private final UserResponse userDto;
     @Override
@@ -31,9 +31,11 @@ public class CustomUserDetails implements UserDetails {
         if(!userDto.isActive()) {
             throw new DisabledException("User is disabled");
         }
-        String role = "ROLE_" + userDto.getRole().getCode();
 
-        return Collections.singleton(new SimpleGrantedAuthority(role));
+        List<GrantedAuthority> authorities = Collections.singletonList(
+                new SimpleGrantedAuthority("ROLE_" + userDto.getRole().getCode()) // Thêm tiền tố ROLE_
+        );
+        return authorities;
     }
 
     @Override

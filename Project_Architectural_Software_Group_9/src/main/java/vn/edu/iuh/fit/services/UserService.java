@@ -9,6 +9,8 @@ package vn.edu.iuh.fit.services;
 import org.springframework.validation.BindingResult;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
+import vn.edu.iuh.fit.entities.User;
+import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 
 /*
  * @description:
@@ -18,6 +20,12 @@ import vn.edu.iuh.fit.dtos.response.UserResponse;
 public interface UserService {
     UserResponse getUserByUsername(String username);
 
-    UserResponse createUser(UserRequest userRequest, BindingResult result);
+    UserResponse createUser(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException;
     public UserResponse findById(Long id);
+
+    boolean existsUsername(String username);
+
+    boolean existsEmail(String email);
+
+    UserResponse findByUsername(String username);
 }
