@@ -19,7 +19,7 @@ public interface CategoryService {
 
     Optional<CategoryResponse> findById(Long id);
 //    List<Category> findAll();
-//    Category findByCategoryName(String categoryName);
+    Category findByCategoryName(String categoryName);
 //    boolean addCategory(CacheRequest categoryRequest);
 //    boolean updateCategory(CategoryRequest categoryRequest, Long id);
 //    boolean deleteCategory(Long id);

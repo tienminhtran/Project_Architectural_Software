@@ -27,6 +27,11 @@ public class CategoryRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get category by id success").response(categoryService.findById(id)).build());
     }
 
+    @GetMapping("/name/{categoryName}")
+    public ResponseEntity<BaseResponse<?>> getCategoryByName(@PathVariable String categoryName) {
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get category by name success").response(categoryService.findByCategoryName(categoryName)).build());
+    }
+
 
 
 }

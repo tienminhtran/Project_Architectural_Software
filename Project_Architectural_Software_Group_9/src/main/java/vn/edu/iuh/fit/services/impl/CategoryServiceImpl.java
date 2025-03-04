@@ -43,6 +43,11 @@ public class CategoryServiceImpl implements CategoryService{
         return modelMapper.map(categoryRequest, Category.class);
     }
 
+    /**
+     * Find category by id
+     * @param id
+     * @return category
+     */
     @Override
     public Optional<CategoryResponse> findById(Long id) {
         Optional<Category> category = categoryRepository.findCategoryById(id);
@@ -50,9 +55,6 @@ public class CategoryServiceImpl implements CategoryService{
             return Optional.of(modelMapper.map(category.get(), CategoryResponse.class));
         }
         return Optional.empty();
-
-
-
     }
 
 //    @Override
@@ -60,10 +62,16 @@ public class CategoryServiceImpl implements CategoryService{
 //        return null;
 //    }
 //
-//    @Override
-//    public Category findByCategoryName(String categoryName) {
-//        return null;
-//    }
+
+    /**
+     * Find category by name
+     * @param categoryName
+     * @return category
+     */
+    @Override
+    public Category findByCategoryName(String categoryName) {
+        return categoryRepository.findCategoryByName(categoryName).orElse(null);
+    }
 //
 //    @Override
 //    public boolean addCategory(CacheRequest categoryRequest) {
