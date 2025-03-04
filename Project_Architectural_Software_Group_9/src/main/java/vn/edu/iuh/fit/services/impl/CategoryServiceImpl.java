@@ -12,6 +12,7 @@ import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.dtos.request.CategoryRequest;
 import vn.edu.iuh.fit.dtos.response.CategoryResponse;
 import vn.edu.iuh.fit.entities.Category;
+import vn.edu.iuh.fit.entities.Voucher;
 import vn.edu.iuh.fit.repositories.CategoryRepository;
 import vn.edu.iuh.fit.services.CategoryService;
 
@@ -34,8 +35,9 @@ public class CategoryServiceImpl implements CategoryService{
 
 
     //entity to dto
-    private CacheResponse convertToDto(Category category) {
-        return modelMapper.map(category, CacheResponse.class);
+    private CategoryResponse convertToDto(Category category) {
+
+        return modelMapper.map(category, CategoryResponse.class);
     }
 
     //dto to entity
@@ -43,6 +45,11 @@ public class CategoryServiceImpl implements CategoryService{
         return modelMapper.map(categoryRequest, Category.class);
     }
 
+    /**
+     * Find category by id
+     * @param id
+     * @return category
+     */
     @Override
     public Optional<CategoryResponse> findById(Long id) {
         Optional<Category> category = categoryRepository.findCategoryById(id);
@@ -50,25 +57,58 @@ public class CategoryServiceImpl implements CategoryService{
             return Optional.of(modelMapper.map(category.get(), CategoryResponse.class));
         }
         return Optional.empty();
-
-
-
     }
 
-//    @Override
-//    public List<Category> findAll() {
-//        return null;
-//    }
-//
-//    @Override
-//    public Category findByCategoryName(String categoryName) {
-//        return null;
-//    }
-//
-//    @Override
-//    public boolean addCategory(CacheRequest categoryRequest) {
-//        return false;
-//    }
+
+    /**
+     * Find all categories
+     * @return list of categories
+     */
+    @Override
+    public List<Category> findAll() {
+        return categoryRepository.findAll();
+    }
+
+
+
+    /**
+     * Find category by name
+     * @param categoryName
+     * @return category
+     */
+    @Override
+    public Category findByCategoryName(String categoryName) {
+        return categoryRepository.findCategoryByName(categoryName).orElse(null);
+    }
+
+
+    /**
+     * Add category
+     * @param categoryRequest
+     * @return boolean
+     */
+    @Override
+    public CategoryResponse save(CategoryRequest categoryRequest) {
+        Category categoryEntity = this.convertToEntity(categoryRequest);
+        Category category = categoryRepository.save(categoryEntity);
+        if (category != null) {
+            return this.convertToDto(category);
+        }
+        return null;
+    }
+
+
+    @Override
+    public boolean existsCategory(String name) {
+        Optional<Category> category = categoryRepository.findCategoryByName(name);
+        if (category.isPresent()) {
+            return true;
+        }
+        return false;
+    }
+
+
+
 //
 //    @Override
 //    public boolean updateCategory(CategoryRequest categoryRequest, Long id) {
