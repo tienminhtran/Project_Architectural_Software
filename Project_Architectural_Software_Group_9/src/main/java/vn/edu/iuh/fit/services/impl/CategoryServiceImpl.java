@@ -108,15 +108,25 @@ public class CategoryServiceImpl implements CategoryService{
     }
 
 
-
-//
 //    @Override
 //    public boolean updateCategory(CategoryRequest categoryRequest, Long id) {
 //        return false;
 //    }
 //
-//    @Override
-//    public boolean deleteCategory(Long id) {
-//        return false;
-//    }
+
+    /**
+     * Delete category
+     * @param id
+     * @return boolean
+     */
+    @Override
+    public boolean deleteCategory(Long id) {
+        Optional<Category> category = categoryRepository.findById(id);
+        if (category.isPresent()) {
+            category.get().setActive(false);
+            categoryRepository.save(category.get());
+            return true;
+        }
+        return false;
+    }
 }
