@@ -19,6 +19,7 @@ import java.util.Set;
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
+@Builder
 public class ProductResponse implements Serializable {
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
