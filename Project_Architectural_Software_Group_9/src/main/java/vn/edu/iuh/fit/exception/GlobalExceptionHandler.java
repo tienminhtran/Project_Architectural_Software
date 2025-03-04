@@ -36,11 +36,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     }
 
     @ExceptionHandler(Exception.class)
-    public ResponseEntity<Map<String, Object>> globalExceptionHandler(Exception ex) {
-        Map<String, Object> errors = new LinkedHashMap<String, Object>();
-        errors.put("status", HttpStatus.INTERNAL_SERVER_ERROR.value());
-        errors.put("message", ex.getMessage());
-        return new ResponseEntity<Map<String, Object>>(errors, HttpStatus.INTERNAL_SERVER_ERROR);
+    public ResponseEntity<BaseResponse<?>> globalExceptionHandler(Exception ex) {
+        return ResponseEntity
+                .status(HttpStatus.INTERNAL_SERVER_ERROR)
+                .body(
+                        BaseResponse.builder()
+                                .status("FAILED")
+                                .message(ex.getMessage())
+                                .build()
+                );
     }
 
     @ExceptionHandler(UserAlreadyExistsException.class)

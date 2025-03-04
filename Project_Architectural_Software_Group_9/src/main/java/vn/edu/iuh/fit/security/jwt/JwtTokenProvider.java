@@ -8,6 +8,8 @@ package vn.edu.iuh.fit.security.jwt;
 
 import io.jsonwebtoken.*;
 import io.jsonwebtoken.security.Keys;
+import jakarta.annotation.PostConstruct;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
 import vn.edu.iuh.fit.security.CustomUserDetails;
@@ -27,10 +29,15 @@ import java.util.stream.Collectors;
 @Component
 public class JwtTokenProvider {
 
-    protected String SIGNER_KEY = "f9b66dcaa8de84de41ce8cd90c993ccec08d988839c077b547ec321553a8054ca9d5ff90d4e5786bb029ff4fc253c36ceb46c7fdfe1e5429a23f7c7a0aba1001";
+    @Value("${jwt.signedKey}")
+    protected String SIGNER_KEY;
     // Create a secure key for signing
     // HMAC-SHA256
-    SecretKey key = Keys.hmacShaKeyFor(SIGNER_KEY.getBytes());
+    private SecretKey key;
+    @PostConstruct
+    public void init() {
+        this.key = Keys.hmacShaKeyFor(SIGNER_KEY.getBytes());
+    }
     // Thoi gian co hieu uc cua token
     private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 30; // 30 phút
     private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 7; // 7 ngày
