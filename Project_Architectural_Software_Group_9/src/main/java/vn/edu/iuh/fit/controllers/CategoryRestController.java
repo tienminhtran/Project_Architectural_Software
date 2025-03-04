@@ -8,11 +8,10 @@ package vn.edu.iuh.fit.controllers;/*
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.fit.dtos.request.CategoryRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
+import vn.edu.iuh.fit.dtos.response.CategoryResponse;
 import vn.edu.iuh.fit.services.CategoryService;
 
 @RestController
@@ -21,6 +20,13 @@ public class CategoryRestController {
 
     @Autowired
     private CategoryService categoryService;
+
+
+    //http://localhost:8080/api/v1/category
+    @GetMapping("")
+    public ResponseEntity<BaseResponse<?>> getAllCategory() {
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get all category success").response(categoryService.findAll()).build());
+    }
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<?>> getCategoryById(@PathVariable Long id) {
@@ -31,6 +37,30 @@ public class CategoryRestController {
     public ResponseEntity<BaseResponse<?>> getCategoryByName(@PathVariable String categoryName) {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get category by name success").response(categoryService.findByCategoryName(categoryName)).build());
     }
+
+
+    @PostMapping("")
+    public ResponseEntity<BaseResponse<?>> createCategory(@RequestBody CategoryRequest categoryRequest) {
+        if(categoryService.existsCategory(categoryRequest.getName())){
+            return ResponseEntity.badRequest()
+                    .body(BaseResponse.builder().status("FAILED").message("The category already exists!").build());
+        }
+        CategoryResponse newCategory = categoryService.save(categoryRequest);
+        if (newCategory == null ) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Create category success").response(newCategory).build());
+    }
+    /*
+        Test API; POSTMAN
+            {
+                 "description": "An electronic machine that is used for storing, organizing, and finding words, numbers, etc.",
+                 "active": true,
+                  "name": "H25"
+            }
+     */
+
+
 
 
 

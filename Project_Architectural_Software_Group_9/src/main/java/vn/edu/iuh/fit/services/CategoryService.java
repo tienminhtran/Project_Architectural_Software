@@ -18,9 +18,12 @@ import java.util.Optional;
 public interface CategoryService {
 
     Optional<CategoryResponse> findById(Long id);
-//    List<Category> findAll();
+    List<Category> findAll();
     Category findByCategoryName(String categoryName);
-//    boolean addCategory(CacheRequest categoryRequest);
+    CategoryResponse save(CategoryRequest categoryRequest);
 //    boolean updateCategory(CategoryRequest categoryRequest, Long id);
 //    boolean deleteCategory(Long id);
+
+    boolean existsCategory(String name);
+
 }
