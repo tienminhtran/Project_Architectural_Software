@@ -60,6 +60,15 @@ public class CategoryRestController {
             }
      */
 
+    @DeleteMapping("/{id}")
+    public ResponseEntity<BaseResponse<?>> deleteCategory(@PathVariable Long id) {
+        boolean isDeleted = categoryService.deleteCategory(id);
+        if (!isDeleted) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Delete category success").build());
+    }
+
 
 
 
