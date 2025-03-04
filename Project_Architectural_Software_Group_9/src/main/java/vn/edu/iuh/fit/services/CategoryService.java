@@ -22,7 +22,7 @@ public interface CategoryService {
     Category findByCategoryName(String categoryName);
     CategoryResponse save(CategoryRequest categoryRequest);
 //    boolean updateCategory(CategoryRequest categoryRequest, Long id);
-//    boolean deleteCategory(Long id);
+    boolean deleteCategory(Long id);
 
     boolean existsCategory(String name);
 
