@@ -6,12 +6,13 @@
 
 package vn.edu.iuh.fit.services.impl;
 
-import org.apache.coyote.BadRequestException;
+import jakarta.validation.Valid;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.dtos.request.ProductRequest;
@@ -20,7 +21,6 @@ import vn.edu.iuh.fit.dtos.response.ProductResponse;
 import vn.edu.iuh.fit.entities.Brand;
 import vn.edu.iuh.fit.entities.Category;
 import vn.edu.iuh.fit.entities.Product;
-import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.repositories.BrandRepository;
 import vn.edu.iuh.fit.repositories.CategoryRepository;
 import vn.edu.iuh.fit.repositories.ProductRepository;
@@ -29,10 +29,7 @@ import vn.edu.iuh.fit.services.ProductService;
 import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 /*
  * @description:
@@ -94,75 +91,95 @@ public class ProductServiceImpl implements ProductService {
         return pageDto;
     }
 
-    public String saveImage(MultipartFile file) {
-        try {
-            // get file name
-            String fileName = file.getOriginalFilename();
-            // generate code random base on UUID
-            String uniqueFileName = UUID.randomUUID().toString() + "_" + LocalDate.now() + "_" + fileName;
-            Files.copy(file.getInputStream(), this.root.resolve(uniqueFileName), StandardCopyOption.REPLACE_EXISTING);
-            return uniqueFileName;
-        } catch (Exception e) {
-            if (e instanceof FileAlreadyExistsException) {
-                throw new RuntimeException("Filename already exists.");
-            }
-
-            throw new RuntimeException(e.getMessage());
-        }
-    }
-
-    private boolean isValidSuffixImage(String img) {
-        return img.endsWith(".jpg") || img.endsWith(".jpeg") ||
-                img.endsWith(".png") || img.endsWith(".gif") ||
-                img.endsWith(".bmp");
+    /**
+     * total product
+     * @return int
+     */
+    @Query("SELECT COUNT(p) FROM Product p")
+    @Override
+    public int countProducts() {
+        return (int) productRepository.count();
     }
 
 
     /**
-     * Save product
-     *
-     * @param productRequest
-     * @return product
+     * total stock quantity
+     * @return int
      */
     @Override
-    public boolean createProduct(ProductRequest productRequest, MultipartFile file) throws IOException {
-        Category categoryExisting = categoryRepository.findById(productRequest.getCategoryId()).get();
-        Brand brand = brandRepository.findById(productRequest.getBrandId()).get();
-        try {
-            String thumbnail = "";
-            if (file == null) {
-                thumbnail = "default-product.jpg";
-            } else {
-                if (!isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
-                    throw new BadRequestException("Image is not valid");
-                }
-                thumbnail = saveImage(file);
-            }
-            Product product = Product.builder()
-                    .productName(productRequest.getName())
-                    .description(productRequest.getDescription())
-                    .price(productRequest.getPrice())
-                    .cpu(productRequest.getCpu())
-                    .ram(productRequest.getRam())
-                    .os(productRequest.getOs())
-                    .monitor(productRequest.getMonitor())
-                    .battery(productRequest.getBattery())
-                    .graphicCard(productRequest.getGraphicCard())
-                    .port(productRequest.getPort())
-                    .rearCamera(productRequest.getRearCamera())
-                    .frontCamera(productRequest.getFrontCamera())
-                    .stockQuantity(productRequest.getStockQuantity())
-                    .warranty(productRequest.getWarranty())
-                    .weight(productRequest.getWeight())
-                    .thumbnail(thumbnail)
-                    .category(categoryExisting)
-                    .brand(brand)
-                    .build();
-            productRepository.save(product);
-            return true;
-        } catch (IOException ioe) {
-            throw new IOException("Cannot create product" + ioe.getMessage());
-        }
+    public int getTotalStockQuantity() {
+        List<Product> products = productRepository.findAll();
+
+        return products.stream()
+                .mapToInt(Product::getStockQuantity)
+                .sum();
     }
+
+
+//    @Override
+//    public ProductResponse save(@Valid ProductRequest productResponse) {
+//        Product productEntity = this.convertToEntity(productResponse, ProductRequest.class);
+//        Product product = productRepository.save(productEntity);
+//        if (product != null) {
+//            return this.convertToDto(product, ProductResponse.class);
+//        }
+//        return null;
+//    }
+
+//    @Override
+//    public boolean existsProduct(String name) {
+//        Optional<Product> product = productRepository.findByName(name);
+//        if (product.isPresent()) {
+//            return true;
+//        }
+//        return false;
+//    }
+
+
+//    public boolean createProduct(ProductResponse productResponse, MultipartFile file) throws IOException {
+//        Product product = this.convertToEntity(productResponse, ProductResponse.class);
+//        if (product.getCategory() != null) {
+//            Category category = categoryRepository.findById(product.getCategory().getId()).orElseThrow(() -> new IllegalArgumentException("Category not found"));
+//            product.setCategory(category);
+//        }
+//        if (product.getBrand() != null) {
+//            Brand brand = brandRepository.findById(product.getBrand().getId()).orElseThrow(() -> new IllegalArgumentException("Brand not found"));
+//            product.setBrand(brand);
+//        }
+//        if (product.getImages() != null) {
+//            product.setImages(saveImage(file));
+//        }
+//        productRepository.save(product);
+//        return true;
+//
+//    }
+
+//    private boolean isValidSuffixImage(String img) {
+//        return img.endsWith(".jpg") || img.endsWith(".jpeg") ||
+//                img.endsWith(".png") || img.endsWith(".gif") ||
+//                img.endsWith(".bmp");
+//    }
+//
+//    public Set<String> saveImage(MultipartFile file) {
+//        Set<String> images = new HashSet<>();
+//        try {
+//            // get file name
+//            String fileName = file.getOriginalFilename();
+//            // generate code random base on UUID
+//            String uniqueFileName = UUID.randomUUID().toString() + "_" + LocalDate.now() + "_" + fileName;
+//            Files.copy(file.getInputStream(), this.root.resolve(uniqueFileName), StandardCopyOption.REPLACE_EXISTING);
+//            images.add(uniqueFileName);
+//        } catch (Exception e) {
+//            if (e instanceof FileAlreadyExistsException) {
+//                throw new RuntimeException("Filename already exists.");
+//            }
+//
+//            throw new RuntimeException(e.getMessage());
+//        }
+//        return images;
+//    }
+
+
+
 
 }

@@ -6,15 +6,20 @@
 
 package vn.edu.iuh.fit.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.ui.Model;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.dtos.request.ProductRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.ProductResponse;
 import vn.edu.iuh.fit.services.ProductService;
 
+import java.io.IOException;
 import java.util.List;
 
 /*
@@ -71,39 +76,31 @@ public class ProductRestController {
     }
 
 
-    /**
-     * Create a new product
-     * @param productRequest
-     * @return ResponseEntity<BaseResponse<?>> response
-     */
+//    @PostMapping("")
+//    public ResponseEntity<BaseResponse<?>> createProduct(@Valid @RequestBody ProductRequest productResponse) {
+//       if(productService.existsProduct(productResponse.getName())){
+//           return ResponseEntity.status(400)
+//                   .body(BaseResponse.builder().status("FAILED").message("The product already exists! ").build());
+//       }
+//
+//        ProductResponse newProduct = productService.save(productResponse);
+//        if (newProduct == null ) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Create product success").response(newProduct).build());
+//    }
 
-    /*
-    Test:
-       			"createdAt": "2024-11-01T00:00:00",
-            "updatedAt": "2025-02-23T00:00:00",
-            "id": 2,
-            "battery": "5000mAh",
-            "cpu": "Intel i5",
-            "description": "AAAAAAAAAAAAAAAA",
-            "frontCamera": "N/A",
-            "graphicCard": "NVIDIA GTX 1650",
-            "monitor": "14 inch",
-            "productName": "HP ProBook",
-            "os": "Windows 10",
-            "port": "USB 3.0, HDMI",
-            "price": 12000000.00,
-            "ram": "8GB",
-            "rearCamera": "N/A",
-            "stockQuantity": 28,
-            "thumbnail": "https://giaiphapvanphong.vn/Image/Picture/HP/Laptop/6M0Y8PA.png",
-            "warranty": "1 year",
-            "weight": 2.0,
-            "images": [
-                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH7baYASYe45fx_REeGP4NY9nnjO0LfCAHhQ&s",
-                "https://bizweb.dktcdn.net/thumb/1024x1024/100/446/400/products/hp-probook-650-g7-0-gia-loc.jpg?v=1703217442140"
-            ]
 
-        }
-     */
+    @GetMapping("/count")
+    public ResponseEntity<BaseResponse<?>> countProducts() {
+        int count = productService.countProducts();
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Count products").response(count).build());
+    }
+
+    @GetMapping("/countStock")
+    public ResponseEntity<BaseResponse<?>> getTotalStockQuantity() {
+        int count = productService.getTotalStockQuantity();
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Total stock quantity").response(count).build());
+    }
 
 }
