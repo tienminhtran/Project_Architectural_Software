@@ -25,6 +25,7 @@ import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthen
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
+import vn.edu.iuh.fit.config.CorsConfig;
 import vn.edu.iuh.fit.security.jwt.JwtAuthenticationFilter;
 import vn.edu.iuh.fit.services.UserService;
 
@@ -47,6 +48,9 @@ public class WebSecurityConfig {
 
     @Autowired
     CustomAccessDeniedHandler customAccessDeniedHandler;
+
+    @Autowired
+    CorsConfig corsConfig;
 
     private final String[] PUBLIC_ENDPOINTS = {"/register", "/user/home", "/forgot-password", "/verify-account",
             "/login","/user/assets/**", "/user/customize/**", "/admin/assets/**"
@@ -78,14 +82,7 @@ public class WebSecurityConfig {
         http
                 .csrf(AbstractHttpConfigurer::disable)
                 // Cấu hình CORS cho phép gọi từ domain khác
-                .cors(cors -> cors.configurationSource(req -> {
-                    CorsConfiguration config = new CorsConfiguration();
-                    config.setAllowedOrigins(List.of("http://localhost:3000"));
-                    config.setAllowedMethods(List.of("GET", "POST", "PUT", "DELETE"));
-                    config.setAllowedHeaders(List.of("*"));
-                    config.setAllowCredentials(true);
-                    return config;
-                }))
+                .cors(Customizer.withDefaults())
                 .authorizeHttpRequests(
                         configure -> configure
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
