@@ -18,7 +18,7 @@ import java.util.Optional;
 public interface CategoryService {
 
     Optional<CategoryResponse> findById(Long id);
-    List<Category> findAll();
+    List<CategoryResponse> findAll();
     Category findByCategoryName(String categoryName);
     CategoryResponse save(CategoryRequest categoryRequest);
 //    boolean updateCategory(CategoryRequest categoryRequest, Long id);
