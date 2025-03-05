@@ -1,0 +1,96 @@
+.axil-signin-area {
+    position: fixed;
+    top: 0;
+    bottom: 0;
+    left: 0;
+    right: 0;
+    height: 100%;
+    width: 100%;
+    overflow: hidden
+}
+
+.signin-header {
+    position: fixed;
+    margin-top: 30px;
+    padding: 50px 120px;
+    z-index: 1
+}
+
+.axil-signin-banner {
+    min-height: 900px;
+    height: 100vh;
+    padding: 200px 50px 0 100px;
+
+}
+
+.bg_name {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-position: center center
+}
+
+.bg-image--9 {
+    background-image: url('/images/bg/bg-image-login.jpg'); /* Đường dẫn hình ảnh */
+}
+
+.title {
+    color:#131a1f;
+    margin:10px 0;
+}
+
+
+/* Media Screen*/
+@media only screen and (max-width: 991px) {
+    .signin-header {
+        padding: 40px 30px
+    }
+}
+
+@media only screen and (max-width: 575px) {
+    .signin-header {
+        padding: 30px;
+        text-align: center
+    }
+}
+
+.signin-header .site-logo {
+    display: inline-block
+}
+
+@media only screen and (max-width: 575px) {
+    .signin-header .site-logo {
+        margin-bottom: 40px
+    }
+}
+
+@media only screen and (max-width: 575px) {
+    .signin-header .singin-header-btn {
+        justify-content: center;
+        flex-direction: column
+    }
+}
+
+@media only screen and (min-width: 768px)and (max-width: 991px) {
+    .signin-header .singin-header-btn .sign-up-btn {
+        margin-left: 20px
+    }
+}
+
+@media only screen and (max-width: 575px) {
+    .signin-header .singin-header-btn .sign-up-btn {
+        margin-left: 0;
+        margin-top: 10px
+    }
+}
+
+@media only screen and (min-width: 992px)and (max-width: 1199px) {
+    .axil-signin-banner {
+        margin-right: 50px
+    }
+}
+
+@media only screen and (max-width: 991px) {
+    .axil-signin-banner {
+        display: none
+    }
+}
