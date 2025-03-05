@@ -75,7 +75,7 @@ public class AuthServiceImpl implements AuthService {
                  .collect(Collectors.toList());
 
 
-        return new AuthResponse(accessToken, refreshToken.getToken(), roles);
+        return new AuthResponse(accessToken, refreshToken.getToken(), roles, ((CustomUserDetails) authentication.getPrincipal()).getUsername());
     }
 
     @Override
@@ -94,6 +94,6 @@ public class AuthServiceImpl implements AuthService {
 
         String newAccessToken = jwtTokenProvider.generateAccessToken(customUserDetails);
 
-        return new AuthResponse(newAccessToken, refreshToken, roles);
+        return new AuthResponse(newAccessToken, refreshToken, roles, user.getUsername());
     }
 }
