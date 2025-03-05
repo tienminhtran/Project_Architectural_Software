@@ -26,4 +26,7 @@ public interface CategoryService {
 
     boolean existsCategory(String name);
 
+    boolean updateCategory(CategoryResponse categoryResponse, Long id);
+
+
 }

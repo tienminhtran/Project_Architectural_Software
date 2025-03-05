@@ -69,6 +69,25 @@ public class CategoryRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Delete category success").build());
     }
 
+    @PutMapping("/{id}")
+    public ResponseEntity<BaseResponse<?>> updateCategory(@RequestBody CategoryResponse categoryResponse, @PathVariable Long id) {
+        boolean isUpdated = categoryService.updateCategory(categoryResponse, id);
+        if (!isUpdated) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Update category success").build());
+    }
+    /*
+
+      {
+            "id": 4,
+            "name": "H25",
+            "description": "An electronic machine",
+            "active": false
+        }
+     */
+
+
 
 
 

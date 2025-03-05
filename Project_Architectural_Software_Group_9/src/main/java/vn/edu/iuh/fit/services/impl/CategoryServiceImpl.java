@@ -108,6 +108,25 @@ public class CategoryServiceImpl implements CategoryService{
         return false;
     }
 
+    /**
+     * Update category
+     * @param categoryResponse
+     * @param id
+     * @return boolean
+     */
+    @Override
+    public boolean updateCategory(CategoryResponse categoryResponse, Long id) {
+        Optional<Category> category = categoryRepository.findById(id);
+        if (category.isPresent()) {
+            category.get().setName(categoryResponse.getName());
+            category.get().setDescription(categoryResponse.getDescription());
+            category.get().setActive(categoryResponse.isActive());
+            categoryRepository.save(category.get());
+            return true;
+        }
+        return false;
+    }
+
 
 //    @Override
 //    public boolean updateCategory(CategoryRequest categoryRequest, Long id) {
