@@ -24,6 +24,14 @@ import java.util.Optional;
  */
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
+
+    /*
+        Bỏ mấy dòng này ra nó sẽ llo6ioi Sinh
+     */
 //    List<Product> findByNameContaining(String name);
-    Product findByProductName(String name);
+//    Product findByProductName(String name);
+
+
+
+
 }

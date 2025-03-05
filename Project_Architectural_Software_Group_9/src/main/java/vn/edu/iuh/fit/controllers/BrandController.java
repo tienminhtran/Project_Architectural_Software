@@ -17,7 +17,7 @@ import vn.edu.iuh.fit.services.BrandService;
 
 @RestController
 @RequestMapping("/api/v1/brand")
-public class BrandController {
+public class BrandController  {
 
     @Autowired
     private BrandService brandService;
