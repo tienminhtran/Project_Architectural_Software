@@ -9,6 +9,7 @@ package vn.edu.iuh.fit.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.fit.dtos.request.ProductRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.ProductResponse;
@@ -70,6 +71,39 @@ public class ProductRestController {
     }
 
 
+    /**
+     * Create a new product
+     * @param productRequest
+     * @return ResponseEntity<BaseResponse<?>> response
+     */
 
+    /*
+    Test:
+       			"createdAt": "2024-11-01T00:00:00",
+            "updatedAt": "2025-02-23T00:00:00",
+            "id": 2,
+            "battery": "5000mAh",
+            "cpu": "Intel i5",
+            "description": "AAAAAAAAAAAAAAAA",
+            "frontCamera": "N/A",
+            "graphicCard": "NVIDIA GTX 1650",
+            "monitor": "14 inch",
+            "productName": "HP ProBook",
+            "os": "Windows 10",
+            "port": "USB 3.0, HDMI",
+            "price": 12000000.00,
+            "ram": "8GB",
+            "rearCamera": "N/A",
+            "stockQuantity": 28,
+            "thumbnail": "https://giaiphapvanphong.vn/Image/Picture/HP/Laptop/6M0Y8PA.png",
+            "warranty": "1 year",
+            "weight": 2.0,
+            "images": [
+                "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcRH7baYASYe45fx_REeGP4NY9nnjO0LfCAHhQ&s",
+                "https://bizweb.dktcdn.net/thumb/1024x1024/100/446/400/products/hp-probook-650-g7-0-gia-loc.jpg?v=1703217442140"
+            ]
+
+        }
+     */
 
 }

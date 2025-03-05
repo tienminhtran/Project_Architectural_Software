@@ -65,8 +65,9 @@ public class CategoryServiceImpl implements CategoryService{
      * @return list of categories
      */
     @Override
-    public List<Category> findAll() {
-        return categoryRepository.findAll();
+    public List<CategoryResponse> findAll() {
+
+        return categoryRepository.findAll().stream().map(this::convertToDto).toList();
     }
 
 
