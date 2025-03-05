@@ -1,0 +1,18 @@
+
+.site-logo img {
+  height: 40px; /* Chiều cao logo */
+}
+
+.singin-header-btn {
+  display: flex;
+  align-items: center;
+}
+
+.sign-up-btn {
+  padding: 15px 30px; /* Padding cho nút */
+  font-size: 16px; /* Cỡ chữ */
+  background-color: #FF4C60; /* Màu nền */
+  border: none;
+  border-radius: 8px;
+  font-weight: 600; /* Độ đậm */
+}
