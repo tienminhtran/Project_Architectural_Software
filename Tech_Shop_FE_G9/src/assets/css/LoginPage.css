@@ -12,21 +12,21 @@
 .signin-header {
     position: fixed;
     margin-top: 30px;
-    padding: 50px 120px;
+    padding: 50px 120px !important;
     z-index: 1
 }
 
 .axil-signin-banner {
-    min-height: 900px;
+    min-height: 900px ;
     height: 100vh;
     padding: 200px 50px 0 100px;
 
 }
 
 .bg_name {
-    background-repeat: no-repeat;
-    background-size: cover;
-    background-position: center center
+    background-repeat: no-repeat ;
+    background-size: cover ;
+    background-position: center center 
 }
 
 .bg-image--9 {
@@ -38,8 +38,60 @@
     margin:10px 0;
 }
 
+/* Form login */
+.axil-signin-form-warp {
+    width: 100%;
+    height: calc(100vh - 180px);
+    overflow-y: auto;
+    display: flex;
+    margin: 180px -30px -30px
+}
+
+.axil-signin-form{
+    max-width: 450px;
+    width: 100%;
+    padding: 30px;
+}
+
+
+
+.axil-signin-form .title {
+    margin: 16px 0;
+    color: #8c959c;
+}
+
+.signin-form {
+    padding-top: 40px
+}
+
+.signin-form .form-group {
+    position: relative;
+    margin-bottom: 35px !important
+}
+
+.signin-form .form-group:last-child {
+    margin-bottom: 0 !important
+}
+
+.signin-form .form-control {
+    height: 60px;
+    border-color: #a3a7aa;
+    padding: 0 30px;
+    color: #777777;
+}
+
+.signin-form .label-input{
+    position: absolute;
+    top: -11px;
+    left: 20px;
+    background-color: white;
+    padding: 0 10px;
+    color: #6e7274;
+}
+
 
 /* Media Screen*/
+
 @media only screen and (max-width: 991px) {
     .signin-header {
         padding: 40px 30px
@@ -92,5 +144,21 @@
 @media only screen and (max-width: 991px) {
     .axil-signin-banner {
         display: none
+    }
+}
+
+/* Media Form Screen */
+@media only screen and (max-width: 991px) {
+    .axil-signin-form-warp {
+        justify-content: center;
+        text-align: center;
+        margin: 150px 0 0
+    }
+}
+
+@media only screen and (max-width: 575px) {
+    .axil-signin-form-warp {
+        margin: 200px 0 0;
+        height: calc(100vh - 200px)
     }
 }
