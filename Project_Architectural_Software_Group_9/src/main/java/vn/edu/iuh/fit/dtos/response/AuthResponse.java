@@ -27,14 +27,15 @@ public class AuthResponse implements Serializable {
     private int ExpiresIn;
     private String RefreshToken;
     private String TokenType;
-//    private String username;
+    private String username;
     private List<String> roles;
 
-    public AuthResponse(String accessToken, String refreshToken, List<String> roles) {
+    public AuthResponse(String accessToken, String refreshToken, List<String> roles, String username) {
         this.AccessToken = accessToken;
         this.ExpiresIn = 1000 * 60 * 30;
         this.RefreshToken = refreshToken;
         this.TokenType = "Bearer";
+        this.username = username;
         this.roles = roles;
     }
 }
