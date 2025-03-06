@@ -9,6 +9,7 @@ import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -56,7 +57,7 @@ public class ProductResponse implements Serializable {
     @Size(max = 255)
     String warranty;
     Double weight;
-    Set<String> images;
+    Set<String> images = new HashSet<>();
 
     List<RatingResponse> ratings = new ArrayList<>();
 }
