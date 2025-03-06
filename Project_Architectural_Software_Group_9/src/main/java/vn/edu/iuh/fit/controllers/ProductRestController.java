@@ -6,8 +6,11 @@
 
 package vn.edu.iuh.fit.controllers;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -75,20 +78,39 @@ public class ProductRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get product by id").response(productResponse).build());
     }
 
+    /**
+     * test api trong postman
+     * phan header: Content-Type: multipart/form-data
+     * phan body: form-data (thay vi chon raw thi chon form-data)
+     * chon key 1 la product, value la text(nhap theo dinh dang json) cua product
+     * chon key 2 la fileImage, value la file (chon file anh)
+     * @param productJson
+     * @param fileImages
+     * @return
+     */
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BaseResponse<?>> createProduct(
+            @RequestPart("product") String productJson,
+            @RequestPart(value = "fileImage", required = false) List<MultipartFile> fileImages) {
 
-//    @PostMapping("")
-//    public ResponseEntity<BaseResponse<?>> createProduct(@Valid @RequestBody ProductRequest productResponse) {
-//       if(productService.existsProduct(productResponse.getName())){
-//           return ResponseEntity.status(400)
-//                   .body(BaseResponse.builder().status("FAILED").message("The product already exists! ").build());
-//       }
-//
-//        ProductResponse newProduct = productService.save(productResponse);
-//        if (newProduct == null ) {
-//            return ResponseEntity.badRequest().build();
-//        }
-//        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Create product success").response(newProduct).build());
-//    }
+        // Chuyen string sang json
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductRequest productRequest;
+        try {
+            productRequest = objectMapper.readValue(productJson, ProductRequest.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid JSON format: " + e.getMessage());
+        }
+
+        productRequest.setFileImage(fileImages);
+        ProductResponse newProduct = productService.createProduct(productRequest);
+
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Create product success")
+                .response(newProduct)
+                .build());
+    }
 
 
     @GetMapping("/count")

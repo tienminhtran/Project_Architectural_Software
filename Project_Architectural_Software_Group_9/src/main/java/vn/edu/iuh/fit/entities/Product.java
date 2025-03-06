@@ -8,6 +8,7 @@ import lombok.*;
 
 
 import java.math.BigDecimal;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
 
@@ -103,7 +104,7 @@ public class Product extends TrackingDate {
     @ElementCollection
     @CollectionTable(name = "product_images", joinColumns = @JoinColumn(name = "product_id"))
     @Column(name = "url", nullable = false)
-    private Set<String> images;
+    private Set<String> images = new HashSet<>();
 
     @OneToMany(mappedBy = "product")
     private List<CartDetail> cartDetails;

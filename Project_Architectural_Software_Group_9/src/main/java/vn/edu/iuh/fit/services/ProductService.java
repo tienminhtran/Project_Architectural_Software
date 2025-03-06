@@ -25,11 +25,8 @@ public interface ProductService {
 
     PageResponse<ProductResponse> getProductsByPage(int pageNo, int pageSize);
 
-
-
-//    ProductResponse save(@Valid ProductRequest productResponse);
-//    boolean existsProduct(String name);
-
+    public ProductResponse createProduct(ProductRequest productRequest);
+    boolean existsProduct(String name);
 
     int countProducts();
 
