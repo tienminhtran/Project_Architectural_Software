@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.dtos.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Digits;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
@@ -9,6 +10,7 @@ import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
 import java.math.BigDecimal;
+import java.util.List;
 
 @Getter
 @Setter
@@ -61,9 +63,8 @@ public class ProductRequest implements Serializable {
 
     private Long brandId;
 
-    private String img;
-
+    @JsonProperty("isUrlImage")
     private boolean isUrlImage;
 
-    private MultipartFile thumbnail;
+    private List<MultipartFile> fileImage;
 }
