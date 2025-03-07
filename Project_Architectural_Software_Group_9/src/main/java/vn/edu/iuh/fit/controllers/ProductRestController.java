@@ -12,17 +12,21 @@ import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.dtos.request.ProductRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
+import vn.edu.iuh.fit.dtos.response.BestSellingProductResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.ProductResponse;
 import vn.edu.iuh.fit.services.ProductService;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /*
@@ -125,4 +129,21 @@ public class ProductRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Total stock quantity").response(count).build());
     }
 
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @GetMapping("/bestSelling")
+    public ResponseEntity<List<BestSellingProductResponse>> getBestSellingProducts(
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false)LocalDate endDate) {
+
+        int currentYear = LocalDate.now().getYear();
+        if (startDate == null) {
+            startDate = LocalDate.of(currentYear, 1, 1);
+        }
+
+        if (endDate == null) {
+            endDate = LocalDate.of(currentYear, 12, 31);
+        }
+
+        return ResponseEntity.ok(productService.getBestSellingProducts(startDate, endDate));
+    }
 }
