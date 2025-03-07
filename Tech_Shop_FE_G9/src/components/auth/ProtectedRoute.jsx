@@ -8,6 +8,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
     return <Navigate to="/login" replace />; // Chưa đăng nhập -> chuyển hướng đến trang đăng nhập
   }
 
+
   console.log("ss",role);
 
   //Admin có thể truy cập tất cả
