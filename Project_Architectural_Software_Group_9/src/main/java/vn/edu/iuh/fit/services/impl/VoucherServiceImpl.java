@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.dtos.request.VoucherRequest;
 import vn.edu.iuh.fit.dtos.response.VoucherResponse;
+import vn.edu.iuh.fit.entities.Category;
 import vn.edu.iuh.fit.entities.Voucher;
 import vn.edu.iuh.fit.repositories.VoucherRepository;
 import vn.edu.iuh.fit.services.VoucherService;
@@ -90,6 +91,20 @@ public class VoucherServiceImpl implements VoucherService {
         Voucher voucherEntity = this.convertToEntity(voucherRequest);
         Voucher voucher = voucherRepository.save(voucherEntity);
         if (voucher != null) {
+            return this.convertToDto(voucher);
+        }
+        return null;
+    }
+
+    @Override
+    public VoucherResponse update(Long id, VoucherRequest voucherRequest) {
+        Voucher voucher = voucherRepository.findById(id).get();
+        if (voucher != null) {
+            voucher.setName(voucherRequest.getName());
+            voucher.setExpiredDate(voucherRequest.getExpiredDate());
+            voucher.setQuantity(voucherRequest.getQuantity());
+            voucher.setValue(voucherRequest.getValue());
+            voucher = voucherRepository.save(voucher);
             return this.convertToDto(voucher);
         }
         return null;
