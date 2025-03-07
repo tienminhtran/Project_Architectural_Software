@@ -6,13 +6,19 @@
 
 package vn.edu.iuh.fit.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
+import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.entities.Role;
 import vn.edu.iuh.fit.entities.User;
@@ -23,6 +29,7 @@ import vn.edu.iuh.fit.repositories.RefreshTokenRepository;
 import vn.edu.iuh.fit.services.UserService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /*
  * @description:
@@ -30,6 +37,7 @@ import java.time.LocalDate;
  * @date: 2/27/2025
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -74,6 +82,7 @@ public class UserServiceImpl implements UserService {
         if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
             result.addError(new FieldError("userRequest", "password",
                     "Mật khẩu không khớp"));
+            throw new IllegalArgumentException("Password not match");
         }
 
         // Lấy day/month/year hiện tại, 11/2/2024 -> tru 15 năm -> 11/2/2009
@@ -82,6 +91,7 @@ public class UserServiceImpl implements UserService {
         if (!userRequest.getDob().isBefore(LocalDate.now().minusYears(15))) {
             result.addError(new FieldError("userRequest", "dob",
                     "Ban chưa đủ 15 tuổi"));
+            throw new IllegalArgumentException("User is under 15 years old");
         }
     }
 
@@ -132,5 +142,50 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse findByUsername(String username) {
         return this.convertToDto(userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Can not find User with username: " + username)), UserResponse.class);
+    }
+
+    @Override
+    public UserResponse createUserRoleManager(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException {
+        Role role = roleRepository.findById(3L).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 3"));
+
+        validation(userRequest, result);
+
+        if(!result.hasErrors()) {
+            User user = this.convertToEntity(userRequest, UserRequest.class);
+            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+            user.setRole(role);
+
+            user = userRepository.save(user);
+
+            return this.convertToDto(user, UserResponse.class);
+        }
+        return null;
+    }
+
+    @Override
+    public List<UserResponse> findAll() {
+        List<User> users = userRepository.findAll();
+        if (users != null) {
+            return users.stream()
+                    .map(user -> this.convertToDto(user, UserResponse.class))
+                    .toList();
+        }
+        return null;
+    }
+
+    @Override
+    public PageResponse<UserResponse> getUsersByPage(int pageNo, int pageSize) {
+        Sort sort = Sort.by("id").ascending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<User> users = userRepository.findAll(pageable);
+        PageResponse<UserResponse> pageDto = new PageResponse<>();
+        if (users != null) {
+            pageDto.setPage(pageNo);
+            pageDto.setSize(pageSize);
+            pageDto.setTotal(users.getNumberOfElements());
+            pageDto.setTotalPages(users.getTotalPages());
+            pageDto.setValues(users.stream().map(user -> this.convertToDto(user, UserResponse.class)).toList());
+        }
+        return pageDto;
     }
 }

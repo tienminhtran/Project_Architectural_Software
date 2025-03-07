@@ -17,6 +17,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.dtos.request.ProductRequest;
+import vn.edu.iuh.fit.dtos.response.BestSellingProductResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.ProductResponse;
 import vn.edu.iuh.fit.entities.Brand;
@@ -24,12 +25,15 @@ import vn.edu.iuh.fit.entities.Category;
 import vn.edu.iuh.fit.entities.Product;
 import vn.edu.iuh.fit.repositories.BrandRepository;
 import vn.edu.iuh.fit.repositories.CategoryRepository;
+import vn.edu.iuh.fit.repositories.OrderDetailRepository;
 import vn.edu.iuh.fit.repositories.ProductRepository;
 import vn.edu.iuh.fit.services.ProductService;
 
 import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.LocalTime;
 import java.util.*;
 
 /*
@@ -52,6 +56,9 @@ public class ProductServiceImpl implements ProductService {
     private final Path root = Paths.get("./uploads");
     @Autowired
     private BrandRepository brandRepository;
+
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
 
 
     //entity to dto
@@ -215,5 +222,11 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-
+    public List<BestSellingProductResponse> getBestSellingProducts(LocalDate startDate, LocalDate endDate) {
+        // Lấy thời gian bắt đầu
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        // Lấy thời gian kết thúc
+        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
+        return orderDetailRepository.findBestSellingProducts(startDateTime, endDateTime);
+    }
 }
