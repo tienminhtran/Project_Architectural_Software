@@ -6,15 +6,13 @@
 
 package vn.edu.iuh.fit.repositories;
 
-import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.dtos.response.BestSellingProductResponse;
+import vn.edu.iuh.fit.dtos.response.TopCustomerResponse;
 import vn.edu.iuh.fit.entities.OrderDetail;
-
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -38,4 +36,22 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
     List<BestSellingProductResponse> findBestSellingProducts(
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate);
+
+
+    @Query("SELECT new vn.edu.iuh.fit.dtos.response.TopCustomerResponse(" +
+            "o.user.id, " +
+            "CONCAT(o.user.lastname, ' ', o.user.firstname), " + // Tên đầy đủ của khách hàng
+            "CAST(SUM(od.quantity * od.product.price * (1 - COALESCE(v.value, 0) / 100)) AS BIGDECIMAL)" + // Tính tổng số tiền đã mua (đã giảm giá nếu có voucher)
+            ") " +
+            "FROM OrderDetail od " +
+            "JOIN od.order o " +
+            "LEFT JOIN o.voucher v " + // Lấy tất cả các đơn hàng, kể cả không có voucher
+            "WHERE o.createdAt BETWEEN :startDate AND :endDate " +
+            "GROUP BY o.user.id, o.user.lastname, o.user.firstname " +
+            "ORDER BY SUM(od.quantity * od.product.price * (1 - COALESCE(v.value, 0) / 100)) DESC "+
+            "LIMIT 10")
+    List<TopCustomerResponse> findTopCustomers(
+            @Param("startDate") LocalDateTime startDate,
+            @Param("endDate") LocalDateTime endDate
+    );
 }

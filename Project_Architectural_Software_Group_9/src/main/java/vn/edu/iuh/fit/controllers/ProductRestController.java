@@ -144,6 +144,10 @@ public class ProductRestController {
             endDate = LocalDate.of(currentYear, 12, 31);
         }
 
-        return ResponseEntity.ok(productService.getBestSellingProducts(startDate, endDate));
+        List<BestSellingProductResponse> bestSellingProductResponses = productService.getBestSellingProducts(startDate, endDate);
+        if (bestSellingProductResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(bestSellingProductResponses);
     }
 }

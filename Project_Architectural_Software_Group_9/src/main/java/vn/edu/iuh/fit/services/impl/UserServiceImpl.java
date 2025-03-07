@@ -19,16 +19,19 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
+import vn.edu.iuh.fit.dtos.response.TopCustomerResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.entities.Role;
 import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
+import vn.edu.iuh.fit.repositories.OrderDetailRepository;
 import vn.edu.iuh.fit.repositories.RoleRepository;
 import vn.edu.iuh.fit.repositories.UserRepository;
 import vn.edu.iuh.fit.repositories.RefreshTokenRepository;
 import vn.edu.iuh.fit.services.UserService;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /*
@@ -54,6 +57,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private OrderDetailRepository orderDetailRepository;
 
     // Phương thức chuyển đổi User sang DTO với kiểu generic T
     private <T> T convertToDto(User user, Class<T> targetClass) {
@@ -187,5 +193,12 @@ public class UserServiceImpl implements UserService {
             pageDto.setValues(users.stream().map(user -> this.convertToDto(user, UserResponse.class)).toList());
         }
         return pageDto;
+    }
+
+    @Override
+    public List<TopCustomerResponse> getTopCustomers(LocalDate startDate, LocalDate endDate) {
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atStartOfDay();
+        return orderDetailRepository.findTopCustomers(startDateTime, endDateTime);
     }
 }
