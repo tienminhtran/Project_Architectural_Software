@@ -29,6 +29,7 @@ public interface VoucherService {
     List<VoucherResponse> findAll();
 
     VoucherResponse save(VoucherRequest voucherRequest);
+    VoucherResponse update(Long id, VoucherRequest voucherRequest);
 
     boolean deleteById(Long id);
 

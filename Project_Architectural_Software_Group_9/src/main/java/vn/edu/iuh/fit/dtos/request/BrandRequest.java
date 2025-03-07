@@ -27,7 +27,7 @@ public class BrandRequest implements Serializable {
     private String name;
 
     @Column(name = "brand_img", length = 10000)
-    private String brandImg;
+    private String brandImg = "default-product.jpg";
 
     private boolean active = true;
 
