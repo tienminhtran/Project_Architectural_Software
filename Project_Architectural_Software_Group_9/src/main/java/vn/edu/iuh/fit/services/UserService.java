@@ -12,6 +12,8 @@ import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 
+import java.util.List;
+
 /*
  * @description:
  * @author: Sinh Phan Tien
@@ -29,5 +31,5 @@ public interface UserService {
 
     UserResponse findByUsername(String username);
 
-    UserResponse createUserRoleManager(UserRequest userRequest);
+    UserResponse createUserRoleManager(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException;
 }
