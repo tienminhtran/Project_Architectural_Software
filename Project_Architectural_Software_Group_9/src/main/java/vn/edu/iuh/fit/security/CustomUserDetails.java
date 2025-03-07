@@ -14,6 +14,7 @@ import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.List;
@@ -32,9 +33,12 @@ public class CustomUserDetails implements UserDetails {
             throw new DisabledException("User is disabled");
         }
 
-        List<GrantedAuthority> authorities = Collections.singletonList(
-                new SimpleGrantedAuthority("ROLE_" + userDto.getRole().getCode()) // Thêm tiền tố ROLE_
-        );
+        List<GrantedAuthority> authorities = new ArrayList<>();
+        authorities.add(new SimpleGrantedAuthority("ROLE_" + userDto.getRole().getCode())); // Thêm tiền tố ROLE_
+
+        if ("ADMIN".equals(userDto.getRole().getCode())) {
+            authorities.add(new SimpleGrantedAuthority("ROLE_MANAGER"));
+        }
         return authorities;
     }
 
