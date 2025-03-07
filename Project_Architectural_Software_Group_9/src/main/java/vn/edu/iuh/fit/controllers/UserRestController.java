@@ -16,10 +16,12 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
+import vn.edu.iuh.fit.dtos.response.TopCustomerResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.services.UserService;
 
+import java.time.LocalDate;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -107,5 +109,30 @@ public class UserRestController {
                 .status("SUCCESS")
                 .message("Get users by page success")
                 .response(userResponses).build());
+    }
+
+    @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
+    @GetMapping("/topCustomers")
+    public ResponseEntity<BaseResponse<List<TopCustomerResponse>> > getTopCustomers(
+            @RequestParam(required = false) LocalDate startDate,
+            @RequestParam(required = false)LocalDate endDate ) {
+
+        int year = LocalDate.now().getYear();
+        if (startDate == null) {
+            startDate = LocalDate.of(year, 1, 1);
+        }
+        if (endDate == null) {
+            endDate = LocalDate.of(year, 12, 31);
+        }
+
+        List<TopCustomerResponse> topCustomerResponses = userService.getTopCustomers(startDate, endDate);
+
+        if (topCustomerResponses == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(BaseResponse.<List<TopCustomerResponse>>builder()
+                .status("SUCCESS")
+                .message("Get top customers success")
+                .response(topCustomerResponses).build());
     }
 }

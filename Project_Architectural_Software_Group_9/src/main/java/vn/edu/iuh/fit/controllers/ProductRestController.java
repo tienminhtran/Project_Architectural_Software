@@ -108,6 +108,75 @@ public class ProductRestController {
 
         productRequest.setFileImage(fileImages);
         ProductResponse newProduct = productService.createProduct(productRequest);
+        if (newProduct == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Create product success")
+                .response(newProduct)
+                .build());
+    }
+
+
+//    /**
+//     * Dunng RequestBody de lay du lieu tu body cua request
+//     * Chi dung duoc khi khong add file
+//     * @param id
+//     * @param productRequest
+//     * @return
+//     */
+//    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+//    @PutMapping("/{id}")
+//    public ResponseEntity<BaseResponse<?>> updateProduct(
+//            @PathVariable Long id,
+//            @Valid @RequestBody ProductRequest productRequest) {
+//
+//        ProductResponse updatedProduct = productService.updateProduct(id, productRequest);
+//        if (updatedProduct == null) {
+//            return ResponseEntity.badRequest().build();
+//        }
+//        return ResponseEntity.ok(BaseResponse.builder()
+//                .status("SUCCESS")
+//                .message("Product updated successfully")
+//                .response(updatedProduct)
+//                .build());
+//    }
+
+
+    /**
+     * test api trong postman
+     * phan header: Content-Type: multipart/form-data
+     * phan body: form-data (thay vi chon raw thi chon form-data)
+     * chon key 1 la product, value la text(nhap theo dinh dang json) cua product
+     * chon key 2 la fileImage, value la file (chon file anh)
+     * @param productJson
+     * @param fileImages
+     * @return
+     */
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BaseResponse<?>> updateProduct(
+            @PathVariable Long id,
+            @RequestPart("product") String productJson,
+            @RequestPart(value = "fileImage", required = false) List<MultipartFile> fileImages) {
+
+        // Chuyen string sang json
+        ObjectMapper objectMapper = new ObjectMapper();
+        ProductRequest productRequest;
+        try {
+            productRequest = objectMapper.readValue(productJson, ProductRequest.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid JSON format: " + e.getMessage());
+        }
+
+        productRequest.setFileImage(fileImages);
+        ProductResponse newProduct = productService.updateProduct(id,productRequest);
+
+        if (newProduct == null) {
+            return ResponseEntity.badRequest().build();
+        }
 
         return ResponseEntity.ok(BaseResponse.builder()
                 .status("SUCCESS")
@@ -144,6 +213,10 @@ public class ProductRestController {
             endDate = LocalDate.of(currentYear, 12, 31);
         }
 
-        return ResponseEntity.ok(productService.getBestSellingProducts(startDate, endDate));
+        List<BestSellingProductResponse> bestSellingProductResponses = productService.getBestSellingProducts(startDate, endDate);
+        if (bestSellingProductResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(bestSellingProductResponses);
     }
 }

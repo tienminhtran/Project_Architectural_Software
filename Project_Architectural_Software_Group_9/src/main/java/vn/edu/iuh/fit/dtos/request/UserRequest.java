@@ -41,6 +41,7 @@ public class UserRequest {
     String firstName;
 
     @NotBlank(message = "Nhập họ của bạn!")
+    @JsonProperty("lastname")
     String lastName;
 
     String gender;

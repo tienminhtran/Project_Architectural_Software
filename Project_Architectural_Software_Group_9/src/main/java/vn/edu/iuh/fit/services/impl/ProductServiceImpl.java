@@ -6,7 +6,6 @@
 
 package vn.edu.iuh.fit.services.impl;
 
-import jakarta.validation.Valid;
 import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -155,7 +154,7 @@ public class ProductServiceImpl implements ProductService {
                 //Handel images product
                 for(MultipartFile file: fileImage) {
                     if (!isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
-                        throw new BadRequestException("Image is not valid");
+                        throw new BadRequestException("Invalid image format");
                     }
                     // function saveFile convert to type String -> add hashset images
                     images.add(saveFile(file));
@@ -187,6 +186,71 @@ public class ProductServiceImpl implements ProductService {
                     .build();
             product = productRepository.save(product);
            return this.convertToDto(product, ProductResponse.class);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    @Override
+    public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
+        // find product by id
+        Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found"));
+
+        // find category and brand by id
+        Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("Category not found"));
+        Brand brand = brandRepository.findById(productRequest.getBrandId()).orElseThrow(() -> new IllegalArgumentException("Brand not found"));
+
+        try {
+            // update
+            product.setProductName(productRequest.getName());
+            product.setPrice(productRequest.getPrice());
+            product.setStockQuantity(productRequest.getStockQuantity());
+            product.setDescription(productRequest.getDescription());
+            product.setCpu(productRequest.getCpu());
+            product.setRam(productRequest.getRam());
+            product.setOs(productRequest.getOs());
+            product.setMonitor(productRequest.getMonitor());
+            product.setWeight(productRequest.getWeight());
+            product.setBattery(productRequest.getBattery());
+            product.setGraphicCard(productRequest.getGraphicCard());
+            product.setPort(productRequest.getPort());
+            product.setRearCamera(productRequest.getRearCamera());
+            product.setFrontCamera(productRequest.getFrontCamera());
+            product.setWarranty(productRequest.getWarranty());
+            product.setCategory(category);
+            product.setBrand(brand);
+            product.setUpdatedAt(LocalDateTime.now());
+
+            List<MultipartFile> fileImage = productRequest.getFileImage();
+            String thumbnail = "default-product.jpg";
+            Set<String> images = new HashSet<>();
+
+            if (fileImage != null && !fileImage.isEmpty()) { // check if file image is not null and not empty
+                MultipartFile firstImage = fileImage.get(0); // get first image
+                if (!isValidSuffixImage(Objects.requireNonNull(firstImage.getOriginalFilename()))) {
+                    throw new BadRequestException("Image is not valid");
+                }
+                // Handel thumbnail product
+                thumbnail = saveFile(firstImage);
+
+                product.setThumbnail(thumbnail);
+
+                //Handel images product
+                for(MultipartFile file: fileImage) {
+                    if (!isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
+                        throw new BadRequestException("Invalid image format");
+                    }
+                    // function saveFile convert to type String -> add hashset images
+                    images.add(saveFile(file));
+                }
+
+                product.setImages(images);
+
+            }
+
+            product = productRepository.save(product);
+            return this.convertToDto(product, ProductResponse.class);
+
         } catch (Exception e) {
             throw new RuntimeException(e.getMessage());
         }

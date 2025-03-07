@@ -10,10 +10,13 @@ import org.springframework.validation.BindingResult;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.ProductResponse;
+import vn.edu.iuh.fit.dtos.response.TopCustomerResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 /*
@@ -38,4 +41,6 @@ public interface UserService {
     List<UserResponse> findAll();
 
     PageResponse<UserResponse> getUsersByPage(int pageNo, int pageSize);
+
+    List<TopCustomerResponse> getTopCustomers(LocalDate startDate, LocalDate endDate);
 }
