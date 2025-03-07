@@ -6,6 +6,7 @@
 
 package vn.edu.iuh.fit.services.impl;
 
+import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -30,6 +31,7 @@ import java.time.LocalDate;
  * @date: 2/27/2025
  */
 @Service
+@Slf4j
 public class UserServiceImpl implements UserService {
 
     @Autowired
@@ -132,5 +134,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserResponse findByUsername(String username) {
         return this.convertToDto(userRepository.findByUsername(username).orElseThrow(() -> new IllegalArgumentException("Can not find User with username: " + username)), UserResponse.class);
+    }
+
+    @Override
+    public UserResponse createUserRoleManager(UserRequest userRequest) {
+        Role role = roleRepository.findById(3L).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 3"));
+
+        User user = this.convertToEntity(userRequest, UserRequest.class);
+        user.setActive(true);
+        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        user.setRole(role);
+
+        user = userRepository.save(user);
+
+        return this.convertToDto(user, UserResponse.class);
     }
 }

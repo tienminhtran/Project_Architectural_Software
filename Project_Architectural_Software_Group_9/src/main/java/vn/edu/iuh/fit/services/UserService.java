@@ -28,4 +28,6 @@ public interface UserService {
     boolean existsEmail(String email);
 
     UserResponse findByUsername(String username);
+
+    UserResponse createUserRoleManager(UserRequest userRequest);
 }
