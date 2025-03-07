@@ -7,12 +7,14 @@ package vn.edu.iuh.fit.dtos.request;/*
  */
 
 import jakarta.persistence.Column;
+import jakarta.validation.constraints.NotBlank;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.io.Serializable;
+
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
@@ -21,13 +23,13 @@ public class BrandRequest implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;
 
-    @Column(nullable = false, length = 100)
+    @NotBlank(message = "Brand name must not be empty")
     private String name;
 
-    @Column(name="brand_img", length = 10000)
+    @Column(name = "brand_img", length = 10000)
     private String brandImg;
 
-    private boolean active;
+    private boolean active = true;
 
 
 }
