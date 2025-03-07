@@ -16,7 +16,8 @@ function App() {
       <Routes>
       <Route path="/login" element={<LoginPage/>} />
       {/* Admin Page */}
-      <Route element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} />}>
+      {/* <Route element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} />}> */}
+      <Route >
           <Route path="/admin/dashboard" element={<AdminPage />} />
       </Route>
 
