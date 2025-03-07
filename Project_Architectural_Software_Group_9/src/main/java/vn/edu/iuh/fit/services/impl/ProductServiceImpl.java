@@ -212,18 +212,18 @@ public class ProductServiceImpl implements ProductService {
 
     public String saveFile(MultipartFile file) throws IOException {
         // khi nao lam fe upload file thi dung
-//        String uploadDir = "./uploads";
-//        Path uploadPath = Paths.get(uploadDir);
-//        if (!Files.exists(uploadPath)) {
-//            Files.createDirectories(uploadPath);
-//        }
+        String uploadDir = "./uploads";
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
 
         try {
             // get file name
             String fileName = file.getOriginalFilename();
             // generate code random base on UUID
             String uniqueFileName = UUID.randomUUID().toString() + "_" + LocalDate.now() + "_" + fileName;
-            Files.copy(file.getInputStream(), this.root.resolve(uniqueFileName), StandardCopyOption.REPLACE_EXISTING);
+            Files.copy(file.getInputStream(), uploadPath.resolve(uniqueFileName), StandardCopyOption.REPLACE_EXISTING);
             return uniqueFileName;
         } catch (Exception e) {
             if (e instanceof FileAlreadyExistsException) {

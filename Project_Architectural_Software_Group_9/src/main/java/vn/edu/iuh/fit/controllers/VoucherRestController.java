@@ -9,9 +9,11 @@ package vn.edu.iuh.fit.controllers;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.request.VoucherRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
+import vn.edu.iuh.fit.dtos.response.BrandResponse;
 import vn.edu.iuh.fit.dtos.response.VoucherResponse;
 import vn.edu.iuh.fit.services.VoucherService;
 
@@ -51,6 +53,17 @@ public class VoucherRestController {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Create voucher success").response(newVoucher).build());
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PutMapping("/{id}")
+    public ResponseEntity<BaseResponse<?>> updateVoucher(@PathVariable Long id,@RequestBody VoucherRequest voucherRequest) {
+
+        VoucherResponse update = voucherService.update(id, voucherRequest);
+        if (update == null) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Update voucher success").response(update).build());
     }
 
     @DeleteMapping("/{id}")
