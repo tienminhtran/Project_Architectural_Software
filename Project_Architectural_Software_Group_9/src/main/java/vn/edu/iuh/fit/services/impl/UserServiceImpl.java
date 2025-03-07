@@ -24,6 +24,7 @@ import vn.edu.iuh.fit.repositories.RefreshTokenRepository;
 import vn.edu.iuh.fit.services.UserService;
 
 import java.time.LocalDate;
+import java.util.List;
 
 /*
  * @description:
@@ -76,6 +77,7 @@ public class UserServiceImpl implements UserService {
         if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
             result.addError(new FieldError("userRequest", "password",
                     "Mật khẩu không khớp"));
+            throw new IllegalArgumentException("Password not match");
         }
 
         // Lấy day/month/year hiện tại, 11/2/2024 -> tru 15 năm -> 11/2/2009
@@ -84,6 +86,7 @@ public class UserServiceImpl implements UserService {
         if (!userRequest.getDob().isBefore(LocalDate.now().minusYears(15))) {
             result.addError(new FieldError("userRequest", "dob",
                     "Ban chưa đủ 15 tuổi"));
+            throw new IllegalArgumentException("User is under 15 years old");
         }
     }
 
@@ -137,16 +140,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse createUserRoleManager(UserRequest userRequest) {
+    public UserResponse createUserRoleManager(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException {
         Role role = roleRepository.findById(3L).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 3"));
 
-        User user = this.convertToEntity(userRequest, UserRequest.class);
-        user.setActive(true);
-        user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-        user.setRole(role);
+        validation(userRequest, result);
 
-        user = userRepository.save(user);
+        if(!result.hasErrors()) {
+            User user = this.convertToEntity(userRequest, UserRequest.class);
+            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+            user.setRole(role);
 
-        return this.convertToDto(user, UserResponse.class);
+            user = userRepository.save(user);
+
+            return this.convertToDto(user, UserResponse.class);
+        }
+        return null;
     }
 }

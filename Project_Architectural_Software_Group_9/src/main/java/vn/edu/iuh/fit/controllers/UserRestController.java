@@ -6,14 +6,22 @@
 
 package vn.edu.iuh.fit.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
+import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.services.UserService;
+
+import java.util.LinkedHashMap;
+import java.util.List;
+import java.util.Map;
 
 /*
  * @description:
@@ -34,18 +42,31 @@ public class UserRestController {
         }
         return ResponseEntity.ok(BaseResponse.<UserResponse>builder().status("success").message("Get user by id success").response(userResponse).build());
     }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/createManager")
-    public ResponseEntity<BaseResponse<UserResponse>> createManager(@RequestBody UserRequest userRequest) {
-        UserResponse userResponse = userService.createUserRoleManager(userRequest);
-        if (userResponse == null) {
-            return ResponseEntity.badRequest().build();
+    public ResponseEntity<Map<String, Object>> createManager(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) throws UserAlreadyExistsException {
+        Map<String, Object> response = new LinkedHashMap<>();
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> errors = new LinkedHashMap<>();
+            bindingResult.getFieldErrors().stream().forEach(result -> {
+                errors.put(result.getField(), result.getDefaultMessage());
+            });
+            response.put("status", HttpStatus.BAD_REQUEST.value());
+            response.put("errors", errors);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
-        return ResponseEntity.ok(BaseResponse.<UserResponse>builder()
-                .status("success")
-                .message("Create manager success")
-                .response(userResponse)
-                .build());
-    }
 
+        UserResponse userResponse = userService.createUserRoleManager(userRequest, bindingResult);
+        if (userResponse == null) {
+            response.put("status", HttpStatus.BAD_REQUEST.value());
+            response.put("message", "Validation failed");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+        }
+
+        response.put("status", HttpStatus.OK.value());
+        response.put("message", "Create manager successfully");
+        response.put("data", userResponse);
+        return ResponseEntity.status(HttpStatus.OK).body(response);
+    }
 }
