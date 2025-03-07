@@ -21,9 +21,11 @@ import vn.edu.iuh.fit.dtos.response.ProductResponse;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Optional;
 
 public interface ProductService {
     List<ProductResponse> getAllProducts();
+
     ProductResponse getProductById(Long id);
 
     PageResponse<ProductResponse> getProductsByPage(int pageNo, int pageSize);
@@ -32,9 +34,11 @@ public interface ProductService {
     public ProductResponse updateProduct(Long id, ProductRequest productRequest);
     boolean existsProduct(String name);
 
-    int countProducts();
 
     int getTotalStockQuantity();
 
     List<BestSellingProductResponse> getBestSellingProducts(LocalDate startDate, LocalDate endDate);
+    List<ProductResponse> getRecentProducts();
+    Double calculateTotalRevenue();
+    int countProducts();
 }

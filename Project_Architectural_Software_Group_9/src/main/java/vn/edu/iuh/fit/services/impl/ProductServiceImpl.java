@@ -100,6 +100,7 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * total product
+     *
      * @return int
      */
     @Query("SELECT COUNT(p) FROM Product p")
@@ -111,6 +112,7 @@ public class ProductServiceImpl implements ProductService {
 
     /**
      * total stock quantity
+     *
      * @return int
      */
     @Override
@@ -120,6 +122,11 @@ public class ProductServiceImpl implements ProductService {
         return products.stream()
                 .mapToInt(Product::getStockQuantity)
                 .sum();
+    }
+
+    @Override
+    public List<BestSellingProductResponse> getBestSellingProducts(LocalDate startDate, LocalDate endDate) {
+        return List.of();
     }
 
 
@@ -133,6 +140,12 @@ public class ProductServiceImpl implements ProductService {
     }
 
 
+    /**
+     * Save product
+     *
+     * @param productRequest
+     * @return product
+     */
     @Override
     public ProductResponse createProduct(ProductRequest productRequest) {
         Category category = categoryRepository.findById(productRequest.getCategoryId()).orElseThrow(() -> new IllegalArgumentException("Category not found"));
@@ -152,7 +165,7 @@ public class ProductServiceImpl implements ProductService {
                 thumbnail = saveFile(firstImage);
 
                 //Handel images product
-                for(MultipartFile file: fileImage) {
+                for (MultipartFile file : fileImage) {
                     if (!isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
                         throw new BadRequestException("Invalid image format");
                     }
@@ -185,8 +198,38 @@ public class ProductServiceImpl implements ProductService {
                     .images(images)
                     .build();
             product = productRepository.save(product);
-           return this.convertToDto(product, ProductResponse.class);
+            return this.convertToDto(product, ProductResponse.class);
         } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
+        }
+    }
+
+    private boolean isValidSuffixImage(String img) {
+        return img.endsWith(".jpg") || img.endsWith(".jpeg") ||
+                img.endsWith(".png") || img.endsWith(".gif") ||
+                img.endsWith(".bmp");
+    }
+
+    public String saveFile(MultipartFile file) throws IOException {
+        // khi nao lam fe upload file thi dung
+//        String uploadDir = "./uploads";
+//        Path uploadPath = Paths.get(uploadDir);
+//        if (!Files.exists(uploadPath)) {
+//            Files.createDirectories(uploadPath);
+//        }
+
+        try {
+            // get file name
+            String fileName = file.getOriginalFilename();
+            // generate code random base on UUID
+            String uniqueFileName = UUID.randomUUID().toString() + "_" + LocalDate.now() + "_" + fileName;
+            Files.copy(file.getInputStream(), this.root.resolve(uniqueFileName), StandardCopyOption.REPLACE_EXISTING);
+            return uniqueFileName;
+        } catch (Exception e) {
+            if (e instanceof FileAlreadyExistsException) {
+                throw new RuntimeException("Filename already exists.");
+            }
+
             throw new RuntimeException(e.getMessage());
         }
     }
@@ -236,7 +279,7 @@ public class ProductServiceImpl implements ProductService {
                 product.setThumbnail(thumbnail);
 
                 //Handel images product
-                for(MultipartFile file: fileImage) {
+                for (MultipartFile file : fileImage) {
                     if (!isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
                         throw new BadRequestException("Invalid image format");
                     }
@@ -256,41 +299,16 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private boolean isValidSuffixImage(String img) {
-        return img.endsWith(".jpg") || img.endsWith(".jpeg") ||
-                img.endsWith(".png") || img.endsWith(".gif") ||
-                img.endsWith(".bmp");
+    @Override
+    public List<ProductResponse> getRecentProducts() {
+        List<Product> recentProducts = productRepository.findRecentProducts();
+        return recentProducts.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
     }
 
-    public String saveFile(MultipartFile file) throws IOException {
-        // khi nao lam fe upload file thi dung
-//        String uploadDir = "./uploads";
-//        Path uploadPath = Paths.get(uploadDir);
-//        if (!Files.exists(uploadPath)) {
-//            Files.createDirectories(uploadPath);
-//        }
-
-        try {
-            // get file name
-            String fileName = file.getOriginalFilename();
-            // generate code random base on UUID
-            String uniqueFileName = UUID.randomUUID().toString() + "_" + LocalDate.now() + "_" + fileName;
-            Files.copy(file.getInputStream(), this.root.resolve(uniqueFileName), StandardCopyOption.REPLACE_EXISTING);
-            return uniqueFileName;
-        } catch (Exception e) {
-            if (e instanceof FileAlreadyExistsException) {
-                throw new RuntimeException("Filename already exists.");
-            }
-
-            throw new RuntimeException(e.getMessage());
-        }
+    @Override
+    public Double calculateTotalRevenue() {
+        return productRepository.calculateTotalRevenue();
     }
 
-    public List<BestSellingProductResponse> getBestSellingProducts(LocalDate startDate, LocalDate endDate) {
-        // Lấy thời gian bắt đầu
-        LocalDateTime startDateTime = startDate.atStartOfDay();
-        // Lấy thời gian kết thúc
-        LocalDateTime endDateTime = endDate.atTime(LocalTime.MAX);
-        return orderDetailRepository.findBestSellingProducts(startDateTime, endDateTime);
-    }
+
 }
