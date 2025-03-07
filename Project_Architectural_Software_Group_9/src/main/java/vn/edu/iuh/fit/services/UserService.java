@@ -32,4 +32,6 @@ public interface UserService {
     UserResponse findByUsername(String username);
 
     UserResponse createUserRoleManager(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException;
+
+    List<UserResponse> findAll();
 }
