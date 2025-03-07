@@ -8,6 +8,8 @@ package vn.edu.iuh.fit.services;
 
 import org.springframework.validation.BindingResult;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
+import vn.edu.iuh.fit.dtos.response.PageResponse;
+import vn.edu.iuh.fit.dtos.response.ProductResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
@@ -34,4 +36,6 @@ public interface UserService {
     UserResponse createUserRoleManager(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException;
 
     List<UserResponse> findAll();
+
+    PageResponse<UserResponse> getUsersByPage(int pageNo, int pageSize);
 }
