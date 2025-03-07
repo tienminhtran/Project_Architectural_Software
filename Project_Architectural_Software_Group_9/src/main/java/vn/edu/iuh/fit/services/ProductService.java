@@ -14,9 +14,12 @@ package vn.edu.iuh.fit.services;
 
 import jakarta.validation.Valid;
 import vn.edu.iuh.fit.dtos.request.ProductRequest;
+import vn.edu.iuh.fit.dtos.response.BestSellingProductResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.ProductResponse;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 public interface ProductService {
@@ -31,4 +34,6 @@ public interface ProductService {
     int countProducts();
 
     int getTotalStockQuantity();
+
+    List<BestSellingProductResponse> getBestSellingProducts(LocalDate startDate, LocalDate endDate);
 }
