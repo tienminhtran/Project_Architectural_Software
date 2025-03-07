@@ -11,6 +11,8 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.web.client.RestTemplate;
+import vn.edu.iuh.fit.dtos.request.UserRequest;
+import vn.edu.iuh.fit.entities.User;
 
 /*
  * @description:
@@ -22,7 +24,13 @@ public class AppConfig {
 
     @Bean
     public ModelMapper modelMapper() {
-        return new ModelMapper();
+        ModelMapper modelMapper = new ModelMapper();
+        // Ánh xạ thủ công cho UserRequest -> User
+        modelMapper.typeMap(UserRequest.class, User.class).addMappings(mapper -> {
+            mapper.map(UserRequest::getDob, User::setDayOfBirth);
+        });
+
+        return modelMapper;
     }
 
     @Bean
