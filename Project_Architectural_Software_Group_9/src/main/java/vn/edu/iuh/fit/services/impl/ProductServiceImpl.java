@@ -165,4 +165,15 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
+    @Override
+    public List<ProductResponse> getRecentProducts() {
+        List<Product> recentProducts = productRepository.findRecentProducts();
+        return recentProducts.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
+    }
+
+    @Override
+    public Double getTotalRevenue() {
+        return productRepository.calculateTotalRevenue();
+    }
+
 }

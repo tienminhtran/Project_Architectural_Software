@@ -28,11 +28,16 @@ import java.util.Optional;
 
 public interface ProductService {
     List<ProductResponse> getAllProducts();
+
     ProductResponse getProductById(Long id);
 
     PageResponse<ProductResponse> getProductsByPage(int pageNo, int pageSize);
 
     boolean createProduct(ProductRequest productRequest, MultipartFile file) throws IOException;
+
+    List<ProductResponse> getRecentProducts();
+
+    Double getTotalRevenue();
 
 
 }

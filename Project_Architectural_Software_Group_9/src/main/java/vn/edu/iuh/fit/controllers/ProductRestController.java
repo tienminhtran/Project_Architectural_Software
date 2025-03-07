@@ -32,17 +32,17 @@ public class ProductRestController {
     public ResponseEntity<BaseResponse<?>> getAllProductsByPage(@RequestParam(defaultValue = "0", required = false) Integer pageNo,
                                                                 @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
 
-        if(pageNo == null) {
+        if (pageNo == null) {
             pageNo = 0;
         }
 
-        if(pageSize == null) {
+        if (pageSize == null) {
             pageSize = 8;
         }
 
         PageResponse<ProductResponse> productResponses = productService.getProductsByPage(pageNo, pageSize);
 
-        if(productResponses == null || productResponses.getValues().isEmpty()) {
+        if (productResponses == null || productResponses.getValues().isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get all products").response(productResponses).build());
@@ -53,7 +53,7 @@ public class ProductRestController {
     public ResponseEntity<BaseResponse<?>> getAllProducts() {
         List<ProductResponse> productResponses = productService.getAllProducts();
 
-        if(productResponses.isEmpty()) {
+        if (productResponses.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get all products").response(productResponses).build());
@@ -64,17 +64,32 @@ public class ProductRestController {
     public ResponseEntity<BaseResponse<?>> getProductById(@PathVariable Long id) {
         ProductResponse productResponse = productService.getProductById(id);
 
-        if(productResponse == null) {
+        if (productResponse == null) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get product by id").response(productResponse).build());
+    }
+
+    @GetMapping("/recent")
+    public ResponseEntity<BaseResponse<?>> getRecentProducts() {
+        List<ProductResponse> productResponses = productService.getRecentProducts();
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get recent products").response(productResponses).build());
+    }
+
+    @GetMapping("/revenue")
+    public ResponseEntity<BaseResponse<?>> getTotalRevenue() {
+        Double totalRevenue = productService.getTotalRevenue();
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get total revenue").response(totalRevenue).build());
     }
 
 
     /**
      * Create a new product
      * @param productRequest
-     * @return ResponseEntity<BaseResponse<?>> response
+     * @return ResponseEntity<BaseResponse < ?>> response
      */
 
     /*

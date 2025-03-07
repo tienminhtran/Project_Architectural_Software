@@ -10,6 +10,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.entities.Product;
 import vn.edu.iuh.fit.entities.Voucher;
@@ -28,4 +29,10 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     Product findByProductName(String name);
 
     List<Product> findByBrandName(String brandName);
+
+    @Query("SELECT p FROM Product p ORDER BY  p.createdAt DESC")
+    List<Product> findRecentProducts();
+
+    @Query("SELECT SUM(p.price * p.stockQuantity) from Product p")
+    Double calculateTotalRevenue();
 }
