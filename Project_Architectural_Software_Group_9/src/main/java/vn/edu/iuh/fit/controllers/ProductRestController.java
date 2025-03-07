@@ -82,6 +82,22 @@ public class ProductRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get product by id").response(productResponse).build());
     }
 
+    @GetMapping("/recent")
+    public ResponseEntity<BaseResponse<?>> getRecentProducts() {
+        List<ProductResponse> productResponses = productService.getRecentProducts();
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get recent products").response(productResponses).build());
+    }
+
+    @GetMapping("/revenue")
+    public ResponseEntity<BaseResponse<?>> getTotalRevenue() {
+        Double totalRevenue = productService.calculateTotalRevenue();
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get total revenue").response(totalRevenue).build());
+    }
+
+
     /**
      * test api trong postman
      * phan header: Content-Type: multipart/form-data

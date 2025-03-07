@@ -6,9 +6,12 @@ package vn.edu.iuh.fit.dtos.response;/*
  * @nameProject: Project_Architectural_Software
  */
 
+import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.Size;
 import lombok.*;
 
 import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
@@ -17,9 +20,10 @@ import java.io.Serializable;
 @ToString
 public class BrandResponse implements Serializable {
     private Long id;
+    @Size(max = 255)
     private String name;
     private String brandImg;
-    private Boolean active = false;
+    private Boolean active;
 
 
 }

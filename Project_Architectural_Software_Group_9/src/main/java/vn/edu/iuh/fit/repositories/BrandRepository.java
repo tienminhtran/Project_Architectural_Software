@@ -9,7 +9,6 @@ package vn.edu.iuh.fit.repositories;/*
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.entities.Brand;
-import vn.edu.iuh.fit.entities.Category;
 
 import java.util.Optional;
 
@@ -17,4 +16,7 @@ import java.util.Optional;
 public interface BrandRepository extends JpaRepository<Brand, Long> {
     Optional<Brand> findBrandById(Long id);
 
+    boolean existsByName(String name);
+
+    Optional<Brand> findByName(String name);
 }
