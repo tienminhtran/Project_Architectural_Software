@@ -24,6 +24,8 @@ import java.util.Optional;
  */
 @Repository
 public interface ProductRepository extends JpaRepository<Product, Long> {
-//    List<Product> findByNameContaining(String name);
+    //    List<Product> findByNameContaining(String name);
     Product findByProductName(String name);
+
+    List<Product> findByBrandName(String brandName);
 }
