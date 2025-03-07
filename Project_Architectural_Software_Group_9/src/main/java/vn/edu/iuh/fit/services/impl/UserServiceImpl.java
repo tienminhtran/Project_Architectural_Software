@@ -9,11 +9,16 @@ package vn.edu.iuh.fit.services.impl;
 import lombok.extern.slf4j.Slf4j;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
+import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.entities.Role;
 import vn.edu.iuh.fit.entities.User;
@@ -166,5 +171,21 @@ public class UserServiceImpl implements UserService {
                     .toList();
         }
         return null;
+    }
+
+    @Override
+    public PageResponse<UserResponse> getUsersByPage(int pageNo, int pageSize) {
+        Sort sort = Sort.by("id").ascending();
+        Pageable pageable = PageRequest.of(pageNo, pageSize, sort);
+        Page<User> users = userRepository.findAll(pageable);
+        PageResponse<UserResponse> pageDto = new PageResponse<>();
+        if (users != null) {
+            pageDto.setPage(pageNo);
+            pageDto.setSize(pageSize);
+            pageDto.setTotal(users.getNumberOfElements());
+            pageDto.setTotalPages(users.getTotalPages());
+            pageDto.setValues(users.stream().map(user -> this.convertToDto(user, UserResponse.class)).toList());
+        }
+        return pageDto;
     }
 }

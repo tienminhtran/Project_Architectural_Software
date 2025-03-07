@@ -15,6 +15,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
+import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.services.UserService;
@@ -71,7 +72,7 @@ public class UserRestController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @GetMapping("")
+    @GetMapping("/all")
     public ResponseEntity<BaseResponse<List<UserResponse>> > getAllUsers() {
         List<UserResponse> userResponses = userService.findAll();
 
@@ -82,6 +83,29 @@ public class UserRestController {
         return ResponseEntity.ok(BaseResponse.<List<UserResponse>>builder()
                 .status("SUCCESS")
                 .message("Get all users success")
+                .response(userResponses).build());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("")
+    public ResponseEntity<BaseResponse<?>> getUsersByPage(@RequestParam(defaultValue = "0", required = false) Integer pageNo,
+                                                                           @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
+        if (pageNo == null) {
+            pageNo = 0;
+        }
+        if (pageSize == null) {
+            pageSize = 5;
+        }
+
+        PageResponse<UserResponse> userResponses = userService.getUsersByPage(pageNo, pageSize);
+
+        if (userResponses == null || userResponses.getValues().isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Get users by page success")
                 .response(userResponses).build());
     }
 }
