@@ -69,4 +69,19 @@ public class UserRestController {
         response.put("data", userResponse);
         return ResponseEntity.status(HttpStatus.OK).body(response);
     }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("")
+    public ResponseEntity<BaseResponse<List<UserResponse>> > getAllUsers() {
+        List<UserResponse> userResponses = userService.findAll();
+
+        if (userResponses == null) {
+            return ResponseEntity.notFound().build();
+        }
+
+        return ResponseEntity.ok(BaseResponse.<List<UserResponse>>builder()
+                .status("SUCCESS")
+                .message("Get all users success")
+                .response(userResponses).build());
+    }
 }

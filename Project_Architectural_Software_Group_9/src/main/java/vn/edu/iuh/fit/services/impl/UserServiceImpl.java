@@ -156,4 +156,15 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
+    @Override
+    public List<UserResponse> findAll() {
+        List<User> users = userRepository.findAll();
+        if (users != null) {
+            return users.stream()
+                    .map(user -> this.convertToDto(user, UserResponse.class))
+                    .toList();
+        }
+        return null;
+    }
 }
