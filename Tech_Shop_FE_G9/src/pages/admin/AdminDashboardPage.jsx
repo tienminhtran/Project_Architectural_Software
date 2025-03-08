@@ -1,5 +1,5 @@
 import React from "react";
-import { FaUsers, FaFile, FaClipboardList,FaRegIdCard   } from "react-icons/fa";
+import { FaUsers, FaFile, FaClipboardList, FaRegIdCard } from "react-icons/fa";
 import Menu from "/src/components/layout/Admin/Menu"; // Sidebar component
 import Menu_Header from "/src/components/layout/Admin/Menu_Header"; // Header component
 import "/src/assets/css/adminDashboard.css"; // Import CSS file
@@ -8,10 +8,10 @@ const AdminDashboardPage = () => {
   return (
     <div className="axil-signin-area ">
       <div className="admin-dashboard">
-      {/* Sidebar */}
+        {/* Sidebar */}
         <Menu />
 
-      {/* Main Content */}
+        {/* Main Content */}
         <div className="admin-content ">
           {/* Header */}
           <Menu_Header />
@@ -36,7 +36,7 @@ const AdminDashboardPage = () => {
             </div>
           </div>
 
-                {/* Thống kê khách hàng / đơn hàng */}
+          {/* Thống kê khách hàng / đơn hàng */}
           <div className="card-stats">
             <div className="card-box orange">
               <div className="card-info">
@@ -51,8 +51,7 @@ const AdminDashboardPage = () => {
                 <h3>3</h3>
                 <p>Staff</p>
               </div>
-              <FaRegIdCard   className="card-icon" />
-
+              <FaRegIdCard className="card-icon" />
             </div>
 
             <div className="card-box darkblue">
@@ -60,9 +59,9 @@ const AdminDashboardPage = () => {
                 <h3>12</h3>
                 <p>Purchase Invoice</p>
               </div>
-              <FaClipboardList  className="card-icon" />
+              <FaClipboardList className="card-icon" />
             </div>
-            
+
             <div className="card-box green">
               <div className="card-info">
                 <h3>12</h3>
@@ -72,11 +71,8 @@ const AdminDashboardPage = () => {
             </div>
           </div>
 
-
-
-
           <div className="product-tables">
-          {/* Best Seller */}
+            {/* Best Seller */}
             <div className="product-table">
               <h3>Best Seller</h3>
               <table>
@@ -149,42 +145,43 @@ const AdminDashboardPage = () => {
             </div>
           </div>
           {/* Khách hàng thân thiết */}
-          <div className="customer-table">
-            <h3>Loyal Customers</h3>
-            <table>
-              <thead>
-                <tr>
-                  <th>Top</th>
-                  <th>Full Name</th>
-                  <th>Phone</th>
-                  <th>Email</th>
-                  <th>Dob</th>
-                  <th>Total Purchase Due</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>1</td>
-                  <td>Nguyễn Hà Huế</td>
-                  <td>0468392418</td>
-                  <td>user@gmail.com</td>
-                  <td>1985-05-21</td>
-                  <td>69,000,000</td>
-                </tr>
-                <tr>
-                  <td>2</td>
-                  <td>Mai Hồng Linh</td>
-                  <td>0956274924</td>
-                  <td>user48@gmail.com</td>
-                  <td>2005-08-12</td>
-                  <td>66,000,000</td>
-                </tr>
-              </tbody>
-            </table>
+          <div className="customer-tables">
+            <div className="customer-table">
+              <h3>Loyal Customers</h3>
+              <table>
+                <thead>
+                  <tr>
+                    <th>Top</th>
+                    <th>Full Name</th>
+                    <th>Phone</th>
+                    <th>Email</th>
+                    <th>Dob</th>
+                    <th>Total Purchase Due</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  <tr>
+                    <td>1</td>
+                    <td>Nguyễn Hà Huế</td>
+                    <td>0468392418</td>
+                    <td>user@gmail.com</td>
+                    <td>1985-05-21</td>
+                    <td>69,000,000</td>
+                  </tr>
+                  <tr>
+                    <td>2</td>
+                    <td>Mai Hồng Linh</td>
+                    <td>0956274924</td>
+                    <td>user48@gmail.com</td>
+                    <td>2005-08-12</td>
+                    <td>66,000,000</td>
+                  </tr>
+                </tbody>
+              </table>
+            </div>
           </div>
         </div>
-        
-      </div>    
+      </div>
     </div>
   );
 };
