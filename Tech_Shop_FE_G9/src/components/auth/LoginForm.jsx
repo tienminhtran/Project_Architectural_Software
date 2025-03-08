@@ -3,7 +3,7 @@ import { Col, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { login, saveAccessToken, getAccessToken } from "../../services/authService";
 import { useDispatch, useSelector } from "react-redux";
-import { loginSuccess } from "../../store/slices/AuthSlice.js";
+import { loginSuccess, loginFailure } from "../../store/slices/AuthSlice.js";
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -13,19 +13,24 @@ const LoginForm = () => {
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
+  // Handle submit form login
   const handleSubmit = async (e) => {
     e.preventDefault();
     try {
       const response = await login({ username, password });
+
       console.log(response.token.accessToken);
       saveAccessToken(response.token.accessToken); // save access token
+
       console.log(getAccessToken());
       console.log(response.token);
+      
       dispatch(loginSuccess(response.token)); // login success, save infomation to redux
       console.log(response.token.roles);
+
       navigate(`/${response.token.roles[0].toLowerCase().replace('role_', '')}/dashboard`);  // navigate to
     } catch (error) {
-      console.log(error);
+      dispatch(loginFailure(error.response.data.message));
     }
   }
 
