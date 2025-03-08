@@ -16,10 +16,12 @@ function App() {
       <Routes>
       <Route path="/login" element={<LoginPage/>} />
       {/* Admin Page */}
-      {/* <Route element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} />}> */}
-      <Route >
-          <Route path="/admin/dashboard" element={<AdminPage />} />
+      <Route element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} />}>
+        <Route >
+            <Route path="/admin/dashboard" element={<AdminPage />} />
+        </Route>
       </Route>
+
 
       {/* Manager Page */}
       <Route element={<ProtectedRoute allowedRoles={['ROLE_MANAGER']} />}>
