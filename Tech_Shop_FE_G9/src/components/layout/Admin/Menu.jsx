@@ -30,7 +30,7 @@ const Menu = () => {
             <FaTags /> Brand <IoIosArrowForward className="arrow" />
             <ul className="submenu">
                 <li><Link to="/common/BrandPage">List Brands</Link></li>
-                <li>Add Brand</li>
+                <li><Link to="/common/AddBrandPage">Add Brand</Link></li>
             </ul>
             </li>
 
