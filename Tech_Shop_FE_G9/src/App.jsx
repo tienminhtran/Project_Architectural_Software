@@ -14,7 +14,7 @@ import BrandPage from './pages/common/BrandPage';
 
 import ProfilePage from './pages/common/ProfilePage';
 import ChangePassword from './pages/common/ChangePassword';
-
+import AddBrandPage from './pages/common/AddBrandPage';
 
 // Reusable Layout Component
 const AdminLayout = ({ children }) => (
@@ -74,6 +74,17 @@ function App() {
               </AdminLayout>
             }
           />
+
+          <Route
+            path="/common/AddBrandPage"
+            element={
+              <AdminLayout>
+                <AddBrandPage />
+              </AdminLayout>
+            }
+          />
+
+
 
         </Route>
 
