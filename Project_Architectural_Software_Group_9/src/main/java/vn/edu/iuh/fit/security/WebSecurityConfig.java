@@ -99,6 +99,7 @@ public class WebSecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/api/v1/products").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers("/api/v1/orders","/api/v1/orders/**").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers("/api/v1/orders/me", "/api/v1/orders/me/**").hasAnyRole("ADMIN", "USER", "MANAGER")
+                                .requestMatchers("/api/v1/order-details","/api/v1/order-details/**").hasAnyRole("ADMIN", "MANAGER", "USER")
                                 .anyRequest().authenticated()
                 )
                 // Dung stateless de su dung JWT

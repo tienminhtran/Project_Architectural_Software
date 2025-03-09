@@ -126,7 +126,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public List<BestSellingProductResponse> getBestSellingProducts(LocalDate startDate, LocalDate endDate) {
-        return List.of();
+        LocalDateTime startDateTime = startDate.atStartOfDay();
+        LocalDateTime endDateTime = endDate.atStartOfDay();
+        return orderDetailRepository.findBestSellingProducts(startDateTime, endDateTime);
     }
 
 
