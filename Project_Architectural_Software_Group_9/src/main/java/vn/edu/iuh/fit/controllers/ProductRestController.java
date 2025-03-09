@@ -216,7 +216,7 @@ public class ProductRestController {
 
     @PreAuthorize("hasRole('ADMIN') or hasRole('MANAGER')")
     @GetMapping("/bestSelling")
-    public ResponseEntity<List<BestSellingProductResponse>> getBestSellingProducts(
+    public ResponseEntity<BaseResponse<?>> getBestSellingProducts(
             @RequestParam(required = false) LocalDate startDate,
             @RequestParam(required = false)LocalDate endDate) {
 
@@ -233,6 +233,6 @@ public class ProductRestController {
         if (bestSellingProductResponses.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
-        return ResponseEntity.ok(bestSellingProductResponses);
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get best selling products").response(bestSellingProductResponses).build());
     }
 }
