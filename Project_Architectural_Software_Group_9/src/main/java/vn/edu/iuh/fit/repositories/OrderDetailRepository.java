@@ -54,4 +54,6 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
             @Param("startDate") LocalDateTime startDate,
             @Param("endDate") LocalDateTime endDate
     );
+
+    List<OrderDetail> findByOrderId(Long orderId);
 }

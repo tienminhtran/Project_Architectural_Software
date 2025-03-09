@@ -5,3 +5,15 @@
   /* text-align: center; */
 }
 
+.admin-layout {
+  display: flex;
+}
+
+.sidebar {
+  width: 250px;
+}
+
+.admin-content {
+  flex-grow: 1;
+  padding: 20px;
+}
