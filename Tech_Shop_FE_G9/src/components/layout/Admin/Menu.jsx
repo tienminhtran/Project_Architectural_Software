@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTachometerAlt, FaTags, FaUsers, FaGift, FaHome } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import "/src/assets/css/adminMenu.css"; // Import CSS file
+import { Link } from "react-router-dom";
 
 const Menu = () => {
   // State để kiểm soát menu con
@@ -23,14 +24,13 @@ const Menu = () => {
       <div className="menuss">
         <ul className="menu">
             <li className="menu-item">
-            <FaTachometerAlt /> Dashboard
+              <FaTachometerAlt /> <Link to="/admin/dashboard">Dashboard </Link>
             </li>
-
             <li className={`menu-item ${openMenus.brand ? "open" : ""}`} onClick={() => toggleMenu("brand")}>
             <FaTags /> Brand <IoIosArrowForward className="arrow" />
             <ul className="submenu">
+                <li><Link to="/common/BrandPage">Manage Brands</Link></li>
                 <li>Add Brand</li>
-                <li>Manage Brands</li>
             </ul>
             </li>
 

@@ -1,21 +1,11 @@
 import React from "react";
 import { FaUsers, FaFile, FaClipboardList, FaRegIdCard } from "react-icons/fa";
-import Menu from "/src/components/layout/Admin/Menu"; // Sidebar component
-import Menu_Header from "/src/components/layout/Admin/Menu_Header"; // Header component
 import "/src/assets/css/adminDashboard.css"; // Import CSS file
 
 const AdminDashboardPage = () => {
   return (
-    <div className="axil-signin-area ">
-      <div className="admin-dashboard">
-        {/* Sidebar */}
-        <Menu />
-
-        {/* Main Content */}
-        <div className="admin-content ">
+        <div className="dashboard-content">
           {/* Header */}
-          <Menu_Header />
-
           {/* Thống kê tổng quan */}
           <div className="stats-grid">
             <div className="stat-card">
@@ -104,6 +94,36 @@ const AdminDashboardPage = () => {
                     <td>Samsung Galaxy Book</td>
                     <td>10000000.00</td>
                   </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Samsung Galaxy Book</td>
+                    <td>10000000.00</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Samsung Galaxy Book</td>
+                    <td>10000000.00</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Samsung Galaxy Book</td>
+                    <td>10000000.00</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Samsung Galaxy Book</td>
+                    <td>10000000.00</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Samsung Galaxy Book</td>
+                    <td>10000000.00</td>
+                  </tr>
+                  <tr>
+                    <td>4</td>
+                    <td>Samsung Galaxy Book</td>
+                    <td>10000000.00</td>
+                  </tr>
                 </tbody>
               </table>
             </div>
@@ -181,8 +201,6 @@ const AdminDashboardPage = () => {
             </div>
           </div>
         </div>
-      </div>
-    </div>
   );
 };
 
