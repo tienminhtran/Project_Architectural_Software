@@ -17,7 +17,7 @@ const RegisterPage = () => {
         <Col lg={6} xl={{ offset: 2 }}>
           <div className="axil-signin-form-warp">
             <div className="axil-signin-form">
-              <h3>Sign in to Tech Shop</h3>
+              <h3>I'm New Here</h3>
               <p className="b2 mb-4 title">Enter your detail below</p>
               <RegisterForm />
             </div>
