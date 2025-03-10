@@ -1,7 +1,7 @@
 /* CommonBrandPage.css */
 
 /* Overall container for the page */
-.brand-page {
+.category-page {
   font-family: Arial, sans-serif;
   margin: 20px;
   padding: 20px;
@@ -16,14 +16,14 @@
 }
 
 /* Heading styles */
-.brand-page h2 {
+.category-page h2 {
   font-size: 24px;
   font-weight: 600;
   color: #343a40;
   margin-bottom: 10px;
 }
 
-.brand-page p {
+.category-page p {
   font-size: 16px;
   color: #6c757d;
   margin-bottom: 20px;

@@ -29,7 +29,7 @@ const Menu = () => {
             <li className={`menu-item ${openMenus.brand ? "open" : ""}`} onClick={() => toggleMenu("brand")}>
             <FaTags /> Brand <IoIosArrowForward className="arrow" />
             <ul className="submenu">
-                <li><Link to="/common/BrandPage">List Brands</Link></li>
+                <li><Link to="/common/BrandPage">Brands List </Link></li>
                 <li><Link to="/common/AddBrandPage">Add Brand</Link></li>
             </ul>
             </li>
@@ -37,8 +37,8 @@ const Menu = () => {
             <li className={`menu-item ${openMenus.category ? "open" : ""}`} onClick={() => toggleMenu("category")}>
             <FaTags /> Category <IoIosArrowForward className="arrow" />
             <ul className="submenu">
+                <li><Link to="/common/CategoryPage">Category List</Link></li>
                 <li>Add Category</li>
-                <li>Manage Categories</li>
             </ul>
             </li>
 

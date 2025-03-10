@@ -115,9 +115,15 @@
   width: 100%;
 }
 
-.menu-item link {
+.menu-item a {
   text-decoration: none;
   color: #333;
+  text-decoration: none; /* Bỏ gạch chân */
+  font-weight: bold;
+}
+.menu-item a:hover {
+  color: #66ecec; /* Màu khi hover */
+  text-decoration: underline; /* Hiệu ứng gạch chân khi hover */
 }
 .menu li:hover {
   background-color: #d7faff;

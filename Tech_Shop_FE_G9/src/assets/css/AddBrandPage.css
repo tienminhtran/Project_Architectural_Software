@@ -85,3 +85,9 @@ input {
   margin-top: 15px;
   cursor: pointer;
 }
+
+.submit-btn:hover {
+  background-color: #ffd000;
+  transform: scale(1.1);
+
+}
