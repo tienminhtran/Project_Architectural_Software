@@ -27,3 +27,23 @@ code {
     monospace;
 }
 
+
+/* Chỉnh scrollbar cho Chrome, Edge, Safari */
+::-webkit-scrollbar {
+  width: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: #f1f1f1; /* Màu nền */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb {
+  background: #d6dfe0; /* Màu thanh cuộn */
+  border-radius: 10px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: #969fa0; /* Màu khi hover */
+}
+

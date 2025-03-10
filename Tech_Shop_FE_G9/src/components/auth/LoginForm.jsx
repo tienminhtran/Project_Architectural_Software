@@ -36,7 +36,7 @@ const LoginForm = () => {
 
   return (
     <div>
-      <Form className="signin-form" onSubmit={handleSubmit}>
+      <Form className="auth-form" onSubmit={handleSubmit}>
         <Form.Group className="mb-3 form-group" controlId="username">
           <Form.Label className="label-input">Username</Form.Label>
           <Form.Control
@@ -54,7 +54,7 @@ const LoginForm = () => {
           <Form.Control
             type="password"
             placeholder="Password"
-            className="form-control"
+            className="form-control input-password"
             value={password}
             onChange={(e) => setPassword(e.target.value)}
             required
@@ -63,14 +63,13 @@ const LoginForm = () => {
 
         {error && <Alert variant="danger">{error}</Alert>}
 
-        <div className="d-flex align-items-center justify-content-between">
+        <div className="d-flex align-items-center justify-content-between gap-5">
           <Button variant="primary" type="submit" size="lg" disabled={loading}>
             {loading ? 'Signing In...' : 'Sign In'}
           </Button>
           <Link
             to="/forgot-password"
-            className="forgot-btn"
-            style={{ textDecoration: "none" }}
+            className="forgot-btn text-decoration-none"
           >
             Forget password?
           </Link>
