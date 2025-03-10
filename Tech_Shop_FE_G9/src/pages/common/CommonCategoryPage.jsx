@@ -1,3 +1,4 @@
+
 import React, { useState } from "react";
 import "/src/assets/css/CommonCategoryPage.css";
 import { FaPen, FaTrashAlt } from "react-icons/fa";
@@ -43,12 +44,12 @@ const CategoryPage = () => {
       <p>View/Search product Category</p>
 
       {/* Nút thêm */}
-      <div className="button">
+      <div className="button-add-remove">
         <button className="add-button">
           <Link to="/common/AddCategoryPage">Add Category</Link>
         </button>
-        <button className="remove-button">
-          <Link to="">Remove Category</Link>
+        <button className="dele-button">
+          <Link to="/common/AddCategoryPage">Remove Category</Link>
         </button>
       </div>
 
@@ -130,3 +131,6 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
+
+
+

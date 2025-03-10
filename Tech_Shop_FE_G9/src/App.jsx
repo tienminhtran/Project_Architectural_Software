@@ -16,8 +16,8 @@ import ProfilePage from './pages/common/ProfilePage';
 import ChangePassword from './pages/common/ChangePassword';
 import AddBrandPage from './pages/common/AddBrandPage';
 import RegisterPage from './pages/RegisterPage';
+import CategoryPage from './pages/common/CommonCategoryPage';
 
-import CategoryPage from './pages/common/CategoryPage';
 // Reusable Layout Component
 const AdminLayout = ({ children }) => (
   <div className="axil-signin-area">
@@ -69,6 +69,15 @@ function App() {
           />
 
           <Route
+            path="/common/ChangePassword"
+            element={
+              <AdminLayout>
+                <ChangePassword />
+              </AdminLayout>
+            }
+          />
+
+          <Route
             path="/common/AddBrandPage"
             element={
               <AdminLayout>
@@ -85,18 +94,6 @@ function App() {
               </AdminLayout>
             }
           />
-
-          <Route
-            path="/common/ChangePassword"
-            element={
-              <AdminLayout>
-                <ChangePassword />
-              </AdminLayout>
-            }
-          />
-
-
-          
 
 
 

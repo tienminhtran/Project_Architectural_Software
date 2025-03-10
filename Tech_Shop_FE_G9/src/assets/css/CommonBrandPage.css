@@ -9,7 +9,7 @@
   border-radius: 8px;
   box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
   max-height: 100vh; /* Chiều cao tối đa bằng với chiều cao màn hình */
-  overflow-y: auto;
+  overflow-y: auto;  
   /* padding: 20px; Khoảng cách để nội dung không quá sát viền */
   /* màu của thanh cuộn */
   scrollbar-color: #ccc #f4f4f4;
@@ -29,17 +29,22 @@
   margin-bottom: 20px;
 }
 
+
+
+
+/* 2  njut */
 /* Căn nút Add Brand về bên phải */
-.button {
+.button-add-remove {
   display: flex;
   justify-content: flex-end;
-  margin-top: 10px;
+  margin-top: 20px;
   gap: 10px;
+  padding: 10px;
 }
 
 /* Thiết kế nút Add Brand */
-.button .add-button {
-  background-color: #eb9d0d;
+.button-add-remove .add-button {
+  background: #ff9f43;
   color: white;
   border: none;
   padding: 12px 18px;
@@ -50,26 +55,17 @@
   transition: 0.3s;
 }
 .add-button a {
+  text-decoration: none;
   color: white;
-  text-decoration: none; /* Bỏ gạch chân */
-  font-weight: bold;
 }
 
-.add-button a:hover {
-  color: #ffd000; /* Màu khi hover */
-  text-decoration: underline; /* Hiệu ứng gạch chân khi hover */
-
-}
-
-.add-button button:hover {
-  background:#ffd000;
+.add-button:hover {
+  background: #ff851b;
   transform: scale(1.1);
-
 }
 
-/* Thiết kế nút remove Brand */
-.button .remove-button {
-  background: #e64f29;
+.button-add-remove .dele-button {
+  background: #ff4343;
   color: white;
   border: none;
   padding: 12px 18px;
@@ -78,29 +74,26 @@
   font-weight: bold;
   cursor: pointer;
   transition: 0.3s;
-}
-.remove-button a {
-  color: rgb(255, 255, 255);
-  text-decoration: none; /* Bỏ gạch chân */
-  font-weight: bold;
+  height: 50px;
 }
 
-.remove-button a:hover {
-  color: #ff7553; /* Màu khi hover */
-  text-decoration: underline; /* Hiệu ứng gạch chân khi hover */
+.dele-button a {
+  text-decoration: none;
+  color: white;
+}
+.dele-button:hover {
+  background: #fd9473;
+  /* phóng to */
+  transform: scale(1.1);
 }
 
-.remove-button button:hover {
-  background: #f17272;
-}
 
 /* Filter section container */
 .filter-container {
   display: flex;
   /* align-items: center; */
-  /* justify-content: space-between; */
+  justify-content: space-between;
   margin-bottom: 20px;
-  width: 100%;
 }
 
 .filter-toggle {
@@ -122,7 +115,6 @@
   display: flex;
   gap: 15px;
   align-items: center;
-  max-width: 100%;
 }
 
 .filters input,
@@ -135,24 +127,26 @@
 }
 
 .filters input {
-  width: 80%;
+  width: 500px;
   background-color: rgb(255, 255, 255);
   /* bỏ viền trái, phải, trên */
   border-left: none;
   border-right: none;
   border-top: none;
   /* viền dưới màu đen */
-  border-bottom: 1px srgb(54, 54, 54) rgb(35, 101, 201);
+  border-bottom: 1px srgb(54, 54, 54)rgb(35, 101, 201);
   font-size: 20px;
   color: #343a40;
+
 }
 
 .filters select {
-  width: 80%;
+  width: 300px;
   background-color: rgb(255, 255, 255);
   color: #343a40;
   border: #0056b3;
   font-size: 20px;
+
 }
 
 /* Table styles */
@@ -162,8 +156,7 @@
   margin-top: 20px;
 }
 
-.brand-table th,
-.brand-table td {
+.brand-table th, .brand-table td {
   padding: 12px;
   text-align: left;
   font-size: 16px;
@@ -183,50 +176,44 @@
   /* align-items: center; */
   gap: 10px;
   width: 100%;
-  text-align: left;
+  text-align:left;
+
 }
 
 .brand-table img {
   /* width: 100%; */
   height: 60px;
   object-fit: contain;
-  text-align: left;
+  text-align:left;
 }
 
 .brand-table button {
-  padding: 12px 12px;
+  padding: 6px 12px;
   font-size: 14px;
   border: 1px solid #ccc;
   border-radius: 5px;
-  background-color: #ffffff;
-  color: rgb(0, 0, 0);
+  background-color: #28a745;
+  color: white;
   cursor: pointer;
   margin-right: 5px;
   width: 100px;
-  text-align: center;
-  text-decoration: none;
-  
 }
 
 .brand-table button:hover {
-  /* background-color:  #28a745; */
-  /* phóng to lên xíu */
-  transform: scale(1.1);
+  background-color: #218838;
 }
 
 .brand-table button:nth-child(2) {
-  /* background-color: #ff7f7f; */
-  color: #000;
+  background-color: #dc3545;
 }
 
 .brand-table button:nth-child(2):hover {
-  /* background-color: #c82333; */  transform: scale(1.1);
-
+  background-color: #c82333;
 }
 
 .brand-table th:first-child,
 .brand-table td:first-child {
-  width: 10px;
+  width: 40px;
   text-align: center;
 }
 
@@ -234,12 +221,11 @@
   width: 16px;
   height: 16px;
   cursor: pointer;
-
-
 }
 
 .action {
   display: flex;
+  justify-content: center;
   gap: 10px;
 }
 

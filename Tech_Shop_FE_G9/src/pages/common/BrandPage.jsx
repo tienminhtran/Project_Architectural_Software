@@ -43,15 +43,15 @@ const BrandPage = () => {
       <h2>Product Brand List</h2>
       <p>View/Search product Brand</p>
 
-      {/* Nút thêm */}
-      <div className="button">
+      <div className="button-add-remove">
         <button className="add-button">
           <Link to="/common/AddBrandPage">Add Brand</Link>
         </button>
-        <button className="remove-button">
+        <button className="dele-button">
           <Link to="">Remove Brand</Link>
         </button>
       </div>
+
 
       {/* Bộ lọc */}
       <div className="filter-container">
