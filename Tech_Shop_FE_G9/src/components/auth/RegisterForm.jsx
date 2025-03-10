@@ -15,7 +15,7 @@ const RegisterForm = () => {
     firstname: "",
     lastname: "",
     gender: "", 
-    dob: ""
+    dob: new Date().toISOString().split("T")[0],
   });
   
 
@@ -42,6 +42,7 @@ const RegisterForm = () => {
     } catch (error) {
       
         dispatch(handleFailure(error.response.data));
+        console.log(error.response.data);
     };
   };
 
@@ -58,8 +59,8 @@ const RegisterForm = () => {
             value={formData.username}
             onChange={handleChange}
           />
-          {error && error.status === 400 && <p className="text-danger">{error.message.username}</p>}
-          {error && error.status === "FAILED" && <p className="text-danger">{error.message}</p>}
+          {error  && <p className="text-danger">{error.message.username}</p>}
+
           
         </Form.Group>
 
@@ -73,8 +74,7 @@ const RegisterForm = () => {
             value={formData.email}
             onChange={handleChange}
           />
-          {error && error.status === 400 && <p className="text-danger">{error.message.email}</p>}
-          {error && error.status === "FAILED" && <p className="text-danger">{error.message}</p>}
+          {error  && <p className="text-danger">{error.message.email}</p>}
 
         </Form.Group>
 
@@ -90,7 +90,7 @@ const RegisterForm = () => {
             onChange={handleChange}
             
           />
-          {error && error.status === 400 && <p className="text-danger">{error.message.password}</p>}
+          {error  && <p className="text-danger">{error.message.password}</p>}
         </Form.Group>
 
         {/* confirm password */}
@@ -106,7 +106,7 @@ const RegisterForm = () => {
             
           />
 
-          {error && error.status === "FAILED" && <p className="text-danger">{error.message}</p>}
+          {error  && <p className="text-danger">{error.message.confirmPassword}</p>}
 
         </Form.Group>
         
@@ -123,7 +123,7 @@ const RegisterForm = () => {
             
           />
 
-          {error && error.status === 400 && <p className="text-danger">{error.message.phoneNumber}</p>}
+          {error  && <p className="text-danger">{error.message.phoneNumber}</p>}
         </Form.Group>
 
         {/* first name */}
@@ -138,7 +138,7 @@ const RegisterForm = () => {
             onChange={handleChange}
             
           />
-        {error && error.status === 400 && <p className="text-danger">{error.message.firstName}</p>}
+        {error  && <p className="text-danger">{error.message.firstName}</p>}
         </Form.Group>
 
         {/* last name */}
@@ -153,7 +153,7 @@ const RegisterForm = () => {
             onChange={handleChange}
             
           />
-        {error && error.status === 400 && <p className="text-danger">{error.message.lastName}</p>}
+        {error  && <p className="text-danger">{error.message.lastName}</p>}
         </Form.Group>
 
         {/* gender */}
@@ -190,11 +190,11 @@ const RegisterForm = () => {
             className="form-control input-dob"
             name="dob"
             value={formData.dob}
+
             onChange={handleChange}
             
           />
-        {error && error.status === 400 && <p className="text-danger">{error.message.dob}</p>}
-        {error && error.status === "FAILED" && <p className="text-danger">{error.message}</p>}
+        {error  && <p className="text-danger">{error.message.dob}</p>}
 
         </Form.Group>
 
