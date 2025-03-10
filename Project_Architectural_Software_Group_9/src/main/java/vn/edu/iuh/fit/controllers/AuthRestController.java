@@ -12,6 +12,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,10 +21,12 @@ import vn.edu.iuh.fit.dtos.request.AuthRequest;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.AuthResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
+import vn.edu.iuh.fit.exception.EmailAlreadyExistsException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.services.AuthService;
 import vn.edu.iuh.fit.services.UserService;
 
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.Map;
 
@@ -98,20 +101,20 @@ public class AuthRestController {
 
     @PostMapping("/register")
     public ResponseEntity<Map<String, Object>> register(@Valid @RequestBody UserRequest authRequest,
-                                                BindingResult bindingResult) throws UserAlreadyExistsException {
-        Map<String, Object> response = new LinkedHashMap<String, Object>();
+                                                BindingResult bindingResult) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
+        userService.validation(authRequest, bindingResult);
+
+        Map<String, Object> response = new HashMap<String, Object>();
 
         if (bindingResult.hasErrors()) {
-            Map<String, Object> errors = new LinkedHashMap<String, Object>();
+            Map<String, Object> errors = new HashMap<String, Object>();
 
             bindingResult.getFieldErrors().stream().forEach(result -> {
                 errors.put(result.getField(), result.getDefaultMessage());
             });
 
             System.out.println(bindingResult);
-            response.put("status", HttpStatus.BAD_REQUEST.value());
-            response.put("message", errors);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.badRequest().body(Map.of("status", "FAILED", "message", errors));
         } else {
 
             UserResponse userResponse = userService.createUser(authRequest, bindingResult);
