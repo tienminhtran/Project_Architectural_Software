@@ -115,9 +115,10 @@
   width: 100%;
 }
 
-.menu-item link {
+.menu-item a {
   text-decoration: none;
   color: #333;
+  font-weight: bold;
 }
 .menu li:hover {
   background-color: #d7faff;
