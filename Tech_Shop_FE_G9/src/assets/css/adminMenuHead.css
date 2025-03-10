@@ -14,6 +14,10 @@
   height: auto;
 }
 
+.header .menu-container .username{
+  color: #000000;  
+}
+
 /* Avatar & Dropdown */
 .menu-container {
   position: relative;

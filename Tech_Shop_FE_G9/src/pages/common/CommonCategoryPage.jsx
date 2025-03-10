@@ -1,9 +1,10 @@
+
 import React, { useState } from "react";
-import "/src/assets/css/CommonBrandPage.css";
+import "/src/assets/css/CommonCategoryPage.css";
 import { FaPen, FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
 
-const BrandPage = () => {
+const CategoryPage = () => {
   const [showFilters, setShowFilters] = useState(false);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
@@ -11,11 +12,10 @@ const BrandPage = () => {
   const [brand, setBrand] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const brands = [
-    { id: 1, name: "Dell", image: "/public/images/avatar/avtdefault.jpg" },
-    { id: 2, name: "HP", image: "/public/images/avatar/avtdefault.jpg" },
-    { id: 3, name: "Acer", image: "/public/images/avatar/avtdefault.jpg" },
-    { id: 4, name: "Lenovo", image: "/public/images/avatar/avtdefault.jpg" },
+  const categorys = [
+    { id: 1, name: "Computer" },
+    { id: 2, name: "Phone" },
+    { id: 3, name: "Accessory" },
   ];
 
   const toggleFilters = () => {
@@ -31,27 +31,27 @@ const BrandPage = () => {
   };
 
   const handleSelectAll = () => {
-    if (selectedRows.length === brands.length) {
+    if (selectedRows.length === categorys.length) {
       setSelectedRows([]);
     } else {
-      setSelectedRows(brands.map((brand) => brand.id));
+      setSelectedRows(categorys.map((item) => item.id));
     }
   };
 
   return (
-    <div className="brand-page">
-      <h2>Product Brand List</h2>
-      <p>View/Search product Brand</p>
+    <div className="category-page">
+      <h2>Product Category list</h2>
+      <p>View/Search product Category</p>
 
+      {/* Nút thêm */}
       <div className="button-add-remove">
         <button className="add-button">
-          <Link to="/common/AddBrandPage">Add Brand</Link>
+          <Link to="/common/AddCategoryPage">Add Category</Link>
         </button>
         <button className="dele-button">
-          <Link to="">Remove Brand</Link>
+          <Link to="/common/AddCategoryPage">Remove Category</Link>
         </button>
       </div>
-
 
       {/* Bộ lọc */}
       <div className="filter-container">
@@ -95,27 +95,25 @@ const BrandPage = () => {
             <th>
               <input
                 type="checkbox"
-                checked={selectedRows.length === brands.length}
+                checked={selectedRows.length === categorys.length}
                 onChange={handleSelectAll}
               />
             </th>
-            <th>Brand Name</th>
+            <th>Category Name</th>
             <th>Action</th>
           </tr>
         </thead>
         <tbody>
-          {brands.map((brand) => (
-            <tr key={brand.id}>
+          {categorys.map((item) => (
+            <tr key={item.id}>
               <td>
                 <input
                   type="checkbox"
-                  checked={selectedRows.includes(brand.id)}
-                  onChange={() => handleSelectRow(brand.id)}
+                  checked={selectedRows.includes(item.id)}
+                  onChange={() => handleSelectRow(item.id)}
                 />
               </td>
-              <td>
-                <img src={brand.image} alt={brand.name} /> {brand.name}
-              </td>
+              <td>{item.name}</td>
               <td className="action">
                 <button>
                   <FaPen /> 
@@ -132,4 +130,7 @@ const BrandPage = () => {
   );
 };
 
-export default BrandPage;
+export default CategoryPage;
+
+
+
