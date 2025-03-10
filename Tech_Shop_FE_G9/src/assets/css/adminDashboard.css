@@ -3,7 +3,6 @@
   overflow-y: auto;  
   /* padding: 20px; Khoảng cách để nội dung không quá sát viền */
   /* màu của thanh cuộn */
-  scrollbar-color: #ccc #f4f4f4;
 }
 /* Bố cục tổng thể */
 .axil-signin-area {

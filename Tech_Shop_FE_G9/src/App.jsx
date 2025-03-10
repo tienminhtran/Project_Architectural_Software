@@ -15,6 +15,7 @@ import BrandPage from './pages/common/BrandPage';
 import ProfilePage from './pages/common/ProfilePage';
 import ChangePassword from './pages/common/ChangePassword';
 import AddBrandPage from './pages/common/AddBrandPage';
+import RegisterPage from './pages/RegisterPage';
 
 // Reusable Layout Component
 const AdminLayout = ({ children }) => (
@@ -35,7 +36,7 @@ function App() {
     <Router>
       <Routes>
         <Route path="/login" element={<LoginPage />} />
-
+        <Route path="/register" element={<RegisterPage />} />
         {/* Admin Page */}
         {/* // Protected Routes */}
         <Route element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} />}>

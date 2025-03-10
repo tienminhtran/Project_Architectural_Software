@@ -33,6 +33,10 @@
     background-image: url('/images/bg/bg-image-login.jpg'); /* Đường dẫn hình ảnh */
 }
 
+.bg-image--10 {
+    background-image: url('/images/bg/bg-image-register.png'); /* Đường dẫn hình ảnh */
+}
+
 .title {
     color:#131a1f;
     margin:10px 0;
@@ -60,27 +64,32 @@
     color: #8c959c;
 }
 
-.signin-form {
-    padding-top: 40px
-}
+.auth-form {
+    padding: 40px 0
+ }
 
-.signin-form .form-group {
+.auth-form .form-group {
     position: relative;
-    margin-bottom: 35px !important
+    margin-bottom: 35px !important;
+}
+.auth-form .form-control {
+    background-color: white !important;
+    font-size: medium;
+    cursor:  auto;
 }
 
-.signin-form .form-group:last-child {
+.auth-form .form-group:last-child {
     margin-bottom: 0 !important
 }
 
-.signin-form .form-control {
+.auth-form .form-control {
     height: 60px;
     border-color: #a3a7aa;
     padding: 0 30px;
     color: #777777;
 }
 
-.signin-form .label-input{
+.auth-form .label-input{
     position: absolute;
     top: -11px;
     left: 20px;
