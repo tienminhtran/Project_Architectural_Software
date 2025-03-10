@@ -1,0 +1,102 @@
+.add-category-container {
+    width: 98%;
+    margin: 20px auto;
+    padding: 20px;
+    border: 1px solid #ddd;
+    border-radius: 10px;
+    background-color: #ffffff;
+  }
+  
+  .form-group {
+    margin-bottom: 15px;
+  }
+  
+  label {
+    display: block;
+    font-weight: bold;
+    margin-bottom: 5px;
+  }
+  
+  input, textarea {
+    width: 100%;
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    background-color: #ffffff;
+  }
+  
+  textarea {
+    height: 100px;
+  }
+  
+  .button-group {
+    height: 50px;
+    display: flex;
+    gap: 10px;
+    align-items: center;
+    justify-content: center;
+    align-items: center;
+
+
+    /* justify-self: center; */
+
+  }
+  
+  .add-category-container .button-group .submit-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #eb9d0d;
+    color: white;
+    cursor: pointer;
+    margin-top: 30px;
+  }
+  
+  .add-category-container .button-group .submit-btn:hover {
+    background-color: #f0b429;
+  }
+  .add-category-container .button-group1 .submit-btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #b3b3b3;
+    color: white;
+    cursor: pointer;
+    
+  }
+  
+  .add-category-container .button-group1 .submit-btn:hover {
+    background-color: #e0e0e0;
+  }
+
+  .form-group-sub-can{
+    display: flex;
+    justify-content: center;
+    gap: 10px;
+    /* text-align: center  ; */
+
+
+  }
+
+
+
+
+
+
+
+
+/* 
+
+
+  .add-category-container .button-group .cancel {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 5px;
+    background-color: #8a8989;
+    color: white;
+    cursor: pointer;
+  }
+  
+  .add-category-container .button-group .cancel:hover {
+    background-color: #ebeae8;
+  } */

@@ -29,13 +29,15 @@ const Menu_Header = () => {
     return (
         <div className="header">
             {/* Logo */}
-            <div>
+            <div className="logo-container">
                 {/* <img src="/images/logo/logo-large.png" alt="Site Logo" className="logo" /> */}
-                <h3 className="title">Admin Dashboard</h3>
+                <h3 className="title">Admin Dashboard</h3>            
             </div>
 
             {/* Avatar + Dropdown Menu */}
             <div className="menu-container" ref={menuRef}>
+                <span className="username">Trần Minh Tiến</span>
+
                 <div className="avatar" onClick={toggleMenu}>
                     <img src="/images/avatar/avtdefault.jpg" alt="User Avatar" className="avatar-img" />
                     <span className="status-indicator"></span>
