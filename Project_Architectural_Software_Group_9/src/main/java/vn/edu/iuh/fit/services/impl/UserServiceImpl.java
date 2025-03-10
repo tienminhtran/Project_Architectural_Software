@@ -17,12 +17,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.TopCustomerResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.entities.Role;
 import vn.edu.iuh.fit.entities.User;
+import vn.edu.iuh.fit.exception.EmailAlreadyExistsException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.repositories.OrderDetailRepository;
 import vn.edu.iuh.fit.repositories.RoleRepository;
@@ -71,24 +73,26 @@ public class UserServiceImpl implements UserService {
         return modelMapper.map(tDto, User.class);
     }
 
-    private void validation(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException {
+
+    @Override
+    public void validation(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
         // Kiem tra username da ton tai chua?
 
         if (this.existsUsername(userRequest.getUsername())) {
             result.addError(new FieldError("userRequest", "username",
-                    "Username đã tồn tại. Vui lòng nhập username khác"));
-            throw new UserAlreadyExistsException("Username already exist");
+                    "Username already exists. Please enter another username!"));
+//            throw new UserAlreadyExistsException("Username already exist");
         }
         if (this.existsEmail(userRequest.getEmail())) {
             result.addError(new FieldError("userRequest", "email",
-                    "Email đã tồn tại. Vui lòng nhập email khác"));
-            throw new UserAlreadyExistsException("Email already exist");
+                    "Email already exists. Please enter another email!"));
+//            throw new EmailAlreadyExistsException("Email already exist");
         }
 
         if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
-            result.addError(new FieldError("userRequest", "password",
-                    "Mật khẩu không khớp"));
-            throw new IllegalArgumentException("Password not match");
+            result.addError(new FieldError("userRequest", "confirmPassword",
+                    "Password not match"));
+//            throw new IllegalArgumentException("Password not match");
         }
 
         // Lấy day/month/year hiện tại, 11/2/2024 -> tru 15 năm -> 11/2/2009
@@ -96,10 +100,10 @@ public class UserServiceImpl implements UserService {
         // nên dùng isBefore (truoc rồi phủ định) chứ không dùng isAfter
         if (!userRequest.getDob().isBefore(LocalDate.now().minusYears(15))) {
             result.addError(new FieldError("userRequest", "dob",
-                    "Ban chưa đủ 15 tuổi"));
-            throw new IllegalArgumentException("User is under 15 years old");
+                    "User is under 15 years old"));
+//            throw new IllegalArgumentException("User is under 15 years old");
         }
-    }
+     }
 
     @Override
     public UserResponse getUserByUsername(String username) {
@@ -112,12 +116,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse createUser(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException {
+    public UserResponse createUser(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
 
         Role role = roleRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 1"));
-
         validation(userRequest, result);
-
         if(!result.hasErrors()) {
             User user = this.convertToEntity(userRequest, UserRequest.class);
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
@@ -151,7 +153,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse createUserRoleManager(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException {
+    public UserResponse createUserRoleManager(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
         Role role = roleRepository.findById(3L).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 3"));
 
         validation(userRequest, result);
