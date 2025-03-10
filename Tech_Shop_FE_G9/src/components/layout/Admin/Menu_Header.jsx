@@ -55,13 +55,17 @@ const Menu_Header = () => {
                         </Link>
                     </li>
 
-
-
+                    <li className="menu-item logout">
+                        <Link to="/login">
+                            <FaSignOutAlt /> Logout
+                        </Link>
+                    </li>
 
 
                     {/* <li className="menu-item"><FaUser /> Profile</li> */}
                     {/* <li className="menu-item"><FaLock /> Change Password</li> */}
-                    <li className="menu-item logout"><FaSignOutAlt /> Logout</li>
+                    {/* <li className="menu-item logout"><FaSignOutAlt /> Logout</li> */}
+
                 </ul>
             </div>
         </div>

@@ -9,18 +9,22 @@ const AdminDashboardPage = () => {
           {/* Thống kê tổng quan */}
           <div className="stats-grid">
             <div className="stat-card">
+              <img src="/images/icon/dash2.svg" alt="Total Sales" />
               <h3>135000000</h3>
               <p>Total Purchase Due</p>
             </div>
             <div className="stat-card">
+              <img src="/images/icon/dash1.svg" alt="Total Purchase Due" />
               <h3>0</h3>
               <p>Total Available Vouchers</p>
             </div>
             <div className="stat-card">
+              <img src="/images/icon/product.svg" alt="Total Products Sold" />
               <h3>12</h3>
               <p>Total Products Sold</p>
             </div>
             <div className="stat-card">
+            <img src="/images/icon/product.svg" alt="Total Product" />
               <h3>1943</h3>
               <p>Total Products</p>
             </div>

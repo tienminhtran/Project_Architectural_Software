@@ -200,7 +200,7 @@
 }
 
 /* Thống kê tổng quan */
-.stats-grid {
+/* .stats-grid {
   display: flex;
   gap: 20px;
   padding: 20px;
@@ -213,7 +213,62 @@
   border-radius: 10px;
   text-align: center;
   font-size: 18px;
+} */
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(100px, 1fr));
+  gap: 20px;
+  padding: 20px;
+  /* height: 80px; */
 }
+
+.stat-card {
+  background: linear-gradient(135deg, #f7f099, #deff90);
+  padding: 25px;
+  border-radius: 12px;
+  text-align: center;
+  font-size: 18px;
+  box-shadow: 0px 5px 15px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+}
+
+.stat-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0px 8px 20px rgba(0, 0, 0, 0.2);
+}
+
+.stat-card img {
+  width: 50px;
+  margin-bottom: 10px;
+}
+
+.stat-card h3 {
+  font-size: 24px;
+  font-weight: bold;
+  margin: 10px 0;
+  color: #333;
+}
+
+.stat-card p {
+  font-size: 16px;
+  color: #8d8d8d;
+  font-size: 20px;
+  text-align: center;
+}
+
+/* Responsive */
+@media (max-width: 768px) {
+  .stats-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+@media (max-width: 480px) {
+  .stats-grid {
+    grid-template-columns: repeat(1, 1fr);
+  }
+}
+
 
 /* Thống kê khách hàng */
 .card-stats {
