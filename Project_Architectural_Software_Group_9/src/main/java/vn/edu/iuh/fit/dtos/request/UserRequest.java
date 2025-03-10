@@ -18,35 +18,36 @@ import java.time.LocalDate;
 public class UserRequest {
     Long id;
 
-    @NotBlank(message = "Username là bắt buộc!")
+    //tieng anh
+    @NotBlank(message = "Username is required !")
     String username;
 
-    @NotBlank(message = "Email là bắt buộc!")
-    @Email(message = "Email nên chứa kí tự @.\n Ex: name@gmail.com")
+    @NotBlank(message = "Email is required!")
+    @Email(message = "Email must contain @.\n Ex: name@gmail.com")
     String email;
 
-    @NotBlank(message = "Nhập mật khẩu!")
+    @NotBlank(message = "Password isn't empty!")
     String password;
 
-    @NotNull(message = "Nhập mật khẩu xác nhận!")
+    @NotNull(message = "Confirm password isn't empty!")
     @JsonProperty("confirm_password")
     String confirmPassword;
 
-    @NotBlank(message = "Số điện thoại là bắt buộc!")
+    @NotBlank(message = "Phone number is required!")
     @JsonProperty("phone_number")
     String phoneNumber;
 
-    @NotBlank(message = "Nhập tên của bạn và tên lót nếu có!")
+    @NotBlank(message = "Enter your first name and middle name if applicable! and not empty!")
     @JsonProperty("firstname")
     String firstName;
 
-    @NotBlank(message = "Nhập họ của bạn!")
+    @NotBlank(message = "Enter your last name and not empty!")
     @JsonProperty("lastname")
     String lastName;
 
     String gender;
 
-    @NotNull(message = "Nhập ngày tháng năm sinh!")
+    @NotNull(message = "Date of birth is required!")
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     LocalDate dob;
 

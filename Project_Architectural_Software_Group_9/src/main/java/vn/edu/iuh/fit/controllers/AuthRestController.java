@@ -110,7 +110,7 @@ public class AuthRestController {
 
             System.out.println(bindingResult);
             response.put("status", HttpStatus.BAD_REQUEST.value());
-            response.put("errors", errors);
+            response.put("message", errors);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         } else {
 
