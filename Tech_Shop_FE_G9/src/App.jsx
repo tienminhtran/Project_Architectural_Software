@@ -15,12 +15,9 @@ import BrandPage from './pages/common/BrandPage';
 import ProfilePage from './pages/common/ProfilePage';
 import ChangePassword from './pages/common/ChangePassword';
 import AddBrandPage from './pages/common/AddBrandPage';
-<<<<<<< HEAD
 import RegisterPage from './pages/RegisterPage';
 
-=======
 import CategoryPage from './pages/common/CategoryPage';
->>>>>>> 151a66c (FE / GUI Admin / CategoryPage - fillter Now OK)
 // Reusable Layout Component
 const AdminLayout = ({ children }) => (
   <div className="axil-signin-area">
