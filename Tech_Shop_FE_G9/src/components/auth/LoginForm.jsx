@@ -3,7 +3,7 @@ import { Col, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
 import { login, saveAccessToken, getAccessToken } from "../../services/authService";
 import { useDispatch, useSelector } from "react-redux";
-import { loginSuccess, loginFailure } from "../../store/slices/AuthSlice.js";
+import { loginSuccess, handleFailure } from "../../store/slices/AuthSlice.js";
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -28,9 +28,14 @@ const LoginForm = () => {
       dispatch(loginSuccess(response.token)); // login success, save infomation to redux
       console.log(response.token.roles);
 
+      if(response.token.roles[0] === 'ROLE_USER'){
+        navigate('/');
+      }
+      
       navigate(`/${response.token.roles[0].toLowerCase().replace('role_', '')}/dashboard`);  // navigate to
+      
     } catch (error) {
-      dispatch(loginFailure(error.response.data.message));
+      dispatch(handleFailure(error.response.data.message));
     }
   }
 

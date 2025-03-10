@@ -74,7 +74,7 @@
 }
 .auth-form .form-control {
     background-color: white !important;
-    font-size: medium;
+    font-size: 15px;
     cursor:  auto;
 }
 
@@ -84,7 +84,7 @@
 
 .auth-form .form-control {
     height: 60px;
-    border-color: #a3a7aa;
+    border-color: #d5d8da;
     padding: 0 30px;
     color: #777777;
 }

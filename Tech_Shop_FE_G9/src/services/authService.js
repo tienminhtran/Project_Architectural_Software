@@ -43,3 +43,8 @@ export const login = async (credential) => {
   const response = await axiosInstance.post('/login', credential);
   return response.data; // Trả về { user, token, role }
 };
+
+export const register = async (user) => {
+  const response = await axiosInstance.post('/register', user);
+  return response.data;
+}
