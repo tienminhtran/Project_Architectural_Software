@@ -16,6 +16,8 @@ import ProfilePage from './pages/common/ProfilePage';
 import ChangePassword from './pages/common/ChangePassword';
 import AddBrandPage from './pages/common/AddBrandPage';
 import RegisterPage from './pages/RegisterPage';
+import CategoryPage from './pages/common/CommonCategoryPage';
+import AddCategoryPage from './pages/common/AddCategoryPage';
 
 // Reusable Layout Component
 const AdminLayout = ({ children }) => (
@@ -85,8 +87,23 @@ function App() {
             }
           />
 
-          
-
+          <Route
+            path="/common/CategoryPage"
+            element={
+              <AdminLayout>
+                <CategoryPage />
+              </AdminLayout>
+            }
+          />
+          {/* ///common/AddCategoryPage */}
+          <Route
+            path="/common/AddCategoryPage"
+            element={
+              <AdminLayout>
+                <AddCategoryPage />
+              </AdminLayout>
+            }
+          />
 
 
         </Route>

@@ -37,8 +37,10 @@ const Menu = () => {
             <li className={`menu-item ${openMenus.category ? "open" : ""}`} onClick={() => toggleMenu("category")}>
             <FaTags /> Category <IoIosArrowForward className="arrow" />
             <ul className="submenu">
-                <li>Add Category</li>
-                <li>Manage Categories</li>
+                <li><Link to="/common/CategoryPage">List Category</Link></li>
+                <li><Link to="/common/AddCategoryPage">Add Category</Link></li>
+                {/* <li>Add Category</li> */}
+                {/* <li>Manage Categories</li> */}
             </ul>
             </li>
 

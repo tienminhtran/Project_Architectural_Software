@@ -12,16 +12,19 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.TopCustomerResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
+import vn.edu.iuh.fit.exception.EmailAlreadyExistsException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.services.UserService;
 
 import java.time.LocalDate;
+import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
@@ -48,15 +51,16 @@ public class UserRestController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/createManager")
-    public ResponseEntity<Map<String, Object>> createManager(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) throws UserAlreadyExistsException {
-        Map<String, Object> response = new LinkedHashMap<>();
+    public ResponseEntity<Map<String, Object>> createManager(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
+        userService.validation(userRequest, bindingResult);
+        Map<String, Object> response = new HashMap<>();
         if (bindingResult.hasErrors()) {
-            Map<String, Object> errors = new LinkedHashMap<>();
+            Map<String, Object> errors = new HashMap<>();
             bindingResult.getFieldErrors().stream().forEach(result -> {
                 errors.put(result.getField(), result.getDefaultMessage());
             });
             response.put("status", HttpStatus.BAD_REQUEST.value());
-            response.put("errors", errors);
+            response.put("message", errors);
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
         }
 
