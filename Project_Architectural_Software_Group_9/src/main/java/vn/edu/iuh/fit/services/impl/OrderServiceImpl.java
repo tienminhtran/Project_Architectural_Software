@@ -99,4 +99,10 @@ public class OrderServiceImpl implements OrderService {
                 .mapToInt(OrderDetail::getQuantity)
                 .sum();
     }
+
+    @Override
+    public int getTotalOrderPending() {
+        List<Order> orders = orderRepository.findByStatus(OrderStatus.PENDING);
+        return orders.size();
+    }
 }

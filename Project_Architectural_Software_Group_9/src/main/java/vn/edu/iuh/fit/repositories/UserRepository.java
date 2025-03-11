@@ -7,6 +7,7 @@
 package vn.edu.iuh.fit.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.entities.User;
 
@@ -24,4 +25,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     boolean existsByUsername(String username);
 
     boolean existsByEmail(String email);
+
+    @Query("SELECT COUNT(u) FROM User u JOIN Role r on u.role.id = r.id WHERE r.code = ?1")
+    int countByRoleUser(String code);
 }

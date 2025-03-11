@@ -46,4 +46,8 @@ public interface UserService {
     PageResponse<UserResponse> getUsersByPage(int pageNo, int pageSize);
 
     List<TopCustomerResponse> getTopCustomers(LocalDate startDate, LocalDate endDate);
+
+    int countByRoleUser();
+    int countByRoleManager();
+
 }
