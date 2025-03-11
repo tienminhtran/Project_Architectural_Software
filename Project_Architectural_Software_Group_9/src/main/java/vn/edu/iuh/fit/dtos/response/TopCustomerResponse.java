@@ -12,6 +12,7 @@ import lombok.Data;
 import lombok.NoArgsConstructor;
 
 import java.math.BigDecimal;
+import java.time.LocalDate;
 
 /*
  * @description:
@@ -26,5 +27,8 @@ import java.math.BigDecimal;
 public class TopCustomerResponse {
     private Long userId;
     private String fullName;
+    private String phoneNumber;
+    private String email;
+    private LocalDate dob;
     private BigDecimal totalSpent;
 }

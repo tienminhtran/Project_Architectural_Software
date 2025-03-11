@@ -30,7 +30,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByBrandName(String brandName);
 
-    @Query("SELECT p FROM Product p ORDER BY  p.createdAt DESC")
+    @Query("SELECT p FROM Product p ORDER BY  p.createdAt DESC LIMIT 5")
     List<Product> findRecentProducts();
 
     @Query("SELECT SUM(p.price * p.stockQuantity) from Product p")
