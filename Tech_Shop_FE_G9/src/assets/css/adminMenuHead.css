@@ -16,6 +16,9 @@
 
 .header .menu-container .username{
   color: #000000;  
+  font-size: 22px;
+  font-weight: bold;
+  margin-right: 10px;
 }
 
 /* Avatar & Dropdown */

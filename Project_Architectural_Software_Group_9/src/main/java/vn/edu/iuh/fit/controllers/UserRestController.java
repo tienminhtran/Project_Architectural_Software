@@ -49,6 +49,15 @@ public class UserRestController {
         return ResponseEntity.ok(BaseResponse.<UserResponse>builder().status("success").message("Get user by id success").response(userResponse).build());
     }
 
+    @GetMapping("/information/{username}")
+    public ResponseEntity<BaseResponse<UserResponse>> getUserByUsername(@PathVariable String username) {
+        UserResponse userResponse = userService.getUserByUsername(username);
+        if (userResponse == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(BaseResponse.<UserResponse>builder().status("success").message("Get user by username success").response(userResponse).build());
+    }
+
     @PreAuthorize("hasRole('ADMIN')")
     @PostMapping("/createManager")
     public ResponseEntity<Map<String, Object>> createManager(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
@@ -139,4 +148,6 @@ public class UserRestController {
                 .message("Get top customers success")
                 .response(topCustomerResponses).build());
     }
+
+
 }
