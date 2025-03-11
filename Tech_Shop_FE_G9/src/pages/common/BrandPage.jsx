@@ -2,8 +2,14 @@ import React, { useState } from "react";
 import "/src/assets/css/CommonBrandPage.css";
 import { FaPen, FaTrashAlt } from "react-icons/fa";
 import { Link } from "react-router-dom";
+import useBrandData from "../../hooks/useBrandData";
 
 const BrandPage = () => {
+
+  const { brandAll } = useBrandData();
+  const brands = brandAll.data?.response || [];
+
+
   const [showFilters, setShowFilters] = useState(false);
   const [search, setSearch] = useState("");
   const [category, setCategory] = useState("");
@@ -11,12 +17,7 @@ const BrandPage = () => {
   const [brand, setBrand] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
 
-  const brands = [
-    { id: 1, name: "Dell", image: "/public/images/avatar/avtdefault.jpg" },
-    { id: 2, name: "HP", image: "/public/images/avatar/avtdefault.jpg" },
-    { id: 3, name: "Acer", image: "/public/images/avatar/avtdefault.jpg" },
-    { id: 4, name: "Lenovo", image: "/public/images/avatar/avtdefault.jpg" },
-  ];
+
 
   const toggleFilters = () => {
     setShowFilters(!showFilters);
@@ -114,7 +115,8 @@ const BrandPage = () => {
                 />
               </td>
               <td>
-                <img src={brand.image} alt={brand.name} /> {brand.name}
+                <img src={brand.brandImg} alt={brand.name} /> 
+                {brand.name}
               </td>
               <td className="action">
                 <button>
