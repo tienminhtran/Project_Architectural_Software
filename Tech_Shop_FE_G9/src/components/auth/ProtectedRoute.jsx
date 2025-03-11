@@ -3,21 +3,21 @@ import { useSelector } from "react-redux";
 import { Navigate, Outlet  } from "react-router-dom";
 
 const ProtectedRoute = ({ allowedRoles }) => {
-  const { isAuthenticated, role } = useSelector((state) => state.auth);
+  const { isAuthenticated, roles } = useSelector((state) => state.auth);
   if (!isAuthenticated) {
     return <Navigate to="/login" replace />; // Chưa đăng nhập -> chuyển hướng đến trang đăng nhập
   }
 
 
-  console.log("ss",role);
+  console.log("ss",roles);
 
   //Admin có thể truy cập tất cả
-  if(role === "ROLE_ADMIN") {
+  if(roles[0] === "ROLE_ADMIN") {
     return <Outlet />;
   }
 
     // Kiểm tra role của người dùng có trong allowedRoles không
-  if (!allowedRoles.includes(role)) {
+  if (!allowedRoles.includes(roles[0])) {
     return <Navigate to="/" replace />; // Không có quyền truy cập -> chuyển hướng về trang chủ
   }
 

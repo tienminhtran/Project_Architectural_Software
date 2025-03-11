@@ -18,7 +18,7 @@ const Menu = () => {
   return (
     <div className="sidebar">
       <div className="logo">
-        <img src="/public/images/logo/logo-large.png" alt="Site Logo" />
+        <img src="/images/logo/logo-large.png" alt="Site Logo" />
       </div>
 
       <div className="menuss">
