@@ -12,6 +12,10 @@ const AdminDashboardPage = () => {
     bestSeller,
     recentlyProduct,
     loyalCustomer,
+    countByRoleManager,
+    countByRoleUser,
+    totalOrder,
+    totalOrderPending
   } = useDashboardData();
 
   return (
@@ -45,7 +49,7 @@ const AdminDashboardPage = () => {
       <div className="card-stats">
         <div className="card-box orange">
           <div className="card-info">
-            <h3>2</h3>
+            <h3>{countByRoleUser}</h3>
             <p>Customers</p>
           </div>
           <FaUsers className="card-icon" />
@@ -53,7 +57,7 @@ const AdminDashboardPage = () => {
 
         <div className="card-box blue">
           <div className="card-info">
-            <h3>3</h3>
+            <h3>{countByRoleManager}</h3>
             <p>Staff</p>
           </div>
           <FaRegIdCard className="card-icon" />
@@ -61,7 +65,7 @@ const AdminDashboardPage = () => {
 
         <div className="card-box darkblue">
           <div className="card-info">
-            <h3>12</h3>
+            <h3>{totalOrder}</h3>
             <p>Purchase Invoice</p>
           </div>
           <FaClipboardList className="card-icon" />
@@ -69,7 +73,7 @@ const AdminDashboardPage = () => {
 
         <div className="card-box green">
           <div className="card-info">
-            <h3>12</h3>
+            <h3>{totalOrderPending}</h3>
             <p>Purchase Pending</p>
           </div>
           <FaFile className="card-icon" />
