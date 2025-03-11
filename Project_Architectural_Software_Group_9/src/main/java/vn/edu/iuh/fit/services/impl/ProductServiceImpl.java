@@ -35,6 +35,9 @@ import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
 
+import static vn.edu.iuh.fit.utils.ImageUtil.isValidSuffixImage;
+import static vn.edu.iuh.fit.utils.ImageUtil.saveFile;
+
 /*
  * @description:
  * @author: Sinh Phan Tien
@@ -206,35 +209,6 @@ public class ProductServiceImpl implements ProductService {
         }
     }
 
-    private boolean isValidSuffixImage(String img) {
-        return img.endsWith(".jpg") || img.endsWith(".jpeg") ||
-                img.endsWith(".png") || img.endsWith(".gif") ||
-                img.endsWith(".bmp");
-    }
-
-    public String saveFile(MultipartFile file) throws IOException {
-        // khi nao lam fe upload file thi dung
-        String uploadDir = "./uploads";
-        Path uploadPath = Paths.get(uploadDir);
-        if (!Files.exists(uploadPath)) {
-            Files.createDirectories(uploadPath);
-        }
-
-        try {
-            // get file name
-            String fileName = file.getOriginalFilename();
-            // generate code random base on UUID
-            String uniqueFileName = UUID.randomUUID().toString() + "_" + LocalDate.now() + "_" + fileName;
-            Files.copy(file.getInputStream(), uploadPath.resolve(uniqueFileName), StandardCopyOption.REPLACE_EXISTING);
-            return uniqueFileName;
-        } catch (Exception e) {
-            if (e instanceof FileAlreadyExistsException) {
-                throw new RuntimeException("Filename already exists.");
-            }
-
-            throw new RuntimeException(e.getMessage());
-        }
-    }
 
     @Override
     public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
@@ -278,7 +252,6 @@ public class ProductServiceImpl implements ProductService {
                 // Handel thumbnail product
                 thumbnail = saveFile(firstImage);
 
-                product.setThumbnail(thumbnail);
 
                 //Handel images product
                 for (MultipartFile file : fileImage) {
@@ -289,9 +262,11 @@ public class ProductServiceImpl implements ProductService {
                     images.add(saveFile(file));
                 }
 
-                product.setImages(images);
 
             }
+            product.setThumbnail(thumbnail);
+            product.setImages(images);
+
 
             product = productRepository.save(product);
             return this.convertToDto(product, ProductResponse.class);
