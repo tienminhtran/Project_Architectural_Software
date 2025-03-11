@@ -60,7 +60,7 @@ const Menu_Header = () => {
             {/* Avatar + Dropdown Menu */}
             <div className="menu-container" ref={menuRef}>
                 <span className="username">{userLogin.lastname} {userLogin.firstname}</span>
-
+        
                 <div className="avatar" onClick={toggleMenu}>
                     <img src="/images/avatar/avtdefault.jpg" alt="User Avatar" className="avatar-img" />
                     <span className="status-indicator"></span>

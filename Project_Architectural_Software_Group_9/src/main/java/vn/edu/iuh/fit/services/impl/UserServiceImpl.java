@@ -203,4 +203,14 @@ public class UserServiceImpl implements UserService {
         LocalDateTime endDateTime = endDate.atStartOfDay();
         return orderDetailRepository.findTopCustomers(startDateTime, endDateTime);
     }
+
+    @Override
+    public int countByRoleUser() {
+        return userRepository.countByRoleUser("USER");
+    }
+
+    @Override
+    public int countByRoleManager() {
+        return userRepository.countByRoleUser("MANAGER");
+    }
 }

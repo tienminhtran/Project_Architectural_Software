@@ -150,4 +150,24 @@ public class UserRestController {
     }
 
 
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/countByRoleUser")
+    public ResponseEntity<BaseResponse<Integer>> countByRoleUser() {
+        int count = userService.countByRoleUser();
+        return ResponseEntity.ok(BaseResponse.<Integer>builder()
+                .status("SUCCESS")
+                .message("Count by role user success")
+                .response(count).build());
+    }
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/countByRoleManager")
+    public ResponseEntity<BaseResponse<Integer>> countByRoleManager() {
+        int count = userService.countByRoleManager();
+        return ResponseEntity.ok(BaseResponse.<Integer>builder()
+                .status("SUCCESS")
+                .message("Count by role manager success")
+                .response(count).build());
+    }
+
 }

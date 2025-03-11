@@ -41,6 +41,9 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
     @Query("SELECT new vn.edu.iuh.fit.dtos.response.TopCustomerResponse(" +
             "o.user.id, " +
             "CONCAT(o.user.lastname, ' ', o.user.firstname), " + // Tên đầy đủ của khách hàng
+            "o.user.phoneNumber, " +
+            "o.user.email, " +
+            "o.user.dayOfBirth, " +
             "CAST(SUM(od.quantity * od.product.price * (1 - COALESCE(v.value, 0) / 100)) AS BIGDECIMAL)" + // Tính tổng số tiền đã mua (đã giảm giá nếu có voucher)
             ") " +
             "FROM OrderDetail od " +

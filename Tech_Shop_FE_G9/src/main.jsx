@@ -6,11 +6,17 @@ import "./index.css";
 import App from "./App.jsx";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import store from "./store/store.js";
+import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
 
+
+// Tạo một instance của QueryClient
+const queryClient = new QueryClient();
 createRoot(document.getElementById("root")).render(
   <StrictMode>
-    <Provider store={store}>
+    <QueryClientProvider client={queryClient}>
+      <Provider store={store}>
         <App />
-    </Provider>
+      </Provider>
+    </QueryClientProvider>
   </StrictMode>
 );
