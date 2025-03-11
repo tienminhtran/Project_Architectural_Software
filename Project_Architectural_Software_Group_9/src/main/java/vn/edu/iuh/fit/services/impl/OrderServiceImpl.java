@@ -16,6 +16,7 @@ import vn.edu.iuh.fit.dtos.response.OrderResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.ProductResponse;
 import vn.edu.iuh.fit.entities.Order;
+import vn.edu.iuh.fit.entities.OrderDetail;
 import vn.edu.iuh.fit.enums.OrderStatus;
 import vn.edu.iuh.fit.repositories.OrderRepository;
 import vn.edu.iuh.fit.services.OrderService;
@@ -88,5 +89,14 @@ public class OrderServiceImpl implements OrderService {
                 .limit(6)
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public int getTotalProductSold() {
+        List<Order> orders = orderRepository.findByStatus(OrderStatus.DELIVERED);
+        return orders.stream()
+                .flatMap(order -> order.getOrderDetails().stream())
+                .mapToInt(OrderDetail::getQuantity)
+                .sum();
     }
 }

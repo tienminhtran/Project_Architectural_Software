@@ -26,4 +26,6 @@ public interface OrderService {
     int getTotalOrders();
 
     List<OrderResponse> getRecentlyOrders();
+
+    int getTotalProductSold();
 }

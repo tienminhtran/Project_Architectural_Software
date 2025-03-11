@@ -76,4 +76,9 @@ public class OrderRestController {
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get recent order").response(orderResponses).build());
     }
+
+    @GetMapping("/total-product-sold")
+    public ResponseEntity<BaseResponse<?>> getTotalProductSold() {
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get total product sold").response(orderService.getTotalProductSold()).build());
+    }
 }
