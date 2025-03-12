@@ -16,7 +16,10 @@ const BrandPage = () => {
   const [subCategory, setSubCategory] = useState("");
   const [brand, setBrand] = useState("");
   const [selectedRows, setSelectedRows] = useState([]);
-
+  const filteredBrands = brands.filter((brand) =>
+    brand.name.toLowerCase().includes(search.toLowerCase())
+  );
+  
 
 
   const toggleFilters = () => {
@@ -105,29 +108,42 @@ const BrandPage = () => {
           </tr>
         </thead>
         <tbody>
-          {brands.map((brand) => (
-            <tr key={brand.id}>
-              <td>
-                <input
-                  type="checkbox"
-                  checked={selectedRows.includes(brand.id)}
-                  onChange={() => handleSelectRow(brand.id)}
+          {filteredBrands.length > 0 ? (
+            filteredBrands.map((brand) => (
+              <tr key={brand.id}>
+                <td>
+                  <input
+                    type="checkbox"
+                    checked={selectedRows.includes(brand.id)}
+                    onChange={() => handleSelectRow(brand.id)}
+                  />
+                </td>
+                <td>
+                  <img src={brand.brandImg} alt={brand.name} />
+                  {brand.name}
+                </td>
+                <td className="action">
+                  <button>
+                    <FaPen />
+                  </button>
+                  <button>
+                    <FaTrashAlt />
+                  </button>
+                </td>
+              </tr>
+            ))
+          ) : (
+            <tr>
+              <td colSpan="3" style={{ textAlign: "center", fontWeight: "bold", padding: "10px" }}>
+                <img
+                  src="../../../public/images/icon/khong-tim-thay.png"
+                  alt="not-found"
+                  style={{ width: "20%", height: "20%" }}
                 />
-              </td>
-              <td>
-                <img src={brand.brandImg} alt={brand.name} /> 
-                {brand.name}
-              </td>
-              <td className="action">
-                <button>
-                  <FaPen /> 
-                </button>
-                <button>
-                  <FaTrashAlt /> 
-                </button>
+                {/* Không tìm thấy thương hiệu nào */}
               </td>
             </tr>
-          ))}
+          )}
         </tbody>
       </table>
     </div>
