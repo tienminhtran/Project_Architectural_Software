@@ -30,11 +30,14 @@ const ProfilePage = () => {
 
   // Xu ly slit file name
   const getFileNameSplit = (fileName) => {
+    if(!fileName) return;
     setImageName(fileName.replace(/^[^_]+_[^_]+_/, "")); 
   };
 
   React.useEffect(() => {
-    getFileNameSplit(userInfor.image);
+    if(userInfor?.image) {
+      getFileNameSplit(userInfor.image);
+    }
   }, [userInfor.image]);
 
 
@@ -75,7 +78,7 @@ const ProfilePage = () => {
         <div className="profile-banner">
           <div className="avatar-container">
             <img
-              src={`/public/images/avatar/${imageName}`}
+              src={`/images/avatar/${imageName}`}
               alt="User Avatar"
               className="avatar"
             />

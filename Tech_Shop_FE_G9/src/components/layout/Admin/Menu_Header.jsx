@@ -15,8 +15,7 @@ const Menu_Header = () => {
     const { userInfor} = useUser();
     
     const [imageName, setImageName] = useState("");
-
-
+    
     // Toggle menu khi click vào avatar
     const toggleMenu = () => {
         setIsOpen((prev) => !prev);
@@ -24,12 +23,16 @@ const Menu_Header = () => {
 
     // Xu ly slit file name
     const getFileNameSplit = (fileName) => {
-        setImageName(fileName.replace(/^[^_]+_[^_]+_/, "")); 
+        if (!fileName) return;
+        setImageName(fileName.replace(/^[^_]+_[^_]+_/, ""));
     };
-
+    
     React.useEffect(() => {
-        getFileNameSplit(userInfor.image);
+        if (userInfor?.image) {
+            getFileNameSplit(userInfor.image);
+        }
     }, [userInfor.image]);
+    
 
     // Ẩn menu khi click ra ngoài
     useEffect(() => {
@@ -59,7 +62,7 @@ const Menu_Header = () => {
                 <span className="username">{userInfor.lastname} {userInfor.firstname}</span>
         
                 <div className="avatar" onClick={toggleMenu}>
-                    <img src={`/public/images/avatar/${imageName}`} alt="User Avatar" className="avatar-img" />
+                    <img src={`/images/avatar/${imageName}`} alt="User Avatar" className="avatar-img" />
                     <span className="status-indicator"></span>
                 </div>
 
