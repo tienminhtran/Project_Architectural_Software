@@ -153,8 +153,8 @@ public class UserServiceImpl implements UserService {
             user.setPhoneNumber(userRequest.getPhoneNumber());
             user.setGender(userRequest.getGender());
             user.setDayOfBirth(userRequest.getDob());
-            user.setActive(userRequest.isActive());
             user.setRole(role);
+            user.setUpdatedAt(LocalDateTime.now());
 
             MultipartFile file = userRequest.getImage();
             String image="";

@@ -1,6 +1,7 @@
 package vn.edu.iuh.fit.dtos.request;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -17,6 +18,7 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonIgnoreProperties(ignoreUnknown = true) // bo qua cac thuoc tinh khong co trong class
 public class UserRequest {
     Long id;
 
@@ -54,7 +56,7 @@ public class UserRequest {
     boolean active;
 
     MultipartFile image;
-
+    @JsonProperty("role")
     Long roleId;
 
 }
