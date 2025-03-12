@@ -8,6 +8,7 @@ package vn.edu.iuh.fit.controllers;/*
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.request.BrandRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
@@ -25,6 +26,7 @@ public class BrandRestController {
     private BrandService brandService;
 
     @GetMapping("")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getAllBrandByPage(@RequestParam(defaultValue = "0", required = false) Integer pageNo,
                                                              @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
         if (pageNo == null) {
@@ -41,6 +43,7 @@ public class BrandRestController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getAllBrand() {
         List<BrandResponse> brandResponses = brandService.getAllBrands();
         if (brandResponses.isEmpty()) {
@@ -50,6 +53,7 @@ public class BrandRestController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getBrandById(@PathVariable Long id) {
         Object brand = brandService.findById(id);
         if (brand == null) {
@@ -59,6 +63,7 @@ public class BrandRestController {
     }
 
     @PostMapping("")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> createBrand(@RequestBody BrandRequest brandRequest) {
         if (brandService.existsBrand(brandRequest.getName())) {
             return ResponseEntity.badRequest()
@@ -72,6 +77,7 @@ public class BrandRestController {
     }
 
     @PutMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> updateBrand(@RequestBody BrandRequest brandRequest, @PathVariable Long id) {
         BrandResponse updatedBrand = brandService.update(brandRequest, id);
         if (updatedBrand == null) {
@@ -81,6 +87,7 @@ public class BrandRestController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> deleteBrand(@PathVariable Long id) {
         boolean isDeleted = brandService.delete(id);
         if (!isDeleted) {

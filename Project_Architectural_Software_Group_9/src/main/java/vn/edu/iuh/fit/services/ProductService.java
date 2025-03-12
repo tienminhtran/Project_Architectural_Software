@@ -31,14 +31,19 @@ public interface ProductService {
     PageResponse<ProductResponse> getProductsByPage(int pageNo, int pageSize);
 
     public ProductResponse createProduct(ProductRequest productRequest);
+
     public ProductResponse updateProduct(Long id, ProductRequest productRequest);
+
     boolean existsProduct(String name);
 
 
     int getTotalStockQuantity();
 
     List<BestSellingProductResponse> getBestSellingProducts(LocalDate startDate, LocalDate endDate);
+
     List<ProductResponse> getRecentProducts();
+
     Double calculateTotalRevenue();
+
     int countProducts();
 }
