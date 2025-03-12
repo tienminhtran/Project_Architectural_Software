@@ -1,5 +1,6 @@
 package vn.edu.iuh.fit.dtos.response;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -22,6 +23,7 @@ public class UserResponse implements Serializable {
     LocalDateTime createdAt;
     LocalDateTime updatedAt;
     Long id;
+    @JsonProperty("dob")
     LocalDate dayOfBirth;
     @NotNull
     @Size(max = 100)
@@ -42,6 +44,7 @@ public class UserResponse implements Serializable {
     @Size(max = 255)
     String password;
     @Size(max = 20)
+    @JsonProperty("phone_number")
     String phoneNumber;
     @NotNull
     @Size(max = 100)

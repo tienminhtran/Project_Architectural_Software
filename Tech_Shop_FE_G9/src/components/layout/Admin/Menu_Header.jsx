@@ -1,21 +1,33 @@
-import React, { useState, useEffect, useRef, useCallback } from "react";
+import React, { useState, useEffect, useRef } from "react";
 import { FaUser, FaSignOutAlt, FaLock } from "react-icons/fa";
 import "/src/assets/css/adminMenuHead.css"; // Import CSS riêng
 import { Link } from "react-router-dom";
-import { useSelector } from "react-redux";
-import { getUsers } from "../../../services/userService";
+
+import useUser from "../../../hooks/useUser";
+
 
 const Menu_Header = () => {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
+    const [imageName, setImageName] = useState("");
     
-    const { user } = useSelector((state) => state.auth);
-    const [userLogin, setUserLogin] = useState({});
+    // const { user } = useSelector((state) => state.auth);
+    // get user login
+    const { userInfor} = useUser();
 
     // Toggle menu khi click vào avatar
     const toggleMenu = () => {
         setIsOpen((prev) => !prev);
     };
+
+    // Xu ly slit file name
+    const getFileNameSplit = (fileName) => {
+        setImageName(fileName.replace(/^[^_]+_[^_]+_/, "")); 
+    };
+
+    React.useEffect(() => {
+        getFileNameSplit(userInfor.image);
+    }, [userInfor.image]);
 
     // Ẩn menu khi click ra ngoài
     useEffect(() => {
@@ -31,23 +43,6 @@ const Menu_Header = () => {
         };
     }, []);
 
-    const fetchUsers = useCallback(async () => {
-        console.log(user);
-        if(!user) return;
-
-        try {
-            const response = await getUsers(user); // Chắc chắn user có id
-            setUserLogin(response.response);
-            console.log(response);
-        } catch (error) {
-            console.log("Failed to fetch users: ", error);
-        }
-    }, [user]);
-
-    useEffect(() => {
-        fetchUsers();
-    }, [fetchUsers]);
-
 
     return (
         <div className="header">
@@ -59,10 +54,10 @@ const Menu_Header = () => {
 
             {/* Avatar + Dropdown Menu */}
             <div className="menu-container" ref={menuRef}>
-                <span className="username">{userLogin.lastname} {userLogin.firstname}</span>
+                <span className="username">{userInfor.lastname} {userInfor.firstname}</span>
         
                 <div className="avatar" onClick={toggleMenu}>
-                    <img src="/images/avatar/avtdefault.jpg" alt="User Avatar" className="avatar-img" />
+                    <img src={`/public/images/avatar/${imageName}`} alt="User Avatar" className="avatar-img" />
                     <span className="status-indicator"></span>
                 </div>
 

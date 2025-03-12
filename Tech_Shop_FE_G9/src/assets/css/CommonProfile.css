@@ -45,7 +45,7 @@
     justify-content: center;
 }
 
-.avatar {
+.profile-banner .avatar {
     width: 60px;
     height: 60px;
     border-radius: 50%;
@@ -53,7 +53,7 @@
 
 /* Tên User */
 .username {
-    font-size: 30px;
+    font-size: 25px;
     color: white;
 }
 
@@ -65,24 +65,25 @@
     margin-top: 40px;
 }
 
-.form-group {
+.profile-form .form-group {
     display: flex;
     flex-direction: column;
 }
 
-.form-group label {
-    font-weight: bold;
+.profile-form .form-group label {
+    font-weight: 500;
     margin-bottom: 5px;
-    font-size: 20px;
+    font-size: 18px;
 }
 
-.form-group input {
+.profile-form .form-group input {
     padding: 10px;
-    border: 1px solid rgb(99, 97, 97);
+    border: 1px solid rgb(201, 199, 199);
     border-radius: 5px;
-    background: #f9f9f9;
+    background: #faf9f9;
     cursor: not-allowed;
-    font-size: large;
+    font-size: medium;
+    color: rgb(133, 133, 133);
 }
 
 .profile-form button {
@@ -90,6 +91,16 @@
     border: none;
     border-radius: 5px;
     background: #ecbb7b;
+    /* color: white; */
+    font-size: 20px;
+    /* cursor: pointer; */
+}
+
+.profile-form button:hover {
+    padding: 10px;
+    border: none;
+    border-radius: 5px;
+    background: #e99221;
     /* color: white; */
     font-size: 20px;
     /* cursor: pointer; */

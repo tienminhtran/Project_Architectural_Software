@@ -196,7 +196,7 @@ public class ProductRestController {
 
         return ResponseEntity.ok(BaseResponse.builder()
                 .status("SUCCESS")
-                .message("Create product success")
+                .message("Update product success")
                 .response(newProduct)
                 .build());
     }
