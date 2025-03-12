@@ -9,11 +9,13 @@ import useUser from "../../../hooks/useUser";
 const Menu_Header = () => {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
-    const [imageName, setImageName] = useState("");
     
     // const { user } = useSelector((state) => state.auth);
     // get user login
     const { userInfor} = useUser();
+    
+    const [imageName, setImageName] = useState("");
+
 
     // Toggle menu khi click vào avatar
     const toggleMenu = () => {
