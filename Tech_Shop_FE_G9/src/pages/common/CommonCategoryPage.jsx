@@ -1,7 +1,7 @@
-
 import React, { useState } from "react";
-import "/src/assets/css/CommonCategoryPage.css";
-import { FaPen, FaTrashAlt } from "react-icons/fa";
+// import "/src/assets/css/CommonCategoryPage.css";
+import { BsPencil, BsTrash, BsSearch } from "react-icons/bs";
+
 import { Link } from "react-router-dom";
 
 const CategoryPage = () => {
@@ -39,18 +39,20 @@ const CategoryPage = () => {
   };
 
   return (
-    <div className="category-page">
-      <h2>Product Category list</h2>
-      <p>View/Search product Category</p>
-
-      {/* Nút thêm */}
-      <div className="button-add-remove">
-        <button className="add-button">
-          <Link to="/common/AddCategoryPage">Add Category</Link>
-        </button>
-        <button className="dele-button">
-          <Link to="/common/AddCategoryPage">Remove Category</Link>
-        </button>
+    <div className="page-wrapper">
+      <div class="page-header d-flex justify-content-between align-items-center">
+        <div class="page-title">
+          <h3>Product Category list</h3>
+          <p>View/Search Category</p>
+        </div>
+        <div class="header-action">
+          <Link
+            to="/common/AddCategoryPage"
+            className="btn btn-warning text-white fw-bold rounded px-4 py-2 text-decoration-none"
+          >
+            Create Category
+          </Link>
+        </div>
       </div>
 
       {/* Bộ lọc */}
@@ -67,12 +69,18 @@ const CategoryPage = () => {
               value={search}
               onChange={(e) => setSearch(e.target.value)}
             />
-            <select value={category} onChange={(e) => setCategory(e.target.value)}>
+            <select
+              value={category}
+              onChange={(e) => setCategory(e.target.value)}
+            >
               <option value="">Choose Category</option>
               <option value="laptops">Laptops</option>
               <option value="accessories">Accessories</option>
             </select>
-            <select value={subCategory} onChange={(e) => setSubCategory(e.target.value)}>
+            <select
+              value={subCategory}
+              onChange={(e) => setSubCategory(e.target.value)}
+            >
               <option value="">Choose Sub Category</option>
               <option value="gaming">Gaming</option>
               <option value="business">Business</option>
@@ -89,7 +97,7 @@ const CategoryPage = () => {
       </div>
 
       {/* Bảng dữ liệu */}
-      <table className="brand-table">
+      <table className="table table-responsive ">
         <thead>
           <tr>
             <th>
@@ -97,6 +105,7 @@ const CategoryPage = () => {
                 type="checkbox"
                 checked={selectedRows.length === categorys.length}
                 onChange={handleSelectAll}
+                className="form-check-input"
               />
             </th>
             <th>Category Name</th>
@@ -111,16 +120,15 @@ const CategoryPage = () => {
                   type="checkbox"
                   checked={selectedRows.includes(item.id)}
                   onChange={() => handleSelectRow(item.id)}
+                  className="form-check-input"
                 />
               </td>
               <td>{item.name}</td>
               <td className="action">
-                <button>
-                  <FaPen /> 
-                </button>
-                <button>
-                  <FaTrashAlt /> 
-                </button>
+                <div className="d-flex gap-3">
+                  <BsPencil className="text-secondary fs-5" role="button" />
+                  <BsTrash className="text-danger fs-5" role="button" />
+                </div>
               </td>
             </tr>
           ))}
@@ -131,6 +139,3 @@ const CategoryPage = () => {
 };
 
 export default CategoryPage;
-
-
-

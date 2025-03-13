@@ -82,65 +82,7 @@
     transform: scale(1.1);
   }
   
-  /* Filter section container */
-  .filter-container {
-    display: flex;
-    /* align-items: center; */
-    justify-content: space-between;
-    margin-bottom: 30px;
-  }
-  
-  .filter-toggle {
-    padding: 10px 15px;
-    font-size: 16px;
-    background-color: #007bff;
-    color: white;
-    border: none;
-    border-radius: 5px;
-    cursor: pointer;
-  }
-  
-  .filter-toggle:hover {
-    background-color: #0056b3;
-  }
-  
-  /* Styles for the filters when visible */
-  .filters {
-    display: flex;
-    gap: 15px;
-    align-items: center;
-    width: 100%;
-  }
-  
-  .filters input,
-  .filters select {
-    padding: 8px 12px;
-    font-size: 14px;
-    border: 1px solid #ccc;
-    border-radius: 5px;
-    box-sizing: border-box;
-  }
-  
-  .filters input {
-    width: 50%;
-    background-color: rgb(255, 255, 255);
-    /* bỏ viền trái, phải, trên */
-    border-left: none;
-    border-right: none;
-    border-top: none;
-    /* viền dưới màu đen */
-    border-bottom: 1px srgb(54, 54, 54) rgb(35, 101, 201);
-    font-size: 20px;
-    color: #343a40;
-  }
-  
-  .filters select {
-    width: 80%;
-    background-color: rgb(255, 255, 255);
-    color: #343a40;
-    border: #0056b3;
-    font-size: 20px;
-  }
+ 
   
   /* Table styles */
   .brand-table {
@@ -207,8 +149,8 @@
     transform: scale(1.1);
   }
   
-  .action {
+  /* .action {
     display: flex;
     justify-content: center;
     gap: 10px;
-  }
+  } */
