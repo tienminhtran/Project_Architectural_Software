@@ -1,0 +1,23 @@
+.page-wrapper {
+    font-family: Arial, sans-serif;
+    margin: 20px;
+    padding: 20px;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+    max-height: 100vh; /* Chiều cao tối đa bằng với chiều cao màn hình */
+    overflow-y: auto;
+  }
+  
+  /* Heading styles */
+  .page-wrapper h3 {
+    font-weight: 600;
+    color: #343a40;
+    margin-bottom: 10px;
+  }
+  
+  .page-wrapper p {
+    font-size: 16px;
+    color: #6c757d;
+    margin-bottom: 20px;
+  }
