@@ -1,16 +1,26 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
-import { BsPencil, BsTrash, BsSearch} from "react-icons/bs";
+import { BsPencil, BsTrash, BsSearch } from "react-icons/bs";
+import useVoucher from "../../hooks/useVoucher";
+import ReactPaginate from "react-paginate";
 
 const VoucherPage = () => {
   const [selectedRows, setSelectedRows] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = 10;
+  const {vouchers_paging} = useVoucher(currentPage, pageSize);
 
-  const vouchers = [
-    { id: 1, name: "Voucher 1" },
-    { id: 2, name: "Voucher 2 " },
-    { id: 3, name: "Voucher 3 " },
-  ];
+  const { data, isLoading, isError, error } = vouchers_paging;
+  console.log(data);
+  const vouchers = data.values || [];
+
+  if (isLoading) return <p>Loading vouchers...</p>;
+  if (isError) return <p>Error: {error.message}</p>;
+
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected.selected);
+  };
 
   const handleSelectRow = (id) => {
     setSelectedRows((prev) =>
@@ -46,12 +56,12 @@ const VoucherPage = () => {
       <div class="page-content">
         <div className="input-group w-25">
           <span className="input-group-text">
-           <BsSearch />
+            <BsSearch />
           </span>
           <input type="text" className="form-control" placeholder="Search..." />
         </div>
 
-        <table class="table table-striped table-responsive">
+        <table class="table table-hover table-responsive">
           <thead>
             <tr>
               <th>
@@ -81,9 +91,9 @@ const VoucherPage = () => {
                   />
                 </td>
                 <td>{voucher.name}</td>
-                <td>{voucher.name}</td>
-                <td>{voucher.name}</td>
-                <td>{voucher.name}</td>
+                <td>{voucher.value}</td>
+                <td>{voucher.quantity}</td>
+                <td>{voucher.expiredDate}</td>
                 <td>
                   <div className="d-flex gap-3">
                     <BsPencil className="text-secondary fs-5" role="button" />
@@ -95,6 +105,24 @@ const VoucherPage = () => {
           </tbody>
         </table>
       </div>
+      <ReactPaginate
+        previousLabel={"←"}
+        nextLabel={"→"}
+        breakLabel={"..."}
+        pageCount={data.totalPages}
+        onPageChange={handlePageChange} // Hàm xử lý khi chuyển trang
+        containerClassName={"pagination d-flex justify-content-end"} // Class của thẻ div bao bọc phân trang
+        pageClassName={"page-item"} // Class của thẻ li của mỗi trang
+        pageLinkClassName={"page-link"} // Class của thẻ a của mỗi trang
+        previousClassName={"page-item"} // Class của thẻ li của nút Previous
+        previousLinkClassName={"page-link"} // Class của thẻ a của nút Previous
+        nextClassName={"page-item"} // Class của thẻ li của nút Next
+        nextLinkClassName={"page-link"} // Class của thẻ a của nút Next
+        breakClassName={"page-item"} 
+        breakLinkClassName={"page-link"}
+        activeClassName={"active"} // Class của trang hiện tại
+        />
+
     </div>
   );
 };
