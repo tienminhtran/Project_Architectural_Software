@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { Link } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
-import { BsPencil, BsTrash } from "react-icons/bs";
+import { BsPencil, BsTrash, BsSearch} from "react-icons/bs";
 
 const VoucherPage = () => {
   const [selectedRows, setSelectedRows] = useState([]);
@@ -30,7 +30,7 @@ const VoucherPage = () => {
     <div className="page-wrapper">
       <div class="page-header d-flex justify-content-between align-items-center">
         <div class="page-title">
-          <h3>Product Category list</h3>
+          <h3>Product Voucher list</h3>
           <p>View/Search Voucher</p>
         </div>
         <div class="header-action">
@@ -46,12 +46,12 @@ const VoucherPage = () => {
       <div class="page-content">
         <div className="input-group w-25">
           <span className="input-group-text">
-            <FaSearch />
+           <BsSearch />
           </span>
           <input type="text" className="form-control" placeholder="Search..." />
         </div>
 
-        <table class="table table-striped table-hover table-responsive">
+        <table class="table table-striped table-responsive">
           <thead>
             <tr>
               <th>
@@ -71,7 +71,7 @@ const VoucherPage = () => {
           </thead>
           <tbody>
             {vouchers.map((voucher) => (
-              <tr key={voucher.id}>
+              <tr key={voucher.id} className="align-middle">
                 <td>
                   <input
                     type="checkbox"
