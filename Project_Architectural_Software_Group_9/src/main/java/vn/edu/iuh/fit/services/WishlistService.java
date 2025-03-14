@@ -11,6 +11,7 @@ import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.WishlistItemResponse;
 import vn.edu.iuh.fit.entities.Wishlist;
 
+import java.util.List;
 import java.util.Optional;
 
 /*
@@ -21,6 +22,10 @@ import java.util.Optional;
  */
 public interface WishlistService {
     Optional<WishlistItemResponse> findById(Long id);
+
     WishlistItemResponse save(WishlistRequest request);
+
     boolean existsWishlist(Long userId);
+
+    List<WishlistItemResponse> getWishlistByUserId(Long userId);
 }
