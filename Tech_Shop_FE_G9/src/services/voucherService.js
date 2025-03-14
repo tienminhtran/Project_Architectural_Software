@@ -12,3 +12,9 @@ export const getAllVouchers_Paging = async (pageNo, pageSize) => {
     const response = await axiosInstance.get(`/voucher?pageNo=${pageNo}&pageSize=${pageSize}`);
     return response.data;
 };
+
+export const createVoucher = async (voucher) => {
+    
+    const response = await axiosInstance.post('/voucher', voucher);
+    return response.data;
+};
