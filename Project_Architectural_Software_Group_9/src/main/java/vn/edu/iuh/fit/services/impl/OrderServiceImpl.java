@@ -12,6 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.fit.dtos.response.OrderDetailResponse;
 import vn.edu.iuh.fit.dtos.response.OrderResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.ProductResponse;
@@ -65,7 +66,7 @@ public class OrderServiceImpl implements OrderService {
         Pageable page = PageRequest.of(pageNo, pageSize);
         Page<Order> orders = orderRepository.findAll(page);
         PageResponse<OrderResponse> response = new PageResponse<>();
-        if(orders.hasContent()) {
+        if (orders.hasContent()) {
             response.setPage(pageNo);
             response.setSize(pageSize);
             response.setTotal(orders.getNumberOfElements());
@@ -104,5 +105,21 @@ public class OrderServiceImpl implements OrderService {
     public int getTotalOrderPending() {
         List<Order> orders = orderRepository.findByStatus(OrderStatus.PENDING);
         return orders.size();
+    }
+
+    @Override
+    public boolean updateOrderStatus(Long orderId, OrderStatus orderStatus) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setStatus(orderStatus);
+        orderRepository.save(order);
+        return true;
+    }
+
+    @Override
+    public List<OrderDetailResponse> getOrderDetailsByOrderId(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+        return order.getOrderDetails().stream()
+                .map(orderDetail -> modelMapper.map(orderDetail, OrderDetailResponse.class))
+                .collect(Collectors.toList());
     }
 }

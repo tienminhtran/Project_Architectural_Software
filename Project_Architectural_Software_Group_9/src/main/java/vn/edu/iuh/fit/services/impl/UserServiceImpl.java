@@ -103,7 +103,7 @@ public class UserServiceImpl implements UserService {
                     "User is under 15 years old"));
 //            throw new IllegalArgumentException("User is under 15 years old");
         }
-     }
+    }
 
     @Override
     public UserResponse getUserByUsername(String username) {
@@ -120,12 +120,12 @@ public class UserServiceImpl implements UserService {
 
         Role role = roleRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 1"));
         validation(userRequest, result);
-        if(!result.hasErrors()) {
+        if (!result.hasErrors()) {
             User user = this.convertToEntity(userRequest, UserRequest.class);
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
             user.setRole(role);
 
-           user = userRepository.save(user);
+            user = userRepository.save(user);
 
             return this.convertToDto(user, UserResponse.class);
         }
@@ -158,7 +158,7 @@ public class UserServiceImpl implements UserService {
 
         validation(userRequest, result);
 
-        if(!result.hasErrors()) {
+        if (!result.hasErrors()) {
             User user = this.convertToEntity(userRequest, UserRequest.class);
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
             user.setRole(role);
@@ -212,5 +212,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public int countByRoleManager() {
         return userRepository.countByRoleUser("MANAGER");
+    }
+
+    @Override
+    public UserResponse updateUserInfo(Long userId, UserRequest userRequest) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Can not find User with id: " + userId));
+        modelMapper.map(userRequest, user);
+        User updatedUser = userRepository.save(user);
+        return this.convertToDto(updatedUser, UserResponse.class);
     }
 }
