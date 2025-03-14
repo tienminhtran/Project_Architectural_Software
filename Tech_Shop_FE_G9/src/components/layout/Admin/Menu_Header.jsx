@@ -2,6 +2,9 @@ import React, { useState, useEffect, useRef } from "react";
 import { FaUser, FaSignOutAlt, FaLock } from "react-icons/fa";
 import "/src/assets/css/adminMenuHead.css"; // Import CSS riêng
 import { Link } from "react-router-dom";
+import { useDispatch } from "react-redux";
+import { logout } from "../../../store/slices/AuthSlice";
+import { removeAccessToken } from "../../../services/authService";
 
 import useUser from "../../../hooks/useUser";
 
@@ -9,6 +12,7 @@ import useUser from "../../../hooks/useUser";
 const Menu_Header = () => {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
+    const dispatch = useDispatch();
     
     // const { user } = useSelector((state) => state.auth);
     // get user login
@@ -48,6 +52,11 @@ const Menu_Header = () => {
         };
     }, []);
 
+    // Xử lý logout
+    const handleLogout = () => {
+        dispatch(logout());
+        removeAccessToken();
+    };
 
     return (
         <div className="header">
@@ -81,7 +90,7 @@ const Menu_Header = () => {
                     </li>
 
                     <li className="menu-item logout">
-                        <Link to="/login">
+                        <Link to="/login" role="button" onClick={handleLogout}>
                             <FaSignOutAlt /> Logout
                         </Link>
                     </li>
