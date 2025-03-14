@@ -18,3 +18,15 @@ export const createVoucher = async (voucher) => {
     const response = await axiosInstance.post('/voucher', voucher);
     return response.data;
 };
+
+export const updateVoucher = async (voucher) => {
+    
+    const response = await axiosInstance.put(`/voucher/${voucher.id}`, voucher);
+    return response.data;
+};
+
+export const deleteVoucher = async (id) => {
+    
+    const response = await axiosInstance.delete(`/voucher/${id}`);
+    return response.data;
+};

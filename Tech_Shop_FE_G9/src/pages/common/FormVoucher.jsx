@@ -1,29 +1,46 @@
 import React, {useState} from "react";
 import { Form } from "react-bootstrap";
+import { useLocation, useNavigate } from "react-router-dom";
 import useVoucher from "../../hooks/useVoucher";
 
  const FormVoucher = () => {
+    const location = useLocation();
+    const navigate = useNavigate();
     const initialState = {
         name: "",
-        value: "",
-        quantity: "",
+        value: 0,
+        quantity: 0,
         expiredDate: ""
     };
+    const vouchers = location.state?.voucher || initialState;
+    console.log(vouchers);
     
-    const [formData, setFormData] = useState(initialState);
-    const { createVoucher } = useVoucher(0, 1);
+    const [formData, setFormData] = useState(vouchers);
+    const { createVoucher, updateVoucher } = useVoucher(0, 1);
 
+    // Xu ly thay doi gia tri cua input
     const handleChange = (e) => {
         setFormData({ ...formData, [e.target.name]: e.target.value });
     };
-    
+
+    // Xu ly reset form
     const handleReset = () => {
-        setFormData(initialState);
+        if(vouchers.id) {
+            navigate("/common/vouchers");
+        } else {
+            setFormData(initialState);
+        }
     };
 
+    // Xu ly submit form
     const handleSubmit = (e) => {
         e.preventDefault();
-        createVoucher(formData);
+        if(vouchers.id) {
+            updateVoucher(formData);
+            navigate("/common/vouchers");
+        } else {
+            createVoucher(formData);
+        }
         handleReset();
     };
        
