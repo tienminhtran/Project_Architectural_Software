@@ -1,15 +1,17 @@
 import React, { useState } from "react";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { BsPencil, BsTrash, BsSearch } from "react-icons/bs";
 import useVoucher from "../../hooks/useVoucher";
 import ReactPaginate from "react-paginate";
 
 const VoucherPage = () => {
+  const navigate = useNavigate();
+
   const [selectedRows, setSelectedRows] = useState([]);
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10;
-  const {vouchers_paging} = useVoucher(currentPage, pageSize);
+  const {vouchers_paging, deleteVoucher} = useVoucher(currentPage, pageSize);
 
   const { data, isLoading, isError, error } = vouchers_paging;
   console.log(data);
@@ -18,6 +20,10 @@ const VoucherPage = () => {
   if (isLoading) return <p>Loading vouchers...</p>;
   if (isError) return <p>Error: {error.message}</p>;
 
+  /**
+   * Xử lý pageSize thay đổi khi chuyển trang
+   * @param {*} selected 
+   */
   const handlePageChange = (selected) => {
     setCurrentPage(selected.selected);
   };
@@ -33,6 +39,24 @@ const VoucherPage = () => {
       setSelectedRows([]);
     } else {
       setSelectedRows(vouchers.map((item) => item.id));
+    }
+  };
+
+  // Chuyển hướng đến trang tạo voucher và truyền dữ liệu voucher qua state
+  // Để thực hiện việc cập nhật voucher
+  const handleNavigate = (voucher) => {
+    navigate('/common/formVoucher', {state: {voucher}});
+  }
+
+  // Xử lý xóa voucher
+  const handleDelete = (voucherid) => {
+    if (window.confirm("Are you sure you want to delete?")) {
+      // selectedRows.forEach((id) => {
+      //   deleteVoucher(id);
+      // });
+      // setSelectedRows([]);
+
+      deleteVoucher(voucherid);
     }
   };
 
@@ -96,11 +120,10 @@ const VoucherPage = () => {
                 <td>{voucher.expiredDate}</td>
                 <td>
                   <div className="d-flex gap-3">
-                    <Link to={`/common/formVoucher/${voucher.id}`}>
-                      <BsPencil className="text-secondary fs-5" role="button" />
-                    </Link>
-              
-                    <BsTrash className="text-danger fs-5" role="button" />
+                    
+                    <BsPencil className="text-secondary fs-5" role="button" onClick={() => handleNavigate(voucher)} />
+                  
+                    <BsTrash className="text-danger fs-5" role="button" onClick={() => handleDelete(voucher.id)}/>
                   </div>
                 </td>
               </tr>
