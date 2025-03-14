@@ -34,8 +34,13 @@ public interface UserService {
     Map<String, Object> getCurrentUser(String token);
 
     UserResponse createUser(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException;
+
+
+
     public UserResponse updateUser(Long id, UserRequest userRequest);
+
     public void validation(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException;
+
     public UserResponse findById(Long id);
 
 
@@ -55,6 +60,9 @@ public interface UserService {
     List<TopCustomerResponse> getTopCustomers(LocalDate startDate, LocalDate endDate);
 
     int countByRoleUser();
+
     int countByRoleManager();
+
+    UserResponse updateUserInfo(Long userId, UserRequest userRequest);
 
 }
