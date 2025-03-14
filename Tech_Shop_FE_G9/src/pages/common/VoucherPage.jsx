@@ -18,7 +18,7 @@ const VoucherPage = () => {
   if (isLoading) return <p>Loading vouchers...</p>;
   if (isError) return <p>Error: {error.message}</p>;
 
-  const handlePageChange = ({ selected }) => {
+  const handlePageChange = (selected) => {
     setCurrentPage(selected.selected);
   };
 
@@ -96,7 +96,10 @@ const VoucherPage = () => {
                 <td>{voucher.expiredDate}</td>
                 <td>
                   <div className="d-flex gap-3">
-                    <BsPencil className="text-secondary fs-5" role="button" />
+                    <Link to={`/common/formVoucher/${voucher.id}`}>
+                      <BsPencil className="text-secondary fs-5" role="button" />
+                    </Link>
+              
                     <BsTrash className="text-danger fs-5" role="button" />
                   </div>
                 </td>
