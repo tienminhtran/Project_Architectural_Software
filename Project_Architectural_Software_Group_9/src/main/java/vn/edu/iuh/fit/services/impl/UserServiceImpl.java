@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -32,12 +33,16 @@ import vn.edu.iuh.fit.repositories.OrderDetailRepository;
 import vn.edu.iuh.fit.repositories.RoleRepository;
 import vn.edu.iuh.fit.repositories.UserRepository;
 import vn.edu.iuh.fit.repositories.RefreshTokenRepository;
+import vn.edu.iuh.fit.security.CustomUserDetails;
+import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
 import vn.edu.iuh.fit.services.UserService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static vn.edu.iuh.fit.utils.ImageUtil.isValidSuffixImage;
 import static vn.edu.iuh.fit.utils.ImageUtil.saveFile;
@@ -68,6 +73,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    private JwtTokenProvider jwtUtils;
 
     // Phương thức chuyển đổi User sang DTO với kiểu generic T
     private <T> T convertToDto(User user, Class<T> targetClass) {
@@ -119,6 +127,27 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Can not find User with username: " + username));
         return this.convertToDto(user, UserResponse.class);
+    }
+
+    @Override
+    public Map<String, Object> getCurrentUser(String token) {
+        String jwt = token.replace("Bearer ", "");
+        String username = jwtUtils.getUserNameFromJWT(jwt);
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Can not find User with username: " + username));
+
+        CustomUserDetails customUserDetails = new CustomUserDetails(this.convertToDto(user, UserResponse.class));
+        List<String> roles = customUserDetails
+                .getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        return Map.of(
+                "username", user.getUsername(),
+                "roles", roles
+        );
     }
 
     @Override
