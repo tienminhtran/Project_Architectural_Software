@@ -7,6 +7,7 @@
 package vn.edu.iuh.fit.services.impl;
 
 import lombok.extern.slf4j.Slf4j;
+import org.apache.coyote.BadRequestException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -18,6 +19,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.TopCustomerResponse;
@@ -35,6 +37,10 @@ import vn.edu.iuh.fit.services.UserService;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Objects;
+
+import static vn.edu.iuh.fit.utils.ImageUtil.isValidSuffixImage;
+import static vn.edu.iuh.fit.utils.ImageUtil.saveFile;
 
 /*
  * @description:
@@ -124,10 +130,50 @@ public class UserServiceImpl implements UserService {
             User user = this.convertToEntity(userRequest, UserRequest.class);
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
             user.setRole(role);
+            user.setActive(false);
+            user.setImage("avtdefault.jpg");
 
             user = userRepository.save(user);
 
             return this.convertToDto(user, UserResponse.class);
+        }
+        return null;
+    }
+
+    @Override
+    public UserResponse updateUser(Long id, UserRequest userRequest) {
+        User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Can not find User with id: " + id));
+        System.out.println(user);
+        Role role = roleRepository.findById(userRequest.getRoleId()).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 1"));
+
+        try {
+            user.setFirstname(userRequest.getFirstName());
+            user.setLastname(userRequest.getLastName());
+            user.setEmail(userRequest.getEmail());
+            user.setPhoneNumber(userRequest.getPhoneNumber());
+            user.setGender(userRequest.getGender());
+            user.setDayOfBirth(userRequest.getDob());
+            user.setRole(role);
+            user.setUpdatedAt(LocalDateTime.now());
+
+            MultipartFile file = userRequest.getImage();
+            String image="";
+            if(file == null || file.isEmpty()) {
+                image = "avtdefault.jpg";
+            } else {
+                if (!isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
+                    throw new BadRequestException("Invalid image format");
+                }
+
+                image = saveFile(file);
+            }
+
+            user.setImage(image);
+            System.out.println(user);
+            user = userRepository.save(user);
+            return this.convertToDto(user, UserResponse.class);
+        } catch (Exception e) {
+            log.error(e.getMessage());
         }
         return null;
     }
@@ -162,6 +208,8 @@ public class UserServiceImpl implements UserService {
             User user = this.convertToEntity(userRequest, UserRequest.class);
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
             user.setRole(role);
+            user.setActive(false);
+            user.setImage("avtdefault.jpg");
 
             user = userRepository.save(user);
 

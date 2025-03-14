@@ -8,8 +8,13 @@ package vn.edu.iuh.fit.services.impl;
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.dtos.request.VoucherRequest;
+import vn.edu.iuh.fit.dtos.response.PageResponse;
+import vn.edu.iuh.fit.dtos.response.ProductResponse;
 import vn.edu.iuh.fit.dtos.response.VoucherResponse;
 import vn.edu.iuh.fit.entities.Category;
 import vn.edu.iuh.fit.entities.Voucher;
@@ -84,6 +89,21 @@ public class VoucherServiceImpl implements VoucherService {
             return vouchers.stream().map(this::convertToDto).toList();
         }
         return null;
+    }
+
+    @Override
+    public PageResponse<VoucherResponse> findAll_Paging(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Voucher> vouchers = voucherRepository.findAll(pageable);
+        PageResponse<VoucherResponse> pageResponse = new PageResponse<>();
+        if (vouchers != null) {
+            pageResponse.setPage(pageNo);
+            pageResponse.setSize(pageSize);
+            pageResponse.setTotal(vouchers.getNumberOfElements());
+            pageResponse.setTotalPages(vouchers.getTotalPages());
+            pageResponse.setValues(vouchers.stream().map(this::convertToDto).toList());
+        }
+        return pageResponse;
     }
 
     @Override

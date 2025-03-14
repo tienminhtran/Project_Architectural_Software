@@ -1,5 +1,7 @@
 package vn.edu.iuh.fit.dtos.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
@@ -7,6 +9,7 @@ import jakarta.validation.constraints.NotNull;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.time.LocalDate;
 
@@ -15,10 +18,10 @@ import java.time.LocalDate;
 @NoArgsConstructor
 @Builder
 @FieldDefaults(level = AccessLevel.PRIVATE)
+@JsonIgnoreProperties(ignoreUnknown = true) // bo qua cac thuoc tinh khong co trong class
 public class UserRequest {
     Long id;
 
-    //tieng anh
     @NotBlank(message = "Username is required !")
     String username;
 
@@ -29,7 +32,6 @@ public class UserRequest {
     @NotBlank(message = "Password isn't empty!")
     String password;
 
-    @NotNull(message = "Confirm password isn't empty!")
     @JsonProperty("confirm_password")
     String confirmPassword;
 
@@ -48,13 +50,13 @@ public class UserRequest {
     String gender;
 
     @NotNull(message = "Date of birth is required!")
-    @DateTimeFormat(pattern = "yyyy-MM-dd")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     LocalDate dob;
 
-    boolean active = false;
+    boolean active;
 
-    String image = "avtdefault.jpg";
-
-    Long roleId = 1L;
+    MultipartFile image;
+    @JsonProperty("role")
+    Long roleId;
 
 }

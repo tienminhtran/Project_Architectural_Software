@@ -20,3 +20,13 @@ export const countUserByRoleManager = async () => {
     const response = await axiosInstance.get('/user/countByRoleManager');
     return response.data;
 }
+
+export const updateProfile = async (id, userFormData) => {
+    console.log("hehe", id);
+    const response = await axiosInstance.put(`/user/${id}`, userFormData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+    return response.data;
+}
