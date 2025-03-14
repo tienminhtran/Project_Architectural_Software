@@ -21,6 +21,7 @@ import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /*
  * @description:
@@ -29,6 +30,8 @@ import java.util.List;
  */
 public interface UserService {
     UserResponse getUserByUsername(String username);
+
+    Map<String, Object> getCurrentUser(String token);
 
     UserResponse createUser(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException;
 
@@ -39,6 +42,8 @@ public interface UserService {
     public void validation(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException;
 
     public UserResponse findById(Long id);
+
+
 
     boolean existsUsername(String username);
 

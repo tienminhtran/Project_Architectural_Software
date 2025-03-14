@@ -34,5 +34,5 @@ public interface WishlistItemRepository extends JpaRepository<WishlistItem, Long
     @Query("SELECT COUNT(wi) FROM WishlistItem wi WHERE wi.wishlist.id = :wishlistId")
     int countByWishlistId(@Param("wishlistId") Long id);
 
-    List<WishlistItem> findByUserId(Long userId);
+//    List<WishlistItem> findByUserId(Long userId);
 }

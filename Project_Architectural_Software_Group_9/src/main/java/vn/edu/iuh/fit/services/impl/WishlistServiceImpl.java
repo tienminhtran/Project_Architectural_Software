@@ -80,8 +80,9 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public List<WishlistItemResponse> getWishlistByUserId(Long userId) {
-        List<WishlistItem> wishlistItems = wishlistItemRepository.findByUserId(userId);
-        return wishlistItems.stream().map(item -> modelMapper.map(item, WishlistItemResponse.class)).collect(Collectors.toList());
+//        List<WishlistItem> wishlistItems = wishlistItemRepository.findByUserId(userId);
+//        return wishlistItems.stream().map(item -> modelMapper.map(item, WishlistItemResponse.class)).collect(Collectors.toList());
+        return null;
     }
 }
 
