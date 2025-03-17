@@ -36,4 +36,6 @@ public interface OrderService {
     boolean updateOrderStatus(Long orderId, OrderStatus orderStatus);
 
     List<OrderDetailResponse> getOrderDetailsByOrderId(Long orderId);
+
+    String cancelOrder(Long orderId);
 }

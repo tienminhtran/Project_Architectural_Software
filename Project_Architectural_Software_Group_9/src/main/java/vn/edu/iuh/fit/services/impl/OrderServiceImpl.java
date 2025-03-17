@@ -122,4 +122,20 @@ public class OrderServiceImpl implements OrderService {
                 .map(orderDetail -> modelMapper.map(orderDetail, OrderDetailResponse.class))
                 .collect(Collectors.toList());
     }
+
+    @Override
+    public String cancelOrder(Long orderId) {
+        Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
+        if(order.getStatus() == OrderStatus.PENDING) {
+            if(order.getPayment().getPaymentName().equals("cod")) {
+                order.setStatus(OrderStatus.CANCELLED);
+                orderRepository.save(order);
+                return "Order cancelled successfully";
+            }
+            order.setStatus(OrderStatus.CANCELLED);
+            orderRepository.save(order);
+            return "Order cancelled successfully. Refund will be processed within 1-2 working days.";
+        }
+        return "Status Order is "+order.getStatus()+". Order cannot be cancelled.";
+    }
 }
