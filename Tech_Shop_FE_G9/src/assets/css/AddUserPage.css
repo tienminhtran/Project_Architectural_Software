@@ -1,0 +1,106 @@
+/* ====== TỔNG QUAN ====== */
+.containers {
+  background: #fff;
+  padding: 20px;
+  margin: 40px auto;
+  border-radius: 20px;
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+  margin: 1% auto;
+  width: 98%;
+}
+
+h2 {
+  font-size: 24px;
+  color: #333;
+  margin-bottom: 5px;
+}
+
+p {
+  color: #777;
+  font-size: 14px;
+  margin-bottom: 20px;
+}
+
+/* ====== FORM 3 CỘT ====== */
+.user-form {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  gap: 15px;
+}
+
+.form-group {
+  display: flex;
+  flex-direction: column;
+  text-align: left;
+}
+
+.form-group label {
+  font-weight: 600;
+  margin-bottom: 6px;
+  color: #444;
+  font-size: 14px;
+}
+
+.form-group input,
+.form-group select {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 8px;
+  font-size: 15px;
+  transition: 0.3s ease-in-out;
+}
+
+.form-group input:focus,
+.form-group select:focus {
+  border-color: #007bff;
+  outline: none;
+  box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+}
+
+/* ====== FILE UPLOAD (CĂN GIỮA) ====== */
+.file-upload {
+  grid-column: span 3;
+  text-align: center;
+}
+
+.file-upload input {
+  margin-top: 8px;
+}
+
+/* ====== NÚT BẤM ====== */
+.form-actions {
+  grid-column: span 3;
+  display: flex;
+  justify-content: center;
+  gap: 15px;
+  margin-top: 20px;
+}
+
+button {
+  padding: 12px 20px;
+  border: none;
+  border-radius: 8px;
+  font-size: 16px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: 0.3s ease-in-out;
+}
+
+.submit {
+  background: #eb9d0d;
+  color: white;
+}
+
+.Cancel {
+  background:#b3b3b3;
+  color: white;
+}
+
+.submit:hover {
+  background:  #c0c0c0;
+}
+
+.Cancel:hover {
+  background: #b3b3b3;
+}
+

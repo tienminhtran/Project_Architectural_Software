@@ -20,7 +20,8 @@ import CategoryPage from './pages/common/CommonCategoryPage';
 import AddCategoryPage from './pages/common/AddCategoryPage';
 import VoucherPage from './pages/common/VoucherPage';
 import FormVoucher from './pages/common/FormVoucher';
-
+import UserPage from './pages/common/UserPage';
+import AddUserPage from './pages/common/AddUserPage';
 // Reusable Layout Component
 const AdminLayout = ({ children }) => (
   <div className="axil-signin-area">
@@ -121,6 +122,23 @@ function App() {
             element={
               <AdminLayout>
                 <FormVoucher />
+              </AdminLayout>
+            }
+          />
+
+          <Route
+            path="/common/UserPage"
+            element={
+              <AdminLayout>
+                <UserPage />
+              </AdminLayout>
+            }
+          />
+          <Route
+            path="/common/AddUserPage"
+            element={
+              <AdminLayout>
+                <AddUserPage />
               </AdminLayout>
             }
           />

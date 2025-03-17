@@ -48,8 +48,8 @@ const Menu = () => {
             <li className={`menu-item ${openMenus.user ? "open" : ""}`} onClick={() => toggleMenu("user")}>
             <FaUsers /> User <IoIosArrowForward className="arrow" />
             <ul className="submenu">
-                <li>User List</li>
-                <li>Roles & Permissions</li>
+                <li><Link to="/common/UserPage">List Users</Link></li>
+                <li><Link to="/common/AddUserPage">Add User</Link></li>
             </ul>
             </li>
 
