@@ -120,7 +120,7 @@ const AdminDashboardPage = () => {
             </thead>
             <tbody>
               {recentlyProduct.map((product, index) => (
-                <tr>
+                <tr key={index}>
                   <td>{index+1}</td>
                   <td>{product.productName}</td>
                   <td>{product.price}</td>
@@ -148,7 +148,7 @@ const AdminDashboardPage = () => {
             </thead>
             <tbody>
             {loyalCustomer.map((customer, index) => (
-              <tr>
+              <tr key={index}>
                 <td>{index + 1 }</td>
                 <td>{customer.fullName}</td>
                 <td>{customer.phoneNumber}</td>

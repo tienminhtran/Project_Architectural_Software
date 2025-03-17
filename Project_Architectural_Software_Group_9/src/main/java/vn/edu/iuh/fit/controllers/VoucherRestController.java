@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.request.VoucherRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.BrandResponse;
+import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.VoucherResponse;
 import vn.edu.iuh.fit.services.VoucherService;
 
@@ -31,9 +32,27 @@ public class VoucherRestController {
     @Autowired
     private VoucherService voucherService;
 
-    @GetMapping("")
+    @GetMapping("/all")
     public ResponseEntity<BaseResponse<?>> getAllVouchers() {
         List<?> vouchers = voucherService.findAll();
+        if (vouchers == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get all vouchers success").response(vouchers).build());
+    }
+
+    @GetMapping("")
+    public ResponseEntity<BaseResponse<?>> getAllVouchers_Paging(@RequestParam(defaultValue = "0", required = false) Integer pageNo,
+                                                                @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
+        if (pageNo == null) {
+            pageNo = 0;
+        }
+
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        PageResponse<?> vouchers = voucherService.findAll_Paging(pageNo, pageSize);
+
         if (vouchers == null) {
             return ResponseEntity.notFound().build();
         }

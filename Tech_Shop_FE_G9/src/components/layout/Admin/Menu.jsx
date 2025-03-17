@@ -2,6 +2,7 @@ import React, { useState } from "react";
 import { FaTachometerAlt, FaTags, FaUsers, FaGift, FaHome } from "react-icons/fa";
 import { IoIosArrowForward } from "react-icons/io";
 import "/src/assets/css/adminMenu.css"; // Import CSS file
+import "/src/assets/css/SubClass.css"; // Import CSS file
 import { Link } from "react-router-dom";
 
 const Menu = () => {
@@ -55,8 +56,8 @@ const Menu = () => {
             <li className={`menu-item ${openMenus.voucher ? "open" : ""}`} onClick={() => toggleMenu("voucher")}>
             <FaGift /> Voucher <IoIosArrowForward className="arrow" />
             <ul className="submenu">
-                <li>Create Voucher</li>
-                <li>Manage Vouchers</li>
+                <li><Link to="/common/formVoucher">Create Voucher</Link></li>
+                <li><Link to="/common/vouchers">Manage Vouchers</Link></li>
             </ul>
             </li>
 

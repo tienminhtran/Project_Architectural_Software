@@ -15,11 +15,14 @@ import vn.edu.iuh.fit.dtos.request.WishlistRequest;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.WishlistItemResponse;
 import vn.edu.iuh.fit.entities.Wishlist;
+import vn.edu.iuh.fit.entities.WishlistItem;
 import vn.edu.iuh.fit.repositories.WishlistItemRepository;
 import vn.edu.iuh.fit.repositories.WishlistRepository;
 import vn.edu.iuh.fit.services.WishlistService;
 
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 /*
  * @description:
@@ -73,6 +76,13 @@ public class WishlistServiceImpl implements WishlistService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public List<WishlistItemResponse> getWishlistByUserId(Long userId) {
+//        List<WishlistItem> wishlistItems = wishlistItemRepository.findByUserId(userId);
+//        return wishlistItems.stream().map(item -> modelMapper.map(item, WishlistItemResponse.class)).collect(Collectors.toList());
+        return null;
     }
 }
 

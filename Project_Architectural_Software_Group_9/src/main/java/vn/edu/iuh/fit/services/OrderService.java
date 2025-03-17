@@ -6,8 +6,10 @@
 
 package vn.edu.iuh.fit.services;
 
+import vn.edu.iuh.fit.dtos.response.OrderDetailResponse;
 import vn.edu.iuh.fit.dtos.response.OrderResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
+import vn.edu.iuh.fit.enums.OrderStatus;
 
 import java.util.List;
 
@@ -28,5 +30,12 @@ public interface OrderService {
     List<OrderResponse> getRecentlyOrders();
 
     int getTotalProductSold();
+
     int getTotalOrderPending();
+
+    boolean updateOrderStatus(Long orderId, OrderStatus orderStatus);
+
+    List<OrderDetailResponse> getOrderDetailsByOrderId(Long orderId);
+
+    String cancelOrder(Long orderId);
 }

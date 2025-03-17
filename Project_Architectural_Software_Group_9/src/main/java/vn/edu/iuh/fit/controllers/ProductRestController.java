@@ -44,17 +44,17 @@ public class ProductRestController {
     public ResponseEntity<BaseResponse<?>> getAllProductsByPage(@RequestParam(defaultValue = "0", required = false) Integer pageNo,
                                                                 @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
 
-        if(pageNo == null) {
+        if (pageNo == null) {
             pageNo = 0;
         }
 
-        if(pageSize == null) {
+        if (pageSize == null) {
             pageSize = 8;
         }
 
         PageResponse<ProductResponse> productResponses = productService.getProductsByPage(pageNo, pageSize);
 
-        if(productResponses == null || productResponses.getValues().isEmpty()) {
+        if (productResponses == null || productResponses.getValues().isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get all products").response(productResponses).build());
@@ -65,7 +65,7 @@ public class ProductRestController {
     public ResponseEntity<BaseResponse<?>> getAllProducts() {
         List<ProductResponse> productResponses = productService.getAllProducts();
 
-        if(productResponses.isEmpty()) {
+        if (productResponses.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get all products").response(productResponses).build());
@@ -76,13 +76,14 @@ public class ProductRestController {
     public ResponseEntity<BaseResponse<?>> getProductById(@PathVariable Long id) {
         ProductResponse productResponse = productService.getProductById(id);
 
-        if(productResponse == null) {
+        if (productResponse == null) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get product by id").response(productResponse).build());
     }
 
     @GetMapping("/recent")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getRecentProducts() {
         List<ProductResponse> productResponses = productService.getRecentProducts();
         if (productResponses.isEmpty()) {
@@ -92,6 +93,7 @@ public class ProductRestController {
     }
 
     @GetMapping("/revenue")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getTotalRevenue() {
         Double totalRevenue = productService.calculateTotalRevenue();
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get total revenue").response(totalRevenue).build());
@@ -104,6 +106,7 @@ public class ProductRestController {
      * phan body: form-data (thay vi chon raw thi chon form-data)
      * chon key 1 la product, value la text(nhap theo dinh dang json) cua product
      * chon key 2 la fileImage, value la file (chon file anh)
+     *
      * @param productJson
      * @param fileImages
      * @return
@@ -167,6 +170,7 @@ public class ProductRestController {
      * phan body: form-data (thay vi chon raw thi chon form-data)
      * chon key 1 la product, value la text(nhap theo dinh dang json) cua product
      * chon key 2 la fileImage, value la file (chon file anh)
+     *
      * @param productJson
      * @param fileImages
      * @return
@@ -188,7 +192,7 @@ public class ProductRestController {
         }
 
         productRequest.setFileImage(fileImages);
-        ProductResponse newProduct = productService.updateProduct(id,productRequest);
+        ProductResponse newProduct = productService.updateProduct(id, productRequest);
 
         if (newProduct == null) {
             return ResponseEntity.badRequest().build();
@@ -196,7 +200,7 @@ public class ProductRestController {
 
         return ResponseEntity.ok(BaseResponse.builder()
                 .status("SUCCESS")
-                .message("Create product success")
+                .message("Update product success")
                 .response(newProduct)
                 .build());
     }
@@ -218,7 +222,7 @@ public class ProductRestController {
     @GetMapping("/bestSelling")
     public ResponseEntity<BaseResponse<?>> getBestSellingProducts(
             @RequestParam(required = false) LocalDate startDate,
-            @RequestParam(required = false)LocalDate endDate) {
+            @RequestParam(required = false) LocalDate endDate) {
 
         int currentYear = LocalDate.now().getYear();
         if (startDate == null) {

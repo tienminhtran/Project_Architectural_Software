@@ -6,21 +6,26 @@
 
 package vn.edu.iuh.fit.controllers;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
+import vn.edu.iuh.fit.dtos.request.ProductRequest;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
-import vn.edu.iuh.fit.dtos.response.BaseResponse;
-import vn.edu.iuh.fit.dtos.response.PageResponse;
-import vn.edu.iuh.fit.dtos.response.TopCustomerResponse;
-import vn.edu.iuh.fit.dtos.response.UserResponse;
+import vn.edu.iuh.fit.dtos.response.*;
+import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.exception.EmailAlreadyExistsException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
+import vn.edu.iuh.fit.security.CustomUserDetails;
+import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
 import vn.edu.iuh.fit.services.UserService;
 
 import java.time.LocalDate;
@@ -40,6 +45,9 @@ public class UserRestController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private JwtTokenProvider jwtUtils;
+
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<UserResponse>> getUserById(@PathVariable Long id) {
         UserResponse userResponse = userService.findById(id);
@@ -56,6 +64,16 @@ public class UserRestController {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(BaseResponse.<UserResponse>builder().status("success").message("Get user by username success").response(userResponse).build());
+    }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String token) {
+        try {
+            Map<String, Object> response = userService.getCurrentUser(token);
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
     }
 
     @PreAuthorize("hasRole('ADMIN')")
@@ -168,6 +186,36 @@ public class UserRestController {
                 .status("SUCCESS")
                 .message("Count by role manager success")
                 .response(count).build());
+    }
+
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BaseResponse<?>> updateProduct(
+            @PathVariable Long id,
+            @RequestPart("user") String userJson,
+            @RequestPart(value = "fileImage", required = false) MultipartFile fileImages) {
+
+        // Chuyen string sang json
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        UserRequest userRequest;
+        try {
+            userRequest = objectMapper.readValue(userJson, UserRequest.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid JSON format: " + e.getMessage());
+        }
+
+        userRequest.setImage(fileImages);
+        UserResponse newProduct = userService.updateUser(id,userRequest);
+
+        if (newProduct == null) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Update user success")
+                .response(newProduct)
+                .build());
     }
 
 }

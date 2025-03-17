@@ -8,6 +8,7 @@ package vn.edu.iuh.fit.services;
 
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
+import vn.edu.iuh.fit.dtos.request.ProductRequest;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.ProductResponse;
@@ -20,6 +21,7 @@ import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 
 /*
  * @description:
@@ -29,9 +31,19 @@ import java.util.List;
 public interface UserService {
     UserResponse getUserByUsername(String username);
 
+    Map<String, Object> getCurrentUser(String token);
+
     UserResponse createUser(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException;
+
+
+
+    public UserResponse updateUser(Long id, UserRequest userRequest);
+
     public void validation(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException;
+
     public UserResponse findById(Long id);
+
+
 
     boolean existsUsername(String username);
 
@@ -48,6 +60,9 @@ public interface UserService {
     List<TopCustomerResponse> getTopCustomers(LocalDate startDate, LocalDate endDate);
 
     int countByRoleUser();
+
     int countByRoleManager();
+
+    UserResponse updateUserInfo(Long userId, UserRequest userRequest);
 
 }

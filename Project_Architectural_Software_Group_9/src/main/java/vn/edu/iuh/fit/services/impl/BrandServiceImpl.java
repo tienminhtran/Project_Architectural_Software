@@ -23,10 +23,7 @@ import vn.edu.iuh.fit.services.BrandService;
 import java.io.IOException;
 import java.nio.file.*;
 import java.time.LocalDate;
-import java.util.List;
-import java.util.Objects;
-import java.util.Optional;
-import java.util.UUID;
+import java.util.*;
 
 @Service
 public class BrandServiceImpl implements BrandService {
@@ -52,7 +49,25 @@ public class BrandServiceImpl implements BrandService {
     private boolean isValidSuffixImage(String img) {
         return img.endsWith(".jpg") || img.endsWith(".png") || img.endsWith(".jpeg")
                 || img.endsWith(".gif") || img.endsWith(".bmp");
+    }
 
+    public String saveFile(MultipartFile file) throws IOException {
+        String uploadDir = "./uploads";
+        Path uploadPath = Paths.get(uploadDir);
+        if (!Files.exists(uploadPath)) {
+            Files.createDirectories(uploadPath);
+        }
+        try {
+            String fileName = file.getOriginalFilename();
+            String uniqueFileName = UUID.randomUUID().toString() + "_" + fileName;
+            Files.copy(file.getInputStream(), Paths.get(uploadDir, uniqueFileName), StandardCopyOption.REPLACE_EXISTING);
+            return uniqueFileName;
+        } catch (Exception e) {
+            if (e instanceof FileAlreadyExistsException) {
+                throw new BadRequestException("File already exists");
+            }
+            throw new RuntimeException(e.getMessage());
+        }
     }
 
 
@@ -88,26 +103,48 @@ public class BrandServiceImpl implements BrandService {
 
     @Override
     public BrandResponse save(BrandRequest brandRequest) {
-        Brand brandEntity = this.convertToEntity(brandRequest);
-        Brand brand = brandRepository.save(brandEntity);
-        if (brand != null) {
+        try {
+            List<MultipartFile> fileImage = brandRequest.getBrandImg();
+            String brandImg = "default-brand.jpg";
+            if (fileImage != null && !fileImage.isEmpty()) {
+                MultipartFile multipartFile = fileImage.get(0);
+                if (!isValidSuffixImage(Objects.requireNonNull(multipartFile.getOriginalFilename()))) {
+                    throw new BadRequestException("Invalid image suffix");
+                }
+                brandImg = saveFile(multipartFile);
+            }
+            Brand brand = Brand.builder()
+                    .name(brandRequest.getName())
+                    .brandImg(brandImg)
+                    .active(true)
+                    .build();
+            brand = brandRepository.save(brand);
             return this.convertToDto(brand);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-        return null;
     }
 
     @Override
     public BrandResponse update(BrandRequest brandRequest, Long id) {
-        Optional<Brand> brand = brandRepository.findById(id);
-        if (brand.isPresent()) {
-            Brand brandEntity = this.convertToEntity(brandRequest);
-            brandEntity.setId(id);
-            Brand brandUpdated = brandRepository.save(brandEntity);
-            if (brandUpdated != null) {
-                return this.convertToDto(brandUpdated);
+        Brand brand = brandRepository.findById(id).orElseThrow(() -> new RuntimeException("Brand not found"));
+        try {
+            List<MultipartFile> fileImage = brandRequest.getBrandImg();
+            String brandImg = brand.getBrandImg();
+            if (fileImage != null && !fileImage.isEmpty()) {
+                MultipartFile multipartFile = fileImage.get(0);
+                if (!isValidSuffixImage(Objects.requireNonNull(multipartFile.getOriginalFilename()))) {
+                    throw new BadRequestException("Invalid image suffix");
+                }
+                brandImg = saveFile(multipartFile);
             }
+            brand.setName(brandRequest.getName());
+            brand.setBrandImg(brandImg);
+            brand = brandRepository.save(brand);
+            return this.convertToDto(brand);
+        } catch (Exception e) {
+            throw new RuntimeException(e.getMessage());
         }
-        return null;
     }
 
     @Override

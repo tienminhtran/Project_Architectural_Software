@@ -12,8 +12,10 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import org.springframework.web.multipart.MultipartFile;
 
 import java.io.Serializable;
+import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -27,7 +29,7 @@ public class BrandRequest implements Serializable {
     private String name;
 
     @Column(name = "brand_img", length = 10000)
-    private String brandImg = "default-product.jpg";
+    private List<MultipartFile> brandImg;
 
     private boolean active = true;
 

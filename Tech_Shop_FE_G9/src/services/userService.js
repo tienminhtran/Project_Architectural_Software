@@ -7,6 +7,14 @@ export const getUsers = async (username) => {
     return response.data;
 };
 
+export const getUsers_Auth = async () => {
+    const accessToken = localStorage.getItem("accessToken");
+    if (!accessToken) return;
+
+    const response = await axiosInstance.get('/user/me');
+    return response.data;
+}
+
 export const getLoyalCustomers = async () => {
     const response = await axiosInstance.get('/user/topCustomers');
     return response.data;
@@ -20,3 +28,14 @@ export const countUserByRoleManager = async () => {
     const response = await axiosInstance.get('/user/countByRoleManager');
     return response.data;
 }
+
+export const updateProfile = async (id, userFormData) => {
+    console.log("hehe", id);
+    const response = await axiosInstance.put(`/user/${id}`, userFormData, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+    return response.data;
+}
+

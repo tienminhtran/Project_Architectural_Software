@@ -7,6 +7,7 @@
 package vn.edu.iuh.fit.services;
 
 import vn.edu.iuh.fit.dtos.request.VoucherRequest;
+import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.VoucherResponse;
 
 import java.util.List;
@@ -27,6 +28,8 @@ public interface VoucherService {
     List<VoucherResponse> findByQuantityGreaterThan(int quantityIsGreaterThan);
 
     List<VoucherResponse> findAll();
+
+    PageResponse<VoucherResponse> findAll_Paging(int pageNo, int pageSize);
 
     VoucherResponse save(VoucherRequest voucherRequest);
     VoucherResponse update(Long id, VoucherRequest voucherRequest);
