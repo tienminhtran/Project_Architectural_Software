@@ -6,6 +6,7 @@
 
 package vn.edu.iuh.fit.dtos.request;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.validation.constraints.*;
 import lombok.*;
 
@@ -38,6 +39,7 @@ public class VoucherRequest implements Serializable {
 
     @NotNull(message = "Expired date cannot be null")
     @Future(message = "Expired date must be in the future")
+    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd")
     private LocalDate expiredDate;
 
     @NotNull(message = "Quantity cannot be null")

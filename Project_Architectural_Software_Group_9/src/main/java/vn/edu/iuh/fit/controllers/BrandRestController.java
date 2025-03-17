@@ -6,9 +6,13 @@ package vn.edu.iuh.fit.controllers;/*
  * @nameProject: Project_Architectural_Software
  */
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.dtos.request.BrandRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.BrandResponse;
@@ -25,6 +29,7 @@ public class BrandRestController {
     private BrandService brandService;
 
     @GetMapping("")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getAllBrandByPage(@RequestParam(defaultValue = "0", required = false) Integer pageNo,
                                                              @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
         if (pageNo == null) {
@@ -41,6 +46,7 @@ public class BrandRestController {
     }
 
     @GetMapping("/all")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getAllBrand() {
         List<BrandResponse> brandResponses = brandService.getAllBrands();
         if (brandResponses.isEmpty()) {
@@ -50,6 +56,7 @@ public class BrandRestController {
     }
 
     @GetMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getBrandById(@PathVariable Long id) {
         Object brand = brandService.findById(id);
         if (brand == null) {
@@ -58,12 +65,17 @@ public class BrandRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get brand by id success").response(brand).build());
     }
 
-    @PostMapping("")
-    public ResponseEntity<BaseResponse<?>> createBrand(@RequestBody BrandRequest brandRequest) {
-        if (brandService.existsBrand(brandRequest.getName())) {
-            return ResponseEntity.badRequest()
-                    .body(BaseResponse.builder().status("FAILED").message("The brand already exists!").build());
+    @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ResponseEntity<BaseResponse<?>> createBrand(@RequestPart("brand") String brandJson, @RequestPart(value = "brandImg", required = false) List<MultipartFile> brandImg) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BrandRequest brandRequest;
+        try {
+            brandRequest = objectMapper.readValue(brandJson, BrandRequest.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid JSON" + e.getMessage());
         }
+        brandRequest.setBrandImg(brandImg);
         BrandResponse newBrand = brandService.save(brandRequest);
         if (newBrand == null) {
             return ResponseEntity.badRequest().build();
@@ -71,16 +83,26 @@ public class BrandRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Create brand success").response(newBrand).build());
     }
 
-    @PutMapping("/{id}")
-    public ResponseEntity<BaseResponse<?>> updateBrand(@RequestBody BrandRequest brandRequest, @PathVariable Long id) {
-        BrandResponse updatedBrand = brandService.update(brandRequest, id);
-        if (updatedBrand == null) {
+    @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ResponseEntity<BaseResponse<?>> updateBrand(@RequestPart("brand") String brandJson, @RequestPart(value = "brandImg", required = false) List<MultipartFile> brandImg, @PathVariable Long id) {
+        ObjectMapper objectMapper = new ObjectMapper();
+        BrandRequest brandRequest;
+        try {
+            brandRequest = objectMapper.readValue(brandJson, BrandRequest.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid JSON" + e.getMessage());
+        }
+        brandRequest.setBrandImg(brandImg);
+        BrandResponse newBrand = brandService.update(brandRequest, id);
+        if (newBrand == null) {
             return ResponseEntity.badRequest().build();
         }
-        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Update brand success").response(updatedBrand).build());
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Update brand success").response(newBrand).build());
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> deleteBrand(@PathVariable Long id) {
         boolean isDeleted = brandService.delete(id);
         if (!isDeleted) {

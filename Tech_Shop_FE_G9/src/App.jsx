@@ -18,6 +18,9 @@ import AddBrandPage from './pages/common/AddBrandPage';
 import RegisterPage from './pages/RegisterPage';
 import CategoryPage from './pages/common/CommonCategoryPage';
 import AddCategoryPage from './pages/common/AddCategoryPage';
+import VoucherPage from './pages/common/VoucherPage';
+import FormVoucher from './pages/common/FormVoucher';
+import UserPage from './pages/common/UserPage';
 
 // Reusable Layout Component
 const AdminLayout = ({ children }) => (
@@ -101,6 +104,33 @@ function App() {
             element={
               <AdminLayout>
                 <AddCategoryPage />
+              </AdminLayout>
+            }
+          />
+
+          <Route
+            path="/common/vouchers"
+            element={
+              <AdminLayout>
+                <VoucherPage />
+              </AdminLayout>
+            }
+          />
+
+          <Route
+            path="/common/formVoucher"
+            element={
+              <AdminLayout>
+                <FormVoucher />
+              </AdminLayout>
+            }
+          />
+
+          <Route
+            path="/common/UserPage"
+            element={
+              <AdminLayout>
+                <UserPage />
               </AdminLayout>
             }
           />

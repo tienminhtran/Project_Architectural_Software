@@ -14,6 +14,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
+import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.validation.BindingResult;
@@ -32,12 +33,16 @@ import vn.edu.iuh.fit.repositories.OrderDetailRepository;
 import vn.edu.iuh.fit.repositories.RoleRepository;
 import vn.edu.iuh.fit.repositories.UserRepository;
 import vn.edu.iuh.fit.repositories.RefreshTokenRepository;
+import vn.edu.iuh.fit.security.CustomUserDetails;
+import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
 import vn.edu.iuh.fit.services.UserService;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
+import java.util.Map;
 import java.util.Objects;
+import java.util.stream.Collectors;
 
 import static vn.edu.iuh.fit.utils.ImageUtil.isValidSuffixImage;
 import static vn.edu.iuh.fit.utils.ImageUtil.saveFile;
@@ -68,6 +73,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    private JwtTokenProvider jwtUtils;
 
     // Phương thức chuyển đổi User sang DTO với kiểu generic T
     private <T> T convertToDto(User user, Class<T> targetClass) {
@@ -109,7 +117,7 @@ public class UserServiceImpl implements UserService {
                     "User is under 15 years old"));
 //            throw new IllegalArgumentException("User is under 15 years old");
         }
-     }
+    }
 
     @Override
     public UserResponse getUserByUsername(String username) {
@@ -122,18 +130,39 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    public Map<String, Object> getCurrentUser(String token) {
+        String jwt = token.replace("Bearer ", "");
+        String username = jwtUtils.getUserNameFromJWT(jwt);
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Can not find User with username: " + username));
+
+        CustomUserDetails customUserDetails = new CustomUserDetails(this.convertToDto(user, UserResponse.class));
+        List<String> roles = customUserDetails
+                .getAuthorities()
+                .stream()
+                .map(GrantedAuthority::getAuthority)
+                .collect(Collectors.toList());
+
+        return Map.of(
+                "username", user.getUsername(),
+                "roles", roles
+        );
+    }
+
+    @Override
     public UserResponse createUser(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
 
         Role role = roleRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 1"));
         validation(userRequest, result);
-        if(!result.hasErrors()) {
+        if (!result.hasErrors()) {
             User user = this.convertToEntity(userRequest, UserRequest.class);
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
             user.setRole(role);
             user.setActive(false);
             user.setImage("avtdefault.jpg");
 
-           user = userRepository.save(user);
+            user = userRepository.save(user);
 
             return this.convertToDto(user, UserResponse.class);
         }
@@ -204,7 +233,7 @@ public class UserServiceImpl implements UserService {
 
         validation(userRequest, result);
 
-        if(!result.hasErrors()) {
+        if (!result.hasErrors()) {
             User user = this.convertToEntity(userRequest, UserRequest.class);
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
             user.setRole(role);
@@ -260,5 +289,13 @@ public class UserServiceImpl implements UserService {
     @Override
     public int countByRoleManager() {
         return userRepository.countByRoleUser("MANAGER");
+    }
+
+    @Override
+    public UserResponse updateUserInfo(Long userId, UserRequest userRequest) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Can not find User with id: " + userId));
+        modelMapper.map(userRequest, user);
+        User updatedUser = userRepository.save(user);
+        return this.convertToDto(updatedUser, UserResponse.class);
     }
 }

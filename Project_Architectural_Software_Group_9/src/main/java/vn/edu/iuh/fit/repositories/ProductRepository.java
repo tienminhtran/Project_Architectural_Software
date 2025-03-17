@@ -33,6 +33,9 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     @Query("SELECT p FROM Product p ORDER BY  p.createdAt DESC LIMIT 5")
     List<Product> findRecentProducts();
 
-    @Query("SELECT SUM(p.price * p.stockQuantity) from Product p")
+    @Query("SELECT SUM(od.quantity * p.price) FROM Order o " +
+            "JOIN OrderDetail od ON o.id = od.order.id " +
+            "JOIN Product p ON od.product.id = p.id " +
+            "WHERE o.status = 'COMPLETED'")
     Double calculateTotalRevenue();
 }
