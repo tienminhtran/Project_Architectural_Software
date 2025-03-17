@@ -86,4 +86,14 @@ public class OrderRestController {
     public ResponseEntity<BaseResponse<?>> getTotalOrderPending() {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get total order pending").response(orderService.getTotalOrderPending()).build());
     }
+
+    @PutMapping("/{orderId}/cancel")
+    public ResponseEntity<BaseResponse<?>> cancelOrder(@PathVariable Long orderId) {
+
+        String message = orderService.cancelOrder(orderId);
+        if(message == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message(message).build());
+    }
 }
