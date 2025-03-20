@@ -16,7 +16,7 @@ h2 {
 }
 
 p {
-  color: #777;
+  color: #000000;
   font-size: 14px;
   margin-bottom: 20px;
 }
@@ -48,13 +48,15 @@ p {
   border-radius: 8px;
   font-size: 15px;
   transition: 0.3s ease-in-out;
+  background-color: #ffeaea;
+  color: #000;
 }
 
 .form-group input:focus,
 .form-group select:focus {
   border-color: #007bff;
   outline: none;
-  box-shadow: 0 0 6px rgba(0, 123, 255, 0.3);
+  box-shadow: 0 0 6px rgba(194, 214, 236, 0.3);
 }
 
 /* ====== FILE UPLOAD (CĂN GIỮA) ====== */
@@ -97,7 +99,7 @@ button {
 }
 
 .submit:hover {
-  background:  #c0c0c0;
+  background:  #b3b3b3;
 }
 
 .Cancel:hover {
