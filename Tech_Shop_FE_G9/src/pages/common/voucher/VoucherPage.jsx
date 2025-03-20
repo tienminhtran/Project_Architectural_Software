@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { BsPencil, BsTrash, BsSearch } from "react-icons/bs";
-import useVoucher from "../../hooks/useVoucher";
+import useVoucher from "../../../hooks/useVoucher";
 import ReactPaginate from "react-paginate";
 
 const VoucherPage = () => {
@@ -15,7 +15,7 @@ const VoucherPage = () => {
 
   const { data, isLoading, isError, error } = vouchers_paging;
   console.log(data);
-  const vouchers = data.values || [];
+  const vouchers = data?.values || [];
 
   if (isLoading) return <p>Loading vouchers...</p>;
   if (isError) return <p>Error: {error.message}</p>;
@@ -62,12 +62,12 @@ const VoucherPage = () => {
 
   return (
     <div className="page-wrapper">
-      <div class="page-header d-flex justify-content-between align-items-center">
-        <div class="page-title">
+      <div className="page-header d-flex justify-content-between align-items-center">
+        <div className="page-title">
           <h3>Product Voucher list</h3>
           <p>View/Search Voucher</p>
         </div>
-        <div class="header-action">
+        <div className="header-action">
           <Link
             to="/common/formVoucher"
             className="btn btn-warning text-white fw-bold rounded px-4 py-2 text-decoration-none"
@@ -77,7 +77,7 @@ const VoucherPage = () => {
         </div>
       </div>
 
-      <div class="page-content">
+      <div className="page-content">
         <div className="input-group w-25">
           <span className="input-group-text">
             <BsSearch />
@@ -85,7 +85,7 @@ const VoucherPage = () => {
           <input type="text" className="form-control" placeholder="Search..." />
         </div>
 
-        <table class="table table-hover table-responsive">
+        <table className="table table-hover table-responsive">
           <thead>
             <tr>
               <th>

@@ -1,5 +1,4 @@
 import React, { useState } from "react";
-import "/src/assets/css/CommonUserPage.css";
 import { BsPencil, BsTrash } from "react-icons/bs";
 import { Link } from "react-router-dom";
 
@@ -48,13 +47,13 @@ const UserPage = () => {
   });
 
   return (
-    <div className="user-page-wrapper">
-      <div className="user-page-header d-flex justify-content-between align-items-center">
-        <div className="user-page-title">
+    <div className="page-wrapper">
+      <div className="page-header d-flex justify-content-between align-items-center">
+        <div className="page-title">
           <h3>User List</h3>
           <p>Manage and search users</p>
         </div>
-        <div className="user-header-action">
+        <div className="header-action">
           <Link to="/common/AddUserPage" className="btn btn-warning text-white fw-bold rounded px-4 py-2 text-decoration-none">
             Add User
           </Link>
@@ -62,12 +61,12 @@ const UserPage = () => {
       </div>
 
       {/* Bộ lọc */}
-      <div className="user-filter-container">
-        <button className="user-filter-toggle" onClick={toggleFilters} > 
+      <div className="filter-container">
+        <button className="filter-toggle" onClick={toggleFilters} > 
           {showFilters ? "✖" : "🔍 Filter"}
         </button>
         {showFilters && (
-          <div className="user-filter-form d-flex gap-2 my-3">
+          <div className="filters">
             <input type="text" className="form-control" placeholder="Enter User Name" value={filterUsername} onChange={(e) => setFilterUsername(e.target.value)} />
             <input type="text" className="form-control" placeholder="Enter Phone" value={filterPhone} onChange={(e) => setFilterPhone(e.target.value)} />
             <input type="text" className="form-control" placeholder="Enter Email" value={filterEmail} onChange={(e) => setFilterEmail(e.target.value)} />
@@ -92,7 +91,7 @@ const UserPage = () => {
       </div>
 
       {/* Bảng dữ liệu */}
-      <table className="table table-responsive">
+      <table className="table table-responsive table-hover">
         <thead>
           <tr>
             <th><input type="checkbox" checked={selectedRows.length === users.length} onChange={handleSelectAll} className="form-check-input" /></th>
@@ -108,7 +107,7 @@ const UserPage = () => {
         </thead>
         <tbody>
           {filteredUsers.map((user) => (
-            <tr key={user.id}>
+            <tr key={user.id} className="align-middle">
               <td><input type="checkbox" checked={selectedRows.includes(user.id)} onChange={() => handleSelectRow(user.id)} className="form-check-input" /></td>
               <td><img src={user.profile} alt="Profile" className="user-profile-img" /></td>
               <td>{user.firstName}</td>
@@ -116,7 +115,7 @@ const UserPage = () => {
               <td>{user.username}</td>
               <td>{user.phone}</td>
               <td>{user.email}</td>
-              <td><span className={`user-status ${user.status === "Active" ? "active" : "inactive"}`}>{user.status}</span></td>
+              <td><span className={`${user.status === "Active" ? "bg-success" : "bg-danger"} p-2 rounded rounded-4 text-light`}>{user.status}</span></td>
               <td className="user-action">
                 <div className="d-flex gap-3">
                   <BsPencil className="text-secondary fs-5" role="button" />

@@ -3,7 +3,7 @@ import React, { useState } from "react";
 import { BsPencil, BsTrash, BsSearch} from "react-icons/bs";
 
 import { Link } from "react-router-dom";
-import useBrandData from "../../hooks/useBrandData";
+import useBrandData from "../../../hooks/useBrandData";
 
 const BrandPage = () => {
   const { brandAll } = useBrandData();
@@ -41,12 +41,12 @@ const BrandPage = () => {
 
   return (
     <div className="page-wrapper">
-      <div class="page-header d-flex justify-content-between align-items-center">
-        <div class="page-title">
+      <div className="page-header d-flex justify-content-between align-items-center">
+        <div className="page-title">
           <h2>Product Brand List</h2>
           <p>View/Search product Brand</p>
         </div>
-        <div class="header-action d-flex align-items-center">
+        <div className="header-action d-flex align-items-center">
           <Link
             to="/common/AddBrandPage"
             className="btn btn-warning text-white fw-bold rounded px-4 py-2 text-decoration-none"
@@ -98,7 +98,7 @@ const BrandPage = () => {
       </div>
 
       {/* Bảng dữ liệu */}
-      <table className="table table-responsive ">
+      <table className="table table-responsive table-hover">
         <thead>
           <tr>
             <th>
