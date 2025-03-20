@@ -6,6 +6,8 @@
 
 package vn.edu.iuh.fit.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
@@ -34,6 +36,6 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
             "WHERE LOWER(TRIM(v.name)) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(TRIM(FUNCTION('STR', v.quantity))) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
             "OR LOWER(TRIM(FUNCTION('STR', v.value))) LIKE LOWER(CONCAT('%', :keyword, '%'))")
-    List<Voucher> findByKeyWord(String keyword);
+    Page<Voucher> findByKeyWord(String keyword, Pageable pageable);
 
 }

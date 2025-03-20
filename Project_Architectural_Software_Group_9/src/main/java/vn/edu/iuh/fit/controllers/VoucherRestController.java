@@ -128,9 +128,18 @@ public class VoucherRestController {
     }
 
     @PostMapping("/search")
-    public ResponseEntity<BaseResponse<?>> searchVoucherByKeyWord(@RequestParam String keyword) {
-        List<?> vouchers = voucherService.getVoucherByKeyWord(keyword);
-        if (vouchers == null || vouchers.isEmpty()) {
+    public ResponseEntity<BaseResponse<?>> searchVoucherByKeyWord(@RequestParam String keyword,
+                                                                  @RequestParam(defaultValue = "0", required = false) Integer pageNo,
+                                                                  @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
+        if(pageNo == null) {
+            pageNo = 0;
+        }
+
+        if(pageSize == null) {
+            pageSize = 10;
+        }
+        PageResponse<?> vouchers = voucherService.getVoucherByKeyWord(keyword, pageNo, pageSize);
+        if (vouchers == null || vouchers.getValues().isEmpty()) {
             return ResponseEntity.notFound().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Search voucher by "+ keyword+" success").response(vouchers).build());
