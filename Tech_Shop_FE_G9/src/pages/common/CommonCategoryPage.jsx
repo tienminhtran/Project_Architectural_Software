@@ -1,32 +1,39 @@
 import React, { useState } from "react";
 import { BsPencil, BsTrash } from "react-icons/bs";
-import { Link, useNavigate } from "react-router-dom";
-// Này  dùng để móc API lấy danh sách category
-import useCategories from "../../hooks/useCategorie"; 
+import { Link,useNavigate } from "react-router-dom";
+import useCategories from "../../hooks/useCategorie";
 import ReactPaginate from "react-paginate";
 
 const CategoryPage = () => {
-  // Khai báo mấy cái biến state để xử lý dữ liệu
-  const [showFilters, setShowFilters] = useState(false); // Cái này để ẩn/hiện bộ lọc
-  const [search, setSearch] = useState(""); 
-  const [category, setCategory] = useState(""); // Biến để chọn category
-  const [subCategory, setSubCategory] = useState(""); // Biến để chọn sub-category
-  const [brand, setBrand] = useState(""); // Biến chọn brand
-  const [selectedRows, setSelectedRows] = useState([]); // Cái này lưu mấy hàng đang được chọn
-  const [currentPage, setCurrentPage] = useState(0); // Lưu số trang hiện tại
-  const pageSize = 10; // Số item trên mỗi trang
+    const navigate = useNavigate();
+  
+  // State để quản lý bộ lọc và danh sách danh mục
+  const [showFilters, setShowFilters] = useState(false);
+  const [search, setSearch] = useState("");
+  const [category, setCategory] = useState("");
+  const [selectedRows, setSelectedRows] = useState([]);
+  const [currentPage, setCurrentPage] = useState(0);
+  const pageSize = 10;
 
   // Gọi API lấy danh sách category theo phân trang
   const { categories_paging, deleteCategory } = useCategories(currentPage, pageSize);
   const { data, isLoading, isError, error } = categories_paging;
-  const categories = data?.values || []; // Lấy danh sách category từ API
+  const categories = data?.values || [];
 
-  if (isLoading) return <p>Loading categories...</p>; // Đang tải thì hiện chữ này
-  if (isError) return <p>Error: {error.message}</p>; // Nếu lỗi thì báo lỗi
+  if (isLoading) return <p>Loading categories...</p>;
+  if (isError) return <p>Error: {error.message}</p>;
 
-  // Hàm xử lý khi bấm qua trang mới
-  const handlePageChange = (selected) => {
-    setCurrentPage(selected.selected);
+  // Xử lý tìm kiếm và lọc theo trạng thái
+  const filteredCategories = categories.filter((item) => {
+    return (
+      item.name.toLowerCase().includes(search.toLowerCase()) &&
+      (category === "" || (category === "Activate" && item.active) || (category === "Disable" && !item.active))
+    );
+  });
+
+  // Hàm xử lý khi chuyển trang
+  const handlePageChange = ({ selected }) => {
+    setCurrentPage(selected);
   };
 
   // Hàm chọn từng hàng
@@ -40,36 +47,56 @@ const CategoryPage = () => {
 
   // Hàm chọn tất cả hàng
   const handleSelectAll = () => {
-    if (selectedRows.length === categories.length) {
-      setSelectedRows([]); // Nếu đã chọn hết rồi thì bỏ chọn
+    if (selectedRows.length === filteredCategories.length) {
+      setSelectedRows([]);
     } else {
-      setSelectedRows(categories.map((item) => item.id)); // Chọn hết luôn
+      setSelectedRows(filteredCategories.map((item) => item.id));
     }
   };
 
-  
- /**
-  * Xử lý khi bấm vào nút sửa
-  * @param {*} voucher 
-  * xóa
-  */
-  const handleDelete = (categoryid) => {
-    if (window.confirm("Are you sure you want to delete?")) {
-      deleteCategory(categoryid);
+  // Hàm xóa danh mục
+  const handleDelete = (categoryId) => {
+    if (window.confirm("Are you sure you want to delete this category?")) {
+      deleteCategory(categoryId);
     }
-
-
   };
+
+  // Hàm cập nhật tìm kiếm
+  const handleSearch = (e) => {
+    setSearch(e.target.value);
+    setCurrentPage(0);
+  };
+
+  // Hàm cập nhật trạng thái danh mục
+  const handleCategoryChange = (e) => {
+    setCategory(e.target.value);
+    setCurrentPage(0);
+  };
+
+  //Thay đổi trong phần xử lý sự kiện khi nhấn nút toggle bộ lọc:
+  const handleToggleFilters = () => {
+    if (showFilters) {
+      setSearch("");  // Reset ô tìm kiếm
+      setCategory(""); // Reset trạng thái lọc
+    }
+    setShowFilters(!showFilters);
+  };
+
+    // Chuyển hướng đến trang tạo Category và truyền dữ liệu Category qua state
+  // Để thực hiện việc cập nhật Category
+  const handleNavigate = (category) => {
+    navigate('/common/AddCategoryPage', {state: {category}});
+  }
+
   return (
     <div className="page-wrapper">
-      {/* Header của trang */}
+      {/* Header */}
       <div className="page-header d-flex justify-content-between align-items-center">
         <div className="page-title">
           <h3>Product Category List</h3>
           <p>View/Search Category</p>
         </div>
         <div className="header-action">
-          {/* Nút để qua trang thêm category mới */}
           <Link
             to="/common/AddCategoryPage"
             className="btn btn-warning text-white fw-bold rounded px-4 py-2 text-decoration-none"
@@ -79,54 +106,37 @@ const CategoryPage = () => {
         </div>
       </div>
 
-      {/* Bộ lọc danh mục */}
+      {/* Bộ lọc */}
       <div className="filter-container">
-        <button className="filter-toggle" onClick={() => setShowFilters(!showFilters)}>
-          {showFilters ? "✖" : "🔍 Filter"}
+        <button className="filter-toggle" onClick={handleToggleFilters}>
+          {showFilters ? "✖" : "🔍 Filters"}
         </button>
 
         {showFilters && (
           <div className="filters">
-            {/* Ô nhập tìm kiếm */}
             <input
               type="text"
-              placeholder="Search..."
+              placeholder="Search name or description"
               value={search}
-              onChange={(e) => setSearch(e.target.value)}
+              onChange={handleSearch}
             />
-            {/* Chọn category */}
-            <select value={category} onChange={(e) => setCategory(e.target.value)}>
-              <option value="">Choose Category</option>
-              <option value="laptops">Laptops</option>
-              <option value="accessories">Accessories</option>
-            </select>
-            {/* Chọn sub-category */}
-            <select value={subCategory} onChange={(e) => setSubCategory(e.target.value)}>
-              <option value="">Choose Sub Category</option>
-              <option value="gaming">Gaming</option>
-              <option value="business">Business</option>
-            </select>
-            {/* Chọn brand */}
-            <select value={brand} onChange={(e) => setBrand(e.target.value)}>
-              <option value="">Choose Brand</option>
-              <option value="dell">Dell</option>
-              <option value="hp">HP</option>
-              <option value="acer">Acer</option>
-              <option value="lenovo">Lenovo</option>
+            <select value={category} onChange={handleCategoryChange}>
+              <option value="">Choose Active Status</option>
+              <option value="Activate">Activate</option>
+              <option value="Disable">Disable</option>
             </select>
           </div>
         )}
       </div>
 
-      {/* Bảng danh sách category */}
+      {/* Bảng danh sách danh mục */}
       <table className="table table-responsive">
         <thead>
           <tr>
             <th>
-              {/* Ô checkbox chọn tất cả */}
               <input
                 type="checkbox"
-                checked={selectedRows.length === categories.length}
+                checked={selectedRows.length === filteredCategories.length}
                 onChange={handleSelectAll}
                 className="form-check-input"
               />
@@ -137,10 +147,9 @@ const CategoryPage = () => {
           </tr>
         </thead>
         <tbody>
-          {categories.map((item) => (
+          {filteredCategories.map((item) => (
             <tr key={item.id}>
               <td>
-                {/* Ô checkbox chọn từng hàng */}
                 <input
                   type="checkbox"
                   checked={selectedRows.includes(item.id)}
@@ -149,14 +158,12 @@ const CategoryPage = () => {
                 />
               </td>
               <td>{item.name}</td>
-              <td>{item.active ? "✅" : "❌"}</td>
+              <td>{item.active ? "✅ Active" : "❌ Disabled"}</td>
               <td className="action">
                 <div className="d-flex gap-3">
-                  {/* Nút sửa */}
-                  <BsPencil className="text-secondary fs-5" role="button" />
-                  {/* Nút xóa */}
-                  <BsTrash className="text-danger fs-5" role="button" onClick={() => handleDelete(item.id)}/>
-                  </div>
+                  <BsPencil className="text-secondary fs-5" role="button" onClick={() => handleNavigate(item)} />
+                  <BsTrash className="text-danger fs-5" role="button" onClick={() => handleDelete(item.id)} />
+                </div>
               </td>
             </tr>
           ))}
@@ -168,15 +175,15 @@ const CategoryPage = () => {
         previousLabel={"←"}
         nextLabel={"→"}
         breakLabel={"..."}
-        pageCount={data.totalPages} // Tổng số trang từ API trả về
-        onPageChange={handlePageChange} // Khi bấm qua trang khác
-        containerClassName={"pagination d-flex justify-content-end"} // Class của div bọc phân trang
-        pageClassName={"page-item"} // Class của từng trang
-        pageLinkClassName={"page-link"} // Class của thẻ a từng trang
-        previousClassName={"page-item"} // Class của nút Previous
-        previousLinkClassName={"page-link"} // Class của thẻ a của Previous
-        nextClassName={"page-item"} // Class của nút Next
-        nextLinkClassName={"page-link"} // Class của thẻ a của Next
+        pageCount={data.totalPages}
+        onPageChange={handlePageChange} // Hàm xử lý khi chuyển trang
+        containerClassName={"pagination d-flex justify-content-end"} // Class của thẻ div bao bọc phân trang
+        pageClassName={"page-item"} // Class của thẻ li của mỗi trang
+        pageLinkClassName={"page-link"} // Class của thẻ a của mỗi trang
+        previousClassName={"page-item"} // Class của thẻ li của nút Previous
+        previousLinkClassName={"page-link"} // Class của thẻ a của nút Previous
+        nextClassName={"page-item"} // Class của thẻ li của nút Next
+        nextLinkClassName={"page-link"} // Class của thẻ a của nút Next
         breakClassName={"page-item"} 
         breakLinkClassName={"page-link"}
         activeClassName={"active"} // Class của trang hiện tại

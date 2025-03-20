@@ -99,6 +99,10 @@ public class CategoryRestController {
         }
      */
 
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<BaseResponse<?>> searchCategory(@PathVariable String keyword) {
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Search category success").response(categoryService.findKeyWord(keyword)).build());
+    }
 
 
 
