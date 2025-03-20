@@ -112,6 +112,12 @@ public class ProductServiceImpl implements ProductService {
         return (int) productRepository.count();
     }
 
+    @Override
+    public List<ProductResponse> searchProduct(String keyword) {
+        List<Product> products = productRepository.searchProduct(keyword);
+        return products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
+    }
+
 
     /**
      * total stock quantity
