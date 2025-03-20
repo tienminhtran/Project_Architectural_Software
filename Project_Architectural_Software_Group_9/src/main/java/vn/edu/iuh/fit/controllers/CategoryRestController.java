@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.request.CategoryRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.CategoryResponse;
+import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.services.CategoryService;
 
 @RestController
@@ -24,8 +25,19 @@ public class CategoryRestController {
 
     //http://localhost:8080/api/v1/category
     @GetMapping("")
-    public ResponseEntity<BaseResponse<?>> getAllCategory() {
-        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get all category success").response(categoryService.findAll()).build());
+    public ResponseEntity<BaseResponse<?>> getAllCategory(@RequestParam(defaultValue = "0", required = false) Integer pageNo,
+                                                          @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
+        if (pageNo == null) {
+            pageNo = 0;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        PageResponse<?> categories = categoryService.findAll_Paging(pageNo, pageSize);
+        if (categories == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get all categories success").response(categories).build());
     }
 
     @GetMapping("/{id}")
