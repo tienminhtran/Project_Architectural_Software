@@ -43,4 +43,6 @@ public interface VoucherService {
     int getAvailableVoucherCount();
 
     boolean existsVoucher(String name);
+
+    List<VoucherResponse> getVoucherByKeyWord(String keyword);
 }

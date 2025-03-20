@@ -168,4 +168,13 @@ public class VoucherServiceImpl implements VoucherService {
         }
         return false;
     }
+
+    @Override
+    public List<VoucherResponse> getVoucherByKeyWord(String keyword) {
+        System.out.println(keyword);
+        List<Voucher> vouchers = voucherRepository.findByKeyWord(keyword);
+        System.out.println(vouchers.size());
+        vouchers.forEach(System.out::println);
+        return vouchers.stream().map(this::convertToDto).toList();
+    }
 }

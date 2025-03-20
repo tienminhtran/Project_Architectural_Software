@@ -127,6 +127,14 @@ public class VoucherRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get available voucher count success").response(count).build());
     }
 
+    @PostMapping("/search")
+    public ResponseEntity<BaseResponse<?>> searchVoucherByKeyWord(@RequestParam String keyword) {
+        List<?> vouchers = voucherService.getVoucherByKeyWord(keyword);
+        if (vouchers == null || vouchers.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Search voucher by "+ keyword+" success").response(vouchers).build());
+    }
 
 
 }
