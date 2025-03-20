@@ -2,7 +2,7 @@ import React, { useState } from "react";
 import { BsPencil, BsTrash } from "react-icons/bs";
 import { Link, useNavigate } from "react-router-dom";
 // Này  dùng để móc API lấy danh sách category
-import useCategories from "../../hooks/useCategorie"; 
+import useCategories from "../../../hooks/useCategorie"; 
 import ReactPaginate from "react-paginate";
 
 const CategoryPage = () => {
@@ -50,7 +50,7 @@ const CategoryPage = () => {
   
  /**
   * Xử lý khi bấm vào nút sửa
-  * @param {*} voucher 
+  * @param {*} categoryid 
   * xóa
   */
   const handleDelete = (categoryid) => {

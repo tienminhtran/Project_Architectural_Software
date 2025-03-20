@@ -74,11 +74,13 @@
 }
 
 /* Logo */
-.logo {
-  font-size: 1.5rem;
-  font-weight: bold;
-  text-align: center;
-  padding-bottom: 20px;
+.sidebar .logo {
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+  width: 100%;
+  height: auto;
+  padding: 20px;
 }
 
 /* Danh sách menu */
@@ -93,7 +95,6 @@
   list-style: none;
   padding: 0;
   margin: 0;
-  background-color: #d7faff;
   /* background-color: #2f7ac5; */
   font-size: 20px;
   border-radius: 1px;
@@ -121,7 +122,7 @@
   font-weight: bold;
 }
 .menu li:hover {
-  background-color: #d7faff;
+  background-color: #FAF1E6;
 }
 
 /* Icon */
@@ -135,8 +136,12 @@
   transition: transform 0.3s ease;
 }
 
+/* .menu-item .open {
+  background-color: #d7faff;
+} */
+
 /* Khi menu con mở, mũi tên quay xuống */
-.menu-item.open .arrow {
+.menu-item .open .arrow {
   transform: rotate(90deg);
 }
 

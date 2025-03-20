@@ -1,7 +1,7 @@
 import React, {useState} from "react";
 import { Form } from "react-bootstrap";
 import { useLocation, useNavigate } from "react-router-dom";
-import useVoucher from "../../hooks/useVoucher";
+import useVoucher from "../../../hooks/useVoucher";
 
  const FormVoucher = () => {
     const location = useLocation();
