@@ -24,4 +24,12 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     List<Order> findByUser_Username(String username);
 
     List<Order> findByStatus(OrderStatus status);
+
+    // tim so dien thoai
+//    List<Order> findByPhoneNumber(String phoneNumber);
+
+    // tim payment
+    List<Order> findByPayment_PaymentName(String payment);
+
+
 }
