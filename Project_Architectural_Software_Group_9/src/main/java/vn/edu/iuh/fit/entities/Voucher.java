@@ -15,6 +15,7 @@ import java.util.List;
 @Builder
 @Entity
 @Table(name = "vouchers")
+@ToString
 public class Voucher extends TrackingDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -38,5 +39,6 @@ public class Voucher extends TrackingDate {
     private double value;
 
     @OneToMany(mappedBy = "voucher")
+    @ToString.Exclude
     private List<Order> orders;
 }

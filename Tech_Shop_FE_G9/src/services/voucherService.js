@@ -30,3 +30,9 @@ export const deleteVoucher = async (id) => {
     const response = await axiosInstance.delete(`/voucher/${id}`);
     return response.data;
 };
+
+export const searchVoucher = async (pageNo, pageSize,keyword) => {
+    
+    const response = await axiosInstance.post(`/voucher/search?keyword=${keyword}&pageNo=${pageNo}&pageSize=${pageSize}`);
+    return response.data;
+};
