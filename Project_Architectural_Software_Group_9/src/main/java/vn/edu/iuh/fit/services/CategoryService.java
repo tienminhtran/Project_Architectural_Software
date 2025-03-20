@@ -22,6 +22,7 @@ public interface CategoryService {
     Optional<CategoryResponse> findById(Long id);
     List<CategoryResponse> findAll();
     Category findByCategoryName(String categoryName);
+    List<CategoryResponse> findKeyWord(String keyword);
     CategoryResponse save(CategoryRequest categoryRequest);
 //    boolean updateCategory(CategoryRequest categoryRequest, Long id);
     boolean deleteCategory(Long id);

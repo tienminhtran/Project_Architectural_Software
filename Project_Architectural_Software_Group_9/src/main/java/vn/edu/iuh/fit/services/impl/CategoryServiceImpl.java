@@ -87,6 +87,16 @@ public class CategoryServiceImpl implements CategoryService{
         return categoryRepository.findCategoryByName(categoryName).orElse(null);
     }
 
+    @Override
+    public List<CategoryResponse> findKeyWord(String keyword) {
+
+        List<Category> categories = categoryRepository.findKeyWork(keyword);
+        if (categories != null) {
+            return categories.stream().map(this::convertToDto).toList();
+        }
+        return null;
+    }
+
 
     /**
      * Add category
