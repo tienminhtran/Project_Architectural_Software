@@ -23,6 +23,7 @@
     border: 1px solid #ccc;
     border-radius: 5px;
     background-color: #ffffff;
+    color: #000;
   }
   
   textarea {
@@ -78,7 +79,48 @@
 
   }
 
+  .form-group label {
+    display: flex;
+    align-items: center;
+    font-size: 16px;
+    font-weight: 500;
+    color: #333;
+  }
+  /* Tùy chỉnh checkbox */
+.form-group input[type="checkbox"] {
+  appearance: none;
+  width: 30px;
+  height: 30px;
+  border: 2px solid #007bff;
+  border-radius: 4px;
+  background-color: #fff;
+  margin-right: 10px;
+  cursor: pointer;
+  transition: 0.2s;
+}
 
+/* Khi checkbox được chọn */
+.form-group input[type="checkbox"]:checked {
+  background-color: #007bff;
+  border-color: #007bff;
+  position: relative;
+}
+
+/* Thêm dấu check khi chọn */
+.form-group input[type="checkbox"]:checked::after {
+  content: "✔";
+  font-size: 14px;
+  color: white;
+  position: absolute;
+  left: 4px;
+  top: 1px;
+  width: 120px;
+}
+
+/* Tạo hiệu ứng hover */
+.form-group input[type="checkbox"]:hover {
+  border-color: #0056b3;
+}
 
 
 

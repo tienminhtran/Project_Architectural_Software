@@ -58,3 +58,15 @@ export const updateCategory = async (category) => {
         throw error;
     }
 };
+
+// search keywork (name or description)
+export const searchCategory = async (keyword) => {
+    try {
+        const response = await axiosInstance.get(`/category/search/${keyword}`);
+        console.log("Category search result:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error searching category:", error);
+        throw error;
+    }
+};
