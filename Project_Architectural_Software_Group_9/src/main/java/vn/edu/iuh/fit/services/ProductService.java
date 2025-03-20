@@ -46,4 +46,10 @@ public interface ProductService {
     Double calculateTotalRevenue();
 
     int countProducts();
+    /*
+        search product by productName, battery, cpu, description, graphicCard,monitor,os,port, price, ram,stockQuantity,warranty,weight
+
+     */
+    List<ProductResponse> searchProduct(String keyword);
+
 }
