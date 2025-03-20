@@ -8,9 +8,14 @@ package vn.edu.iuh.fit.services.impl;/*
 
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.dtos.request.CategoryRequest;
 import vn.edu.iuh.fit.dtos.response.CategoryResponse;
+import vn.edu.iuh.fit.dtos.response.PageResponse;
+import vn.edu.iuh.fit.dtos.response.VoucherResponse;
 import vn.edu.iuh.fit.entities.Category;
 import vn.edu.iuh.fit.entities.Voucher;
 import vn.edu.iuh.fit.repositories.CategoryRepository;
@@ -125,6 +130,21 @@ public class CategoryServiceImpl implements CategoryService{
             return true;
         }
         return false;
+    }
+
+    @Override
+    public PageResponse<CategoryResponse> findAll_Paging(int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Category> categories = categoryRepository.findAll(pageable);
+        PageResponse<CategoryResponse> pageResponse = new PageResponse<>();
+        if (categories != null) {
+            pageResponse.setPage(pageNo);
+            pageResponse.setSize(pageSize);
+            pageResponse.setTotal(categories.getNumberOfElements());
+            pageResponse.setTotalPages(categories.getTotalPages());
+            pageResponse.setValues(categories.stream().map(this::convertToDto).toList());
+        }
+        return pageResponse;
     }
 
 

@@ -46,4 +46,9 @@ public interface OrderService {
 
     // tìm payment
 //    List<OrderResponse> findByPayment(String payment);
+
+//    Chuyển status sang Cancelled
+
+
+
 }
