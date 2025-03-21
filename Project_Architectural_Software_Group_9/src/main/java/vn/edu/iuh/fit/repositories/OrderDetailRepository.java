@@ -25,7 +25,7 @@ import java.util.List;
 @Repository
 public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> {
     @Query("SELECT new vn.edu.iuh.fit.dtos.response.BestSellingProductResponse( " +
-            "od.product.id, od.product.productName, " +
+            "od.product.id, od.product.productName, od.product.thumbnail, od.product.category.name, od.product.brand.name, " +
             "SUM(od.quantity), CAST(SUM(od.quantity * od.product.price) AS BIGDECIMAL)) " +  // Tính tổng doanh thu
             "FROM OrderDetail od " +
             "JOIN od.order o " +  // Nếu muốn lọc theo thời gian thì cần JOIN orders
