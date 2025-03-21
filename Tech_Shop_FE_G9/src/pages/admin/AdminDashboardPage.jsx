@@ -80,7 +80,7 @@ const AdminDashboardPage = () => {
         </div>
       </div>
 
-      <div className="product-tables">
+      <div className="main">
         {/* Best Seller */}
         <div className="product-table">
           <h3>Best Seller</h3>
