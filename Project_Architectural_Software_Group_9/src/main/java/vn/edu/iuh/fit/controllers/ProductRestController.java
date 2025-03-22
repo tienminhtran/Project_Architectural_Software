@@ -239,4 +239,17 @@ public class ProductRestController {
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get best selling products").response(bestSellingProductResponses).build());
     }
+
+    /*
+    search product by productName, battery, cpu, description, graphicCard,monitor,os,port, price, ram,stockQuantity,warranty,weight
+     */
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<BaseResponse<?>> searchProduct(@PathVariable String keyword) {
+        List<ProductResponse> productResponses = productService.searchProduct(keyword);
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Search product").response(productResponses).build());
+    }
+
 }

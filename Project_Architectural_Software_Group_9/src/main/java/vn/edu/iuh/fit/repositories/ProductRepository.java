@@ -38,4 +38,18 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "JOIN Product p ON od.product.id = p.id " +
             "WHERE o.status = 'COMPLETED'")
     Double calculateTotalRevenue();
+
+
+    /*
+        Query to search product by productName, battery, cpu, description, graphicCard,monitor,os,port, price, ram,stockQuantity,warranty,weight
+     */
+    @Query("SELECT p FROM Product p WHERE p.productName LIKE %:keyword% " +
+            "OR p.battery LIKE %:keyword% " +
+            "OR p.cpu LIKE %:keyword% OR p.description LIKE %:keyword% " +
+            "OR p.graphicCard LIKE %:keyword% OR p.monitor LIKE %:keyword% " +
+            "OR p.os LIKE %:keyword% " +
+            "OR p.port LIKE %:keyword% OR p.port LIKE %:keyword% " +
+            "OR p.ram LIKE %:keyword% " +
+            "OR p.warranty LIKE %:keyword% ")
+    List<Product> searchProduct(String keyword);
 }

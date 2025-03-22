@@ -189,7 +189,7 @@ public class UserRestController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<BaseResponse<?>> updateProduct(
+    public ResponseEntity<BaseResponse<?>> updateUser(
             @PathVariable Long id,
             @RequestPart("user") String userJson,
             @RequestPart(value = "fileImage", required = false) MultipartFile fileImages) {
@@ -205,16 +205,16 @@ public class UserRestController {
         }
 
         userRequest.setImage(fileImages);
-        UserResponse newProduct = userService.updateUser(id,userRequest);
+        UserResponse newUser = userService.updateUser(id,userRequest);
 
-        if (newProduct == null) {
+        if (newUser == null) {
             return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok(BaseResponse.builder()
                 .status("SUCCESS")
                 .message("Update user success")
-                .response(newProduct)
+                .response(newUser)
                 .build());
     }
 

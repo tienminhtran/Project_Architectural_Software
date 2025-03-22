@@ -96,4 +96,33 @@ public class OrderRestController {
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message(message).build());
     }
+
+//    tìm theo khách hàng
+    @GetMapping("/customer/{customerName}")
+    public ResponseEntity<BaseResponse<?>> getOrdersByCustomerName(@PathVariable String customerName) {
+        List<OrderResponse> orderResponses = orderService.findByCustomerName(customerName);
+        if(orderResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by customer name").response(orderResponses).build());
+    }
+
+    /**
+     * Find order by payment
+      * @param namePayment
+     * @return
+     */
+    @GetMapping("/payment/{namePayment}")
+    public ResponseEntity<BaseResponse<?>> getOrdersByPayment(@PathVariable String namePayment) {
+        List<OrderResponse> orderResponses = orderService.findByNamePayMent(namePayment);
+        if(orderResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by payment").response(orderResponses).build());
+    }
+
+
+
+
+
 }

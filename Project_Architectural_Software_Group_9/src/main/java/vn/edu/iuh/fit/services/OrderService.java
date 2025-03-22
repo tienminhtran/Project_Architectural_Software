@@ -38,4 +38,17 @@ public interface OrderService {
     List<OrderDetailResponse> getOrderDetailsByOrderId(Long orderId);
 
     String cancelOrder(Long orderId);
+
+//    Tìm kiếm đơn hàng theo tên khách hàng
+    List<OrderResponse> findByCustomerName(String customerName);
+
+    List<OrderResponse> findByNamePayMent(String namePayment);
+
+    // tìm payment
+//    List<OrderResponse> findByPayment(String payment);
+
+//    Chuyển status sang Cancelled
+
+
+
 }

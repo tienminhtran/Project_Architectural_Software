@@ -1,8 +1,8 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllVouchers_Paging, createVoucher, updateVoucher, deleteVoucher } from "../services/voucherService";
+import { getAllVouchers_Paging, createVoucher, updateVoucher, deleteVoucher, searchVoucher } from "../services/voucherService";
 import usePaginationQuery from "./usePaginationQuery";
 
-const useVoucher = (pageNo, pageSize) => {
+const useVoucher = (pageNo, pageSize, voucherSearch) => {
   const queryClient = useQueryClient();
 
   // Sử dụng useMutation để tạo mới voucher
@@ -49,11 +49,15 @@ const useVoucher = (pageNo, pageSize) => {
     },
   })
 
+  //seach voucher
+
+
   return {
     vouchers_paging: usePaginationQuery("getAllVouchers_Paging", getAllVouchers_Paging, pageNo, pageSize),
     createVoucher: create.mutate,
     updateVoucher: update.mutate,
-    deleteVoucher: deleteVou.mutate
+    deleteVoucher: deleteVou.mutate,
+    search_paging: usePaginationQuery("searchVoucher", searchVoucher,pageNo, pageSize, voucherSearch),
   };
 };
 

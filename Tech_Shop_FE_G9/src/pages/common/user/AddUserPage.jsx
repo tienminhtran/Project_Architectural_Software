@@ -42,27 +42,27 @@ const AddUserPage = () => {
       <form onSubmit={handleSubmit} className="user-form">
         <div className="form-group">
           <label>Username</label>
-          <input type="text" name="username" value={formData.username} onChange={handleChange} required />
+          <input type="text" name="username" value={formData.username} placeholder="Enter username" onChange={handleChange} required />
         </div>
 
         <div className="form-group">
           <label>Email</label>
-          <input type="email" name="email" value={formData.email} onChange={handleChange} required />
+          <input type="email" name="email" value={formData.email} placeholder="Enter email" onChange={handleChange} required />
         </div>
 
         <div className="form-group">
           <label>Phone Number</label>
-          <input type="text" name="phone" value={formData.phone} onChange={handleChange} required />
+          <input type="text" name="phone" value={formData.phone} placeholder="Enter phone number" onChange={handleChange} required />
         </div>
 
         <div className="form-group">
           <label>First Name</label>
-          <input type="text" name="firstName" value={formData.firstName} onChange={handleChange} required />
+          <input type="text" name="firstName" value={formData.firstName} placeholder="Enter firstname" onChange={handleChange} required />
         </div>
 
         <div className="form-group">
           <label>Last Name</label>
-          <input type="text" name="lastName" value={formData.lastName} onChange={handleChange} required />
+          <input type="text" name="lastName" value={formData.lastName} placeholder="Enter lastname" onChange={handleChange} required />
         </div>
 
         <div className="form-group">

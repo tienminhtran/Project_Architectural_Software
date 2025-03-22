@@ -1,29 +1,34 @@
-import React from 'react';
-import './App.css';
-import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import React from "react";
+import "./App.css";
+import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Menu from "/src/components/layout/Admin/Menu"; // Sidebar component
 import Menu_Header from "/src/components/layout/Admin/Menu_Header"; // Header component
 
-import ProtectedRoute from './components/auth/ProtectedRoute';
+import ProtectedRoute from "./components/auth/ProtectedRoute";
 
-import LoginPage from './pages/LoginPage';
-import HomePage from './pages/HomePage';
-import AdminPage from './pages/admin/AdminDashboardPage';
-import ManagerPage from './pages/manager/ManagerDashboardPage';
-import BrandPage from './pages/common/BrandPage';
+import LoginPage from "./pages/LoginPage";
+import HomePage from "./pages/HomePage";
+import AdminPage from "./pages/admin/AdminDashboardPage";
+import ManagerPage from "./pages/manager/ManagerDashboardPage";
+import BrandPage from "./pages/common/brand/BrandPage";
 
-import ProfilePage from './pages/common/ProfilePage';
-import ChangePassword from './pages/common/ChangePassword';
-import AddBrandPage from './pages/common/AddBrandPage';
-import RegisterPage from './pages/RegisterPage';
-import CategoryPage from './pages/common/CommonCategoryPage';
-import AddCategoryPage from './pages/common/AddCategoryPage';
-import VoucherPage from './pages/common/VoucherPage';
-import FormVoucher from './pages/common/FormVoucher';
-import UserPage from './pages/common/UserPage';
-import AddUserPage from './pages/common/AddUserPage';
+import ProfilePage from "./pages/common/user/ProfilePage";
+import ChangePassword from "./pages/common/user/ChangePassword";
+import AddBrandPage from "./pages/common/brand/AddBrandPage";
+import RegisterPage from "./pages/RegisterPage";
+import CategoryPage from "./pages/common/category/CommonCategoryPage";
+import AddCategoryPage from "./pages/common/category/AddCategoryPage";
+import VoucherPage from "./pages/common/voucher/VoucherPage";
+import FormVoucher from "./pages/common/voucher/FormVoucher";
+import UserPage from "./pages/common/user/UserPage";
+import AddUserPage from "./pages/common/user/AddUserPage";
+import ProductPage from "./pages/common/product/ProductPage";
+import FormProduct from "./pages/common/product/FormProduct";
+import OrderPage from "./pages/common/order/OrderPage";
+import OrderDetailPage from "./pages/common/order/OrderDetailPage";
+
 // Reusable Layout Component
-const AdminLayout = ({ children }) => (
+const DashboardLayout = ({ children }) => (
   <div className="axil-signin-area">
     <div className="admin-dashboard">
       <Menu />
@@ -35,7 +40,6 @@ const AdminLayout = ({ children }) => (
   </div>
 );
 
-
 function App() {
   return (
     <Router>
@@ -43,112 +47,164 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         {/* Admin Page */}
-        {/* // Protected Routes */}
-        <Route element={<ProtectedRoute allowedRoles={['ROLE_ADMIN']} />}>
+
+        <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} />}>
           <Route
             path="/admin/dashboard"
             element={
-              <AdminLayout>
+              <DashboardLayout>
                 <AdminPage />
-              </AdminLayout>
-            }
-          />
-
-          <Route
-            path="/common/BrandPage"
-            element={
-              <AdminLayout>
-                <BrandPage />
-              </AdminLayout>
-            }
-          />
-
-          <Route
-            path="/common/ProfilePage"
-            element={
-              <AdminLayout>
-                <ProfilePage />
-              </AdminLayout>
-            }
-          />
-
-          <Route
-            path="/common/ChangePassword"
-            element={
-              <AdminLayout>
-                <ChangePassword />
-              </AdminLayout>
-            }
-          />
-
-          <Route
-            path="/common/AddBrandPage"
-            element={
-              <AdminLayout>
-                <AddBrandPage />
-              </AdminLayout>
-            }
-          />
-
-          <Route
-            path="/common/CategoryPage"
-            element={
-              <AdminLayout>
-                <CategoryPage />
-              </AdminLayout>
-            }
-          />
-          {/* ///common/AddCategoryPage */}
-          <Route
-            path="/common/AddCategoryPage"
-            element={
-              <AdminLayout>
-                <AddCategoryPage />
-              </AdminLayout>
-            }
-          />
-
-          <Route
-            path="/common/vouchers"
-            element={
-              <AdminLayout>
-                <VoucherPage />
-              </AdminLayout>
-            }
-          />
-
-          <Route
-            path="/common/formVoucher"
-            element={
-              <AdminLayout>
-                <FormVoucher />
-              </AdminLayout>
+              </DashboardLayout>
             }
           />
 
           <Route
             path="/common/UserPage"
             element={
-              <AdminLayout>
+              <DashboardLayout>
                 <UserPage />
-              </AdminLayout>
+              </DashboardLayout>
             }
           />
           <Route
             path="/common/AddUserPage"
             element={
-              <AdminLayout>
+              <DashboardLayout>
                 <AddUserPage />
-              </AdminLayout>
+              </DashboardLayout>
             }
+          />
+        </Route>
+
+        {/* Common Page */}
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]} />
+          }
+        >
+          <Route
+            path="/common/BrandPage"
+            element={
+              <DashboardLayout>
+                <BrandPage />
+              </DashboardLayout>
+            }
+          />
+
+          <Route
+            path="/common/ProfilePage"
+            element={
+              <DashboardLayout>
+                <ProfilePage />
+              </DashboardLayout>
+            }
+          />
+
+          <Route
+            path="/common/ChangePassword"
+            element={
+              <DashboardLayout>
+                <ChangePassword />
+              </DashboardLayout>
+            }
+          />
+
+          <Route
+            path="/common/AddBrandPage"
+            element={
+              <DashboardLayout>
+                <AddBrandPage />
+              </DashboardLayout>
+            }
+          />
+
+          <Route
+            path="/common/CategoryPage"
+            element={
+              <DashboardLayout>
+                <CategoryPage />
+              </DashboardLayout>
+            }
+          />
+          {/* ///common/AddCategoryPage */}
+          <Route
+            path="/common/AddCategoryPage"
+            element={
+              <DashboardLayout>
+                <AddCategoryPage />
+              </DashboardLayout>
+            }
+          />
+
+          <Route
+            path="/common/vouchers"
+            element={
+              <DashboardLayout>
+                <VoucherPage />
+              </DashboardLayout>
+            }
+          />
+
+          <Route
+            path="/common/formVoucher"
+            element={
+              <DashboardLayout>
+                <FormVoucher />
+              </DashboardLayout>
+            }
+          />
+
+          <Route
+            path="/common/formProduct"
+            element={
+              <DashboardLayout>
+                <FormProduct />
+              </DashboardLayout>
+            }
+          />
+
+          <Route
+            path="/common/products"
+            element={
+              <DashboardLayout>
+                <ProductPage />
+              </DashboardLayout>
+            }           
+          />
+
+          <Route
+            path="/common/orders"
+            element={
+              <DashboardLayout>
+                <OrderPage />
+              </DashboardLayout>
+            }
+          />
+
+          <Route
+            path="/common/orders/detail"
+            element={
+              <DashboardLayout>
+                <OrderDetailPage />
+              </DashboardLayout>
+            }           
           />
 
 
         </Route>
 
+      
+
         {/* Manager Page */}
-        <Route element={<ProtectedRoute allowedRoles={['ROLE_MANAGER']} />}>
-          <Route path="/manager/dashboard" element={<ManagerPage />} />
+        <Route element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}>
+          <Route
+            path="/manager/dashboard"
+            element={
+              <DashboardLayout>
+                <ManagerPage />
+              </DashboardLayout>
+            }
+          />
         </Route>
 
         <Route path="/" element={<HomePage />} />

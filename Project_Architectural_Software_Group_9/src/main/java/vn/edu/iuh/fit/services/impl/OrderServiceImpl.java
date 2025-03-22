@@ -18,6 +18,7 @@ import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.ProductResponse;
 import vn.edu.iuh.fit.entities.Order;
 import vn.edu.iuh.fit.entities.OrderDetail;
+import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.enums.OrderStatus;
 import vn.edu.iuh.fit.repositories.OrderRepository;
 import vn.edu.iuh.fit.services.OrderService;
@@ -138,4 +139,22 @@ public class OrderServiceImpl implements OrderService {
         }
         return "Status Order is "+order.getStatus()+". Order cannot be cancelled.";
     }
+
+    @Override
+    public List<OrderResponse> findByCustomerName(String customerName) {
+        List<Order> orders = orderRepository.findByUser_Username(customerName);
+        return orders.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderResponse> findByNamePayMent(String namePayment) {
+        List<Order> orders = orderRepository.findByPayment_PaymentName(namePayment);
+        return orders.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
+//    @Override
+//    public List<OrderResponse> findByPayment(String payment) {
+//        List<Order> orders = orderRepository.findByPayment(payment);
+//        return orders.stream().map(this::convertToDto).collect(Collectors.toList());
+//    }
 }

@@ -8,6 +8,8 @@ package vn.edu.iuh.fit.services;/*
 
 import vn.edu.iuh.fit.dtos.request.CategoryRequest;
 import vn.edu.iuh.fit.dtos.response.CategoryResponse;
+import vn.edu.iuh.fit.dtos.response.PageResponse;
+import vn.edu.iuh.fit.dtos.response.VoucherResponse;
 import vn.edu.iuh.fit.entities.Category;
 
 import java.net.CacheRequest;
@@ -20,6 +22,7 @@ public interface CategoryService {
     Optional<CategoryResponse> findById(Long id);
     List<CategoryResponse> findAll();
     Category findByCategoryName(String categoryName);
+    List<CategoryResponse> findKeyWord(String keyword);
     CategoryResponse save(CategoryRequest categoryRequest);
 //    boolean updateCategory(CategoryRequest categoryRequest, Long id);
     boolean deleteCategory(Long id);
@@ -27,6 +30,9 @@ public interface CategoryService {
     boolean existsCategory(String name);
 
     boolean updateCategory(CategoryResponse categoryResponse, Long id);
+
+    PageResponse<CategoryResponse> findAll_Paging(int pageNo, int pageSize);
+
 
 
 }
