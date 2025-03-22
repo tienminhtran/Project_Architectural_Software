@@ -55,6 +55,7 @@ const Menu_Header = () => {
     const handleLogout = () => {
         dispatch(logout());
         removeAccessToken();
+        localStorage.removeItem("lastDashboard");
     };
 
     return (
