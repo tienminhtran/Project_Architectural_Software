@@ -35,14 +35,14 @@ const Menu = () => {
 
   // Cập nhật `lastDashboard` ngay khi URL thay đổi
   useEffect(() => {
-    if (isAdminPage && lastDashboard !== "admin") {
+    if (isAdminPage ) {
       setLastDashboard("admin");
       localStorage.setItem("lastDashboard", "admin");
-    } else if (isManagerPage && lastDashboard !== "manager") {
+    } else if (isManagerPage) {
       setLastDashboard("manager");
       localStorage.setItem("lastDashboard", "manager");
     }
-  }, [location.pathname]); // Lắng nghe sự thay đổi của URL
+  }, [isAdminPage, isManagerPage, lastDashboard]); // Lắng nghe sự thay đổi của URL
   
   console.log(lastDashboard);
   let dashboardLink;
