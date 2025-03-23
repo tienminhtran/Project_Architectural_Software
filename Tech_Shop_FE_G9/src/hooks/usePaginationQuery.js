@@ -1,7 +1,12 @@
 import { useQuery } from "@tanstack/react-query";
 
-const usePaginationQuery = (queryKey, fetchFn, pageNo, pageSize, keySearch="") => {
-
+const usePaginationQuery = (
+  queryKey,
+  fetchFn,
+  pageNo,
+  pageSize,
+  keySearch = ""
+) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
     queryKey: [queryKey, keySearch, pageNo, pageSize],
     queryFn: () => fetchFn(pageNo, pageSize, keySearch),
@@ -15,7 +20,6 @@ const usePaginationQuery = (queryKey, fetchFn, pageNo, pageSize, keySearch="") =
   });
 
   return {
-    
     data: data?.response || {},
     isLoading,
     isError,
