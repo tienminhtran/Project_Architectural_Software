@@ -10,6 +10,7 @@ import {
   getTotalProductSold,
   getTotalOrder,
   getTotalOrderPending,
+  getRecentOrders,
 } from "../services/orderService";
 import {
   getLoyalCustomers,
@@ -68,6 +69,12 @@ const useDashboardData = () => {
     queryFn: getTotalOrderPending,
   });
 
+  const recentOrders = useQuery({
+    queryKey: ["recentOrders"],
+    queryFn: getRecentOrders,
+  })
+
+
   return {
     revenue: revenue.data?.response || 0,
     totalAvailVoucher: totalAvailVoucher.data?.response || 0,
@@ -80,6 +87,7 @@ const useDashboardData = () => {
     countByRoleManager: countByRoleManager.data?.response || 0,
     totalOrder: totalOrder.data?.response || 0,
     totalOrderPending: totalOrderPending.data?.response || 0,
+    recentOrders: recentOrders.data?.response || 0,
   };
 };
 

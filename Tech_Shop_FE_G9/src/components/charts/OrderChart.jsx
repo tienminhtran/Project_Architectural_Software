@@ -1,37 +1,50 @@
-import React,{ useState, useEffect } from "react";
+import React,{ useState, useEffect, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
+import useOrder from "../../hooks/useOrder";
 
-const dailyOrders = [
-    { createdAt: '2025-02-17 00:00:0', orders: 42 },
-    { createdAt: '2025-02-18 00:00:0', orders: 56 },
-    { createdAt: '2025-02-19 00:00:0', orders: 89 },
-    { createdAt: '2025-02-20 00:00:0', orders: 63 },
-    { createdAt: '2025-02-21 00:00:0', orders: 78 },
-    { createdAt: '2025-02-22 00:00:0', orders: 45 },
-    { createdAt: '2025-02-23 00:00:0', orders: 35 }
-  ];
+// const dailyOrders = [
+//     { createdAt: '2025-02-17 00:00:0', orders: 42 },
+//     { createdAt: '2025-02-18 00:00:0', orders: 56 },
+//     { createdAt: '2025-02-19 00:00:0', orders: 89 },
+//     { createdAt: '2025-02-20 00:00:0', orders: 63 },
+//     { createdAt: '2025-02-21 00:00:0', orders: 78 },
+//     { createdAt: '2025-02-22 00:00:0', orders: 45 },
+//     { createdAt: '2025-02-24 00:00:0', orders: 35 }
+//   ];
 
 const OrderChart = () => {
+
+  const {dailyOrders} = useOrder();
+  const dailys = useMemo(() => dailyOrders, [dailyOrders]);
+
   const [timeFilter, setTimeFilter] = useState("today");
   const [filtered, setFiltered] = useState([]);
 
     useEffect(() => {
+      if(!Array.isArray(dailys)) return;
         const date = new Date();
+
+        const firstDayOfWeek = new Date(date);
+        firstDayOfWeek.setDate(date.getDate() - date.getDay() + 1); // Lấy ngày đầu tiên của tuần
+
+        const lastDayOfWeek = new Date(date);
+        lastDayOfWeek.setDate(firstDayOfWeek.getDate() + 6); // Lấy ngày đầu tiên của tuần + 6 ngày ra ngày cuối cùng của tuần
 
         let filtered=[];
         if(timeFilter === 'today') {
-           filtered =dailyOrders.filter((order) => {
+           filtered =dailys.filter((order) => {
             const orderDate = new Date(order.createdAt);
             return orderDate.getDate() === date.getDate();
            })
         } else if(timeFilter === 'week') {
-            filtered =dailyOrders.filter((order) => {
-                const week = new Date(order.createdAt);
-                return week.getDate() <= date.getDate();
+            filtered =dailys.filter((order) => {
+                const week = new Date(order.createdAt);      
+                return week.getDate() >= firstDayOfWeek.getDate() && week.getDate() <= lastDayOfWeek.getDate();
             })
+            console.log("week", filtered);
         }
         setFiltered(filtered);
-    }, [timeFilter]);
+    }, [timeFilter, dailys]);
 
   
     return (
@@ -92,7 +105,7 @@ const OrderChart = () => {
 
                 <Tooltip contentStyle={{backgroundColor:'white', border:'none', borderRadius:'8px',  boxShadow: '0 4px 6px -1px rgba(0, 0, 0, 0.1)',}}/>
                 <Bar 
-                  dataKey="orders" 
+                  dataKey="totalOrder" 
                   fill="#818CF8"
                   radius={[4, 4, 0, 0]}
                   barSize={32} 
