@@ -5,6 +5,7 @@ import { TbShoppingCartCopy } from "react-icons/tb";
 
 import DeviceChart from "../../components/charts/SelleringCategoryChart";
 import OrderChart from "../../components/charts/OrderChart";
+import useDashboardData from "../../hooks/useDashboardData ";
 
 const recentlyProduct = [
   { customer: 'Phan Tiên Sinh', date: '2025-03-10', amount: '$156.00', status: 'Completed' },
@@ -24,10 +25,18 @@ const data = [
   { createdAt: '2025-01-23 00:00:00', computer: 20, phone: 40  },
   { createdAt: '2025-01-23 00:00:00', computer: 45, phone: 43  },
   { createdAt: '2025-01-23 00:00:00', computer: 15, phone: 45  },
-  { createdAt: '2025-02-23 00:00:00', computer: 30, phone: 43  }
+  { createdAt: '2025-03-24 00:00:00', computer: 30, phone: 43  }
 ];
 
 const ManagerDashboardPage = () => {
+
+  const {
+    revenue,
+    totalProductsSold,
+    totalAvailVoucher,
+    recentOrders,
+    totalOrder
+  } = useDashboardData();
 
   const [viewType, setViewType] = useState('month');
 
@@ -90,8 +99,8 @@ const ManagerDashboardPage = () => {
     let filtered = [];
 
     if(viewType === 'day') {
-      filtered = data.filter(item => new Date(item.createdAt).toISOString().split("T")[0] === today.toISOString().split("T")[0]);
-
+      filtered = data.filter(item => new Date(item.createdAt).toLocaleDateString('en-US', {weekday:'short'}) === today.toLocaleDateString('en-US', {weekday:'short'}));
+      console.log(filtered);
     } else if (viewType === 'month') {
 
       const currentYear = today.getFullYear();
@@ -118,19 +127,22 @@ const ManagerDashboardPage = () => {
                 <div className="bg-secondary bg-opacity-10 p-2 rounded-circle d-flex justify-content-center align-items-center">
                   <img src="/images/icon/dash2.svg" alt="Total Sales"  style={{width: '30px', height:'30px'}}/>
                 </div>
+
                 <div className="card-info flex-column">
-                  <h3 className="text-dark">9650000</h3>
+                  <h3 className="text-dark">{revenue}</h3>
                   <p className="fs-6">Revenue</p>
                 </div>
               </div>
       
               <div className="card-box justify-content-start gap-3">
+
                 <div className="bg-secondary bg-opacity-10 p-2 rounded-circle d-flex justify-content-center align-items-center">
 
                   <TbShoppingCartCopy className="card-icon" color="#EB5B00" size={30}/>
                 </div> 
+
                 <div className="card-info flex-column">
-                  <h3 className="text-dark">56</h3>
+                  <h3 className="text-dark">{totalOrder}</h3>
                   <p className="fs-6">Order</p>
                 </div>
               </div>
@@ -140,7 +152,7 @@ const ManagerDashboardPage = () => {
                   <img src="/images/icon/product.svg" alt="Total Products Sold" style={{width: '30px', height:'30px'}}/>
                 </div> 
                 <div className="card-info flex-column">
-                  <h3 className="text-dark">12</h3>
+                  <h3 className="text-dark">{totalProductsSold}</h3>
                   <p className="fs-6">Total Products Sold</p>
                 </div>
               </div>
@@ -151,7 +163,7 @@ const ManagerDashboardPage = () => {
                   <img src="/images/icon/dash1.svg" alt="Total Purchase Due" style={{width: '30px', height:'30px'}}/>
                 </div> 
                 <div className="card-info flex-column">
-                  <h3 className="text-dark">10</h3>
+                  <h3 className="text-dark">{totalAvailVoucher}</h3>
                   <p className="fs-6">Total Available Vouchers</p>
                 </div>
               </div>
@@ -175,22 +187,21 @@ const ManagerDashboardPage = () => {
               </tr>
             </thead>
             <tbody>
-              {recentlyProduct.map((order, index) => (
-                <tr key={index} className="align-middle mb-2">
-                  <td>{index+1}</td>
-                  <td>
-                     {order.customer}
-                  </td>
-                  <td>{order.amount}</td>
-                  <td>{new Date(order.date).toISOString().split("T")[0]}</td>
-                  <td>
-                    <span className={`p-1 rounded rounded-3
-                      ${order.status === 'Completed' ? 'bg-success text-light' : 
-                      order.status === 'Processing' ? 'bg-primary text-light': 
-                      'bg-warning text-light' }`} style={{fontSize: '14px'}}>{order.status}</span>
+              {Array.isArray(recentOrders) &&              
+                recentOrders.map((order, index) => (
+                  <tr key={index} className="align-middle mb-2">
+                    <td>{index+1}</td>
+                    <td>
+                      {order.fullName}
                     </td>
-                </tr>
-              ))}
+                    <td>{order.amount}</td>
+                    <td>{new Date(order.orderDate).toISOString().split("T")[0]}</td>
+                    <td>
+                      <span className={'p-1 rounded rounded-3 bg-primary text-light'
+                        } style={{fontSize: '14px'}}>{order.status}</span>
+                      </td>
+                  </tr>
+                ))}
             </tbody>
           </table>
         </div>
