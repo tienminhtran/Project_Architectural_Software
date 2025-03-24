@@ -1,10 +1,15 @@
 import { useQuery } from "@tanstack/react-query";
 
-const usePaginationQuery = (queryKey, fetchFn, pageNo, pageSize) => {
-
+const usePaginationQuery = (
+  queryKey,
+  fetchFn,
+  pageNo,
+  pageSize,
+  keySearch = ""
+) => {
   const { data, isLoading, isError, error, refetch } = useQuery({
-    queryKey: [queryKey, pageNo, pageSize],
-    queryFn: () => fetchFn(pageNo, pageSize),
+    queryKey: [queryKey, keySearch, pageNo, pageSize],
+    queryFn: () => fetchFn(pageNo, pageSize, keySearch),
 
     keepPreviousData: true, // Giữ lại dữ liệu cũ khi chuyển trang
     refetchOnWindowFocus: false,
@@ -15,7 +20,6 @@ const usePaginationQuery = (queryKey, fetchFn, pageNo, pageSize) => {
   });
 
   return {
-    
     data: data?.response || {},
     isLoading,
     isError,

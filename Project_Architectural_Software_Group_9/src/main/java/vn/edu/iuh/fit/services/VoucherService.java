@@ -43,4 +43,6 @@ public interface VoucherService {
     int getAvailableVoucherCount();
 
     boolean existsVoucher(String name);
+
+    PageResponse<VoucherResponse> getVoucherByKeyWord(String keyword, int pageNo, int pageSize);
 }

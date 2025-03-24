@@ -6,7 +6,10 @@
 
 package vn.edu.iuh.fit.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.entities.Voucher;
 
@@ -28,4 +31,11 @@ public interface VoucherRepository extends JpaRepository<Voucher, Long> {
     List<Voucher> findByQuantityGreaterThanAndExpiredDateGreaterThan(int quantityIsGreaterThan, LocalDate expiredDateIsGreaterThan);
 
     Voucher findByNameAndQuantityGreaterThanAndExpiredDateGreaterThan(String name, int quantityIsGreaterThan, LocalDate expiredDateIsGreaterThan);
+
+    @Query("SELECT v FROM Voucher v " +
+            "WHERE LOWER(TRIM(v.name)) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(TRIM(FUNCTION('STR', v.quantity))) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(TRIM(FUNCTION('STR', v.value))) LIKE LOWER(CONCAT('%', :keyword, '%'))")
+    Page<Voucher> findByKeyWord(String keyword, Pageable pageable);
+
 }

@@ -118,7 +118,17 @@ public class ProductServiceImpl implements ProductService {
         return products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
     }
 
+    @Override
+    public boolean deleteProduct(Long id) {
+        Optional<Product> p = productRepository.findById(id);
+        if(p.isPresent()){
+            p.get().setStockQuantity(0);
+            productRepository.save(p.get());
+            return true;
+        }
+        return false;
 
+    }
     /**
      * total stock quantity
      *

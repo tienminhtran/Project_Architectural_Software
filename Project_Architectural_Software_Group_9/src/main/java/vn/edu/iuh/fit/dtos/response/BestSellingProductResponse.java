@@ -26,6 +26,9 @@ import java.math.BigDecimal;
 public class BestSellingProductResponse {
     private Long productId;
     private String productName;
+    private String thumbnail;
+    private String categoryName;
+    private String brandName;
     private Long totalSold;
     private BigDecimal totalRevenue;
 }

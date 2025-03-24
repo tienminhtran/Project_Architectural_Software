@@ -80,7 +80,7 @@ const AdminDashboardPage = () => {
         </div>
       </div>
 
-      <div className="product-tables">
+      <div className="main">
         {/* Best Seller */}
         <div className="product-table">
           <h3>Best Seller</h3>
@@ -97,7 +97,7 @@ const AdminDashboardPage = () => {
               {bestSeller.map((product, index) => (
                 <tr key={index}>
                   <td>{index + 1}</td>
-                  <td>{product.productName}</td>
+                  <td><img src={product.thumbnail} alt="image" style={{width: '40px', height: '40px', marginLeft: '5px'}}/> {product.productName}</td>
                   <td>{product.totalSold}</td>
                   <td>{product.totalRevenue}</td>
                 </tr>
@@ -122,7 +122,14 @@ const AdminDashboardPage = () => {
               {recentlyProduct.map((product, index) => (
                 <tr key={index}>
                   <td>{index+1}</td>
-                  <td>{product.productName}</td>
+                  <td>
+                    <img 
+                      src={product.thumbnail.startsWith("https://") ? product.thumbnail : `/public/images/product/${product.thumbnail.replace(/^[^_]+_[^_]+_/, "")}`} 
+                      alt="image" 
+                      style={{width: '40px', height: '40px', marginRight: '5px'}}
+                    />
+                     {product.productName}
+                  </td>
                   <td>{product.price}</td>
                   <td>{new Date(product.createdAt).toISOString().split("T")[0]}</td>
                 </tr>

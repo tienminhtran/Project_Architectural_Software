@@ -8,13 +8,16 @@ package vn.edu.iuh.fit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +36,8 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
+import java.util.*;
 
 /*
  * @description:
@@ -47,6 +52,9 @@ public class UserRestController {
 
     @Autowired
     private JwtTokenProvider jwtUtils;
+
+    @Autowired
+    private Validator validator;
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<UserResponse>> getUserById(@PathVariable Long id) {
@@ -77,32 +85,56 @@ public class UserRestController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/createManager")
-    public ResponseEntity<Map<String, Object>> createManager(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
-        userService.validation(userRequest, bindingResult);
-        Map<String, Object> response = new HashMap<>();
-        if (bindingResult.hasErrors()) {
-            Map<String, Object> errors = new HashMap<>();
-            bindingResult.getFieldErrors().stream().forEach(result -> {
-                errors.put(result.getField(), result.getDefaultMessage());
-            });
-            response.put("status", HttpStatus.BAD_REQUEST.value());
-            response.put("message", errors);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    @PostMapping(value = "/createManager", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BaseResponse<?>> createManager(
+            @RequestPart("user") String userJson,
+            @RequestPart(value = "fileImage", required = false) MultipartFile fileImage,
+            BindingResult bindingResult)
+            throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
+
+
+        // Chuyển user từ JSON String sang Object
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        UserRequest userRequest;
+        try {
+            userRequest = objectMapper.readValue(userJson, UserRequest.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid JSON format: " + e.getMessage());
         }
 
+        // Gán ảnh vào userRequest
+        userRequest.setImage(fileImage);
+
+        // Validate dữ liệu đầu vào
+        userService.validation(userRequest, bindingResult);
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = bindingResult.getFieldErrors().stream()
+                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
+
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("ERROR")
+                    .message("Validation failed")
+                    .response(errors)
+                    .build());
+        }
+
+        // Gọi service để tạo user
         UserResponse userResponse = userService.createUserRoleManager(userRequest, bindingResult);
         if (userResponse == null) {
-            response.put("status", HttpStatus.BAD_REQUEST.value());
-            response.put("message", "Validation failed");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("ERROR")
+                    .message("Failed to create manager")
+                    .build());
         }
 
-        response.put("status", HttpStatus.OK.value());
-        response.put("message", "Create manager successfully");
-        response.put("data", userResponse);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Create manager successfully")
+                .response(userResponse)
+                .build());
     }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")
@@ -189,7 +221,7 @@ public class UserRestController {
     }
 
     @PutMapping(value = "/{id}", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
-    public ResponseEntity<BaseResponse<?>> updateProduct(
+    public ResponseEntity<BaseResponse<?>> updateUser(
             @PathVariable Long id,
             @RequestPart("user") String userJson,
             @RequestPart(value = "fileImage", required = false) MultipartFile fileImages) {
@@ -201,20 +233,34 @@ public class UserRestController {
         try {
             userRequest = objectMapper.readValue(userJson, UserRequest.class);
         } catch (Exception e) {
-            throw new RuntimeException("Invalid JSON format: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+
+        //validation userRequest
+        Set<ConstraintViolation<UserRequest>> violations = validator.validate(userRequest);
+        if(!violations.isEmpty()) {
+            Map<String, Object> errors = new HashMap<>();
+            violations.forEach(violation -> {
+                errors.put(violation.getPropertyPath().toString(), violation.getMessage());
+            });
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("FAILED")
+                    .message("Validation error")
+                    .response(errors)
+                    .build());
         }
 
         userRequest.setImage(fileImages);
-        UserResponse newProduct = userService.updateUser(id,userRequest);
+        UserResponse newUser = userService.updateUser(id,userRequest);
 
-        if (newProduct == null) {
+        if (newUser == null) {
             return ResponseEntity.badRequest().build();
         }
 
         return ResponseEntity.ok(BaseResponse.builder()
                 .status("SUCCESS")
                 .message("Update user success")
-                .response(newProduct)
+                .response(newUser)
                 .build());
     }
 

@@ -13,8 +13,7 @@ const Menu_Header = () => {
     const [isOpen, setIsOpen] = useState(false);
     const menuRef = useRef(null);
     const dispatch = useDispatch();
-    
-    // const { user } = useSelector((state) => state.auth);
+  
     // get user login
     const { userInfor} = useUser();
     
@@ -56,14 +55,13 @@ const Menu_Header = () => {
     const handleLogout = () => {
         dispatch(logout());
         removeAccessToken();
+        localStorage.removeItem("lastDashboard");
     };
 
     return (
         <div className="header">
             {/* Logo */}
-            <div className="logo-container">
-                {/* <img src="/images/logo/logo-large.png" alt="Site Logo" className="logo" /> */}
-                <h3 className="title">Admin Dashboard</h3>            
+            <div className="logo-container">        
             </div>
 
             {/* Avatar + Dropdown Menu */}
@@ -94,11 +92,6 @@ const Menu_Header = () => {
                             <FaSignOutAlt /> Logout
                         </Link>
                     </li>
-
-
-                    {/* <li className="menu-item"><FaUser /> Profile</li> */}
-                    {/* <li className="menu-item"><FaLock /> Change Password</li> */}
-                    {/* <li className="menu-item logout"><FaSignOutAlt /> Logout</li> */}
 
                 </ul>
             </div>

@@ -3,7 +3,7 @@ import { Form } from "react-bootstrap";
 import Menu from "/src/components/layout/Admin/Menu"; // Sidebar
 import Menu_Header from "/src/components/layout/Admin/Menu_Header"; // Header
 import "/src/assets/css/CommonProfile.css"; // Import CSS
-import useUser from "../../hooks/useUser";
+import useUser from "../../../hooks/useUser";
 
 const ProfilePage = () => {
   const { userInfor, updateUser } = useUser();

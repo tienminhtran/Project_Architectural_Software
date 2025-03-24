@@ -1,7 +1,9 @@
 import React, { useState } from "react";
 import { BsPencil, BsTrash } from "react-icons/bs";
-import { Link,useNavigate } from "react-router-dom";
-import useCategories from "../../hooks/useCategorie";
+import { Link, useNavigate } from "react-router-dom";
+// Này  dùng để móc API lấy danh sách category
+import useCategories from "../../../hooks/useCategorie"; 
+
 import ReactPaginate from "react-paginate";
 
 const CategoryPage = () => {
@@ -53,6 +55,7 @@ const CategoryPage = () => {
       setSelectedRows(filteredCategories.map((item) => item.id));
     }
   };
+
 
   // Hàm xóa danh mục
   const handleDelete = (categoryId) => {

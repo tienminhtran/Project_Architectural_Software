@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "/src/assets/css/AddCategoryPage.css";
 import { useLocation, useNavigate } from "react-router-dom";
-import useCategories from "../../hooks/useCategorie";
+import useCategories from "../../../hooks/useCategorie.js";
 
 const AddCategoryPage = () => {
   const location = useLocation();

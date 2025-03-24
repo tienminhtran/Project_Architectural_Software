@@ -168,4 +168,20 @@ public class VoucherServiceImpl implements VoucherService {
         }
         return false;
     }
+
+    @Override
+    public PageResponse<VoucherResponse> getVoucherByKeyWord(String keyword, int pageNo, int pageSize) {
+        System.out.println(keyword);
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Voucher> vouchers = voucherRepository.findByKeyWord(keyword, pageable);
+        PageResponse<VoucherResponse> pageResponse = new PageResponse<>();
+        if (vouchers != null) {
+            pageResponse.setPage(pageNo);
+            pageResponse.setSize(pageSize);
+            pageResponse.setTotal(vouchers.getNumberOfElements());
+            pageResponse.setTotalPages(vouchers.getTotalPages());
+            pageResponse.setValues(vouchers.stream().map(this::convertToDto).toList());
+        }
+        return pageResponse;
+    }
 }
