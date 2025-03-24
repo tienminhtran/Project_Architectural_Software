@@ -6,10 +6,12 @@
 
 package vn.edu.iuh.fit.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.request.VoucherRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
@@ -18,7 +20,9 @@ import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.VoucherResponse;
 import vn.edu.iuh.fit.services.VoucherService;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 import java.util.Optional;
 
 /*
@@ -60,7 +64,16 @@ public class VoucherRestController {
     }
 
     @PostMapping("")
-    public ResponseEntity<BaseResponse<?>> createVoucher(@RequestBody VoucherRequest voucher) {
+    public ResponseEntity<BaseResponse<?>> createVoucher(@Valid @RequestBody VoucherRequest voucher, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) {
+            Map<String, Object> errors = new HashMap<String, Object>();
+            bindingResult.getFieldErrors().forEach(result -> {
+                errors.put(result.getField(), result.getDefaultMessage());
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
+                    .body(BaseResponse.builder().status("FAILED").message("Validation error").response(errors).build());
+        }
 
         if(voucherService.existsVoucher(voucher.getName())){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
