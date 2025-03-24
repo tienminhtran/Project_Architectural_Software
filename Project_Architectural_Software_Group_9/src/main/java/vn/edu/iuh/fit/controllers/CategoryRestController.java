@@ -6,14 +6,20 @@ package vn.edu.iuh.fit.controllers;/*
  * @nameProject: BTL
  */
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.request.CategoryRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.CategoryResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.services.CategoryService;
+
+import java.util.HashMap;
+import java.util.Map;
 
 @RestController
 @RequestMapping("/api/v1/category")
@@ -52,7 +58,17 @@ public class CategoryRestController {
 
 
     @PostMapping("")
-    public ResponseEntity<BaseResponse<?>> createCategory(@RequestBody CategoryRequest categoryRequest) {
+    public ResponseEntity<BaseResponse<?>> createCategory(@Valid @RequestBody CategoryRequest categoryRequest, BindingResult bindingResult) {
+
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> errors = new HashMap<String, Object>();
+            bindingResult.getFieldErrors().forEach(result -> {
+                errors.put(result.getField(), result.getDefaultMessage());
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
+                    .body(BaseResponse.builder().status("FAILED").message("Validation error").response(errors).build());
+        }
+
         if(categoryService.existsCategory(categoryRequest.getName())){
             return ResponseEntity.badRequest()
                     .body(BaseResponse.builder().status("FAILED").message("The category already exists!").build());

@@ -95,27 +95,29 @@ public class UserServiceImpl implements UserService {
         if (this.existsUsername(userRequest.getUsername())) {
             result.addError(new FieldError("userRequest", "username",
                     "Username already exists. Please enter another username!"));
-//            throw new UserAlreadyExistsException("Username already exist");
         }
         if (this.existsEmail(userRequest.getEmail())) {
             result.addError(new FieldError("userRequest", "email",
                     "Email already exists. Please enter another email!"));
-//            throw new EmailAlreadyExistsException("Email already exist");
         }
 
-        if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
+        if(userRequest.getPassword() == null || userRequest.getConfirmPassword() == null) {
+            result.addError(new FieldError("userRequest", "password",
+                    "Password is required"));
+        } else if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
             result.addError(new FieldError("userRequest", "confirmPassword",
                     "Password not match"));
-//            throw new IllegalArgumentException("Password not match");
         }
 
         // Lấy day/month/year hiện tại, 11/2/2024 -> tru 15 năm -> 11/2/2009
         // giả sử một người có sinh nhật 1/2/2009 -> 1/2/2009 đã đu tuổi so voi day/month/year hiện tại
         // nên dùng isBefore (truoc rồi phủ định) chứ không dùng isAfter
-        if (!userRequest.getDob().isBefore(LocalDate.now().minusYears(15))) {
+        if (userRequest.getDob() == null) {
+            result.addError(new FieldError("userRequest", "dob",
+                    "Date of birth is required"));
+        } else if (!userRequest.getDob().isBefore(LocalDate.now().minusYears(15))) {
             result.addError(new FieldError("userRequest", "dob",
                     "User is under 15 years old"));
-//            throw new IllegalArgumentException("User is under 15 years old");
         }
     }
 

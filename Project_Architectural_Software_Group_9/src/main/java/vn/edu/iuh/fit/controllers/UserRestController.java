@@ -8,7 +8,9 @@ package vn.edu.iuh.fit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
+import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -35,6 +37,7 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
+import java.util.*;
 
 /*
  * @description:
@@ -49,6 +52,9 @@ public class UserRestController {
 
     @Autowired
     private JwtTokenProvider jwtUtils;
+
+    @Autowired
+    private Validator validator;
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<UserResponse>> getUserById(@PathVariable Long id) {
@@ -227,7 +233,21 @@ public class UserRestController {
         try {
             userRequest = objectMapper.readValue(userJson, UserRequest.class);
         } catch (Exception e) {
-            throw new RuntimeException("Invalid JSON format: " + e.getMessage());
+            return ResponseEntity.badRequest().build();
+        }
+
+        //validation userRequest
+        Set<ConstraintViolation<UserRequest>> violations = validator.validate(userRequest);
+        if(!violations.isEmpty()) {
+            Map<String, Object> errors = new HashMap<>();
+            violations.forEach(violation -> {
+                errors.put(violation.getPropertyPath().toString(), violation.getMessage());
+            });
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("FAILED")
+                    .message("Validation error")
+                    .response(errors)
+                    .build());
         }
 
         userRequest.setImage(fileImages);
