@@ -9,6 +9,7 @@ package vn.edu.iuh.fit.services;
 import vn.edu.iuh.fit.dtos.response.OrderDetailResponse;
 import vn.edu.iuh.fit.dtos.response.OrderResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
+import vn.edu.iuh.fit.dtos.response.RecentOrderResponse;
 import vn.edu.iuh.fit.enums.OrderStatus;
 
 import java.util.List;
@@ -27,7 +28,7 @@ public interface OrderService {
 
     int getTotalOrders();
 
-    List<OrderResponse> getRecentlyOrders();
+    List<RecentOrderResponse> getRecentlyOrders();
 
     int getTotalProductSold();
 

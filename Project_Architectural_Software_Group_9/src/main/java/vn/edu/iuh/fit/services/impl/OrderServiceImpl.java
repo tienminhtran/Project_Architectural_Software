@@ -12,10 +12,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
-import vn.edu.iuh.fit.dtos.response.OrderDetailResponse;
-import vn.edu.iuh.fit.dtos.response.OrderResponse;
-import vn.edu.iuh.fit.dtos.response.PageResponse;
-import vn.edu.iuh.fit.dtos.response.ProductResponse;
+import vn.edu.iuh.fit.dtos.response.*;
 import vn.edu.iuh.fit.entities.Order;
 import vn.edu.iuh.fit.entities.OrderDetail;
 import vn.edu.iuh.fit.entities.User;
@@ -84,12 +81,12 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public List<OrderResponse> getRecentlyOrders() {
-        return orderRepository.findAll()
+    public List<RecentOrderResponse> getRecentlyOrders() {
+        return orderRepository.findByCreateRecent()
                 .stream()
                 .filter(order -> order.getStatus() == OrderStatus.PENDING)
+                .sorted(((o1, o2) -> o2.getOrderDate().compareTo(o1.getOrderDate())))
                 .limit(6)
-                .map(this::convertToDto)
                 .collect(Collectors.toList());
     }
 
