@@ -9,6 +9,7 @@ package vn.edu.iuh.fit.repositories;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
+import vn.edu.iuh.fit.dtos.response.DailyOrderResponse;
 import vn.edu.iuh.fit.dtos.response.RecentOrderResponse;
 import vn.edu.iuh.fit.entities.Order;
 import vn.edu.iuh.fit.enums.OrderStatus;
@@ -44,6 +45,17 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "JOIN o.user u " +
             "GROUP BY o.id, u.lastname, u.firstname, o.createdAt, o.status")
     List<RecentOrderResponse> findByCreateRecent();
+
+    @Query("SELECT new vn.edu.iuh.fit.dtos.response.DailyOrderResponse(" +
+            "count(o.id), " +
+            "CAST(o.createdAt AS java.sql.Date)) " +
+            "FROM Order o " +
+            "GROUP BY CAST(o.createdAt AS java.sql.Date)")
+    List<DailyOrderResponse> totalOrderByDay();
+
+
+
+
 
 
 }

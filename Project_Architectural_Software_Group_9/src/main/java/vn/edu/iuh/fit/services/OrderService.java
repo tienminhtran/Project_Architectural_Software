@@ -6,10 +6,7 @@
 
 package vn.edu.iuh.fit.services;
 
-import vn.edu.iuh.fit.dtos.response.OrderDetailResponse;
-import vn.edu.iuh.fit.dtos.response.OrderResponse;
-import vn.edu.iuh.fit.dtos.response.PageResponse;
-import vn.edu.iuh.fit.dtos.response.RecentOrderResponse;
+import vn.edu.iuh.fit.dtos.response.*;
 import vn.edu.iuh.fit.enums.OrderStatus;
 
 import java.util.List;
@@ -44,6 +41,8 @@ public interface OrderService {
     List<OrderResponse> findByCustomerName(String customerName);
 
     List<OrderResponse> findByNamePayMent(String namePayment);
+
+    List<DailyOrderResponse> totalOrderByDay();
 
     // tìm payment
 //    List<OrderResponse> findByPayment(String payment);

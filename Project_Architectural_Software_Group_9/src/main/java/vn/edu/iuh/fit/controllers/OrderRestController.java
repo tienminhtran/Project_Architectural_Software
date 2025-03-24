@@ -122,6 +122,14 @@ public class OrderRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by payment").response(orderResponses).build());
     }
 
+    @GetMapping("/daily")
+    public ResponseEntity<BaseResponse<?>> totalOrderByDay() {
+        List<?> orderResponses = orderService.totalOrderByDay();
+        if(orderResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get total order by day").response(orderResponses).build());
+    }
 
 
 

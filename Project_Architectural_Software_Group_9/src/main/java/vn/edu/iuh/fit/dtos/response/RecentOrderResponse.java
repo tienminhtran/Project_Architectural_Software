@@ -9,6 +9,7 @@ package vn.edu.iuh.fit.dtos.response;
 import lombok.*;
 import vn.edu.iuh.fit.enums.OrderStatus;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 
@@ -23,7 +24,7 @@ import java.time.LocalDateTime;
 @NoArgsConstructor
 @Builder
 @ToString
-public class RecentOrderResponse {
+public class RecentOrderResponse implements Serializable {
     private Long id;
     private String fullName;
     private LocalDateTime orderDate;
