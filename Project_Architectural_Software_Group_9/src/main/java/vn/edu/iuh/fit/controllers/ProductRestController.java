@@ -306,8 +306,13 @@ package vn.edu.iuh.fit.controllers;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
+import jakarta.validation.Validation;
+import jakarta.validation.Validator;
+import jakarta.validation.constraints.NotNull;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -325,7 +330,10 @@ import vn.edu.iuh.fit.services.ProductService;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 /*
  * @description:
@@ -337,6 +345,9 @@ import java.util.List;
 public class ProductRestController {
     @Autowired
     private ProductService productService;
+
+    @Autowired
+    private Validator validator;
 
     @GetMapping("")
     public ResponseEntity<BaseResponse<?>> getAllProductsByPage(@RequestParam(defaultValue = "0", required = false) Integer pageNo,
@@ -405,13 +416,15 @@ public class ProductRestController {
      * chon key 1 la product, value la text(nhap theo dinh dang json) cua product
      * chon key 2 la fileImage, value la file (chon file anh)
      *
+     * Vi khong su dụng truc tiep @Valid nen phai dung Validator de validate
+     *
      * @param productJson
      * @param fileImages
      * @return
      */
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse<?>> createProduct(
-            @RequestPart("product") String productJson,
+            @RequestPart("product")  @NotNull(message = "Product data is required") String productJson,
             @RequestPart(value = "fileImage", required = false) List<MultipartFile> fileImages) {
 
         // Chuyen string sang json
@@ -420,7 +433,17 @@ public class ProductRestController {
         try {
             productRequest = objectMapper.readValue(productJson, ProductRequest.class);
         } catch (Exception e) {
-            throw new RuntimeException("Invalid JSON format: " + e.getMessage());
+            return ResponseEntity.badRequest().body(BaseResponse.builder().status("FAILED").message("Invalid JSON format: " + e.getMessage()).build());
+        }
+
+        // Validate productRequest
+        Set<ConstraintViolation<ProductRequest>> violations = validator.validate(productRequest);
+        if(!violations.isEmpty()) {
+            Map<String, Object> errors = new HashMap<>();
+            violations.forEach(violation -> {
+                errors.put(violation.getPropertyPath().toString(), violation.getMessage());
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.builder().status("FAILED").message("Validation error").response(errors).build());
         }
 
         productRequest.setFileImage(fileImages);
@@ -486,7 +509,17 @@ public class ProductRestController {
         try {
             productRequest = objectMapper.readValue(productJson, ProductRequest.class);
         } catch (Exception e) {
-            throw new RuntimeException("Invalid JSON format: " + e.getMessage());
+            return ResponseEntity.badRequest().body(BaseResponse.builder().status("FAILED").message("Invalid JSON format: " + e.getMessage()).build());
+        }
+
+        //validation
+        Set<ConstraintViolation<ProductRequest>> violations = validator.validate(productRequest);
+        if(!violations.isEmpty()) {
+            Map<String,Object> errors = new HashMap<>();
+            violations.forEach(vio -> {
+                errors.put(vio.getPropertyPath().toString(),vio.getMessage());
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.builder().status("FAILED").message("Validation error").response(errors).build());
         }
 
         productRequest.setFileImage(fileImages);

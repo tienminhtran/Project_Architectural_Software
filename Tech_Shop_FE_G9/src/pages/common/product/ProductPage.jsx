@@ -1,3 +1,4 @@
+
 import React, { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { BsPencil, BsTrash, BsSearch, BsEye } from "react-icons/bs";
@@ -243,3 +244,4 @@ const ProductPage = () => {
 };
 
 export default ProductPage;
+
