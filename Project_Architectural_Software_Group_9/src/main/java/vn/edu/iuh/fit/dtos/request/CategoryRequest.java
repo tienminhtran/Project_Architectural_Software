@@ -6,6 +6,7 @@ package vn.edu.iuh.fit.dtos.request;/*
  * @nameProject: Project_Architectural_Software
  */
 
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -25,7 +26,7 @@ public class CategoryRequest implements Serializable {
     private static final long serialVersionUID = 1L;
     private Long id;
 
-    @NotNull(message = "Category name is required")
+    @NotBlank(message = "Category name is required")
     private String name;
 
     private String description;

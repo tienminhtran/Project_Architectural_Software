@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useMemo  } from "react";
+import React, { useState, useEffect, useMemo } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { FaSearch } from "react-icons/fa";
 import { BsPencil, BsTrash, BsSearch } from "react-icons/bs";
@@ -18,19 +18,24 @@ const VoucherPage = () => {
   const [currentPage, setCurrentPage] = useState(0);
   const pageSize = 10;
 
-  const {vouchers_paging, deleteVoucher, search_paging} = useVoucher(currentPage, pageSize, voucherSearch);
+  const { vouchers_paging, deleteVoucher, search_paging } = useVoucher(
+    currentPage,
+    pageSize,
+    voucherSearch
+  );
 
-  const { data, isLoading, isError, error } = debouncedSearchTerm ? search_paging : vouchers_paging; // Nếu có giá trị tìm kiếm thì gọi API search, ngược lại gọi API lấy danh sách voucher
+  const { data, isLoading, isError, error } = debouncedSearchTerm
+    ? search_paging
+    : vouchers_paging; // Nếu có giá trị tìm kiếm thì gọi API search, ngược lại gọi API lấy danh sách voucher
   console.log(data);
 
   const vouchers_response = useMemo(() => data?.values || [], [data]); // dùng useMemo để tránh việc render lại nếu data không thay đổi
 
   const [vouchers, setVouchers] = useState([]);
-  
 
   /**
    * Xử lý pageSize thay đổi khi chuyển trang
-   * @param {*} selected 
+   * @param {*} selected
    */
   const handlePageChange = (selected) => {
     setCurrentPage(selected.selected);
@@ -54,8 +59,8 @@ const VoucherPage = () => {
   // Chuyển hướng đến trang tạo voucher và truyền dữ liệu voucher qua state
   // Để thực hiện việc cập nhật voucher
   const handleNavigate = (voucher) => {
-    navigate('/common/formVoucher', {state: {voucher}});
-  }
+    navigate("/common/formVoucher", { state: { voucher } });
+  };
 
   // Xử lý xóa voucher
   const handleDelete = (voucherid) => {
@@ -71,6 +76,7 @@ const VoucherPage = () => {
 
   // Xử lý hiển thị dữ liệu voucher khi có dữ liệu trả về từ API
   useEffect(() => {
+    console.log("Fetched Vouchers:", vouchers_response);
     if (Array.isArray(vouchers_response)) {
       setVouchers(vouchers_response);
     }
@@ -101,7 +107,14 @@ const VoucherPage = () => {
           <span className="input-group-text">
             <BsSearch />
           </span>
-          <input type="text" className="form-control" name="search" placeholder="Search..." value={voucherSearch} onChange={(e) => setVoucherSearch(e.target.value)}/>
+          <input
+            type="text"
+            className="form-control"
+            name="search"
+            placeholder="Search..."
+            value={voucherSearch}
+            onChange={(e) => setVoucherSearch(e.target.value)}
+          />
         </div>
 
         <table className="table table-hover table-responsive">
@@ -139,10 +152,17 @@ const VoucherPage = () => {
                 <td>{voucher.expiredDate}</td>
                 <td>
                   <div className="d-flex gap-3">
-                    
-                    <BsPencil className="text-secondary fs-5" role="button" onClick={() => handleNavigate(voucher)} />
-                  
-                    <BsTrash className="text-danger fs-5" role="button" onClick={() => handleDelete(voucher.id)}/>
+                    <BsPencil
+                      className="text-secondary fs-5"
+                      role="button"
+                      onClick={() => handleNavigate(voucher)}
+                    />
+
+                    <BsTrash
+                      className="text-danger fs-5"
+                      role="button"
+                      onClick={() => handleDelete(voucher.id)}
+                    />
                   </div>
                 </td>
               </tr>
@@ -163,11 +183,10 @@ const VoucherPage = () => {
         previousLinkClassName={"page-link"} // Class của thẻ a của nút Previous
         nextClassName={"page-item"} // Class của thẻ li của nút Next
         nextLinkClassName={"page-link"} // Class của thẻ a của nút Next
-        breakClassName={"page-item"} 
+        breakClassName={"page-item"}
         breakLinkClassName={"page-link"}
         activeClassName={"active"} // Class của trang hiện tại
-        />
-
+      />
     </div>
   );
 };

@@ -47,6 +47,7 @@ public class UserRequest {
     @JsonProperty("lastname")
     String lastName;
 
+    @NotBlank(message = "Gender is required!")
     String gender;
 
     @NotNull(message = "Date of birth is required!")

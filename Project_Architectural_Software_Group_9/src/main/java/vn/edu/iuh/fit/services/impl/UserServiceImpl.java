@@ -95,27 +95,29 @@ public class UserServiceImpl implements UserService {
         if (this.existsUsername(userRequest.getUsername())) {
             result.addError(new FieldError("userRequest", "username",
                     "Username already exists. Please enter another username!"));
-//            throw new UserAlreadyExistsException("Username already exist");
         }
         if (this.existsEmail(userRequest.getEmail())) {
             result.addError(new FieldError("userRequest", "email",
                     "Email already exists. Please enter another email!"));
-//            throw new EmailAlreadyExistsException("Email already exist");
         }
 
-        if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
+        if(userRequest.getPassword() == null || userRequest.getConfirmPassword() == null) {
+            result.addError(new FieldError("userRequest", "password",
+                    "Password is required"));
+        } else if (!userRequest.getPassword().equals(userRequest.getConfirmPassword())) {
             result.addError(new FieldError("userRequest", "confirmPassword",
                     "Password not match"));
-//            throw new IllegalArgumentException("Password not match");
         }
 
         // Lấy day/month/year hiện tại, 11/2/2024 -> tru 15 năm -> 11/2/2009
         // giả sử một người có sinh nhật 1/2/2009 -> 1/2/2009 đã đu tuổi so voi day/month/year hiện tại
         // nên dùng isBefore (truoc rồi phủ định) chứ không dùng isAfter
-        if (!userRequest.getDob().isBefore(LocalDate.now().minusYears(15))) {
+        if (userRequest.getDob() == null) {
+            result.addError(new FieldError("userRequest", "dob",
+                    "Date of birth is required"));
+        } else if (!userRequest.getDob().isBefore(LocalDate.now().minusYears(15))) {
             result.addError(new FieldError("userRequest", "dob",
                     "User is under 15 years old"));
-//            throw new IllegalArgumentException("User is under 15 years old");
         }
     }
 
@@ -228,24 +230,59 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse createUserRoleManager(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
-        Role role = roleRepository.findById(3L).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 3"));
+    public UserResponse createUserRoleManager(UserRequest userRequest, BindingResult result)
+            throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
 
+        Role role = roleRepository.findById(userRequest.getRoleId())
+                .orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: " + userRequest.getRoleId()));
+
+        // Kiểm tra dữ liệu đầu vào
         validation(userRequest, result);
+        if (result.hasErrors()) {
+            throw new MethodArgumentNotValidException(null, result);
+        }
 
-        if (!result.hasErrors()) {
-            User user = this.convertToEntity(userRequest, UserRequest.class);
-            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        try {
+            // Chuyển đổi từ DTO sang entity
+            User user = new User();
+            user.setUsername(userRequest.getUsername());
+            user.setFirstname(userRequest.getFirstName());
+            user.setLastname(userRequest.getLastName());
+            user.setEmail(userRequest.getEmail());
+            user.setPhoneNumber(userRequest.getPhoneNumber());
+            user.setGender(userRequest.getGender());
+            user.setDayOfBirth(userRequest.getDob());
             user.setRole(role);
-            user.setActive(false);
-            user.setImage("avtdefault.jpg");
+            user.setActive(userRequest.isActive());
+            user.setCreatedAt(LocalDateTime.now());
+            user.setUpdatedAt(LocalDateTime.now());
 
+            // Mã hóa mật khẩu trước khi lưu
+            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+
+            // Xử lý ảnh đại diện
+            MultipartFile file = userRequest.getImage();
+            String image = "avtdefault.jpg"; // Ảnh mặc định
+
+            if (file != null && !file.isEmpty()) {
+                if (!isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
+                    throw new BadRequestException("Invalid image format");
+                }
+                image = saveFile(file);
+            }
+
+            user.setImage(image);
+
+            // Lưu user vào database
             user = userRepository.save(user);
 
             return this.convertToDto(user, UserResponse.class);
+        } catch (Exception e) {
+            log.error("Error creating user: {}", e.getMessage());
+            throw new RuntimeException("Error creating user: " + e.getMessage());
         }
-        return null;
     }
+
 
     @Override
     public List<UserResponse> findAll() {
