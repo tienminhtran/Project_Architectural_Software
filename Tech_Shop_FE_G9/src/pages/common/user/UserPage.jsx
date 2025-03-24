@@ -1,6 +1,6 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { BsPencil, BsTrash } from "react-icons/bs";
-import { Link } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import ReactPaginate from "react-paginate";
 import useUser from "../../../hooks/useUser";
 
@@ -14,6 +14,8 @@ const UserPage = () => {
   const [selectedRows, setSelectedRows] = useState([]);
 
   const [currentPage, setCurrentPage] = useState(0);
+
+  const navigate = useNavigate();
   const pageSize = 10;
 
   // const validPageNo = Number.isInteger(currentPage) ? currentPage : 0;
@@ -81,6 +83,10 @@ const UserPage = () => {
       (filterStatus === "" || user.active === JSON.parse(filterStatus))
     );
   });
+
+  const handleNavigate = (user) => {
+    navigate("/common/AddUserPage", { state: { user } });
+  };
 
   return (
     <div className="page-wrapper">
@@ -190,7 +196,11 @@ const UserPage = () => {
               <td>{user.active ? "✅ Active" : "❌ Disabled"}</td>
               <td className="user-action">
                 <div className="d-flex gap-3">
-                  <BsPencil className="text-secondary fs-5" role="button" />
+                  <BsPencil
+                    className="text-secondary fs-5"
+                    role="button"
+                    onClick={() => handleNavigate(user)}
+                  />
                   {/* <BsTrash className="text-danger fs-5" role="button" /> */}
                 </div>
               </td>

@@ -3,6 +3,7 @@ import {
   getUserInfo,
   updateProfile,
   getAllUsersPaging,
+  createUserRoleManager,
   // getAllUsersNoPage,
 } from "../services/userService";
 import { useSelector } from "react-redux";
@@ -24,6 +25,17 @@ const useUser = (pageNo, pageSize) => {
     pageNo ?? 0,
     pageSize ?? 10
   );
+
+  const createRoleManager = useMutation({
+    mutationFn: (formData) => createUserRoleManager(formData),
+    onSuccess: () => {
+      alert("Create user role manager successfully!!");
+    },
+    onError: (error) => {
+      console.error("Create user role manager failed:", error);
+      alert("Create user role manager fail. Please try again!");
+    },
+  });
 
   // const userNoPaging = useQuery({
   //   queryKey: ["getAllUsersNoPage"],
@@ -51,6 +63,7 @@ const useUser = (pageNo, pageSize) => {
   return {
     user_paging: userPaging,
     // user_nopaging: userNoPaging,
+    createManager: createRoleManager,
     userInfor: getUser.data?.response || {},
     updateUser: updateProfileUser.mutate,
   };
