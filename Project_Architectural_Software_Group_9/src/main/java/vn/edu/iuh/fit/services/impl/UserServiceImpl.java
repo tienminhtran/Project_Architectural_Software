@@ -228,24 +228,59 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserResponse createUserRoleManager(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
-        Role role = roleRepository.findById(3L).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 3"));
+    public UserResponse createUserRoleManager(UserRequest userRequest, BindingResult result)
+            throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
 
+        Role role = roleRepository.findById(userRequest.getRoleId())
+                .orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: " + userRequest.getRoleId()));
+
+        // Kiểm tra dữ liệu đầu vào
         validation(userRequest, result);
+        if (result.hasErrors()) {
+            throw new MethodArgumentNotValidException(null, result);
+        }
 
-        if (!result.hasErrors()) {
-            User user = this.convertToEntity(userRequest, UserRequest.class);
-            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+        try {
+            // Chuyển đổi từ DTO sang entity
+            User user = new User();
+            user.setUsername(userRequest.getUsername());
+            user.setFirstname(userRequest.getFirstName());
+            user.setLastname(userRequest.getLastName());
+            user.setEmail(userRequest.getEmail());
+            user.setPhoneNumber(userRequest.getPhoneNumber());
+            user.setGender(userRequest.getGender());
+            user.setDayOfBirth(userRequest.getDob());
             user.setRole(role);
-            user.setActive(false);
-            user.setImage("avtdefault.jpg");
+            user.setActive(userRequest.isActive());
+            user.setCreatedAt(LocalDateTime.now());
+            user.setUpdatedAt(LocalDateTime.now());
 
+            // Mã hóa mật khẩu trước khi lưu
+            user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+
+            // Xử lý ảnh đại diện
+            MultipartFile file = userRequest.getImage();
+            String image = "avtdefault.jpg"; // Ảnh mặc định
+
+            if (file != null && !file.isEmpty()) {
+                if (!isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
+                    throw new BadRequestException("Invalid image format");
+                }
+                image = saveFile(file);
+            }
+
+            user.setImage(image);
+
+            // Lưu user vào database
             user = userRepository.save(user);
 
             return this.convertToDto(user, UserResponse.class);
+        } catch (Exception e) {
+            log.error("Error creating user: {}", e.getMessage());
+            throw new RuntimeException("Error creating user: " + e.getMessage());
         }
-        return null;
     }
+
 
     @Override
     public List<UserResponse> findAll() {

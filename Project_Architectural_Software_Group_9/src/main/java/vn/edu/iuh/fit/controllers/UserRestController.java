@@ -15,6 +15,7 @@ import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.validation.BindingResult;
+import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
@@ -33,6 +34,7 @@ import java.util.HashMap;
 import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 /*
  * @description:
@@ -77,32 +79,56 @@ public class UserRestController {
     }
 
     @PreAuthorize("hasRole('ADMIN')")
-    @PostMapping("/createManager")
-    public ResponseEntity<Map<String, Object>> createManager(@Valid @RequestBody UserRequest userRequest, BindingResult bindingResult) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
-        userService.validation(userRequest, bindingResult);
-        Map<String, Object> response = new HashMap<>();
-        if (bindingResult.hasErrors()) {
-            Map<String, Object> errors = new HashMap<>();
-            bindingResult.getFieldErrors().stream().forEach(result -> {
-                errors.put(result.getField(), result.getDefaultMessage());
-            });
-            response.put("status", HttpStatus.BAD_REQUEST.value());
-            response.put("message", errors);
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+    @PostMapping(value = "/createManager", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
+    public ResponseEntity<BaseResponse<?>> createManager(
+            @RequestPart("user") String userJson,
+            @RequestPart(value = "fileImage", required = false) MultipartFile fileImage,
+            BindingResult bindingResult)
+            throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException {
+
+
+        // Chuyển user từ JSON String sang Object
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.registerModule(new JavaTimeModule());
+        UserRequest userRequest;
+        try {
+            userRequest = objectMapper.readValue(userJson, UserRequest.class);
+        } catch (Exception e) {
+            throw new RuntimeException("Invalid JSON format: " + e.getMessage());
         }
 
+        // Gán ảnh vào userRequest
+        userRequest.setImage(fileImage);
+
+        // Validate dữ liệu đầu vào
+        userService.validation(userRequest, bindingResult);
+        if (bindingResult.hasErrors()) {
+            Map<String, String> errors = bindingResult.getFieldErrors().stream()
+                    .collect(Collectors.toMap(FieldError::getField, FieldError::getDefaultMessage));
+
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("ERROR")
+                    .message("Validation failed")
+                    .response(errors)
+                    .build());
+        }
+
+        // Gọi service để tạo user
         UserResponse userResponse = userService.createUserRoleManager(userRequest, bindingResult);
         if (userResponse == null) {
-            response.put("status", HttpStatus.BAD_REQUEST.value());
-            response.put("message", "Validation failed");
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(response);
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("ERROR")
+                    .message("Failed to create manager")
+                    .build());
         }
 
-        response.put("status", HttpStatus.OK.value());
-        response.put("message", "Create manager successfully");
-        response.put("data", userResponse);
-        return ResponseEntity.status(HttpStatus.OK).body(response);
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Create manager successfully")
+                .response(userResponse)
+                .build());
     }
+
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/all")

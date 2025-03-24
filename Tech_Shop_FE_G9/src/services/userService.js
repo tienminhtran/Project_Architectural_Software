@@ -17,6 +17,20 @@ export const getAllUsersNoPage = async () => {
   const response = await axiosInstance.get(`/user/all`);
   return response.data;
 };
+
+export const createUserRoleManager = async (userFormData) => {
+  const response = await axiosInstance.post(
+    "/user/createManager",
+    userFormData,
+    {
+      headers: {
+        "Content-Type": "multipart/form-data",
+      },
+    }
+  );
+  return response.data;
+};
+
 export const getUsers_Auth = async () => {
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) return;
