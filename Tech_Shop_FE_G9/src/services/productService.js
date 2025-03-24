@@ -24,3 +24,34 @@ export const getRecentlyProductAdd = async () => {
     const response = await axiosInstance.get('/products/recent');
     return response.data;
 };
+
+export const getAllProduct_Paging = async (pageNo, pageSize) => {
+
+    const response = await axiosInstance.get(`/products?pageNo=${pageNo}&pageSize=${pageSize}`);
+    return response.data;
+};
+
+export const deleteProduct = async (id) => {
+    
+    const response = await axiosInstance.delete(`/products/${id}`);
+    return response.data;
+};
+
+// seach keyword
+export const searchProduct = async (keyword) => {
+    
+    const response = await axiosInstance.get(`/products/search?keyword=${keyword}`);
+    return response.data;
+};
+
+
+ export const createProduct = async (product) => {
+    console.log("product service", product);
+    const response = await axiosInstance.post('/products', product, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+    console.log("Product created:", response.data);
+    return response.data;
+}

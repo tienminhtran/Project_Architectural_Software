@@ -52,4 +52,5 @@ public interface ProductService {
      */
     List<ProductResponse> searchProduct(String keyword);
 
+    boolean deleteProduct(Long id);
 }
