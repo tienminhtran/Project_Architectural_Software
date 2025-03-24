@@ -1,6 +1,7 @@
 package vn.edu.iuh.fit.entities;
 
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Future;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -21,13 +22,13 @@ public class Voucher extends TrackingDate {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    @NotNull
+    @NotNull(message = "Expired date cannot be null")
+    @Future(message = "Expired date must be in the future")
     @Column(name = "expired_date", nullable = false)
     private LocalDate expiredDate;
 
-    @Size(max = 255)
-    @NotNull
-    @Column(name = "name", nullable = false)
+    @NotNull(message = "Voucher name cannot be null")
+    @Column(nullable = false)
     private String name;
 
     @NotNull

@@ -2,6 +2,7 @@ package vn.edu.iuh.fit.entities;
 
 import jakarta.persistence.*;
 import jakarta.validation.constraints.Min;
+import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
@@ -51,7 +52,7 @@ public class Product extends TrackingDate {
     private String monitor;
 
     @Size(max = 255)
-    @NotNull
+    @NotBlank(message = "Product's name must not be empty")
     @Column(name = "product_name", nullable = false)
     private String productName;
 
