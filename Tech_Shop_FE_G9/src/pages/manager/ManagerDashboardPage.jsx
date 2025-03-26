@@ -7,13 +7,6 @@ import DeviceChart from "../../components/charts/SelleringCategoryChart";
 import OrderChart from "../../components/charts/OrderChart";
 import useDashboardData from "../../hooks/useDashboardData ";
 
-const recentlyProduct = [
-  { customer: 'Phan Tiên Sinh', date: '2025-03-10', amount: '$156.00', status: 'Completed' },
-  { customer: 'Nguyễn Tấn Thái Dương', date: '2025-03-09', amount: '$245.00', status: 'Processing' },
-  { customer: 'Trần Hiển Vinh', date: '2025-03-09', amount: '$98.50', status: 'Pending' },
-  { customer: 'Trần Minh Tiến', date: '2025-03-08', amount: '$387.00', status: 'Completed' },
-];
-
 const data = [
   { createdAt: '2024-12-05 00:00:00', computer: 20, phone: 45  },
   { createdAt: '2024-12-05 00:00:00', computer: 15, phone: 50  },
@@ -40,7 +33,6 @@ const ManagerDashboardPage = () => {
 
   const [viewType, setViewType] = useState('month');
 
-  const [filteredDataSelect, setFilteredDataSelect] = useState([]);
 
   const handleViewTypeChange = (e) => {
     const value = e.target.value;
@@ -48,77 +40,6 @@ const ManagerDashboardPage = () => {
       setViewType(value);
     }
   }
-
-  // Tính tổng giá trị theo tháng
-  const aggregateByMonth = (data) => {
-    const groupedData = {};
-  
-    data.forEach((item) => {
-      const date = new Date(item.createdAt);
-      
-      const monthKey = `${date.getFullYear()}-${date.getMonth() + 1}`; // "2024-3"
-  
-      // Nếu chưa có thì khởi tạo
-      if (!groupedData[monthKey]) {
-        groupedData[monthKey] = { createdAt: monthKey, computer: 0, phone: 0 };
-      }
-
-      groupedData[monthKey].computer += item.computer; 
-      groupedData[monthKey].phone += item.phone; 
-    });
-  
-    return Object.values(groupedData); // Chuyển object thành mảng
-  };
-
-  // Tính tổng giá trị theo năm
-  const aggregateBYear = (data) => {
-    const groupedData = {};
-  
-    data.forEach((item) => {
-      const date = new Date(item.createdAt);
-      
-      const yearKey = `${date.getFullYear()}`; // "2024"
-  
-      // Nếu chưa có thì khởi tạo
-      if (!groupedData[yearKey]) {
-        groupedData[yearKey] = { createdAt: yearKey, computer: 0, phone: 0 };
-      }
-
-      groupedData[yearKey].computer += item.computer; 
-      groupedData[yearKey].phone += item.phone; 
-    });
-  
-    return Object.values(groupedData); // Chuyển object thành mảng
-  };
-  
-
-  // reload dữ liệu theo option
-  React.useEffect(() => {
-    const today = new Date();
-
-    let filtered = [];
-
-    if(viewType === 'day') {
-      filtered = data.filter(item => new Date(item.createdAt).toLocaleDateString('en-US', {weekday:'short'}) === today.toLocaleDateString('en-US', {weekday:'short'}));
-      console.log(filtered);
-    } else if (viewType === 'month') {
-
-      const currentYear = today.getFullYear();
-
-      filtered = data.filter(item => {
-        const date = new Date(item.createdAt);
-        return  date.getFullYear() === currentYear;
-      });
-
-      filtered = aggregateByMonth(filtered);
-      console.log(filtered);
-
-    } else if(viewType === 'year') {
-      filtered = data.filter(item => new Date(item.createdAt).getFullYear());
-      filtered = aggregateBYear(filtered);
-    }
-    setFilteredDataSelect(filtered);
-  }, [viewType]);
 
   return (
     <div className="dashboard-content">
@@ -210,7 +131,7 @@ const ManagerDashboardPage = () => {
       {/* Sellering Category Chart */}
       <div className="main">
         <div className="bg-light rounded rounded-3 p-3 shadow-sm w-100">
-          <h3>Sellering Category</h3>
+          <h3>Selling Category</h3>
           <div className="d-flex justify-content-end mt-4">
               <select 
                 value={viewType}
@@ -223,7 +144,7 @@ const ManagerDashboardPage = () => {
                 <option value="day">Day</option>
               </select>
           </div>
-          <DeviceChart data={filteredDataSelect} type={viewType}/>
+          <DeviceChart type={viewType}/>
         </div>
       </div>
 

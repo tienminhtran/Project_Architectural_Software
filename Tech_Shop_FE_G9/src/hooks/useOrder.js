@@ -1,6 +1,6 @@
 import { useQuery } from "@tanstack/react-query";
 
-import { getDailyOrders } from "../services/orderService";
+import { getDailyOrders, getDailyCategory } from "../services/orderService";
 
 const useOrder = () => {
 
@@ -9,8 +9,16 @@ const useOrder = () => {
         queryFn: getDailyOrders,
     });
 
+    const dailyCategory = useQuery({
+        queryKey: ["dailyCategory"],
+        queryFn: getDailyCategory
+    });
+
+
+
     return {
         dailyOrders: dailyOrders.data?.response || 0,
+        dailyCategory: dailyCategory.data?.response || 0
     };
 
 };
