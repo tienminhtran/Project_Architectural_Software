@@ -27,6 +27,12 @@ export const getRecentOrders = async () => {
 
 export const getDailyOrders = async () => {
 
-    const response = await axiosInstance.get('/orders/daily');
+    const response = await axiosInstance.get('/reports/daily');
+    return response.data;
+};
+
+export const getDailyCategory = async () => {
+
+    const response = await axiosInstance.get('/reports/daily-category');
     return response.data;
 };
