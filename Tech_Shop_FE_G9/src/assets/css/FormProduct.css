@@ -9,6 +9,8 @@
   border-radius: 10px;
   box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
   background-color: #f3f3f3;
+  max-height: 100vh; /* Chiều cao tối đa bằng với chiều cao màn hình */
+    overflow-y: auto;
 }
 
 

@@ -19,6 +19,7 @@ import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.services.CategoryService;
 
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 @RestController
@@ -46,7 +47,16 @@ public class CategoryRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get all categories success").response(categories).build());
     }
 
-    @GetMapping("/{id}")
+    @GetMapping("/all")
+    public ResponseEntity<BaseResponse<?>> getCategories() {
+        List<?> categories = categoryService.findAll();
+        if (categories == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get all categories no paging success").response(categories).build());
+    }
+
+        @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<?>> getCategoryById(@PathVariable Long id) {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get category by id success").response(categoryService.findById(id)).build());
     }

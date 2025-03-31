@@ -9,14 +9,6 @@ import ProductModal from "./ProductModal"; // Import modal hiển thị chi ti�
 
 const ProductPage = () => {
 
-
-
-
-
-
-
-
-
   const navigate = useNavigate(); // Hook để điều hướng trang
   const [selectedRows, setSelectedRows] = useState([]); // Danh sách các hàng (sản phẩm) được chọn
   const [productSearch, setProductSearch] = useState(""); // Trạng thái của ô tìm kiếm sản phẩm
@@ -26,7 +18,8 @@ const ProductPage = () => {
 
   // Lấy dữ liệu sản phẩm từ custom hook, phân biệt giữa tìm kiếm và danh sách mặc định
   const { products_paging, deleteProduct, search_paging } = useProduct(currentPage, pageSize, productSearch);
-  const { data, isLoading, isError, error } = debouncedSearchTerm ? search_paging : products_paging;
+const { data, isLoading, isError, error } = 
+  debouncedSearchTerm.trim().length > 0 ? search_paging : products_paging;
   
   // Memo hóa dữ liệu sản phẩm để tối ưu hiệu suất
   const products_response = useMemo(() => data?.values || [], [data]);
@@ -36,6 +29,9 @@ const ProductPage = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
 
+
+  
+
   // Cập nhật danh sách sản phẩm khi dữ liệu từ API thay đổi
   useEffect(() => {
     if (Array.isArray(products_response)) {
@@ -43,33 +39,12 @@ const ProductPage = () => {
     }
   }, [products_response]);
 
-
-
-
-  // xử lý ảnh, khi gọi lên
-  const [imageNameThumbnail, setimageNameThumbnail] = useState("");//
-
-  
-  // xử lý ảnh, khi gọi lên
-  
+   
    // Xu ly slit file name
    const getFileNameSplit = (fileName) => {
-    if(!fileName) return;
-    setimageNameThumbnail(fileName.replace(/^[^_]+_[^_]+_/, "")); 
+    if(!fileName) return null;
+    return fileName.replace(/^[^_]+_[^_]+_/, ""); 
   };
-
-  // xử lý ảnh, khi gọi lên
-
-  useEffect(() => {
-    products_response.map((product) => {
-      if (product.thumbnail) {
-        getFileNameSplit(product.thumbnail); // Chỉnh lại đúng thuộc tính
-      }
-    });
-  }, [products_response]);
-
-
-
 
 
   // Xử lý chuyển trang khi người dùng bấm vào số trang
@@ -141,6 +116,7 @@ const ProductPage = () => {
           <input 
             type="text" 
             className="form-control" 
+            name="search"
             placeholder="Search..." 
             value={productSearch} 
             onChange={(e) => setProductSearch(e.target.value)} 
@@ -186,9 +162,9 @@ const ProductPage = () => {
                 <td>
                   {/* xử lý https hoặc file toán tử 3 ngoi*/}
                   {product.thumbnail?.startsWith("http") ? (
-                    <img src={product.thumbnail} alt={product.description} width="50" height="50" className="rounded" />
+                    <img src={product.thumbnail} alt={product.name} width="50" height="50" className="rounded" />
                   ) : (
-                    <img src={`/images/${imageNameThumbnail}`} alt={product.description} width="50" height="50" className="rounded" />
+                    <img src={`/images/product/${getFileNameSplit(product.thumbnail)}`} alt={product.name} width="50" height="50" className="rounded" />
                   )}
                 </td>
                 <td>{product.productName}</td>

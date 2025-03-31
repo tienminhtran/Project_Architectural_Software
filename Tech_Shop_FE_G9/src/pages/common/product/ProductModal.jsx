@@ -6,6 +6,10 @@ const ProductModal = ({ show, onHide, product }) => {
   if (!product) return null;
 
 
+  const getFileNameSplit = (fileName) => {
+    if(!fileName) return null;
+    return fileName.replace(/^[^_]+_[^_]+_/, "");
+  };
   
   
 
@@ -16,11 +20,16 @@ const ProductModal = ({ show, onHide, product }) => {
       </Modal.Header>
       <Modal.Body>
         {/* Carousel hình ảnh sản phẩm */}
-        <Carousel className="product-carousel">
+        <Carousel className="product-carousel" >
           {product.images.map((img, index) => (
             <Carousel.Item key={index}>
-              <img className="d-block mx-auto product-image" src={img} alt={`Slide ${index}`} />
-              <img className="d-block mx-auto product-image" src={`/public/images/${product.images[0]}`} alt={`Slide ${index}`} />
+              {img.startsWith("http") ? (
+
+                <img className="d-block mx-auto product-image" src={img} alt={`Slide ${index}`} />
+              ) : (
+
+                <img className="d-block mx-auto product-image" src={`/images/product/${getFileNameSplit(img)}`} alt={`Slide ${index}`} />
+              )}
   
             </Carousel.Item>
           ))}

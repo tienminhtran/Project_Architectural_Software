@@ -59,5 +59,8 @@ public class ProductResponse implements Serializable {
     Double weight;
     Set<String> images = new HashSet<>();
 
+    BrandResponse brand;
+    CategoryResponse category;
+
     List<RatingResponse> ratings = new ArrayList<>();
 }

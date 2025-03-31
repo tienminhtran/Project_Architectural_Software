@@ -38,9 +38,9 @@ export const deleteProduct = async (id) => {
 };
 
 // seach keyword
-export const searchProduct = async (keyword) => {
+export const searchProduct = async (pageNo, pageSize,keyword) => {
     
-    const response = await axiosInstance.get(`/products/search?keyword=${keyword}`);
+    const response = await axiosInstance.get(`/products/search/${keyword}?pageNo=${pageNo}&pageSize=${pageSize}`);
     return response.data;
 };
 
@@ -53,5 +53,16 @@ export const searchProduct = async (keyword) => {
         }
     });
     console.log("Product created:", response.data);
+    return response.data;
+}
+
+ export const updateProduct = async (product, id) => {
+    console.log("product service update", product);
+    const response = await axiosInstance.put(`/products/${id}`, product, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+    console.log("Product updated:", response.data);
     return response.data;
 }
