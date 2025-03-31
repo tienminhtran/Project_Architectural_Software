@@ -5,12 +5,7 @@ import useProduct from "../../../hooks/useProduct";
 import "../../../assets/css/FormProduct.css";
 
 const FrmProduct = () => {
-  const { createProduct } = useProduct(0,1); 
-    // const [imageName, setImageName] = useState("");
-  
-  const [selectedFiles, setSelectedFiles] = useState(null);
-
-  const [product, setProduct] = useState({
+  const initialState = {
     name: "",
     price: 0,
     stockQuantity: 0,
@@ -26,20 +21,24 @@ const FrmProduct = () => {
     weight: 0,
     frontCamera: "",
     rearCamera: "",
-    brandId:"1",
-    categoryId:"1",
+    brandId:"",
+    categoryId:"",
     isUrlImage: true
-  });
+  }
+  const { createProduct } = useProduct(0,1); 
+    // const [imageName, setImageName] = useState("");
+  
+  const [selectedFiles, setSelectedFiles] = useState([]);
+  const formRef = React.useRef(null);
 
-  const [preview, setPreview] = useState({
-    thumbnail: null,
-    images: [null, null],
-  });
-
+  const [product, setProduct] = useState(initialState);
  
     // Xu ly chon anh
     const handleImageChange = (e) => {
-      setSelectedFiles(e.target.files);
+      const files = e.target.files;
+
+      const filesArray = Array.from(files);
+      setSelectedFiles(filesArray);
     };
   
     // // Xu ly slit file name
@@ -56,40 +55,20 @@ const FrmProduct = () => {
     // }, [product.image]);
 
 
-
-  
-
   const handleChange = (e) => {
     const { name, value } = e.target;
     setProduct({ ...product, [name]: value });
   };
 
   const handleReset = () => {
-    setProduct({
-      name: "",
-      price: 0,
-      stockQuantity: 0,
-      description: "",
-      cpu: "",
-      ram: "",
-      graphicCard: "",
-      monitor: "",
-      battery: "",
-      os: "",
-      port: "",
-      warranty: "",
-      weight: 0,
-      frontCamera: "",
-      rearCamera: "",
-      brandId: "1",
-      categoryId: "1",
-      isUrlImage: true
-    });
-
-    setPreview({
-      thumbnail: null,
-      images: [null],
-    });
+    // Reset giá trị form
+    if (formRef.current) {
+      formRef.current.reset(); // Reset tất cả input trong form
+    }
+    
+    // Reset state
+    setProduct(initialState);
+    setSelectedFiles([]);
   };
 
   const handleSubmit = (e) => {
@@ -101,14 +80,16 @@ const FrmProduct = () => {
       new Blob([JSON.stringify(product)], { type: "application/json" })
     );
     console.log("Product created:", formData);
-        // kiem tra xem co chon file hay khong
-        if (selectedFiles) {
-          // append file vao formdata
-          formData.append("fileImage", selectedFiles[0]);
-        }
-    
 
+        // kiem tra xem co chon file hay khong
+     if (selectedFiles.length > 0) {  
+        selectedFiles.forEach((file) => {
+         formData.append("fileImage", file);  
+        });
+    }  
+    
     createProduct({formData: formData});
+    handleReset();
 
   };
 
@@ -121,7 +102,7 @@ const FrmProduct = () => {
         </div>
       </div>
 
-      <Form onSubmit={handleSubmit}>
+      <Form  ref={formRef} onSubmit={handleSubmit} >
         <Row>
           {/* Cột 1: Thông tin chung */}
           <Col md={4}>
@@ -133,10 +114,12 @@ const FrmProduct = () => {
               <label className="form-label">Brand</label>
               <select name="brandId" value={product.brandId} onChange={handleChange} className="form-control">
                 <option value="">---Select Brand---</option>
-                <option value="1">Apple</option>
-                <option value="2">Samsung</option>
-                <option value="3">Xiaomi</option>
-                <option value="4">Oppo</option>
+                <option value="1">Dell</option>
+                <option value="2">HP</option>
+                <option value="3">Acer</option>
+                <option value="4">Lenovo</option>
+                <option value="5">Apple</option>
+                <option value="7">Samsung</option>
               </select>
             </div>
 
@@ -144,9 +127,8 @@ const FrmProduct = () => {
               <label className="form-label">Category</label>
               <select name="categoryId" value={product.categoryId} onChange={handleChange} className="form-control">
                 <option value="">---Select category---</option>
-                <option value="1">Smartphone</option>
-                <option value="2">Laptop</option>
-                <option value="3">Tablet</option>
+                <option value="1">Computer</option>
+                <option value="2">Phone</option>
               </select>
             </div>
             <div className="mb-3">
@@ -224,27 +206,29 @@ const FrmProduct = () => {
           {/* Cột 3: Camera + Ảnh */}
           <Col md={4}>
             <div className="mb-3">
-              <label className="form-label">Thumbnail Image</label>
-              <input type="file" accept="/public/images/*" onChange={(e) => handleImageChange(e)} className="form-control" />
-              {preview.thumbnail && <img src={preview.thumbnail} alt="Thumbnail preview" width="20%" />}
+              <label className="form-label">Images</label>
+              <input type="file" accept="image/*" onChange={handleImageChange} className="form-control" multiple />
+              {selectedFiles && selectedFiles.length > 0 && (
+                <div className="mt-2 d-flex flex-wrap">
+                  {selectedFiles.map((file, index) => (
+                    <img
+                      key={index}
+                      src={URL.createObjectURL(file)}
+                      alt={`Preview ${index}`}
+                      className="img-thumbnail"
+                      style={{ width: "100px", height: "100px", marginRight: "10px" }}
+                    />
+                  ))}
+                </div>
+              )}
             </div>
-
-            <div className="mb-3">
-              <label className="form-label">Extra Image 1</label>
-              <input type="file" accept="/public/images/*" onChange={(e) => handleImageChange(e, 0)} className="form-control" />
-              {preview.images[0] && <img src={preview.imageName[0]} alt="Extra 1 preview" width="20%" />}
-            </div>
-
-  
-
-
           </Col>
         </Row>
 
         <div className="text-center mt-3">
           <button type="submit" className="submit">Lưu</button>
           <button type="button" className="Cancel" onClick={handleReset}>Hủy</button>
-        </div>np
+        </div>
       </Form>
     </div>
   );

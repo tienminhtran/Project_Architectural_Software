@@ -9,14 +9,6 @@ import ProductModal from "./ProductModal"; // Import modal hiển thị chi ti�
 
 const ProductPage = () => {
 
-
-
-
-
-
-
-
-
   const navigate = useNavigate(); // Hook để điều hướng trang
   const [selectedRows, setSelectedRows] = useState([]); // Danh sách các hàng (sản phẩm) được chọn
   const [productSearch, setProductSearch] = useState(""); // Trạng thái của ô tìm kiếm sản phẩm
@@ -47,7 +39,7 @@ const ProductPage = () => {
 
 
   // xử lý ảnh, khi gọi lên
-  const [imageNameThumbnail, setimageNameThumbnail] = useState("");//
+  const [imageNameThumbnail, setImageNameThumbnail] = useState("");//
 
   
   // xử lý ảnh, khi gọi lên
@@ -55,21 +47,20 @@ const ProductPage = () => {
    // Xu ly slit file name
    const getFileNameSplit = (fileName) => {
     if(!fileName) return;
-    setimageNameThumbnail(fileName.replace(/^[^_]+_[^_]+_/, "")); 
+    setImageNameThumbnail(fileName.replace(/^[^_]+_[^_]+_/, "")); 
   };
 
   // xử lý ảnh, khi gọi lên
 
   useEffect(() => {
-    products_response.map((product) => {
-      if (product.thumbnail) {
-        getFileNameSplit(product.thumbnail); // Chỉnh lại đúng thuộc tính
-      }
-    });
+    if (products_response?.length > 0) {
+      products_response.forEach((item) => {
+        if (item.thumbnail) {
+          getFileNameSplit(item.thumbnail);
+        }
+      });
+    }
   }, [products_response]);
-
-
-
 
 
   // Xử lý chuyển trang khi người dùng bấm vào số trang
@@ -186,9 +177,9 @@ const ProductPage = () => {
                 <td>
                   {/* xử lý https hoặc file toán tử 3 ngoi*/}
                   {product.thumbnail?.startsWith("http") ? (
-                    <img src={product.thumbnail} alt={product.description} width="50" height="50" className="rounded" />
+                    <img src={product.thumbnail} alt={product.name} width="50" height="50" className="rounded" />
                   ) : (
-                    <img src={`/images/${imageNameThumbnail}`} alt={product.description} width="50" height="50" className="rounded" />
+                    <img src={`/images/product/${imageNameThumbnail}`} alt={product.name} width="50" height="50" className="rounded" />
                   )}
                 </td>
                 <td>{product.productName}</td>
