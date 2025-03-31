@@ -18,7 +18,8 @@ const ProductPage = () => {
 
   // Lấy dữ liệu sản phẩm từ custom hook, phân biệt giữa tìm kiếm và danh sách mặc định
   const { products_paging, deleteProduct, search_paging } = useProduct(currentPage, pageSize, productSearch);
-  const { data, isLoading, isError, error } = debouncedSearchTerm ? search_paging : products_paging;
+const { data, isLoading, isError, error } = 
+  debouncedSearchTerm.trim().length > 0 ? search_paging : products_paging;
   
   // Memo hóa dữ liệu sản phẩm để tối ưu hiệu suất
   const products_response = useMemo(() => data?.values || [], [data]);
@@ -27,6 +28,9 @@ const ProductPage = () => {
   // Trạng thái cho modal chi tiết sản phẩm
   const [showModal, setShowModal] = useState(false);
   const [selectedProduct, setSelectedProduct] = useState(null);
+
+
+  
 
   // Cập nhật danh sách sản phẩm khi dữ liệu từ API thay đổi
   useEffect(() => {
@@ -112,6 +116,7 @@ const ProductPage = () => {
           <input 
             type="text" 
             className="form-control" 
+            name="search"
             placeholder="Search..." 
             value={productSearch} 
             onChange={(e) => setProductSearch(e.target.value)} 

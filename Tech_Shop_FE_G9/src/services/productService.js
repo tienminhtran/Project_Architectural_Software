@@ -55,3 +55,14 @@ export const searchProduct = async (pageNo, pageSize,keyword) => {
     console.log("Product created:", response.data);
     return response.data;
 }
+
+ export const updateProduct = async (product, id) => {
+    console.log("product service update", product);
+    const response = await axiosInstance.put(`/products/${id}`, product, {
+        headers: {
+            'Content-Type': 'multipart/form-data'
+        }
+    });
+    console.log("Product updated:", response.data);
+    return response.data;
+}

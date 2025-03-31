@@ -70,3 +70,9 @@ export const searchCategory = async (keyword) => {
         throw error;
     }
 };
+
+export const getAll_NoPaging = async () => {
+
+    const response = await axiosInstance.get('/category/all');
+    return response.data;
+};
