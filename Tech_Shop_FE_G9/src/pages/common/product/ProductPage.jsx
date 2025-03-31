@@ -35,32 +35,12 @@ const ProductPage = () => {
     }
   }, [products_response]);
 
-
-
-
-  // xử lý ảnh, khi gọi lên
-  const [imageNameThumbnail, setImageNameThumbnail] = useState("");//
-
-  
-  // xử lý ảnh, khi gọi lên
-  
+   
    // Xu ly slit file name
    const getFileNameSplit = (fileName) => {
-    if(!fileName) return;
-    setImageNameThumbnail(fileName.replace(/^[^_]+_[^_]+_/, "")); 
+    if(!fileName) return null;
+    return fileName.replace(/^[^_]+_[^_]+_/, ""); 
   };
-
-  // xử lý ảnh, khi gọi lên
-
-  useEffect(() => {
-    if (products_response?.length > 0) {
-      products_response.forEach((item) => {
-        if (item.thumbnail) {
-          getFileNameSplit(item.thumbnail);
-        }
-      });
-    }
-  }, [products_response]);
 
 
   // Xử lý chuyển trang khi người dùng bấm vào số trang
@@ -179,7 +159,7 @@ const ProductPage = () => {
                   {product.thumbnail?.startsWith("http") ? (
                     <img src={product.thumbnail} alt={product.name} width="50" height="50" className="rounded" />
                   ) : (
-                    <img src={`/images/product/${imageNameThumbnail}`} alt={product.name} width="50" height="50" className="rounded" />
+                    <img src={`/images/product/${getFileNameSplit(product.thumbnail)}`} alt={product.name} width="50" height="50" className="rounded" />
                   )}
                 </td>
                 <td>{product.productName}</td>
