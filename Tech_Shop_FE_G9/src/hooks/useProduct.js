@@ -1,9 +1,9 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllProduct_Paging, deleteProduct, createProduct} from "../services/productService";
+import { getAllProduct_Paging, deleteProduct, createProduct, searchProduct} from "../services/productService";
 import usePaginationQuery from "./usePaginationQuery";
 
 
-const useProduct = (pageNo, pageSize) => {
+const useProduct = (pageNo, pageSize, productSearch) => {
     const queryClient = useQueryClient();
     
     // create product
@@ -38,6 +38,7 @@ const useProduct = (pageNo, pageSize) => {
         // updateProduct: update.mutate,
         deleteProduct: deletePro.mutate,
         createProduct: createPro.mutate,
+        search_paging: usePaginationQuery("searchProduct", searchProduct, pageNo, pageSize, productSearch),
     }
 }
 export default useProduct;

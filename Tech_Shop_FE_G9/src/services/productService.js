@@ -38,9 +38,9 @@ export const deleteProduct = async (id) => {
 };
 
 // seach keyword
-export const searchProduct = async (keyword) => {
+export const searchProduct = async (pageNo, pageSize,keyword) => {
     
-    const response = await axiosInstance.get(`/products/search?keyword=${keyword}`);
+    const response = await axiosInstance.get(`/products/search/${keyword}?pageNo=${pageNo}&pageSize=${pageSize}`);
     return response.data;
 };
 
