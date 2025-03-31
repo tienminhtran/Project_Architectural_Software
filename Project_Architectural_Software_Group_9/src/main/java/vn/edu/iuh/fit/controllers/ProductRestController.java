@@ -521,7 +521,7 @@ public class ProductRestController {
             });
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.builder().status("FAILED").message("Validation error").response(errors).build());
         }
-
+        System.out.println("fileImages: " + fileImages);
         productRequest.setFileImage(fileImages);
         ProductResponse newProduct = productService.updateProduct(id, productRequest);
 

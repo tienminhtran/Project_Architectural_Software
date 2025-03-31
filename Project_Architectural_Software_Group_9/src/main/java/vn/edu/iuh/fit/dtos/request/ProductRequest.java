@@ -23,7 +23,8 @@ public class ProductRequest implements Serializable {
     private Long id;
 
     @NotBlank(message = "Product's name must not be empty")
-    private String name;
+    @JsonProperty("productName")
+    private String productName;
 
     @NotBlank(message = "Product's description must not be empty")
     private String description;
