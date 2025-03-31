@@ -575,9 +575,20 @@ public class ProductRestController {
     search product by productName, battery, cpu, description, graphicCard,monitor,os,port, price, ram,stockQuantity,warranty,weight
      */
     @GetMapping("/search/{keyword}")
-    public ResponseEntity<BaseResponse<?>> searchProduct(@PathVariable String keyword) {
-        List<ProductResponse> productResponses = productService.searchProduct(keyword);
-        if (productResponses.isEmpty()) {
+    public ResponseEntity<BaseResponse<?>> searchProduct(@PathVariable String keyword,
+                                                         @RequestParam(defaultValue = "0", required = false) Integer pageNo,
+                                                         @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
+
+        if(pageNo == null) {
+            pageNo = 0;
+        }
+
+        if(pageSize == null) {
+            pageSize = 10;
+        }
+
+        PageResponse<ProductResponse> productResponses = productService.searchProduct(keyword, pageNo, pageSize);
+        if (productResponses.getValues().isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Search product").response(productResponses).build());

@@ -51,5 +51,5 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "OR p.port LIKE %:keyword% OR p.port LIKE %:keyword% " +
             "OR p.ram LIKE %:keyword% " +
             "OR p.warranty LIKE %:keyword% ")
-    List<Product> searchProduct(String keyword);
+    Page<Product> searchProduct(String keyword, Pageable pageable);
 }

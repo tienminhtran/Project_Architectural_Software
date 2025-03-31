@@ -34,6 +34,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static vn.edu.iuh.fit.utils.ImageUtil.isValidSuffixImage;
 import static vn.edu.iuh.fit.utils.ImageUtil.saveFile;
@@ -113,9 +114,19 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> searchProduct(String keyword) {
-        List<Product> products = productRepository.searchProduct(keyword);
-        return products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
+    public PageResponse<ProductResponse> searchProduct(String keyword, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Product> products = productRepository.searchProduct(keyword, pageable);
+
+        PageResponse<ProductResponse> response = new PageResponse<>();
+        if(products != null) {
+            response.setPage(pageNo);
+            response.setSize(pageSize);
+            response.setPage(products.getNumberOfElements());
+            response.setTotal(products.getTotalPages());
+            response.setValues(products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).collect(Collectors.toList()));
+        }
+        return response;
     }
 
     @Override

@@ -50,7 +50,7 @@ public interface ProductService {
         search product by productName, battery, cpu, description, graphicCard,monitor,os,port, price, ram,stockQuantity,warranty,weight
 
      */
-    List<ProductResponse> searchProduct(String keyword);
+    PageResponse<ProductResponse> searchProduct(String keyword, int pageNo, int pageSize);
 
     boolean deleteProduct(Long id);
 }
