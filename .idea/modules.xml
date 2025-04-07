@@ -4,6 +4,7 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/.idea/Project_Architectural_Software.iml" filepath="$PROJECT_DIR$/.idea/Project_Architectural_Software.iml" />
       <module fileurl="file://$PROJECT_DIR$/.idea/modules/Project_Architectural_Software_Group_9.main.iml" filepath="$PROJECT_DIR$/.idea/modules/Project_Architectural_Software_Group_9.main.iml" />
+      <module fileurl="file://$PROJECT_DIR$/.idea/modules/vn.edu.iuh.fit.Project_Architectural_Software_Group_9.main.iml" filepath="$PROJECT_DIR$/.idea/modules/vn.edu.iuh.fit.Project_Architectural_Software_Group_9.main.iml" />
     </modules>
   </component>
 </project>
