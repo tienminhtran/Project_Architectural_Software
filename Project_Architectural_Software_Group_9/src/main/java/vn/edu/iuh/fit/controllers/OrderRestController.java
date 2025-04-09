@@ -8,6 +8,7 @@ package vn.edu.iuh.fit.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.OrderResponse;
@@ -30,15 +31,14 @@ public class OrderRestController {
     private OrderService orderService;
 
     @GetMapping("")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getOrdersPage(@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
         if(pageNo == null) {
             pageNo = 0;
         }
-
         if(pageSize == null) {
             pageSize = 10;
         }
-
         PageResponse<?> pageResponse = orderService.findAll(pageNo, pageSize);
         if(pageResponse.getValues().isEmpty()) {
             return ResponseEntity.noContent().build();
@@ -122,5 +122,14 @@ public class OrderRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by payment").response(orderResponses).build());
     }
 
+    @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    public ResponseEntity<BaseResponse<?>> deleteOrder(@PathVariable Long id) {
+        boolean isDeleted = orderService.delete(id);
+        if(!isDeleted) {
+            return ResponseEntity.badRequest().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Delete order successfully").build());
+    }
 
 }
