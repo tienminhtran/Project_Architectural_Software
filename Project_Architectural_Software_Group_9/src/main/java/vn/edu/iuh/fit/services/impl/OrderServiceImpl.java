@@ -154,6 +154,14 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.totalOrderByDay();
     }
 
+    @Override
+    public boolean delete(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
+        return true;
+    }
+
 //    @Override
 //    public List<OrderResponse> findByPayment(String payment) {
 //        List<Order> orders = orderRepository.findByPayment(payment);
