@@ -32,4 +32,6 @@ public interface BrandService {
     boolean delete(Long id);
 
     boolean existsBrand(String name);
+
+    PageResponse<BrandResponse> searchBrand(String keyword, int pageNo, int pageSize);
 }

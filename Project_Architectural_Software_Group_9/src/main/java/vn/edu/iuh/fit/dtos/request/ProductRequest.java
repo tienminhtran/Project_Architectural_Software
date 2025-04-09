@@ -67,5 +67,5 @@ public class ProductRequest implements Serializable {
     @JsonProperty("isUrlImage")
     private boolean isUrlImage;
 
-    private List<MultipartFile> fileImage;
+        private List<MultipartFile> fileImage;
 }

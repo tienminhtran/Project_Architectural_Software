@@ -167,5 +167,18 @@ public class BrandServiceImpl implements BrandService {
         return false;
     }
 
-
+    @Override
+    public PageResponse<BrandResponse> searchBrand(String keyword, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Brand> brands = brandRepository.searchBrand(keyword, pageable);
+        PageResponse<BrandResponse> response = new PageResponse<>();
+        if (brands != null) {
+            response.setPage(pageNo);
+            response.setSize(pageSize);
+            response.setTotal(brands.getNumberOfElements());
+            response.setTotalPages(brands.getTotalPages());
+            response.setValues(brands.stream().map(this::convertToDto).toList());
+        }
+        return response;
+    }
 }
