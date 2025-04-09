@@ -34,6 +34,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import static vn.edu.iuh.fit.utils.ImageUtil.isValidSuffixImage;
 import static vn.edu.iuh.fit.utils.ImageUtil.saveFile;
@@ -113,12 +114,32 @@ public class ProductServiceImpl implements ProductService {
     }
 
     @Override
-    public List<ProductResponse> searchProduct(String keyword) {
-        List<Product> products = productRepository.searchProduct(keyword);
-        return products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
+    public PageResponse<ProductResponse> searchProduct(String keyword, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Product> products = productRepository.searchProduct(keyword, pageable);
+
+        PageResponse<ProductResponse> response = new PageResponse<>();
+        if(products != null) {
+            response.setPage(pageNo);
+            response.setSize(pageSize);
+            response.setPage(products.getNumberOfElements());
+            response.setTotal(products.getTotalPages());
+            response.setValues(products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).collect(Collectors.toList()));
+        }
+        return response;
     }
 
+    @Override
+    public boolean deleteProduct(Long id) {
+        Optional<Product> p = productRepository.findById(id);
+        if(p.isPresent()){
+            p.get().setStockQuantity(0);
+            productRepository.save(p.get());
+            return true;
+        }
+        return false;
 
+    }
     /**
      * total stock quantity
      *
@@ -188,7 +209,7 @@ public class ProductServiceImpl implements ProductService {
 
             // create product
             Product product = Product.builder()
-                    .productName(productRequest.getName())
+                    .productName(productRequest.getProductName())
                     .price(productRequest.getPrice())
                     .stockQuantity(productRequest.getStockQuantity())
                     .description(productRequest.getDescription())
@@ -218,6 +239,7 @@ public class ProductServiceImpl implements ProductService {
 
     @Override
     public ProductResponse updateProduct(Long id, ProductRequest productRequest) {
+//        System.out.println(productRequest.getFileImage().size());
         // find product by id
         Product product = productRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Product not found"));
 
@@ -227,7 +249,7 @@ public class ProductServiceImpl implements ProductService {
 
         try {
             // update
-            product.setProductName(productRequest.getName());
+            product.setProductName(productRequest.getProductName());
             product.setPrice(productRequest.getPrice());
             product.setStockQuantity(productRequest.getStockQuantity());
             product.setDescription(productRequest.getDescription());
@@ -246,9 +268,10 @@ public class ProductServiceImpl implements ProductService {
             product.setBrand(brand);
             product.setUpdatedAt(LocalDateTime.now());
 
+
             List<MultipartFile> fileImage = productRequest.getFileImage();
-            String thumbnail = "default-product.jpg";
-            Set<String> images = new HashSet<>();
+            String thumbnail = product.getThumbnail();
+            Set<String> images = product.getImages();
 
             if (fileImage != null && !fileImage.isEmpty()) { // check if file image is not null and not empty
                 MultipartFile firstImage = fileImage.get(0); // get first image

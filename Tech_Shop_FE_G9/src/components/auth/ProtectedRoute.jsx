@@ -1,8 +1,9 @@
 import React, {useEffect} from "react";
 import { useSelector, useDispatch } from "react-redux";
 import { Navigate, Outlet  } from "react-router-dom";
-import { setUser } from "../../store/slices/AuthSlice";
+import { setUser,  } from "../../store/slices/AuthSlice";
 import { getUsers_Auth } from "../../services/userService";
+import {removeAccessToken} from "../../services/authService";
 
 const ProtectedRoute = ({ allowedRoles }) => {
   const dispatch = useDispatch();
@@ -32,6 +33,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
 
   // Kiểm tra nếu roles chưa được cập nhật -> hiển thị loading
   if (!roles || roles.length === 0) {
+    // removeAccessToken(); // Xóa token
     return <div>Loading...</div>;
   }
 

@@ -12,6 +12,7 @@ import jakarta.annotation.PostConstruct;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.stereotype.Component;
+import vn.edu.iuh.fit.exception.CustomJwtException;
 import vn.edu.iuh.fit.security.CustomUserDetails;
 
 import javax.crypto.SecretKey;
@@ -34,10 +35,12 @@ public class JwtTokenProvider {
     // Create a secure key for signing
     // HMAC-SHA256
     private SecretKey key;
+
     @PostConstruct
     public void init() {
         this.key = Keys.hmacShaKeyFor(SIGNER_KEY.getBytes());
     }
+
     // Thoi gian co hieu uc cua token
     private static final long ACCESS_TOKEN_EXPIRATION = 1000 * 60 * 30; // 30 phút
     private static final long REFRESH_TOKEN_EXPIRATION = 1000 * 60 * 60 * 24 * 7; // 7 ngày
@@ -72,7 +75,7 @@ public class JwtTokenProvider {
     }
 
     // Lay thong tin user tu jwt
-    public List<String> getRolesFromJWT (String token) {
+    public List<String> getRolesFromJWT(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -82,7 +85,7 @@ public class JwtTokenProvider {
 
     }
 
-    public String getUserNameFromJWT (String token) {
+    public String getUserNameFromJWT(String token) {
         Claims claims = Jwts.parserBuilder()
                 .setSigningKey(key)
                 .build()
@@ -93,7 +96,7 @@ public class JwtTokenProvider {
     }
 
     // Kiem tra token co hop le khong
-    public boolean validateToken (String authToken) {
+    public boolean validateToken(String authToken) throws CustomJwtException {
         try {
             Jwts.parserBuilder()
                     .setSigningKey(key)
@@ -101,16 +104,17 @@ public class JwtTokenProvider {
                     .parseClaimsJws(authToken);
             return true;
         } catch (ExpiredJwtException e) {
-            System.err.println("JWT expired: " + e.getMessage());
+            throw new CustomJwtException("JWT token is expired: " + e.getMessage());
         } catch (MalformedJwtException e) {
-            System.err.println("Invalid JWT: " + e.getMessage());
+            throw new CustomJwtException("Invalid JWT token: " + e.getMessage());
         } catch (SignatureException e) {
-            System.err.println("Invalid JWT signature: " + e.getMessage());
+            throw new CustomJwtException("Invalid JWT signature: " + e.getMessage());
         } catch (UnsupportedJwtException e) {
-            System.err.println("Unsupported JWT: " + e.getMessage());
+            throw new CustomJwtException("Unsupported JWT: " + e.getMessage());
         } catch (IllegalArgumentException e) {
-            System.err.println("JWT claims string is empty: " + e.getMessage());
+            throw new CustomJwtException("JWT claims string is empty: " + e.getMessage());
         }
-        return false;
     }
+
+
 }

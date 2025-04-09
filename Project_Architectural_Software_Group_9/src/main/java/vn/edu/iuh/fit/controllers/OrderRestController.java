@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.OrderResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
+import vn.edu.iuh.fit.dtos.response.RecentOrderResponse;
 import vn.edu.iuh.fit.services.OrderService;
 
 import java.util.List;
@@ -70,7 +71,7 @@ public class OrderRestController {
 
     @GetMapping("/recently")
     public ResponseEntity<BaseResponse<?>> getRecentlyOrders() {
-        List<OrderResponse> orderResponses = orderService.getRecentlyOrders();
+        List<RecentOrderResponse> orderResponses = orderService.getRecentlyOrders();
         if(orderResponses.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -120,9 +121,6 @@ public class OrderRestController {
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by payment").response(orderResponses).build());
     }
-
-
-
 
 
 }

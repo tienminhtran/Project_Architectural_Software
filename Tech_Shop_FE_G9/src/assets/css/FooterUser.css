@@ -1,0 +1,177 @@
+.footer {
+  background: #fff;
+  border-top: 1px solid #ddd;
+  padding: 40px 20px;
+  font-family: "Segoe UI", sans-serif;
+  color: #444;
+}
+
+/* Top features */
+.footer-top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto 30px auto;
+}
+
+.feature-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex: 1;
+  min-width: 220px;
+}
+
+.feature-box .icon {
+  color: #7d9aff;
+  font-size: 50px;
+}
+
+.feature-title {
+  font-weight: 600;
+  font-size: 16px;
+}
+
+.feature-desc {
+  font-size: 14px;
+  color: #777;
+}
+
+/* Footer columns */
+.footer-container {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  gap: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+.footer-column {
+  flex: 1 1 220px;
+  min-width: 220px;
+}
+
+.footer-column h3 {
+  font-size: 18px;
+  margin-bottom: 15px;
+}
+
+.footer-column ul {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.footer-column ul li {
+  font-size: 14px;
+  margin-bottom: 8px;
+  color: #666;
+  cursor: pointer;
+  transition: color 0.3s ease;
+}
+
+.footer-column ul li:hover {
+  color: #154af7;
+}
+
+.footer-logo {
+  height: 30px;
+  margin-bottom: 15px;
+}
+
+.footer-column p {
+  font-size: 14px;
+  color: #666;
+  margin-bottom: 8px;
+  line-height: 1.5;
+}
+
+.footer-column .icon {
+  margin-right: 6px;
+  vertical-align: middle;
+}
+
+/* App download */
+.download-app {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  margin-top: 10px;
+}
+
+.qr-section {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.qr-section img {
+  width: 80px;
+  height: auto;
+}
+
+.store-icons img {
+  width: 100px;
+  display: block;
+  margin-bottom: 10px;
+}
+
+/* Footer bottom */
+.footer-bottom {
+  text-align: center;
+  padding: 20px 0;
+  font-size: 14px;
+  color: #888;
+  border-top: 1px solid #ddd;
+  margin-top: 40px;
+}
+
+.footer-bottom .socials {
+  margin: 10px 0;
+}
+
+.footer-bottom .icon {
+  font-size: 18px;
+  margin: 0 8px;
+  color: #555;
+  transition: color 0.3s;
+}
+
+.footer-bottom .icon:hover {
+  color: #154af7;
+}
+
+.payments {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  gap: 10px;
+  margin-top: 10px;
+}
+
+.payments img {
+  height: 24px;
+}
+
+@media (max-width: 768px) {
+  .footer-top,
+  .footer-container {
+    flex-direction: column;
+    align-items: center;
+  }
+
+  .feature-box {
+    justify-content: center;
+  }
+
+  .footer-column {
+    text-align: center;
+  }
+
+  .download-app {
+    flex-direction: column;
+  }
+}

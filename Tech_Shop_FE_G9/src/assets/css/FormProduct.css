@@ -1,0 +1,78 @@
+
+/* Container */
+.ok {
+    width: 98%;
+  margin: 20px;
+  /* text-align: center; */
+  padding: 20px;
+  border: 1px solid #ddd;
+  border-radius: 10px;
+  box-shadow: 0px 4px 6px rgba(0, 0, 0, 0.1);
+  background-color: #f3f3f3;
+  max-height: 100vh; /* Chiều cao tối đa bằng với chiều cao màn hình */
+    overflow-y: auto;
+}
+
+
+/* Nhóm nhập liệu */
+.form-group {
+    margin-bottom: 15px;
+}
+
+/* Nhãn */
+.form-group label {
+    font-weight: 500;
+    color: #555;
+}
+
+/* Ô nhập liệu */
+.form-control {
+    border-radius: 5px;
+    border: 1px solid #ddd;
+    padding: 10px;
+    font-size: 14px;
+}
+
+.form-control:focus {
+    border-color: #ffcc00;
+    box-shadow: 0 0 5px rgba(255, 204, 0, 0.5);
+}
+
+/* Nút */
+.text-center button {
+    border: none;
+    padding: 10px 20px;
+    font-size: 16px;
+    font-weight: 500;
+    border-radius: 5px;
+    transition: 0.3s ease;
+}
+
+/* Nút Lưu */
+.submit {
+    background-color: #ffcc00;
+    color: #fff;
+    margin-right: 10px;
+}
+
+.submit:hover {
+    background-color: #e6b800;
+}
+
+/* Nút Hủy */
+.Cancel {
+    background-color: #6c757d;
+    color: #fff;
+}
+
+.Cancel:hover {
+    background-color: #5a6268;
+}
+
+/* Hình ảnh xem trước */
+.img-thumbnail {
+    display: block;
+    margin-top: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 5px rgba(0, 0, 0, 0.2);
+}

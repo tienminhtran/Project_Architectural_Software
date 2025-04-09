@@ -1,9 +1,14 @@
 import { useQuery , useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllCategories_Paging, createCategory, deleteCategory, updateCategory} from "../services/categoryService";
+import { getAllCategories_Paging, createCategory, deleteCategory, updateCategory,getAll_NoPaging} from "../services/categoryService";
 import usePaginationQuery from "./usePaginationQuery";
 
 const useCategorie = (pageNo, pageSize) => {
     const queryClient = useQueryClient();
+
+    const getCategories_NoPaging = useQuery({
+        queryKey: ["getAllCategories"],
+        queryFn: () => getAll_NoPaging(),
+    });
 
     const create = useMutation({
         mutationFn: (formData) => createCategory(formData),
@@ -49,7 +54,8 @@ const useCategorie = (pageNo, pageSize) => {
         categories_paging: usePaginationQuery("getAllCategories_Paging", getAllCategories_Paging, pageNo, pageSize),
         createCategory: create.mutate,
         updateCategory: update.mutate,
-        deleteCategory: deleteCate.mutate
+        deleteCategory: deleteCate.mutate,
+        getCategories_NoPaging: getCategories_NoPaging.data?.response || [],
     };
 };
 

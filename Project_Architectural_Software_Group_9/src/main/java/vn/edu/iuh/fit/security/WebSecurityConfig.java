@@ -25,6 +25,7 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.oauth2.server.resource.web.BearerTokenAuthenticationEntryPoint;
 import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
+import org.springframework.security.web.authentication.www.BasicAuthenticationEntryPoint;
 import org.springframework.web.cors.CorsConfiguration;
 import vn.edu.iuh.fit.config.CorsConfig;
 import vn.edu.iuh.fit.security.jwt.JwtAuthenticationFilter;
@@ -50,6 +51,7 @@ public class WebSecurityConfig {
 
     @Autowired
     CustomAccessDeniedHandler customAccessDeniedHandler;
+
 
     @Autowired
     CorsConfig corsConfig;
@@ -106,7 +108,7 @@ public class WebSecurityConfig {
                 .sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS)) // Stateless session
                 .addFilterBefore(jwtAuthenticationFilter(), UsernamePasswordAuthenticationFilter.class) // Thêm JWT Filter
                 .exceptionHandling(
-                        (ex) -> ex.authenticationEntryPoint(new BearerTokenAuthenticationEntryPoint())
+                        (ex) -> ex.authenticationEntryPoint(new BasicAuthenticationEntryPoint())
                                 .accessDeniedHandler(this.customAccessDeniedHandler));
         return http.build();
     }

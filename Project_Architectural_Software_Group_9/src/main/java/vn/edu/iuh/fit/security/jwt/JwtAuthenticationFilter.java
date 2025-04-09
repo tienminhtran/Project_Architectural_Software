@@ -17,8 +17,10 @@ import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.web.authentication.WebAuthenticationDetailsSource;
 import org.springframework.util.StringUtils;
 import org.springframework.web.filter.OncePerRequestFilter;
+import vn.edu.iuh.fit.exception.CustomJwtException;
 import vn.edu.iuh.fit.security.UserDetailService;
 
+import javax.security.sasl.AuthenticationException;
 import java.io.IOException;
 
 /*
@@ -53,8 +55,13 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
                     SecurityContextHolder.getContext().setAuthentication(authentication);
                 }
             }
+//            else {
+//                throw new AuthenticationException("Token validation failed") {};
+//            }
         } catch (Exception e) {
             logger.error("Failed on set user authentication", e);
+//            System.out.println("JWT validation failed: " + e.getMessage());
+//            throw new AuthenticationException("JWT Authentication failed", e){};
         }
 
         filterChain.doFilter(request, response);

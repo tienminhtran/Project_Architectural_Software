@@ -13,6 +13,8 @@ import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.dtos.response.BestSellingProductResponse;
 import vn.edu.iuh.fit.dtos.response.TopCustomerResponse;
 import vn.edu.iuh.fit.entities.OrderDetail;
+import vn.edu.iuh.fit.projection.DailyCategoryStats;
+
 import java.time.LocalDateTime;
 import java.util.List;
 
@@ -59,4 +61,17 @@ public interface OrderDetailRepository extends JpaRepository<OrderDetail, Long> 
     );
 
     List<OrderDetail> findByOrderId(Long orderId);
+
+    @Query(value = """
+        select cast(o.created_at as DATE) as created_at, 
+                c.name as category_name, 
+                sum(od.quantity) as total_quantity
+        FROM order_details od
+             JOIN orders o ON od.order_id = o.id
+             JOIN products p ON od.product_id = p.id
+             JOIN categories c ON p.category_id = c.id
+        GROUP BY CAST(o.created_at AS DATE), c.name
+        ORDER BY created_at 
+""" , nativeQuery = true)
+    List<DailyCategoryStats> findDailyCategoryStats();
 }
