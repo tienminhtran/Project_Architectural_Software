@@ -132,4 +132,13 @@ public class OrderRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Delete order successfully").build());
     }
 
+    @GetMapping("/{orderId}/total-amount")
+    public ResponseEntity<BaseResponse<?>> getTotalAmountByOrderId(@PathVariable Long orderId) {
+        Double totalAmount = orderService.getTotalAmountByOrderId(orderId);
+        if(totalAmount == null) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get total amount by order id").response(totalAmount).build());
+    }
+
 }

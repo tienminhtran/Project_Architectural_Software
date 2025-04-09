@@ -8,12 +8,14 @@ package vn.edu.iuh.fit.repositories;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.dtos.response.DailyOrderResponse;
 import vn.edu.iuh.fit.dtos.response.RecentOrderResponse;
 import vn.edu.iuh.fit.entities.Order;
 import vn.edu.iuh.fit.enums.OrderStatus;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 /*
@@ -52,6 +54,12 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "FROM Order o " +
             "GROUP BY CAST(o.createdAt AS java.sql.Date)")
     List<DailyOrderResponse> totalOrderByDay();
+
+    @Query("SELECT SUM(od.quantity * od.product.price) " +
+            "FROM OrderDetail od " +
+            "JOIN od.order o " +
+            "WHERE o.id = :orderId")
+    Double calculateTotalAmountByOrderId(@Param("orderId") Long orderId);
 
 
 

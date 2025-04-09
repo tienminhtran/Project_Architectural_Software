@@ -46,6 +46,8 @@ public interface OrderService {
 
     boolean delete(Long id);
 
+    public Double getTotalAmountByOrderId(Long orderId);
+
     // tìm payment
 //    List<OrderResponse> findByPayment(String payment);
 
