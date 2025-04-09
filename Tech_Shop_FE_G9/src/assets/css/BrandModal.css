@@ -1,14 +1,14 @@
-.product-carousel {
+.brand-carousel {
     max-width: 600px;
     margin: auto;
 }
 
-.product-image {
+.brand-image {
     max-height: 300px;
     object-fit: contain;
 }
 
-.product-info {
+.brand-info {
     font-size: 16px;
 }
 
