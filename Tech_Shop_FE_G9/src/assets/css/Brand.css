@@ -1,0 +1,72 @@
+/* Brand.css */
+.brand-section {
+  padding: 0;
+  text-align: center;
+  /* background-color: #f8f8f8; */
+}
+
+.brand-section h2 {
+  color: #ff4d9d;
+  font-size: 18px;
+  font-weight: 600;
+  margin-bottom: 8px;
+}
+.brand-icon {
+  background-color: #ff4d9d;
+  color: #fff;
+  width: 30px;
+  height: auto;
+  padding: 5px;
+  border-radius: 50%;
+}
+.brand-section h1 {
+  color: #000000;
+  font-size: 25px;
+  font-weight: 700;
+  margin-bottom: 8px;
+  text-align: left;
+  /* margin-bottom: 30px; */
+}
+
+.brand-sliders {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  margin: 0 auto;
+  padding: 20px 0;
+}
+
+.swiper-slide {
+  display: flex;
+  justify-content: center;
+}
+
+.brand-card {
+  background-color: #fffafa;
+  border-radius: 1rem;
+  padding: 10px;
+  text-align: center;
+  box-shadow: 1 2px 10px rgba(0, 0, 0, 0.1);
+  transition: transform 0.3s ease;
+  cursor: pointer;
+  width: "60%";
+  height: "40%";
+}
+
+.brand-card:hover {
+  transform: scale(1.05);
+}
+
+.brand-card img {
+  width: 80px;
+  height: 80px;
+  object-fit: contain;
+  margin-bottom: 10px;
+}
+
+.brand-card p {
+  font-weight: 500;
+  color: #333;
+  text-align: center;
+  font-size: 14px;
+}
