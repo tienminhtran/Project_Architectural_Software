@@ -42,3 +42,8 @@ export const deleteOrder = async (id) => {
     const response = await axiosInstance.delete(`/orders/${id}`);
     return response.data;
 };
+
+export const getTotalAmountByOrderId = async (orderId) => {
+    const response = await axiosInstance.get(`/orders/${orderId}/total-amount`);
+    return response.data;
+};

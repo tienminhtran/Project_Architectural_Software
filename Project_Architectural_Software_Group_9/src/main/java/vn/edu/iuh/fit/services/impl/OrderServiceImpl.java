@@ -162,6 +162,11 @@ public class OrderServiceImpl implements OrderService {
         return true;
     }
 
+    @Override
+    public Double getTotalAmountByOrderId(Long orderId) {
+        return orderRepository.calculateTotalAmountByOrderId(orderId);
+    }
+
 //    @Override
 //    public List<OrderResponse> findByPayment(String payment) {
 //        List<Order> orders = orderRepository.findByPayment(payment);

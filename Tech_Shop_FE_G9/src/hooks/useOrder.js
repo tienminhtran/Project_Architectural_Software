@@ -1,15 +1,10 @@
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 
 import {
-    // getDailyOrders,
-    // getDailyCategory,
-    getTotalOrderPending,
-    getTotalProductSold,
     deleteOrder as deleteOrderService,
     getAllOrder_Paging,
 } from "../services/orderService";
 import usePaginationQuery from "./usePaginationQuery";
-import { get } from "react-hook-form";
 
 const useOrder = (pageNo, pageSize) => {
     const queryClient = useQueryClient();
@@ -24,22 +19,11 @@ const useOrder = (pageNo, pageSize) => {
             alert("Delete order fail. Please try again!");
         },
     });
+
     return {
         orders_paging: usePaginationQuery(
             "getAllOrder_Paging",
             getAllOrder_Paging,
-            pageNo,
-            pageSize
-        ),
-        getTotalOrderPending: usePaginationQuery(
-            "getTotalOrderPending",
-            getTotalOrderPending,
-            pageNo,
-            pageSize
-        ),
-        getTotalProductSold: usePaginationQuery(
-            "getTotalProductSold",
-            getTotalProductSold,
             pageNo,
             pageSize
         ),
