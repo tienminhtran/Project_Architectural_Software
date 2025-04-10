@@ -1,12 +1,17 @@
 import React from "react";
 import FooterUser from "../components/layout/Footer"; // Adjust the path as necessary
-
+import HeardUser from "../components/layout/HeaderUser";
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min.js";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import "../assets/css/HomePage.css";
 const HomePage = () => {
   return (
     <div>
-      <h1 className="text-3xl font-bold text-center mt-10">Welcome to the Home Page</h1>
-      <p className="text-center mt-4">This is the content of the home page.</p>
-      {/* Add more content here */}
+
+
+      <HeardUser />
+
       <FooterUser />
     </div>
   );

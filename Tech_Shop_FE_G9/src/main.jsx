@@ -7,6 +7,9 @@ import App from "./App.jsx";
 import "bootstrap/dist/css/bootstrap.min.css"; // Import Bootstrap CSS
 import store from "./store/store.js";
 import { QueryClient, QueryClientProvider } from "@tanstack/react-query";
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 
 // Tạo một instance của QueryClient

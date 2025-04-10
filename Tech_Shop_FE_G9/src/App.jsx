@@ -27,6 +27,9 @@ import FormProduct from "./pages/common/product/FormProduct";
 import OrderPage from "./pages/common/order/OrderPage";
 import OrderDetailPage from "./pages/common/order/OrderDetailPage";
 
+import 'bootstrap/dist/css/bootstrap.min.css';
+import 'bootstrap/dist/js/bootstrap.bundle.min';
+import 'bootstrap-icons/font/bootstrap-icons.css';
 
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (

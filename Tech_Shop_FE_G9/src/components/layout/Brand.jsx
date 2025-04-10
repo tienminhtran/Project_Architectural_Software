@@ -21,7 +21,7 @@ const Brand = () => {
                 <h1>Browse by Brands</h1>
             </div>
             <div className="brand-sliders">
-                <Swiper spaceBetween={20} slidesPerView={6}>
+                <Swiper spaceBetween={20} slidesPerView={7} navigation={true} pagination={true}>
                     {brands.map((brand, index) => (
                         <SwiperSlide key={index}>
                             <div className="brand-card">
