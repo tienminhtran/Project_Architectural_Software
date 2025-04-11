@@ -19,6 +19,7 @@ const OrderChart = () => {
 
   const [timeFilter, setTimeFilter] = useState("today");
   const [filtered, setFiltered] = useState([]);
+  const [totalOrder, setTotalOrder] = useState(0);
 
     useEffect(() => {
       if(!Array.isArray(dailys)) return;
@@ -43,6 +44,8 @@ const OrderChart = () => {
             })
             console.log("week", filtered);
         }
+        const totalOrder = filtered.reduce((acc, order) => acc + order.totalOrder, 0);
+        setTotalOrder(totalOrder);
         setFiltered(filtered);
     }, [timeFilter, dailys]);
 
@@ -53,7 +56,7 @@ const OrderChart = () => {
         <div className="d-flex align-items-center justify-content-between mb-6">
           <div>
             <h2 className="fs-5 fw-semibold text-dark">Total Orders</h2>
-            <p className="display-5 fw-bold text-primary mt-2">{filtered.length}</p>
+            <p className="display-5 fw-bold text-primary mt-2">{totalOrder}</p>
           </div>
           <div className="d-flex gap-2">
             <button 
