@@ -1,37 +1,43 @@
 import React, { useEffect, useState } from "react";
 import { FaArrowLeft, FaArrowRight } from "react-icons/fa";
 import "../../assets/css/AnnouncementBar.css";
+import useVoucher from "../../hooks/useVoucher";
 
 const AnnouncementBar = () => {
-  const messages = [
-    { text: "STUDENT NOW GET 10% OFF :", link: "#", linkText: "GET OFFER" },
-    { text: "FREE SHIPPING ON ORDERS OVER $50", link: "#", linkText: "SHOP NOW" },
-    { text: "SUMMER SALE - UP TO 70% OFF", link: "#", linkText: "BROWSE SALE" },
-    { text: "JOIN OUR REWARDS PROGRAM", link: "#", linkText: "SIGN UP" },
-  ];
+  const { vouchers_paging } = useVoucher(0, 100); // lấy 100 voucher đầu
+  const vouchers = vouchers_paging.data?.values || [];
+
+  // Lọc voucher còn hạn
+  const validVouchers = vouchers.filter((voucher) => {
+    const today = new Date();
+    const expiry = new Date(voucher.expiredDate);
+    return expiry >= today;
+  });
+
+  const messages = validVouchers.map((voucher) => ({
+    text: `VOUCHER: ${voucher.name} - ${voucher.value}% OFF`,
+  }));
 
   const [currentIndex, setCurrentIndex] = useState(0);
 
-  // Tự động chuyển thông báo sau mỗi 5 giây
   useEffect(() => {
     const interval = setInterval(() => {
       setCurrentIndex((prev) => (prev + 1) % messages.length);
-    }, 5000); // 5 giây
+    }, 5000);
 
-    return () => clearInterval(interval); // cleanup
+    return () => clearInterval(interval);
   }, [messages.length]);
 
   const currentMessage = messages[currentIndex];
+
+  if (messages.length === 0) return null; // Không hiển thị nếu không có voucher hợp lệ
 
   return (
     <div className="announcement-bar">
       <div className="announcement-bar___marquee">
         <FaArrowLeft className="announcement-bar___icon" />
         <span className="announcement-bar___text marquee-animation">
-          {currentMessage.text}{" "}
-          <a href={currentMessage.link} className="link">
-            {currentMessage.linkText}
-          </a>
+          {currentMessage.text}
         </span>
         <FaArrowRight className="announcement-bar___icon" />
       </div>

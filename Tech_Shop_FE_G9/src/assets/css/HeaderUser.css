@@ -186,8 +186,13 @@
   background: #ec4899;
 }
 
+
 .header-user__macbook-img {
-  width: 220px;
+  position: relative;
+  background-color: #666;
+  width: 220px; /* you can adjust this */
+  height: 200px;
+  z-index: 1;
 }
 
 .header-user__bag-card {
