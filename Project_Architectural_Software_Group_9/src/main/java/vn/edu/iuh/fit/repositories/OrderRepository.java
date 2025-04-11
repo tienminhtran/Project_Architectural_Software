@@ -6,6 +6,8 @@
 
 package vn.edu.iuh.fit.repositories;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
@@ -61,9 +63,10 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "WHERE o.id = :orderId")
     Double calculateTotalAmountByOrderId(@Param("orderId") Long orderId);
 
-
-
-
+   @Query("SELECT o FROM Order o " +
+       "JOIN o.user u " +
+       "WHERE (:keyword IS NOT NULL AND u.firstname LIKE CONCAT('%', :keyword, '%'))")
+Page<Order> searchOrder( String keyword, Pageable pageable);
 
 
 }

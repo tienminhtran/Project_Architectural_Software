@@ -141,4 +141,26 @@ public class OrderRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get total amount by order id").response(totalAmount).build());
     }
 
+   @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @GetMapping("/search/{keyword}")
+public ResponseEntity<BaseResponse<?>> searchOrder(
+        @RequestParam(required = false, defaultValue = "") String keyword,
+        @RequestParam(defaultValue = "0") Integer pageNo,
+        @RequestParam(defaultValue = "10") Integer pageSize) {
+    if (pageNo == null) {
+        pageNo = 0;
+    }
+    if (pageSize == null) {
+        pageSize = 10;
+    }
+    PageResponse<?> pageResponse = orderService.searchOrder(keyword, pageNo, pageSize);
+    if (pageResponse.getValues().isEmpty()) {
+        return ResponseEntity.noContent().build();
+    }
+    return ResponseEntity.ok(BaseResponse.builder()
+            .status("SUCCESS")
+            .message("Search order")
+            .response(pageResponse)
+            .build());
+}
 }
