@@ -1,13 +1,28 @@
-import { useMutation, useQueryClient } from "@tanstack/react-query";
+import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
 
 import {
     deleteOrder as deleteOrderService,
     getAllOrder_Paging,
     searchOrder,
+    getDailyCategory, 
+    getDailyOrders
 } from "../services/orderService";
 import usePaginationQuery from "./usePaginationQuery";
 
 const useOrder = (pageNo, pageSize, orderSearch) => {
+
+    // Lấy danh sách đơn hàng theo ngày
+    const dailyOrders = useQuery({
+        queryKey: ["dailyOrders"],
+        queryFn: () => getDailyOrders(),
+    });
+
+    const dailyCategory = useQuery({
+        queryKey: ["dailyCategory"],
+        queryFn: () => getDailyCategory(),
+    });
+
+
     const queryClient = useQueryClient();
     const deleteOrder = useMutation({
         mutationFn: (id) => deleteOrderService(id),
@@ -37,6 +52,8 @@ const useOrder = (pageNo, pageSize, orderSearch) => {
             true
         ),
         deleteOrder: deleteOrder.mutate,
+        dailyOrders: dailyOrders.data?.response || 0,
+        dailyCategory: dailyCategory.data?.response || 0
     };
 };
 
