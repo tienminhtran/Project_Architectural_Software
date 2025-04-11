@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { FaBars, FaChevronDown, FaShoppingCart, FaUser,FaHeart,FaEye} from "react-icons/fa";
 import "../../../src/assets/css/HeaderUser.css";
 import AnnouncementBar from "./AnnouncementBar.jsx";
+import useDashboardData from "../../hooks/useDashboardData ";
 
 
 
@@ -9,27 +10,19 @@ import AnnouncementBar from "./AnnouncementBar.jsx";
 const HeaderUser = () => {
   const categories = ["Computer", "Phone", "Accessory"];
 
+  const {recentlyProduct} = useDashboardData();
+
     // Dữ liệu các brand
-    const banners = [
-      {
-        category: "Macbook",
-        icon: "💻",
-        title: "Macbook Pro\nM2 – Strong Performance",
-        img: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
-      },
-      {
-        category: "Samsung",
-        icon: "📱",
-        title: "Galaxy Z Flip6\nFlex Your Style",
-        img: "../../../public/images/product/oppo-a38-black-2.jpeg",
-      },
-      {
-        category: "Sony",
-        icon: "🎧",
-        title: "Sony WH-1000XM5\nNoise Cancelling King",
-        img: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
-      },
-    ];
+    const banners = recentlyProduct.slice(0, 3).map((product, index) => ({
+      category: product.categoryName || "Unknown",
+      icon: ["💻", "📱", "🎧"][index % 3],
+      title: `${product.productName}\n${product.description?.substring(0, 30) || "Special Offer"}`,
+      img: product.thumbnail.startsWith("https://")
+        ? product.thumbnail
+        : `/public/images/product/${product.thumbnail.replace(/^[^_]+_[^_]+_/, "")}`,
+    }));
+
+
     const [activeIndex, setActiveIndex] = useState(0);
     // Tự động chuyển banner sau mỗi 4 giây
     useEffect(() => {
@@ -139,41 +132,45 @@ const HeaderUser = () => {
 
         {/* Banner Carousel */}
         <div className="col-7">
-          <div className="header-user__macbook-card">
-            <div className="header-user__macbook-content">
-              <div className="header-user__category">
-                <span className="header-user__icon">
-                  {banners[activeIndex].icon}
-                </span>{" "}
-                {banners[activeIndex].category}
+          {banners.length > 0 && (
+            <div className="header-user__macbook-card">
+              <div className="header-user__macbook-content">
+                <div className="header-user__category">
+                  <span className="header-user__icon">
+                    {banners[activeIndex].icon}
+                  </span>{" "}
+                  {banners[activeIndex].category}
+                </div>
+                <h2 className="header-user__title">
+                  {banners[activeIndex].title.split("\n").map((line, i) => (
+                    <React.Fragment key={i}>
+                      {line}
+                      <br />
+                    </React.Fragment>
+                  ))}
+                </h2>
+                <button className="header-user__shop-button">Shop Now →</button>
+                <div className="header-user__dots">
+                  {banners.map((_, index) => (
+                    <span
+                      key={index}
+                      className={`header-user__dot ${
+                        index === activeIndex ? "active" : ""
+                      }`}
+                    ></span>
+                  ))}
+                </div>
               </div>
-              <h2 className="header-user__title">
-                {banners[activeIndex].title.split("\n").map((line, i) => (
-                  <React.Fragment key={i}>
-                    {line}
-                    <br />
-                  </React.Fragment>
-                ))}
-              </h2>
-              <button className="header-user__shop-button">Shop Now →</button>
-              <div className="header-user__dots">
-                {banners.map((_, index) => (
-                  <span
-                    key={index}
-                    className={`header-user__dot ${
-                      index === activeIndex ? "active" : ""
-                    }`}
-                  ></span>
-                ))}
-              </div>
+              
+              <img
+                src={banners[activeIndex].img}
+                alt={banners[activeIndex].title}
+                className="header-user__macbook-img"
+              />
             </div>
-            <img
-              src={banners[activeIndex].img}
-              alt={banners[activeIndex].title}
-              className="header-user__macbook-img"
-            />
-          </div>
+          )}
         </div>
+
 
           {/* Featured Product */}
           <div className="col-2 text-end">
