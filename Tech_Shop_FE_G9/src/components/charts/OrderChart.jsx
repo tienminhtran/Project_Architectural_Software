@@ -14,7 +14,7 @@ import useOrder from "../../hooks/useOrder";
 
 const OrderChart = () => {
 
-  const {dailyOrders} = useOrder();
+  const {dailyOrders} = useOrder(0,1);
   const dailys = useMemo(() => dailyOrders, [dailyOrders]);
 
   const [timeFilter, setTimeFilter] = useState("today");
@@ -53,7 +53,7 @@ const OrderChart = () => {
         <div className="d-flex align-items-center justify-content-between mb-6">
           <div>
             <h2 className="fs-5 fw-semibold text-dark">Total Orders</h2>
-            <p className="display-5 fw-bold text-primary mt-2">56</p>
+            <p className="display-5 fw-bold text-primary mt-2">{filtered.length}</p>
           </div>
           <div className="d-flex gap-2">
             <button 
