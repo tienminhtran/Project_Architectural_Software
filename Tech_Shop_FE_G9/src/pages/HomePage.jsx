@@ -8,10 +8,7 @@ import "../assets/css/HomePage.css";
 const HomePage = () => {
   return (
     <div>
-
-
       <HeardUser />
-
       <FooterUser />
     </div>
   );

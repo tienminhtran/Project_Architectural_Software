@@ -1,0 +1,38 @@
+.announcement-bar {
+    background: linear-gradient(90deg, #ff00cc, #3333ff);
+    color: white;
+    padding: 10px 0;
+    overflow: hidden;
+    position: relative;
+    font-weight: bold;
+    text-align: center;
+  }
+  
+  .announcement-bar___marquee {
+    display: inline-flex;
+    align-items: center;
+    animation: scroll-left 15s linear infinite;
+    white-space: nowrap;
+    font-size: 14px;
+  }
+  
+  .announcement-bar___icon {
+    margin: 0 10px;
+    opacity: 0.8;
+  }
+  
+  .announcement-bar___link {
+    color: white;
+    text-decoration: underline;
+  }
+  
+  @keyframes scroll-left {
+    0% {
+      transform: translateX(100%);
+    }
+  
+    100% {
+      transform: translateX(-100%);
+    }
+  }
+  
