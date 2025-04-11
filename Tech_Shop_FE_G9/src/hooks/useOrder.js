@@ -3,10 +3,11 @@ import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
     deleteOrder as deleteOrderService,
     getAllOrder_Paging,
+    searchOrder,
 } from "../services/orderService";
 import usePaginationQuery from "./usePaginationQuery";
 
-const useOrder = (pageNo, pageSize) => {
+const useOrder = (pageNo, pageSize, orderSearch) => {
     const queryClient = useQueryClient();
     const deleteOrder = useMutation({
         mutationFn: (id) => deleteOrderService(id),
@@ -26,6 +27,14 @@ const useOrder = (pageNo, pageSize) => {
             getAllOrder_Paging,
             pageNo,
             pageSize
+        ),
+        search_paging: usePaginationQuery(
+            "searchOrder",
+            searchOrder,
+            pageNo,
+            pageSize,
+            orderSearch,
+            true
         ),
         deleteOrder: deleteOrder.mutate,
     };

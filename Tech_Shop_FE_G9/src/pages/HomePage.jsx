@@ -6,12 +6,12 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../assets/css/HomePage.css";
 const HomePage = () => {
-  return (
-    <div>
-      <HeardUser />
-      <FooterUser />
-    </div>
-  );
-}
+    return (
+        <div>
+            <HeardUser />
+            <FooterUser />
+        </div>
+    );
+};
 
 export default HomePage;

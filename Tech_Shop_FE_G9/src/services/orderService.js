@@ -47,3 +47,10 @@ export const getTotalAmountByOrderId = async (orderId) => {
     const response = await axiosInstance.get(`/orders/${orderId}/total-amount`);
     return response.data;
 };
+
+export const searchOrder = async (pageNo, pageSize, keyword) => {
+    const response = await axiosInstance.get(
+        `/orders/search/${keyword}?pageNo=${pageNo}&pageSize=${pageSize}`
+    );
+    return response.data;
+};

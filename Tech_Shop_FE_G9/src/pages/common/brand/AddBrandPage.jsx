@@ -1,38 +1,60 @@
 import React, { useState, useEffect, useRef } from "react";
 import { useLocation, useNavigate } from "react-router-dom";
-import { FaCloudUploadAlt } from "react-icons/fa"; // Import upload icon
-import "../../../assets/css/AddBrandPage.css"; // Import CSS file
+import { FaCloudUploadAlt } from "react-icons/fa";
+import "../../../assets/css/AddBrandPage.css";
 import useBrandData from "../../../hooks/useBrandData";
 
 function AddBrandPage() {
     const location = useLocation();
     const navigate = useNavigate();
+
     const initialState = {
+        id: null,
         name: "",
         active: true,
     };
 
-    const brandFromLocation = location.state?.brand;
+    const brandFromLocation = location.state?.brand || initialState;
 
-    const normalizeInitialState = (brand) => {
-        if (!brand || brand.id) return initialState;
-        return {
-            ...brand,
-            brandId: brand.id || "",
-            brandName: brand.name || "",
-            active: brand.active || true,
-        };
-    };
-
-    const { createBrand, updateBrand } = useBrandData();
-    const [brand, setBrand] = useState(
-        normalizeInitialState(brandFromLocation)
+    const [brand, setBrand] = useState(() =>
+        brandFromLocation.id ? brandFromLocation : initialState
     );
+
     const [selectedFiles, setSelectedFiles] = useState([]);
     const formRef = useRef(null);
-    const [formData, setFormData] = useState({ active: false });
 
-    // Handle image selection
+    const { createBrand, updateBrand } = useBrandData();
+
+    //  Load hình ảnh khi cập nhật
+    useEffect(() => {
+        if (brandFromLocation && brandFromLocation.images?.length > 0) {
+            const imagePath = brandFromLocation.images.map((image) => {
+                if (image.startsWith("http")) {
+                    return {
+                        url: image,
+                        name: image.split("/").pop(),
+                    };
+                } else {
+                    return {
+                        url: `/uploads/${image}`, // tùy cấu hình backend
+                        name: image,
+                    };
+                }
+            });
+            setSelectedFiles(imagePath);
+        }
+    }, [brandFromLocation]);
+
+    //  Xử lý input (name, checkbox)
+    const handleChange = (e) => {
+        const { name, value, type, checked } = e.target;
+        setBrand((prev) => ({
+            ...prev,
+            [name]: type === "checkbox" ? checked : value,
+        }));
+    };
+
+    //  Xử lý chọn ảnh
     const handleImageChange = (e) => {
         if (!e.target.files) return;
         const files = Array.from(e.target.files).map((file) => ({
@@ -40,115 +62,74 @@ function AddBrandPage() {
             url: URL.createObjectURL(file),
             name: file.name,
         }));
-        setSelectedFiles((prevFiles) => [...prevFiles, ...files]);
+        setSelectedFiles((prev) => [...prev, ...files]);
     };
 
-    const handleSlitFileName = (fileName) => {
-        if (!fileName) return null;
-        return fileName.replace(/^[^_]+_[^_]+_/, "");
-    };
-
-    useEffect(() => {
-        if (brandFromLocation) {
-            let imagePath;
-            if (
-                brandFromLocation.images &&
-                brandFromLocation.images.length > 0
-            ) {
-                imagePath = brandFromLocation.images.map((image) => {
-                    if (image.startsWith("http")) {
-                        return { url: image, name: image.split("/").pop() };
-                    } else {
-                        return { url: handleSlitFileName(image), name: image };
-                    }
-                });
-            }
-            setSelectedFiles(imagePath || []);
-        }
-    }, [brandFromLocation]);
-
-    const handleChange = (e) => {
-        const { name, value } = e.target;
-        setBrand({ ...brand, [name]: value });
-    };
-
+    // Reset form
     const handleReset = () => {
         if (brand.id) {
-            navigate("/common/brands");
+            navigate("/common/BrandPage");
         } else {
-            if (formRef.current) {
-                formRef.current.reset();
-            }
             setBrand(initialState);
             setSelectedFiles([]);
-            setFormData({ active: false });
+            if (formRef.current) formRef.current.reset();
         }
     };
 
+    //  Xử lý gửi form
     const handleSubmit = (e) => {
         e.preventDefault();
 
         const formData = new FormData();
-
-        // Ensure the correct mapping of fields
-        const updatedBrand = {
-            id: brand.brandId || null,
-            name: brand.name || "",
+        const brandPayload = {
+            id: brand.id || null,
+            name: brand.name,
             active: brand.active,
         };
 
         formData.append(
             "brand",
-            new Blob([JSON.stringify(updatedBrand)], {
+            new Blob([JSON.stringify(brandPayload)], {
                 type: "application/json",
             })
         );
 
-        // Add files to FormData
-        if (selectedFiles.length > 0) {
-            selectedFiles.forEach((fileObj) => {
-                if (fileObj.file) {
-                    formData.append("brandImg", fileObj.file); // Ensure field name matches server expectations
-                }
-            });
-        }
+        selectedFiles.forEach((fileObj) => {
+            if (fileObj.file) {
+                formData.append("brandImg", fileObj.file);
+            }
+        });
 
-        // Send API request
         if (brand.id) {
             updateBrand({ formData, id: brand.id });
-            navigate("/common/brands");
         } else {
             createBrand({ formData });
         }
+
         handleReset();
     };
-    const handleRemoveFile = (index) => {
-        setSelectedFiles((prevFiles) =>
-            prevFiles.filter((_, i) => i !== index)
-        );
-    };
 
-    const handleChangeCheckbox = (e) => {
-        const { name, checked } = e.target;
-        setFormData((prevData) => ({
-            ...prevData,
-            [name]: checked,
-        }));
+    //  Xóa ảnh khỏi danh sách đã chọn
+    const handleRemoveFile = (index) => {
+        setSelectedFiles((prev) => prev.filter((_, i) => i !== index));
     };
 
     return (
         <div className="add-brand-container">
-            <form onSubmit={handleSubmit}>
+            <form onSubmit={handleSubmit} ref={formRef}>
                 <div className="form-group">
                     <label>Brand Name:</label>
                     <input
                         type="text"
-                        placeholder="Enter brand name"
                         name="name"
-                        value={brand.brandName}
+                        placeholder="Enter brand name"
+                        value={brand.name}
                         onChange={handleChange}
+                        required
                     />
                 </div>
+
+                {/* Upload ảnh */}
                 <div className="upload-area">
                     <input
                         type="file"
@@ -163,6 +144,8 @@ function AddBrandPage() {
                         <p>Click to upload files</p>
                     </label>
                 </div>
+
+                {/* Preview ảnh */}
                 <div className="preview-container">
                     {selectedFiles.map((fileObj, index) => (
                         <div key={index} className="preview-card">
@@ -182,20 +165,32 @@ function AddBrandPage() {
                         </div>
                     ))}
                 </div>
+
+                {/* Checkbox Active */}
                 <div className="form-group">
                     <label>
                         <input
                             type="checkbox"
                             name="active"
-                            checked={formData.active}
-                            onChange={handleChangeCheckbox}
+                            checked={brand.active}
+                            onChange={handleChange}
                         />
                         Active
                     </label>
                 </div>
-                <button className="submit-btn" type="submit">
-                    Add Brand
-                </button>
+
+                <div className="form-buttons">
+                    <button className="submit-btn" type="submit">
+                        {brand.id ? "Update Brand" : "Add Brand"}
+                    </button>
+                    <button
+                        className="cancel-btn"
+                        type="button"
+                        onClick={handleReset}
+                    >
+                        Cancel
+                    </button>
+                </div>
             </form>
         </div>
     );
