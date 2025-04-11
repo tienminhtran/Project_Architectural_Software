@@ -185,21 +185,17 @@ public class UserServiceImpl implements UserService {
             user.setGender(userRequest.getGender());
             user.setDayOfBirth(userRequest.getDob());
             user.setRole(role);
+            user.setActive(userRequest.isActive());
             user.setUpdatedAt(LocalDateTime.now());
 
             MultipartFile file = userRequest.getImage();
-            String image="";
-            if(file == null || file.isEmpty()) {
-                image = "avtdefault.jpg";
-            } else {
+            if (file != null && !file.isEmpty()) {
                 if (!isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
                     throw new BadRequestException("Invalid image format");
                 }
-
-                image = saveFile(file);
+                String image = saveFile(file);
+                user.setImage(image); // chỉ set nếu có file mới
             }
-
-            user.setImage(image);
             System.out.println(user);
             user = userRepository.save(user);
             return this.convertToDto(user, UserResponse.class);
