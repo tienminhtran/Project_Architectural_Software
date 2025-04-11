@@ -219,52 +219,8 @@ const HeaderUser = () => {
         </div>
 
 
-        <div className="container-fluid py-3">
-          <div className="header-user__products">
-              <h2>
-                  <FaShoppingCart className="header-user__products-icon" /> Our Products
-              </h2>
-              <h1>Explore our Products</h1>
-          </div>
 
-          {/* container product */}
-          <div className="row">
-            {productData.map((product, index) => (
-              <div className="col-md-3" key={index}>
-                <div className="header-user__product-card">
-                  <div className="header-user__product-image-wrapper">
-                    <img src={product.image} alt={product.name} className="header-user__product-img" />
-                    <div className="header-user__badge">20% Off</div>
-
-                    {/* Hover Actions */}
-                    <div className="header-user__product-actions">
-                      <button className="header-user__View">
-                        <FaEye />
-                      </button>
-                      <button className="header-user__add-to-cart">
-                        <FaShoppingCart /> Thêm giỏ hàng
-                      </button>
-                      <button className="header-user__favorite">
-                        <FaHeart />
-                      </button>
-                    </div>
-                  </div>
-
-                  <div className="header-user__product-info">
-                    <p className="header-user__product-name">{product.name}</p>
-                    <p className="header-user__product-price">
-                      <span className="header-user__new-price">{product.newPrice} ₫</span>{" "}
-                      <span className="header-user__old-price">{product.oldPrice} ₫</span>
-                    </p>
-                  </div>
-                </div>
-              </div>
-            ))}
-          </div>
-
-
-
-        </div>
+         
       </div>
     </div>
   );
