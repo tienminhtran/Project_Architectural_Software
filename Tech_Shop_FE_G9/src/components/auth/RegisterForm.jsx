@@ -123,7 +123,7 @@ const RegisterForm = () => {
             
           />
 
-          {error  && <p className="text-danger">{error.message.phoneNumber}</p>}
+          {error  && <p className="text-danger">{error.message.phone}</p>}
         </Form.Group>
 
         {/* first name */}

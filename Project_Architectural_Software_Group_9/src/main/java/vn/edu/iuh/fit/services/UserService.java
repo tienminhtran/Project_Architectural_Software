@@ -49,6 +49,8 @@ public interface UserService {
 
     boolean existsEmail(String email);
 
+    boolean existsPhone(String email);
+
     UserResponse findByUsername(String username);
 
     UserResponse createUserRoleManager(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException;
