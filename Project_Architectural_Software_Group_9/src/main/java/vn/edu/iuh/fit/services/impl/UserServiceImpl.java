@@ -101,6 +101,11 @@ public class UserServiceImpl implements UserService {
                     "Email already exists. Please enter another email!"));
         }
 
+        if (this.existsPhone(userRequest.getPhoneNumber())) {
+            result.addError(new FieldError("userRequest", "phone",
+                    "Phone already exists. Please enter another Phone!"));
+        }
+
         if(userRequest.getPassword() == null || userRequest.getConfirmPassword() == null) {
             result.addError(new FieldError("userRequest", "password",
                     "Password is required"));
@@ -218,6 +223,11 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean existsEmail(String email) {
         return userRepository.existsByEmail(email);
+    }
+
+    @Override
+    public boolean existsPhone(String phone) {
+        return userRepository.existsByPhoneNumber(phone);
     }
 
     @Override

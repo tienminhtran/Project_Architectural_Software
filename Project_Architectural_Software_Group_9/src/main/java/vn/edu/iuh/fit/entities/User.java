@@ -61,7 +61,7 @@ public class User extends TrackingDate{
     private String password;
 
     @Size(max = 20)
-    @Column(name = "phone_number", length = 20)
+    @Column(name = "phone_number", length = 20, unique = true)
     private String phoneNumber;
 
     @Size(max = 100)
