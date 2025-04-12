@@ -154,6 +154,37 @@ public class OrderServiceImpl implements OrderService {
         return orderRepository.totalOrderByDay();
     }
 
+    @Override
+    public boolean delete(Long id) {
+        Order order = orderRepository.findById(id).orElseThrow(() -> new RuntimeException("Order not found"));
+        order.setStatus(OrderStatus.CANCELLED);
+        orderRepository.save(order);
+        return true;
+    }
+
+    @Override
+    public Double getTotalAmountByOrderId(Long orderId) {
+        return orderRepository.calculateTotalAmountByOrderId(orderId);
+    }
+
+    @Override
+    public PageResponse<OrderResponse> searchOrder(String keyword, int pageNo, int pageSize) {
+    if (keyword == null || keyword.trim().isEmpty()) {
+        throw new IllegalArgumentException("Keyword must not be null or empty");
+    }
+    Pageable pageable = PageRequest.of(pageNo, pageSize);
+    Page<Order> orders = orderRepository.searchOrder(keyword, pageable);
+    PageResponse<OrderResponse> response = new PageResponse<>();
+    if (orders.hasContent()) {
+        response.setPage(pageNo);
+        response.setSize(pageSize);
+        response.setTotal(orders.getNumberOfElements());
+        response.setTotalPages(orders.getTotalPages());
+        response.setValues(orders.stream().map(this::convertToDto).collect(Collectors.toList()));
+    }
+    return response;
+}
+
 //    @Override
 //    public List<OrderResponse> findByPayment(String payment) {
 //        List<Order> orders = orderRepository.findByPayment(payment);

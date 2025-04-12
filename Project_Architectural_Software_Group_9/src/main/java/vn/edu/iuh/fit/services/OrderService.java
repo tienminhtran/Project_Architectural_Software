@@ -37,18 +37,22 @@ public interface OrderService {
 
     String cancelOrder(Long orderId);
 
-//    Tìm kiếm đơn hàng theo tên khách hàng
+    //    Tìm kiếm đơn hàng theo tên khách hàng
     List<OrderResponse> findByCustomerName(String customerName);
 
     List<OrderResponse> findByNamePayMent(String namePayment);
 
     List<DailyOrderResponse> totalOrderByDay();
 
+    boolean delete(Long id);
+
+    public Double getTotalAmountByOrderId(Long orderId);
+    PageResponse<OrderResponse> searchOrder(String keyword, int pageNo, int pageSize);
+
     // tìm payment
 //    List<OrderResponse> findByPayment(String payment);
 
 //    Chuyển status sang Cancelled
-
 
 
 }

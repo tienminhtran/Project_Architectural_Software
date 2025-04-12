@@ -1,26 +1,25 @@
 .product-carousel {
     max-width: 600px;
     margin: auto;
-  }
-  
-  .product-image {
+}
+
+.product-image {
     max-height: 300px;
     object-fit: contain;
-  }
-  
-  .product-info {
+}
+
+.product-info {
     font-size: 16px;
-  }
-  
-  .info-grid {
+}
+
+.info-grid {
     display: grid;
     grid-template-columns: repeat(2, 1fr);
     gap: 10px;
-  }
-  
-  @media (max-width: 576px) {
+}
+
+@media (max-width: 576px) {
     .info-grid {
-      grid-template-columns: 1fr;
+        grid-template-columns: 1fr;
     }
-  }
-  
+}

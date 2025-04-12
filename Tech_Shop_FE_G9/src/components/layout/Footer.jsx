@@ -1,21 +1,18 @@
-import {
-  FaShippingFast,
-  FaHeadset,
-  FaFacebookF,
-  FaInstagram,
-  FaTwitter,
-  FaLinkedinIn,
-  FaDiscord,
-} from "react-icons/fa";
+import { FaShippingFast, FaHeadset, FaFacebookF, FaInstagram, FaTwitter, FaLinkedinIn, FaDiscord, } from "react-icons/fa";
 import { MdOutlineVerifiedUser } from "react-icons/md";
 import { BsArrowReturnLeft } from "react-icons/bs";
 import { IoMdMail } from "react-icons/io";
 import { FiPhoneCall } from "react-icons/fi";
 import '../../assets/css/FooterUser.css';
-
+import Brand from './Brand.jsx';
 const Footer = () => {
   return (
+
     <footer className="footer">
+      <div className="footer-top">
+        <Brand />
+      </div>
+      
       {/* Top features */}
       <div className="footer-top">
         <div className="feature-box">
@@ -58,7 +55,7 @@ const Footer = () => {
         {/* Support */}
         <div className="footer-column">
           <h3>Support</h3>
-          <img src="/logo.png" alt="Logo" className="footer-logo" />
+          <img src="../../../public/images/logo/logo-large.png" alt="Logo" className="footer-logo" />
           <p>Trường Đại học Công Nghiệp,<br />Số 4 Nguyễn Văn Bảo,<br />Phường 9, Gò Vấp.</p>
           <p><IoMdMail className="icon" /> minhtien.dev.iuh.edu@gmail.com</p>
           <p><FiPhoneCall className="icon" /> (+84) 0689188704</p>
@@ -98,8 +95,8 @@ const Footer = () => {
               </a>
             </div>
             <div className="store-icons">
-              <img src="/app-store.png" alt="App Store" />
-              <img src="/google-play.png" alt="Google Play" />
+              <img src="/public/images/icon/app-store.png" alt="App Store" />
+              <img src="/public/images/icon/google-play.png" alt="Google Play" />
             </div>
           </div>
         </div>

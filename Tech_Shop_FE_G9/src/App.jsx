@@ -27,6 +27,10 @@ import FormProduct from "./pages/common/product/FormProduct";
 import OrderPage from "./pages/common/order/OrderPage";
 import OrderDetailPage from "./pages/common/order/OrderDetailPage";
 
+import "bootstrap/dist/css/bootstrap.min.css";
+import "bootstrap/dist/js/bootstrap.bundle.min";
+import "bootstrap-icons/font/bootstrap-icons.css";
+import UpdateUserPage from "./pages/common/user/UpdateUserPage";
 
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
@@ -72,6 +76,14 @@ function App() {
             element={
               <DashboardLayout>
                 <AddUserPage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/common/UpdateUserPage/"
+            element={
+              <DashboardLayout>
+                <UpdateUserPage />
               </DashboardLayout>
             }
           />
@@ -170,7 +182,7 @@ function App() {
               <DashboardLayout>
                 <ProductPage />
               </DashboardLayout>
-            }           
+            }
           />
 
           <Route
@@ -188,13 +200,9 @@ function App() {
               <DashboardLayout>
                 <OrderDetailPage />
               </DashboardLayout>
-            }           
+            }
           />
-
-
         </Route>
-
-      
 
         {/* Manager Page */}
         <Route element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}>

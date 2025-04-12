@@ -43,7 +43,7 @@ const UserPage = () => {
     }, {});
   }, [users_response]);
 
-  if (isLoading) return <p>Loading vouchers...</p>;
+  if (isLoading) return <p>Loading user...</p>;
   if (isError) return <p>Error: {error.message}</p>;
 
   const handlePageChange = (selected) => {
@@ -85,7 +85,7 @@ const UserPage = () => {
   });
 
   const handleNavigate = (user) => {
-    navigate("/common/AddUserPage", { state: { user } });
+    navigate("/common/UpdateUserPage", { state: { user } });
   };
 
   return (
@@ -224,6 +224,7 @@ const UserPage = () => {
         breakClassName={"page-item"}
         breakLinkClassName={"page-link"}
         activeClassName={"active"} // Class của trang hiện tại
+        forcePage={currentPage}
       />
     </div>
   );

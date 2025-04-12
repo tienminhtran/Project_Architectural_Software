@@ -111,5 +111,20 @@ public class BrandRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Delete brand success").build());
     }
 
-
+    @GetMapping("/search/{keyword}")
+    public ResponseEntity<BaseResponse<?>> searchBrand(@PathVariable String keyword,
+                                                       @RequestParam(defaultValue = "0", required = false) Integer pageNo,
+                                                       @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
+        if (pageNo == null) {
+            pageNo = 0;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        PageResponse<BrandResponse> brandREsponse = brandService.searchBrand(keyword, pageNo, pageSize);
+        if (brandREsponse == null || brandREsponse.getValues().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Search brand success").response(brandREsponse).build());
+    }
 }

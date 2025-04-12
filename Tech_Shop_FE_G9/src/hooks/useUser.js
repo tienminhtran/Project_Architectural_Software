@@ -44,7 +44,7 @@ const useUser = (pageNo, pageSize) => {
   //sử dụng useMuntation để update thông tin user
   const updateProfileUser = useMutation({
     mutationFn: ({ userid, formData }) => {
-      updateProfile(userid, formData);
+      return updateProfile(userid, formData);
     }, // Gọi API update user, munationFn nhận vào 1 object có 2 key là userid và formData
     onSuccess: (data) => {
       // Cập nhật lại cache của user sau khi update thành công
@@ -52,6 +52,9 @@ const useUser = (pageNo, pageSize) => {
         ...oldData,
         response: { ...oldData?.response, ...data },
       }));
+      queryClient.invalidateQueries(["getUser", user]); // Invalidate the query to refetch the user data
+      queryClient.invalidateQueries(["getAllUsersPaging"]); // Invalidate the query to refetch the user data
+
       alert("Update user successfully!!");
     },
     onError: (error) => {

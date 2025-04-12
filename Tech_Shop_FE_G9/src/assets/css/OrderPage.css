@@ -1,0 +1,34 @@
+/* Status: Pending */
+.status-pending {
+    display: inline-block;
+    width: 110px !important;
+    background-color: #0d6efd !important;
+}
+
+/* Status: Refund */
+.status-refund {
+    display: inline-block;
+    width: 110px !important;
+    background-color: #ffc107 !important;
+}
+
+/* Status: Completed */
+.status-completed {
+    display: inline-block;
+    width: 110px !important;
+    background-color: #198754 !important;
+}
+
+/* Status: Cancelled */
+.status-cancelled {
+    display: inline-block;
+    width: 110px !important;
+    background-color: #dc3545 !important;
+}
+
+/* Status: Delivered */
+.status-delivered {
+    display: inline-block;
+    width: 110px !important;
+    background-color: #6c757d !important;
+}

@@ -5,7 +5,9 @@
   font-family: "Segoe UI", sans-serif;
   color: #444;
 }
-
+.footer-top-brand {
+  margin-bottom: 70px;
+}
 /* Top features */
 .footer-top {
   display: flex;
@@ -32,11 +34,14 @@
 .feature-title {
   font-weight: 600;
   font-size: 16px;
+  margin: 0%;
+  align-items: center;
 }
 
 .feature-desc {
   font-size: 14px;
   color: #777;
+  margin: 0%;
 }
 
 /* Footer columns */
@@ -70,13 +75,16 @@
   margin-bottom: 8px;
   color: #666;
   cursor: pointer;
-  transition: color 0.3s ease;
+  transition: all 0.3s ease;
+  /* display: inline-block; */
 }
 
 .footer-column ul li:hover {
-  color: #154af7;
+  color: #978ef0;
+  transform: scale(1.05);
+  font-weight: bold;
+  text-shadow: 1px 1px 3px rgba(0, 0, 0, 0.2);
 }
-
 .footer-logo {
   height: 30px;
   margin-bottom: 15px;
