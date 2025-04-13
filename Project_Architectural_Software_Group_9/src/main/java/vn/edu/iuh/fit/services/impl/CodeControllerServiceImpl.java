@@ -46,26 +46,58 @@ public class CodeControllerServiceImpl implements CodeControllerService {
         // Tạo đối tượng CodeController
         CodeController code = new CodeController();
 
-        // Set thông tin ID, nếu không có sẽ sử dụng Auto Increment
-        code.setId(request.getId());  // ID có thể bỏ nếu để AUTO_INCREMENT
-        code.setActive(request.isActive());  // Lấy thông tin active từ client
+        // Set các thuộc tính từ request
+        code.setId(request.getId());
+        code.setCode(request.getCode()); // Sử dụng mã code người dùng nhập
+        code.setActive(request.isActive());
 
-        // Lấy thời gian hiện tại và chuyển thành chuỗi ISO 8601
+        // Lấy thời gian hiện tại
         LocalDateTime now = LocalDateTime.now();
         DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
-        code.setDate_create(now.format(formatter));  // Lưu thời gian hiện tại vào date_create
+        code.setDate_create(now.format(formatter));
 
         // Đặt vòng đời là 180 giây (3 phút)
         code.setLife_cycle(180);
 
-        // Lưu đối tượng vào cơ sở dữ liệu
+        // Lưu đối tượng vào CSDL
         CodeController saved = codeControllerRepository.save(code);
 
-        // Kiểm tra nếu lưu thành công
         if (saved != null) {
             return convertToDto(saved);
         } else {
             throw new Exception("CodeController not created");
         }
     }
+
+//    public CodeControllerResponse createCodeController(CodeControllerRequest request) throws Exception {
+//        // Tạo đối tượng CodeController
+//        CodeController code = new CodeController();
+//
+//        // Set ID nếu có (nếu để AUTO_INCREMENT thì bỏ dòng dưới)
+//        code.setId(request.getId());
+//
+//        // Mặc định là active = true khi tạo mới
+//        code.setActive(true);
+//
+//        // Lấy thời gian hiện tại
+//        LocalDateTime now = LocalDateTime.now();
+//        DateTimeFormatter formatter = DateTimeFormatter.ISO_LOCAL_DATE_TIME;
+//        code.setDate_create(now.format(formatter));
+//
+//        // Đặt vòng đời là 180 giây (3 phút)
+//        code.setLife_cycle(180);
+//
+//        // Sinh ngẫu nhiên 6 chữ số cho mã code
+//        String randomCode = String.format("%06d", (int) (Math.random() * 1000000));
+//        code.setCode(randomCode);
+//
+//        // Lưu đối tượng vào CSDL
+//        CodeController saved = codeControllerRepository.save(code);
+//
+//        if (saved != null) {
+//            return convertToDto(saved);
+//        } else {
+//            throw new Exception("CodeController not created");
+//        }
+//    }
 }

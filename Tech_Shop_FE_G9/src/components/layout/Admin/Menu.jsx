@@ -195,11 +195,22 @@ const Menu = () => {
                         <FaGift /> Voucher{" "}
                         <IoIosArrowForward className="arrow" />
                         <ul className="submenu">
-                            <li>
-                                <Link to="/common/formVoucher">
+                            {localStorage.getItem("lastDashboard") === "admin" && (
+                                <li >
+                            
+                                    <Link to="/common/formVoucher" >
                                     Create Voucher
-                                </Link>
-                            </li>
+                                    </Link>
+                                </li>
+                            )}
+                            {localStorage.getItem("lastDashboard") === "manager" && (
+                                <li >
+                                   
+                                    <Link to="/common/checkCode" >
+                                    Create Voucher
+                                    </Link>
+                                </li>
+                            )}
                             <li>
                                 <Link to="/common/vouchers">
                                     Manage Vouchers

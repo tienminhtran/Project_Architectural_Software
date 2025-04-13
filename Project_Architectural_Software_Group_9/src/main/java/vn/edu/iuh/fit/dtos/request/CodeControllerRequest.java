@@ -20,6 +20,7 @@ public class CodeControllerRequest {
 
     private static final long serialVersionUID = 1L;
     private Long id;
+    private String code;  // Thêm mã code vào request
 
     private boolean active;
 }

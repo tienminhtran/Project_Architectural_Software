@@ -12,10 +12,7 @@ package vn.edu.iuh.fit.entities;/*
   `active` BIT(1) NOT NULL,
  */
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import lombok.*;
 
 @Getter
@@ -33,5 +30,7 @@ public class CodeController {
     private String date_create;  // Định dạng chuỗi để lưu thời gian
     private int life_cycle;      // Vòng đời tính bằng giây
     private boolean active;      // Trạng thái hoạt động
+    @Column(name="ma_code")
+    private String code;
 
 }
