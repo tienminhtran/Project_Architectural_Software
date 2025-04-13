@@ -21,6 +21,7 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
+import vn.edu.iuh.fit.dtos.EmailVerifyEntry;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.TopCustomerResponse;
@@ -28,6 +29,8 @@ import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.entities.Role;
 import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.exception.EmailAlreadyExistsException;
+import vn.edu.iuh.fit.exception.ItemNotFoundException;
+import vn.edu.iuh.fit.exception.SendEmailException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.repositories.OrderDetailRepository;
 import vn.edu.iuh.fit.repositories.RoleRepository;
@@ -35,13 +38,17 @@ import vn.edu.iuh.fit.repositories.UserRepository;
 import vn.edu.iuh.fit.repositories.RefreshTokenRepository;
 import vn.edu.iuh.fit.security.CustomUserDetails;
 import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
+import vn.edu.iuh.fit.services.EmailService;
 import vn.edu.iuh.fit.services.UserService;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Map;
 import java.util.Objects;
+import java.util.UUID;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static vn.edu.iuh.fit.utils.ImageUtil.isValidSuffixImage;
@@ -76,6 +83,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private JwtTokenProvider jwtUtils;
+
+    @Autowired
+    private EmailService emailService;
+
+    private final Map<String, EmailVerifyEntry> emailVerifyMap = new ConcurrentHashMap<>();
 
     // Phương thức chuyển đổi User sang DTO với kiểu generic T
     private <T> T convertToDto(User user, Class<T> targetClass) {
@@ -170,6 +182,19 @@ public class UserServiceImpl implements UserService {
             user.setImage("avtdefault.jpg");
 
             user = userRepository.save(user);
+
+            // Gửi email xác thực tài khoản
+            try {
+                String verifyToken = UUID.randomUUID().toString();
+                long now = Instant.now().toEpochMilli();
+
+                emailVerifyMap.put(user.getEmail(), new EmailVerifyEntry(verifyToken, now));
+
+                emailService.sendEmailToVerifyAccount(user.getLastname() + " " + user.getFirstname(),
+                        user.getEmail(), verifyToken);
+            } catch (SendEmailException e) {
+                throw new RuntimeException(e);
+            }
 
             return this.convertToDto(user, UserResponse.class);
         }
@@ -340,5 +365,33 @@ public class UserServiceImpl implements UserService {
         modelMapper.map(userRequest, user);
         User updatedUser = userRepository.save(user);
         return this.convertToDto(updatedUser, UserResponse.class);
+    }
+
+    @Override
+    public boolean verifyAccount(String email,String token) {
+        System.out.println("verifyAccount: " + email + " " + token);
+
+        EmailVerifyEntry entry = emailVerifyMap.get(email);
+        System.out.println("entry: " + entry);
+        if(entry == null) return false;
+
+        long currentTime = Instant.now().toEpochMilli();
+        long TTL_MILLIS = 3 * 60 * 1000; // 3 phút
+        if(currentTime - entry.getTimestamp() > TTL_MILLIS) {
+            // Token đã hết hạn
+            emailVerifyMap.remove(email);
+            return false;
+        }
+        if(entry.getTokenVerify().equals(token)) {
+            User user = userRepository.findByEmail(email).orElseThrow(() -> new ItemNotFoundException("Can not find User with email: " + email));
+            user.setActive(true);
+
+            userRepository.save(user);
+
+            emailVerifyMap.remove(email);
+            // Xóa token sau khi xác thực thành công
+            return true;
+        }
+        return false;
     }
 }

@@ -79,4 +79,16 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                 );
     }
 
+    @ExceptionHandler(SendEmailException.class)
+    public ResponseEntity<BaseResponse<?>> sendEmailFailHandler(SendEmailException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        BaseResponse.builder()
+                                .status("FAILED")
+                                .message(ex.getMessage())
+                                .build()
+                );
+    }
+
 }

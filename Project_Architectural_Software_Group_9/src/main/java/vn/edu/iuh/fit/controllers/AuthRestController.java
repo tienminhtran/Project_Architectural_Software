@@ -13,10 +13,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.MethodArgumentNotValidException;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import vn.edu.iuh.fit.dtos.request.AuthRequest;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.AuthResponse;
@@ -124,6 +121,16 @@ public class AuthRestController {
             response.put("data", userResponse);
             response.put("message", "User created successfully");
             return ResponseEntity.status(HttpStatus.OK).body(response);
+        }
+    }
+
+    @GetMapping("/verify")
+    public ResponseEntity<?> verifyAccount(@RequestParam(name = "email") String email,@RequestParam(name = "token") String token) {
+        try {
+            userService.verifyAccount(email,token);
+            return ResponseEntity.ok("Verify account successfully");
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body("Verify account failed");
         }
     }
 }
