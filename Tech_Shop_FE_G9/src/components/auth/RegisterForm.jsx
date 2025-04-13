@@ -4,6 +4,7 @@ import { useSelector, useDispatch } from "react-redux";
 import { register } from "../../services/authService";
 import { handleFailure, setUser } from "../../store/slices/AuthSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -38,6 +39,10 @@ const RegisterForm = () => {
 
         const response = await register(formData);
         dispatch(setUser(response));
+        toast.success("Registration successful!. Please check your email for verification.", {
+                position: 'top-center',
+                autoClose: 3000,
+              }); 
         navigate("/login");
     } catch (error) {
       
