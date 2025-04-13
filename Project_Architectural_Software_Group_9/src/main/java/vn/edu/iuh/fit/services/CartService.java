@@ -20,4 +20,6 @@ public interface CartService {
     CartResponse getCartByUserId(Long userId);
 
     List<CartItemResponse> getCartItemsByCartId(Long userId);
+
+
 }

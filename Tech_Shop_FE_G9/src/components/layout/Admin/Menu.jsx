@@ -6,7 +6,7 @@ import {
     FaGift,
     FaHome,
     FaUserShield,
-    FaFileInvoice,
+    FaFileInvoice,FaRegPaperPlane
 } from "react-icons/fa";
 import { BiCategoryAlt } from "react-icons/bi";
 import { IoIosArrowForward } from "react-icons/io";
@@ -217,6 +217,13 @@ const Menu = () => {
                             <FaHome />{" "}
                             <Link to="/manager/dashboard" className="fw-normal">
                                 Manager Home
+                            </Link>
+                        </li>
+                    )}
+                    {localStorage.getItem("lastDashboard") === "admin" && (
+                        <li className="menu-item">
+                            <Link to="/admin/code" className="fw-normal">
+                                <FaRegPaperPlane /> Task
                             </Link>
                         </li>
                     )}
