@@ -4,6 +4,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { login, saveAccessToken, getAccessToken } from "../../services/authService";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess, handleFailure } from "../../store/slices/AuthSlice.js";
+import { toast } from "react-toastify";
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -35,7 +36,13 @@ const LoginForm = () => {
       navigate(`/${response.token.roles[0].toLowerCase().replace('role_', '')}/dashboard`);  // navigate to
       
     } catch (error) {
-      dispatch(handleFailure(error.response.data.message));
+      console.error("Login error:", error.response.data.message);
+      dispatch(handleFailure(error.response.data)); 
+      toast.error(error.response.data.message, {
+        position: 'top-center',
+        autoClose: 3000,
+      }); 
+
     }
   }
 
@@ -66,7 +73,7 @@ const LoginForm = () => {
           />
         </Form.Group>
 
-        {error && <Alert variant="danger">{error}</Alert>}
+        {/* {error && <Alert variant="danger">{error.message}</Alert>} */}
 
         <div className="d-flex align-items-center justify-content-between gap-5">
           <Button variant="primary" type="submit" size="lg" disabled={loading}>

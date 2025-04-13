@@ -4,6 +4,8 @@ import { useSelector, useDispatch } from "react-redux";
 import { register } from "../../services/authService";
 import { handleFailure, setUser } from "../../store/slices/AuthSlice";
 import { useNavigate } from "react-router-dom";
+import { toast } from "react-toastify";
+import Loading from "../common/Loading";
 
 const RegisterForm = () => {
   const [formData, setFormData] = useState({
@@ -22,9 +24,7 @@ const RegisterForm = () => {
   const { error } = useSelector((state) => state.auth);
   const dispatch = useDispatch();
   const navigate = useNavigate();
-
-
-  
+  const [isLoading, setLoading] = useState(false); 
 
   // Xu ly thay doi gia tri cua input
   const handleChange = (e) => {
@@ -36,10 +36,23 @@ const RegisterForm = () => {
     e.preventDefault();
     try {
 
-        const response = await register(formData);
-        dispatch(setUser(response));
-        navigate("/login");
+      setLoading(true); // Bat dau loading
+
+      const response = await register(formData);
+
+      dispatch(setUser(response.data)); // Luu thong tin user vao redux
+
+      setLoading(false); // Ket thuc loading
+
+      toast.success("Register success", {
+        position: "top-center",
+        autoClose: 3000,
+      });
+
+      navigate("/login"); // Chuyen huong ve trang login
+
     } catch (error) {
+      setLoading(false); // Ket thuc loading
       
         dispatch(handleFailure(error.response.data));
         console.log(error.response.data);
@@ -205,6 +218,7 @@ const RegisterForm = () => {
         </div>
 
       </Form>
+      <Loading isLoading={isLoading} /> {/* Loading component */}
     </div>
   );
 };
