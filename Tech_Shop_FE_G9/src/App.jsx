@@ -31,6 +31,7 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import UpdateUserPage from "./pages/common/user/UpdateUserPage";
+import AdminCodeControllerPage from "./pages/admin/AdminCodeControllerPage";
 
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
@@ -84,6 +85,14 @@ function App() {
             element={
               <DashboardLayout>
                 <UpdateUserPage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/admin/code/"
+            element={
+              <DashboardLayout>
+                <AdminCodeControllerPage />
               </DashboardLayout>
             }
           />

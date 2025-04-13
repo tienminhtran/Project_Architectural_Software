@@ -63,10 +63,14 @@ const Menu_Header = () => {
             {/* Logo */}
             <div className="logo-container">        
             </div>
+            
 
             {/* Avatar + Dropdown Menu */}
             <div className="menu-container" ref={menuRef}>
+                <img src='../../../../public/images/avatar/hello.png'alt="User Avatar" className="avatar-hello" />
+
                 <span className="username">{userInfor.lastname} {userInfor.firstname}</span>
+                
         
                 <div className="avatar" onClick={toggleMenu}>
                     <img src={`/images/avatar/${imageName}`} alt="User Avatar" className="avatar-img" />

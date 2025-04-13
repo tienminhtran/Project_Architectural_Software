@@ -99,6 +99,7 @@ const ProfilePage = () => {
                 value={formData.firstname}
                 onChange={handleChange}
                 disabled={!activeUpdate}
+                style={{ cursor: !activeUpdate ? "not-allowed" : "text"}}
               />
             </div>
 
@@ -110,6 +111,7 @@ const ProfilePage = () => {
                 value={formData.lastname}
                 onChange={handleChange}
                 disabled={!activeUpdate}
+                style={{ cursor: !activeUpdate ? "not-allowed" : "text"}}
               />
             </div>
 
@@ -121,6 +123,7 @@ const ProfilePage = () => {
                 value={formData.email}
                 onChange={handleChange}
                 disabled={!activeUpdate}
+                style={{ cursor: !activeUpdate ? "not-allowed" : "text"}}
               />
             </div>
 
@@ -132,6 +135,7 @@ const ProfilePage = () => {
                 value={formData.phone_number}
                 onChange={handleChange}
                 disabled={!activeUpdate}
+                style={{ cursor: !activeUpdate ? "not-allowed" : "text"}}
               />
             </div>
 
@@ -153,6 +157,7 @@ const ProfilePage = () => {
                 value={formData.dob}
                 onChange={handleChange}
                 disabled={!activeUpdate}
+                style={{ cursor: !activeUpdate ? "not-allowed" : "text"}}
               />
             </div>
 
