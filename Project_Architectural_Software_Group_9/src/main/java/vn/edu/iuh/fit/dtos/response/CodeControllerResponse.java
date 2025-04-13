@@ -18,4 +18,6 @@ public class CodeControllerResponse {
     private String dateCreate;
     private Integer lifeCycle;
     private boolean active;
+
+    private String code;
 }

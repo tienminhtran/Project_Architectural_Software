@@ -10,6 +10,5 @@ import vn.edu.iuh.fit.dtos.request.CodeControllerRequest;
 import vn.edu.iuh.fit.dtos.response.CodeControllerResponse;
 
 public interface CodeControllerService {
-
     CodeControllerResponse createCodeController(CodeControllerRequest codeControllerRequest) throws Exception;
 }
