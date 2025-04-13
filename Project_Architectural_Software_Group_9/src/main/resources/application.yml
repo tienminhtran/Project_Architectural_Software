@@ -6,6 +6,8 @@ server:
 spring:
   application:
     name: Project_Architectural_Software_Group_9
+  config:
+    import: optional:file:.env[.properties]  # Import từ file .env
   datasource:
     url: jdbc:mariadb://localhost:3306/tech_shop?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
     username: root
@@ -24,6 +26,18 @@ spring:
     multipart:
       max-file-size: 5MB
       max-request-size: 10MB
+  mail:
+    host: smtp.gmail.com
+    port: 465
+    username: ${EMAIL_USERNAME} # Lấy từ .env
+    password: ${EMAIL_PASSWORD}
+    default-encoding: UTF-8
+    properties:
+      mail.smtp.auth: true
+      mail.smtp.ssl.enable: true
+      mail.smtp.starttls.enable: false
+    verify:
+      host: http://localhost:${SERVER_PORT}
 
 
 

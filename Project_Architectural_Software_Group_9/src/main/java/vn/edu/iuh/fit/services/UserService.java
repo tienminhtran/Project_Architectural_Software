@@ -67,4 +67,5 @@ public interface UserService {
 
     UserResponse updateUserInfo(Long userId, UserRequest userRequest);
 
+    boolean verifyAccount(String email,String token);
 }
