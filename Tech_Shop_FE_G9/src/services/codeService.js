@@ -1,35 +1,46 @@
-import axiosInstance from "../api/axios"; // Import axiosInstance đã cấu hình
+import axiosInstance from "../api/axios";
 
-// Hàm gửi yêu cầu POST đến API để tạo mã code
+// Tạo mã code
 export const createCode = async (codeData = {}) => {
   try {
-    // Lấy dữ liệu từ codeData, ví dụ: mã code và trạng thái active
-    const { code, active = true } = codeData; 
+    const { code, active = true } = codeData;
 
-    // Gửi yêu cầu POST tới API
-    const res = await axiosInstance.post('/code', { code, active });
+    const res = await axiosInstance.post('/code', {
+      code,
+      active
+    });
 
-    // Kiểm tra dữ liệu trả về từ API
-    console.log("Full response từ API:", res.data);
+    console.log("Full response from API:", res.data);
 
-    // Trả về mã code từ response của API
-    return res.data.response.code; // Giả sử API trả về mã code trong trường hợp response.response.code
+    return res.data.response; // Trả về toàn bộ object: { id, code, active }
   } catch (error) {
-    // Kiểm tra lỗi và ném lỗi về phía trên (cho phép bắt ở nơi gọi hàm)
-    console.error("Có lỗi trong quá trình tạo mã code:", error);
-    
+    console.error("Error creating code:", error);
+
     if (error.response) {
-      // Khi có lỗi từ phía server (ví dụ: lỗi 400, 500...)
-      console.error("Chi tiết lỗi từ server:", error.response.data);
-      throw new Error(error.response.data.message || "Lỗi từ server. Vui lòng thử lại!");
+      throw new Error(error.response.data.message || "Error from server. Please try again!");
     } else if (error.request) {
-      // Khi không nhận được phản hồi từ server (lỗi mạng, timeout...)
-      console.error("Không nhận được phản hồi từ server:", error.request);
-      throw new Error("Không thể kết nối tới server. Vui lòng thử lại!");
+      throw new Error("Unable to connect to server. Please try again!");
     } else {
-      // Khi có lỗi khác không thuộc 2 loại trên
-      console.error("Lỗi không xác định:", error.message);
-      throw new Error("Đã xảy ra lỗi. Vui lòng thử lại!");
+      throw new Error("An error occurred. Please try again!");
     }
   }
+};
+
+// Xóa mã code
+export const deleteCode = async (id) => {
+  try {
+    const res = await axiosInstance.delete(`/code/${id}`);
+    console.log("✔️ Delete successful:", res.data);
+    return res.data;
+  } catch (err) {
+    console.error("❌ Delete failed:", err.response?.data || err.message);
+    throw err;
+  }
+};
+
+// Lấy tất cả mã code
+export const getAllCodes = async () => {
+  const res = await axiosInstance.get('/code/all');
+  console.log("Code list:", res.data);
+  return res.data;
 };
