@@ -3,35 +3,52 @@ import useCode from '../../hooks/useCode';
 
 const AdminCodeControllerPage = () => {
   const [code, setCode] = useState(null);
-  const [isUsingCode, setIsUsingCode] = useState(false); // Để theo dõi xem người dùng đã sử dụng mã chưa
-  const { createCode } = useCode();
+  const [isUsingCode, setIsUsingCode] = useState(false); // Track if the code has been used
+  const [inputCode, setInputCode] = useState(''); // For user input code
+  const [statusMessage, setStatusMessage] = useState(''); // For status feedback
+  const { createCode, checkCodeStatus } = useCode();
 
-  // Hàm tạo mã mới ngẫu nhiên
+  // Generate a random 6-digit code
   const generateRandomCode = () => {
-    const randomCode = Math.floor(100000 + Math.random() * 900000); // Tạo mã 6 chữ số
-    setCode(randomCode.toString()); // Cập nhật mã mới
+    const randomCode = Math.floor(100000 + Math.random() * 900000); // Generate a 6-digit code
+    setCode(randomCode.toString()); // Set the generated code
   };
 
-  // Tạo mã mới mỗi 30 giây
+  // Generate a new code every 60 seconds
   useEffect(() => {
-    const interval = setInterval(generateRandomCode, 60000); // Gọi hàm mỗi 60 giây
-    generateRandomCode(); // Tạo mã ngay khi lần đầu tiên tải trang
+    const interval = setInterval(generateRandomCode, 60000); // Call every 60 seconds
+    generateRandomCode(); // Generate code when the component first loads
 
-    return () => clearInterval(interval); // Dọn dẹp interval khi component bị unmount
+    return () => clearInterval(interval); // Clean up interval on component unmount
   }, []);
 
-  // Hàm lưu mã vào database khi người dùng nhấn nút "Sử dụng mã"
+  // Handle when the user clicks "Use Code"
   const handleUseCode = async () => {
-    if (isUsingCode) return; // Nếu mã đã được sử dụng, không làm gì thêm
+    if (isUsingCode) return; // If the code has already been used, do nothing
+
+    if (!code || code.length !== 6) {
+      alert('Mã không hợp lệ!');
+      return;
+    }
 
     try {
-      await createCode({ code }); // Lưu mã vào database
-      setIsUsingCode(true); // Đánh dấu là mã đã được sử dụng
-      alert("Mã đã được sử dụng và lưu vào database!");
+      await createCode({ code }); // Save the code to the database
+      setIsUsingCode(true); // Mark as used
+      alert('Mã đã được sử dụng và lưu vào database!');
     } catch (error) {
       console.error('Error saving code:', error);
-      alert("Không thể lưu mã vào database. Vui lòng thử lại!");
+      alert('Không thể lưu mã vào database. Vui lòng thử lại!');
     }
+  };
+
+  // Handle input change for checking code status
+  const handleCodeInputChange = async (event) => {
+    const { value } = event.target;
+    setInputCode(value);
+
+    // Check the status of the input code
+    const result = await checkCodeStatus(value);
+    setStatusMessage(result.message); // Set the status message for feedback
   };
 
   return (
@@ -58,6 +75,7 @@ const AdminCodeControllerPage = () => {
       }}>
         Mã Code hiện tại: <span style={{ fontFamily: 'monospace' }}>{code}</span>
       </div>
+
 
       <button
         onClick={handleUseCode}

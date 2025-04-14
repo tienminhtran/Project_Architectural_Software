@@ -8,16 +8,18 @@ package vn.edu.iuh.fit.dtos.response;/*
 
 import lombok.*;
 
+import java.io.Serializable;
+
 @Getter
 @Setter
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class CodeControllerResponse {
-    private Long id;
-    private String dateCreate;
-    private Integer lifeCycle;
-    private boolean active;
+public class CodeControllerResponse implements Serializable {
 
-    private String code;
+     String code;
+     String dateCreate;
+     int lifeCycle;
+     boolean active;
+
 }

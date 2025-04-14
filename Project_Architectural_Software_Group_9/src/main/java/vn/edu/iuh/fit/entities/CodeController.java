@@ -24,13 +24,12 @@ import lombok.*;
 @Table(name = "controlcodes")
 public class CodeController {
     @Id
-    @GeneratedValue(strategy = jakarta.persistence.GenerationType.IDENTITY)
-    private Long id;
+    @Column(name="ma_code")
+    private String code;
 
     private String date_create;  // Định dạng chuỗi để lưu thời gian
     private int life_cycle;      // Vòng đời tính bằng giây
     private boolean active;      // Trạng thái hoạt động
-    @Column(name="ma_code")
-    private String code;
+
 
 }
