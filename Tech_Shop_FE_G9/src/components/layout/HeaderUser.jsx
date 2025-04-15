@@ -1,59 +1,81 @@
-import React, { useEffect, useState } from "react";
-import { FaBars, FaChevronDown, FaShoppingCart, FaUser,FaHeart,FaEye} from "react-icons/fa";
+// Nhập các thư viện và hook cần thiết
+import React, { useEffect, useState,useRef } from "react";
+import { FaBars, FaChevronDown, FaShoppingCart, FaUser, FaHeart, FaEye } from "react-icons/fa";
 import "../../../src/assets/css/HeaderUser.css";
 import AnnouncementBar from "./AnnouncementBar.jsx";
-import useDashboardData from "../../hooks/useDashboardData ";
-
-import useUser from "../../hooks/useUser.js";
-
-
+import useDashboardData from "../../hooks/useDashboardData "; // Hook lấy dữ liệu dashboard
+import useUser from "../../hooks/useUser.js"; // Hook lấy thông tin người dùng
+import saletopprice from "./saletopprice.jsx";
 const HeaderUser = () => {
-  const { userInfor} = useUser(0,1);
+  const { userInfor } = useUser(0, 1);
   const categories = ["Computer", "Phone", "Accessory"];
 
-  const {recentlyProduct} = useDashboardData();
+  const { recentlyProduct } = useDashboardData();
 
-    // Dữ liệu các brand
-    const banners = recentlyProduct.slice(0, 3).map((product, index) => ({
-      category: product.categoryName || "Unknown",
-      icon: ["💻", "📱", "🎧"][index % 3],
-      title: `${product.productName}\n${product.description?.substring(0, 30) || "Special Offer"}`,
-      img: product.thumbnail.startsWith("https://")
-        ? product.thumbnail
-        : `/public/images/product/${product.thumbnail.replace(/^[^_]+_[^_]+_/, "")}`,
-    }));
+  const userMenuRef = useRef(); // ✅ Gán useRef cho menu
 
+  // 🔧 Xử lý dữ liệu banner từ sản phẩm gần đây
+  const banners =
+    Array.isArray(recentlyProduct) && recentlyProduct.length > 0
+      ? recentlyProduct.slice(0, 3).map((product, index) => ({
+          category: product.categoryName || "Unknown",
+          icon: ["💻", "📱", "🎧"][index % 3],
+          title: `${product.productName}\n${
+            product.description?.substring(0, 30) || "Special Offer"
+          }`,
+          img: product.thumbnail?.startsWith("https://")
+            ? product.thumbnail
+            : `/images/product/${product.thumbnail?.replace(/^[^_]+_[^_]+_/, "")}`,
+        }))
+      : [];
 
-    const [activeIndex, setActiveIndex] = useState(0);
-    // Tự động chuyển banner sau mỗi 4 giây
-    useEffect(() => {
-      const interval = setInterval(() => {
-        setActiveIndex((prevIndex) => (prevIndex + 1) % banners.length);
-      }, 4000);
-  
-      return () => clearInterval(interval);
-    }, [banners.length]);
+  const [activeIndex, setActiveIndex] = useState(0);
+
+  // Tự động chuyển banner mỗi 4 giây
+  useEffect(() => {
+    if (banners.length === 0) return;
+
+    const interval = setInterval(() => {
+      setActiveIndex((prevIndex) => (prevIndex + 1) % banners.length);
+    }, 4000);
+
+    return () => clearInterval(interval);
+  }, [banners.length]);
+
+  // Biến trạng thái để điều khiển hiển thị menu
+  const [showMenu, setShowMenu] = useState(false);
+  const toggleMenu = () => setShowMenu((prev) => !prev);
+
+  // Tự động đóng menu khi click ra ngoài
+  useEffect(() => {
+    const handleClickOutside = (event) => {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
+        setShowMenu(false);
+      }
+    };
+    document.addEventListener("mousedown", handleClickOutside);
+    return () => document.removeEventListener("mousedown", handleClickOutside);
+  }, []);
 
   return (
     <div className="header-user">
-      {/* AnnouncementBar */}
+      {/* Thanh thông báo đầu trang */}
       <AnnouncementBar />
 
-
       <div className="container-fluid py-3">
-        {/* Top Header */}
+        {/* Header trên cùng */}
         <div className="row align-items-center">
           {/* Logo */}
           <div className="col-3 text-center text-md-start">
             <img
-              src="../../../public/images/logo/logo-large.png"
+              src="/images/logo/logo-large.png"
               alt="TechMart Logo"
               className="img-fluid"
               style={{ maxHeight: "50px" }}
             />
           </div>
 
-          {/* Search */}
+          {/* Ô tìm kiếm */}
           <div className="col-7">
             <form className="d-flex">
               <input
@@ -64,7 +86,7 @@ const HeaderUser = () => {
             </form>
           </div>
 
-          {/* Language + Currency */}
+          {/* Ngôn ngữ & tiền tệ */}
           <div className="col-2 text-end">
             <div className="d-flex justify-content-end gap-2">
               <select className="form-select w-auto">
@@ -80,9 +102,8 @@ const HeaderUser = () => {
           </div>
         </div>
 
-        {/* Categories + Navbar */}
+        {/* Menu điều hướng & danh mục */}
         <div className="row align-items-center mt-3">
-          {/* Categories */}
           <div className="col-3 text-center text-md-start">
             <div className="header-user__category-header">
               <FaBars className="header-user__menu-icon" />
@@ -90,7 +111,6 @@ const HeaderUser = () => {
             </div>
           </div>
 
-          {/* Navbar Menu */}
           <div className="col-7">
             <ul className="header-user__menu">
               <li><a href="#" className="active">Home</a></li>
@@ -102,82 +122,94 @@ const HeaderUser = () => {
             </ul>
           </div>
 
-          {/* Icons */}
           <div className="col-2 text-end">
             <div className="header-user__menu-icons">
               <div className="header-user__icon-item">
-                <FaShoppingCart />
-                <span className="header-user__icon-badge">2</span>
+                <FaShoppingCart style={{color:'#838383' }}/>
+                <span className="header-user__icon-badge-cart">2</span>
               </div>
               <div className="header-user__icon-item">
-                <FaUser />
-                <span className="header-user__username">{userInfor.firstname}</span>
+                <FaHeart style={{color:'#838383' }} />
+                <span className="header-user__icon-badge-heart">12</span>
               </div>
+              <div className="header-user__icon-item" onClick={toggleMenu} ref={userMenuRef}>
+                <FaUser />
+                <span className="header-user__username">{userInfor?.firstname || "User"}</span>
+                {showMenu && (
+                  <div className="header-user__dropdown">
+                    <div className="header-user__dropdown-item">Login</div>
+                    <div className="header-user__dropdown-item">Logout</div>
+                    <div className="header-user__dropdown-item">Manager</div>
+                    <div className="header-user__dropdown-item">Admin</div>
+                  </div>
+                )}
+              </div>
+              
             </div>
           </div>
         </div>
 
-        {/* Banner Section */}
+        {/* Banner chính */}
         <div className="row mt-3">
-        {/* Categories List */}
-        <div className="col-3 text-center text-md-start">
-          <ul className="header-user__category-list">
-            {categories.map((cat, index) => (
-              <li key={index} className="header-user__category-item">
-                {cat}
-                <FaChevronDown className="header-user__chevron-icon" />
-              </li>
-            ))}
-          </ul>
-        </div>
+          {/* Danh sách danh mục */}
+          <div className="col-3 text-center text-md-start">
+            <ul className="header-user__category-list">
+              {categories.map((cat, index) => (
+                <li key={index} className="header-user__category-item">
+                  {cat}
+                  <FaChevronDown className="header-user__chevron-icon" />
+                </li>
+              ))}
+            </ul>
+          </div>
 
-        {/* Banner Carousel */}
-        <div className="col-7">
-          {banners.length > 0 && (
-            <div className="header-user__macbook-card">
-              <div className="header-user__macbook-content">
-                <div className="header-user__category">
-                  <span className="header-user__icon">
-                    {banners[activeIndex].icon}
-                  </span>{" "}
-                  {banners[activeIndex].category}
+          {/* Banner chính ở giữa */}
+          <div className="col-7">
+            {banners.length > 0 && (
+              <div className="header-user__macbook-card">
+                <div className="header-user__macbook-content">
+                  <div className="header-user__category">
+                    <span className="header-user__icon">
+                      {banners[activeIndex].icon}
+                    </span>{" "}
+                    {banners[activeIndex].category}
+                  </div>
+                  <h2 className="header-user__title">
+                    {banners[activeIndex].title.split("\n").map((line, i) => (
+                      <React.Fragment key={i}>
+                        {line}
+                        <br />
+                      </React.Fragment>
+                    ))}
+                  </h2>
+                  <button className="header-user__shop-button">Shop Now →</button>
+
+                  <div className="header-user__dots">
+                    {banners.map((_, index) => (
+                      <span
+                        key={index}
+                        className={`header-user__dot ${index === activeIndex ? "active" : ""}`}
+                      ></span>
+                    ))}
+                  </div>
                 </div>
-                <h2 className="header-user__title">
-                  {banners[activeIndex].title.split("\n").map((line, i) => (
-                    <React.Fragment key={i}>
-                      {line}
-                      <br />
-                    </React.Fragment>
-                  ))}
-                </h2>
-                <button className="header-user__shop-button">Shop Now →</button>
-                <div className="header-user__dots">
-                  {banners.map((_, index) => (
-                    <span
-                      key={index}
-                      className={`header-user__dot ${
-                        index === activeIndex ? "active" : ""
-                      }`}
-                    ></span>
-                  ))}
-                </div>
+
+                <img
+                  src={banners[activeIndex].img}
+                  alt={banners[activeIndex].title}
+                  className="header-user__macbook-img"
+                />
               </div>
-              
-              <img
-                src={banners[activeIndex].img}
-                alt={banners[activeIndex].title}
-                className="header-user__macbook-img"
-              />
-            </div>
-          )}
-        </div>
+            )}
+            <saletopprice />
 
+          </div>
 
-          {/* Featured Product */}
+          {/* Sản phẩm nổi bật */}
           <div className="col-2 text-end">
             <div className="header-user__bag-card">
               <img
-                src="../../../public/images/product/samsung-galaxy-z-flip6-2.jpg"
+                src="/images/product/samsung-galaxy-z-flip6-2.jpg"
                 alt="Yantiti Leather Bag"
                 className="header-user__bag-img"
               />
@@ -186,11 +218,8 @@ const HeaderUser = () => {
             </div>
           </div>
         </div>
-
-
-
-         
       </div>
+     
     </div>
   );
 };

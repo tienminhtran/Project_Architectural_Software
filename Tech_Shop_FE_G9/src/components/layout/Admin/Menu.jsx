@@ -220,7 +220,11 @@ const Menu = () => {
                     </li>
 
                     <li className="menu-item">
-                        <FaHome /> User Home
+                        <FaHome />
+                        <Link to="/" className="fw-normal">
+                            <span className="text">User Home</span>
+                        </Link>
+                         {/* User Home */}
                     </li>
 
                     {localStorage.getItem("lastDashboard") === "admin" && (

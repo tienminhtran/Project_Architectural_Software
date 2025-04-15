@@ -6,10 +6,12 @@ import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../assets/css/HomePage.css";
 import ProductUser from "../components/layout/ProductUser"; 
+import ProductsYouViewed from "../components/layout/ProductsYouViewed"; 
 const HomePage = () => {
     return (
         <div>
             <HeardUser />
+            <ProductsYouViewed />
             <ProductUser />
             <FooterUser />
         </div>
