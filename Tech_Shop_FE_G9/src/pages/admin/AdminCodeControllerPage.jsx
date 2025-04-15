@@ -34,10 +34,10 @@ const AdminCodeControllerPage = () => {
     try {
       await createCode({ code }); // Save the code to the database
       setIsUsingCode(true); // Mark as used
-      alert('Mã đã được sử dụng và lưu vào database!');
+      // alert('Mã đã được sử dụng và lưu vào database!');
     } catch (error) {
       console.error('Error saving code:', error);
-      alert('Không thể lưu mã vào database. Vui lòng thử lại!');
+      // alert('Không thể lưu mã vào database. Vui lòng thử lại!');
     }
   };
 
