@@ -103,19 +103,68 @@
   position: relative;
   color: #333;
   cursor: pointer;
+  
+}
+.header-user__dropdown {
+  position: absolute;
+  top: 100%;
+  right: 0;
+  margin-top: 8px;
+  background-color: #fff;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  min-width: 160px;
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+  z-index: 999; /* Đảm bảo nằm trên phần khác */
+  animation: fadeIn 0.2s ease-in-out;
 }
 
-.header-user__icon-badge {
-  background-color: #4285f4;
-  color: white;
+.header-user__dropdown-item {
+  padding: 10px 16px;
+  color: #333;
+  font-size: 14px;
+  transition: background 0.2s;
+}
+
+.header-user__dropdown-item:hover {
+  background-color: #f1f1f1;
+  cursor: pointer;
+}
+
+/* Hiệu ứng fade in nhẹ */
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+    transform: translateY(-5px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.header-user__icon-badge-cart {
+  background-color: #9b9b9b;
+  color: rgb(255, 254, 254);
   font-size: 12px;
   padding: 2px 6px;
   border-radius: 50%;
   position: absolute;
-  top: -8px;
-  right: -10px;
+  top: -10px;
+  right: -15px;
+  /* viền trắng */
+  box-shadow: 0 0 0 2px white;
 }
-
+.header-user__icon-badge-heart {
+  background-color: #fd7608;
+  color: rgb(255, 254, 254);
+  font-size: 12px;
+  padding: 2px 6px;
+  border-radius: 50%;
+  position: absolute;
+  top: -10px;
+  right: -15px;
+}
 .header-user__username {
   font-size: 14px;
   margin-left: 5px;
@@ -130,6 +179,7 @@
   padding: 24px;
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+  height: 85%;
 }
 
 .header-user__macbook-content {
@@ -202,6 +252,7 @@
   border-radius: 16px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
   text-align: center;
+  height: 100%;
 }
 
 .header-user__bag-img {

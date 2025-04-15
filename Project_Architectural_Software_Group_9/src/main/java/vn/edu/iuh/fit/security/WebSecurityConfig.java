@@ -56,7 +56,7 @@ public class WebSecurityConfig {
     @Autowired
     CorsConfig corsConfig;
 
-    private final String[] PUBLIC_ENDPOINTS = {"/register", "/user/home", "/forgot-password", "/verify-account",
+    private final String[] PUBLIC_ENDPOINTS = {"/register", "/user/home", "/forgot-password", "/api/v1/auth/verify",
             "/login","/user/assets/**", "/user/customize/**", "/admin/assets/**"
     };
 
@@ -90,9 +90,11 @@ public class WebSecurityConfig {
                 .authorizeHttpRequests(
                         configure -> configure
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/auth/refresh").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/login/google").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.GET, "/api/v1/auth/verify", "/api/v1/auth/verify/**").permitAll()
+
                                 .requestMatchers(HttpMethod.GET, "/api/v1/user","/api/v1/user/**", "/api/v1/cart/**").hasAnyRole("ADMIN", "USER", "MANAGER")
                                 .requestMatchers(HttpMethod.GET, "/api/v1/voucher","/api/v1/voucher/**").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.POST, "/api/v1/voucher").hasAnyRole("ADMIN", "MANAGER")

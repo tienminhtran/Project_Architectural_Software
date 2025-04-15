@@ -48,6 +48,10 @@
   height: 100%;
   border-radius: 50%;
 }
+.avatar-hello{
+  width: 100px;
+  height: 70px;
+}
 
 /* Trạng thái (status) trên avatar */
 .status-indicator {

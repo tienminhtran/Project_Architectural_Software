@@ -5,6 +5,7 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.*;
 import lombok.experimental.FieldDefaults;
+import vn.edu.iuh.fit.enums.TypeProviderAuth;
 
 import java.time.LocalDate;
 import java.util.HashSet;
@@ -51,18 +52,20 @@ public class User extends TrackingDate{
     private Boolean active = false;
 
     @Size(max = 255)
-    @NotNull
-    @Column(name = "lastname", nullable = false)
+    @Column(name = "lastname")
     private String lastname;
 
     @Size(max = 255)
-    @NotNull
-    @Column(name = "password", nullable = false)
+    @Column(name = "password")
     private String password;
 
     @Size(max = 20)
     @Column(name = "phone_number", length = 20, unique = true)
     private String phoneNumber;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "provider_auth")
+    private TypeProviderAuth providerAuth;
 
     @Size(max = 100)
     @NotNull

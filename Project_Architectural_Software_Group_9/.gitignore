@@ -35,3 +35,6 @@ out/
 
 ### VS Code ###
 .vscode/
+.env
+
+src/main/resources/tech-shop-f5a1c-firebase-adminsdk-fbsvc-921e7de853.json

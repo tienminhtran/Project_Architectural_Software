@@ -31,6 +31,9 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import UpdateUserPage from "./pages/common/user/UpdateUserPage";
+import AdminCodeControllerPage from "./pages/admin/AdminCodeControllerPage";
+import CheckCodeModal from "./components/layout/CheckCodeModal"; // đường dẫn đúng
+
 
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
@@ -84,6 +87,14 @@ function App() {
             element={
               <DashboardLayout>
                 <UpdateUserPage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/admin/code/"
+            element={
+              <DashboardLayout>
+                <AdminCodeControllerPage />
               </DashboardLayout>
             }
           />
@@ -149,23 +160,7 @@ function App() {
             }
           />
 
-          <Route
-            path="/common/vouchers"
-            element={
-              <DashboardLayout>
-                <VoucherPage />
-              </DashboardLayout>
-            }
-          />
 
-          <Route
-            path="/common/formVoucher"
-            element={
-              <DashboardLayout>
-                <FormVoucher />
-              </DashboardLayout>
-            }
-          />
 
           <Route
             path="/common/formProduct"
@@ -204,6 +199,37 @@ function App() {
           />
         </Route>
 
+        <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]} />}>
+          <Route
+              path="/common/vouchers"
+              element={
+                <DashboardLayout>
+                  <VoucherPage />
+                </DashboardLayout>
+              }
+            />
+
+            <Route
+              path="/common/formVoucher"
+              element={
+                <DashboardLayout>
+                  <FormVoucher />
+                </DashboardLayout>
+              }
+            />
+        </Route>
+
+        <Route element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}>
+          <Route
+              path="/common/checkCode"
+              element={
+                <DashboardLayout>
+                  <CheckCodeModal />
+                </DashboardLayout>
+              }
+            />
+        </Route>
+
         {/* Manager Page */}
         <Route element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}>
           <Route
@@ -215,6 +241,7 @@ function App() {
             }
           />
         </Route>
+
 
         <Route path="/" element={<HomePage />} />
       </Routes>

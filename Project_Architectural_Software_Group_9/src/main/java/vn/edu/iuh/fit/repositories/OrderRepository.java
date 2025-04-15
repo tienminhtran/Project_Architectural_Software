@@ -63,10 +63,17 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "WHERE o.id = :orderId")
     Double calculateTotalAmountByOrderId(@Param("orderId") Long orderId);
 
-   @Query("SELECT o FROM Order o " +
-       "JOIN o.user u " +
-       "WHERE (:keyword IS NOT NULL AND u.firstname LIKE CONCAT('%', :keyword, '%'))")
-Page<Order> searchOrder( String keyword, Pageable pageable);
+    @Query("SELECT o FROM Order o " +
+            "JOIN o.user u " +
+            "JOIN o.payment p " +
+            "WHERE (:keyword IS NOT NULL AND u.firstname LIKE %:keyword%) OR " +"p.paymentName LIKE %:keyword%")
+    Page<Order> searchOrder(String keyword, Pageable pageable);
 
+    @Query("SELECT o FROM Order o " +
+            "WHERE o.status = :status")
+    Page<Order> filterByStatus(OrderStatus status, Pageable pageable);
 
+    @Query("SELECT o FROM Order o " +
+            "WHERE o.payment.paymentName LIKE %:payment%")
+    Page<Order> filterByPayment(@Param("payment") String payment, Pageable pageable);
 }

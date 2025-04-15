@@ -27,8 +27,26 @@ export const login = async (credential) => {
   //     } else {
   //         localStorage.setItem("message", response.data.message);
   //     }
-  const response = await axiosInstance.post('/auth/login', credential);
-  return response.data; // Trả về { user, token, role }
+  try {
+    const response = await axiosInstance.post('/auth/login', credential);
+    return response.data; // Trả về { user, token, role }
+  } catch (error) {
+    console.error("Login error:", error.response.data);
+    throw error; // Ném lỗi để xử lý ở nơi gọi hàm
+  }
+  
+};
+
+export const loginGoogle = async (idToken) => {
+
+  try {
+    const response = await axiosInstance.post('/auth/login/google', { idToken });
+    return response.data; // Trả về { user, token, role }
+  } catch (error) {
+    console.error("Login error:", error.response.data);
+    throw error; // Ném lỗi để xử lý ở nơi gọi hàm
+  }
+  
 };
 
 export const register = async (user) => {

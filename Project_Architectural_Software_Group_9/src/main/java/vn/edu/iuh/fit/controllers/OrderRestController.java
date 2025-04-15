@@ -14,6 +14,7 @@ import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.OrderResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.RecentOrderResponse;
+import vn.edu.iuh.fit.enums.OrderStatus;
 import vn.edu.iuh.fit.services.OrderService;
 
 import java.util.List;
@@ -33,14 +34,14 @@ public class OrderRestController {
     @GetMapping("")
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getOrdersPage(@RequestParam(defaultValue = "0") Integer pageNo, @RequestParam(defaultValue = "10") Integer pageSize) {
-        if(pageNo == null) {
+        if (pageNo == null) {
             pageNo = 0;
         }
-        if(pageSize == null) {
+        if (pageSize == null) {
             pageSize = 10;
         }
         PageResponse<?> pageResponse = orderService.findAll(pageNo, pageSize);
-        if(pageResponse.getValues().isEmpty()) {
+        if (pageResponse.getValues().isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get all orders page").response(pageResponse).build());
@@ -49,7 +50,7 @@ public class OrderRestController {
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<?>> getOrderById(@PathVariable Long id) {
         OrderResponse orderResponse = orderService.findById(id);
-        if(orderResponse == null) {
+        if (orderResponse == null) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get order by id").response(orderResponse).build());
@@ -58,7 +59,7 @@ public class OrderRestController {
     @GetMapping("/me/{username}")
     public ResponseEntity<BaseResponse<?>> getOrdersByUsername(@PathVariable String username) {
         List<OrderResponse> orderResponses = orderService.findByUsername(username);
-        if(orderResponses.isEmpty()) {
+        if (orderResponses.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by username").response(orderResponses).build());
@@ -72,7 +73,7 @@ public class OrderRestController {
     @GetMapping("/recently")
     public ResponseEntity<BaseResponse<?>> getRecentlyOrders() {
         List<RecentOrderResponse> orderResponses = orderService.getRecentlyOrders();
-        if(orderResponses.isEmpty()) {
+        if (orderResponses.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get recent order").response(orderResponses).build());
@@ -92,17 +93,17 @@ public class OrderRestController {
     public ResponseEntity<BaseResponse<?>> cancelOrder(@PathVariable Long orderId) {
 
         String message = orderService.cancelOrder(orderId);
-        if(message == null) {
+        if (message == null) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message(message).build());
     }
 
-//    tìm theo khách hàng
+    //    tìm theo khách hàng
     @GetMapping("/customer/{customerName}")
     public ResponseEntity<BaseResponse<?>> getOrdersByCustomerName(@PathVariable String customerName) {
         List<OrderResponse> orderResponses = orderService.findByCustomerName(customerName);
-        if(orderResponses.isEmpty()) {
+        if (orderResponses.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by customer name").response(orderResponses).build());
@@ -110,13 +111,14 @@ public class OrderRestController {
 
     /**
      * Find order by payment
-      * @param namePayment
+     *
+     * @param namePayment
      * @return
      */
     @GetMapping("/payment/{namePayment}")
     public ResponseEntity<BaseResponse<?>> getOrdersByPayment(@PathVariable String namePayment) {
         List<OrderResponse> orderResponses = orderService.findByNamePayMent(namePayment);
-        if(orderResponses.isEmpty()) {
+        if (orderResponses.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by payment").response(orderResponses).build());
@@ -126,7 +128,7 @@ public class OrderRestController {
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> deleteOrder(@PathVariable Long id) {
         boolean isDeleted = orderService.delete(id);
-        if(!isDeleted) {
+        if (!isDeleted) {
             return ResponseEntity.badRequest().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Delete order successfully").build());
@@ -135,32 +137,80 @@ public class OrderRestController {
     @GetMapping("/{orderId}/total-amount")
     public ResponseEntity<BaseResponse<?>> getTotalAmountByOrderId(@PathVariable Long orderId) {
         Double totalAmount = orderService.getTotalAmountByOrderId(orderId);
-        if(totalAmount == null) {
+        if (totalAmount == null) {
             return ResponseEntity.noContent().build();
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get total amount by order id").response(totalAmount).build());
     }
 
-   @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @GetMapping("/search/{keyword}")
-public ResponseEntity<BaseResponse<?>> searchOrder(
-        @RequestParam(required = false, defaultValue = "") String keyword,
-        @RequestParam(defaultValue = "0") Integer pageNo,
-        @RequestParam(defaultValue = "10") Integer pageSize) {
-    if (pageNo == null) {
-        pageNo = 0;
+    public ResponseEntity<BaseResponse<?>> searchOrder(
+            @PathVariable String keyword,
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        if (pageNo == null) {
+            pageNo = 0;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        PageResponse<?> pageResponse = orderService.searchOrder(keyword, pageNo, pageSize);
+        if (pageResponse.getValues().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Search order")
+                .response(pageResponse)
+                .build());
     }
-    if (pageSize == null) {
-        pageSize = 10;
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @GetMapping("/filter/status/{status}")
+    public ResponseEntity<BaseResponse<?>> filterByStatus(
+            @PathVariable OrderStatus status,
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        if (pageNo == null) {
+            pageNo = 0;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        PageResponse<?> pageResponse = orderService.filterByStatus(status, pageNo, pageSize);
+        if (pageResponse.getValues().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Filter by status")
+                .response(pageResponse)
+                .build());
     }
-    PageResponse<?> pageResponse = orderService.searchOrder(keyword, pageNo, pageSize);
-    if (pageResponse.getValues().isEmpty()) {
-        return ResponseEntity.noContent().build();
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @GetMapping("/filter/payment/{payment}")
+    public ResponseEntity<BaseResponse<?>> filterByPayment(
+            @PathVariable String payment,
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        if (pageNo == null) {
+            pageNo = 0;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        PageResponse<?> pageResponse = orderService.filterByPayment(payment, pageNo, pageSize);
+        if (pageResponse.getValues().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Filter by payment")
+                .response(pageResponse)
+                .build());
     }
-    return ResponseEntity.ok(BaseResponse.builder()
-            .status("SUCCESS")
-            .message("Search order")
-            .response(pageResponse)
-            .build());
-}
+
+
 }

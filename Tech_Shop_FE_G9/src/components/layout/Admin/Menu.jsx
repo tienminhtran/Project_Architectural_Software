@@ -6,7 +6,7 @@ import {
     FaGift,
     FaHome,
     FaUserShield,
-    FaFileInvoice,
+    FaFileInvoice,FaRegPaperPlane
 } from "react-icons/fa";
 import { BiCategoryAlt } from "react-icons/bi";
 import { IoIosArrowForward } from "react-icons/io";
@@ -195,11 +195,22 @@ const Menu = () => {
                         <FaGift /> Voucher{" "}
                         <IoIosArrowForward className="arrow" />
                         <ul className="submenu">
-                            <li>
-                                <Link to="/common/formVoucher">
+                            {localStorage.getItem("lastDashboard") === "admin" && (
+                                <li >
+                            
+                                    <Link to="/common/formVoucher" >
                                     Create Voucher
-                                </Link>
-                            </li>
+                                    </Link>
+                                </li>
+                            )}
+                            {localStorage.getItem("lastDashboard") === "manager" && (
+                                <li >
+                                   
+                                    <Link to="/common/checkCode" >
+                                    Create Voucher
+                                    </Link>
+                                </li>
+                            )}
                             <li>
                                 <Link to="/common/vouchers">
                                     Manage Vouchers
@@ -209,7 +220,11 @@ const Menu = () => {
                     </li>
 
                     <li className="menu-item">
-                        <FaHome /> User Home
+                        <FaHome />
+                        <Link to="/" className="fw-normal">
+                            <span className="text">User Home</span>
+                        </Link>
+                         {/* User Home */}
                     </li>
 
                     {localStorage.getItem("lastDashboard") === "admin" && (
@@ -217,6 +232,13 @@ const Menu = () => {
                             <FaHome />{" "}
                             <Link to="/manager/dashboard" className="fw-normal">
                                 Manager Home
+                            </Link>
+                        </li>
+                    )}
+                    {localStorage.getItem("lastDashboard") === "admin" && (
+                        <li className="menu-item">
+                            <Link to="/admin/code" className="fw-normal">
+                                <FaRegPaperPlane /> Task
                             </Link>
                         </li>
                     )}

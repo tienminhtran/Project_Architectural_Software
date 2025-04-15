@@ -1,0 +1,56 @@
+.sale-top__container {
+    display: flex;
+    align-items: center;
+    background-color: #1849c6;
+    padding: 10px 20px;
+    border-radius: 6px;
+    color: white;
+    justify-content: space-between;
+    gap: 20px;
+    height: 15%;
+  }
+  
+  .sale-top__timer-box {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+  }
+  
+  .sale-top__timer-box span {
+    background: white;
+    color: black;
+    font-weight: bold;
+    padding: 4px 8px;
+    border-radius: 4px;
+    font-size: 16px;
+    min-width: 28px;
+    text-align: center;
+  }
+  
+  .sale-top__title-sale {
+    display: flex;
+    align-items: center;
+    color: yellow;
+    font-size: 18px;
+    font-weight: bold;
+    gap: 6px;
+    white-space: nowrap;
+  }
+  
+  .sale-top__bolt-icon {
+    color: yellow;
+  }
+  
+  .sale-top__view-detail a {
+    color: white;
+    text-decoration: none;
+    font-size: 14px;
+    display: flex;
+    align-items: center;
+    gap: 4px;
+  }
+  
+  .sale-top__view-detail a:hover {
+    text-decoration: underline;
+  }
+  

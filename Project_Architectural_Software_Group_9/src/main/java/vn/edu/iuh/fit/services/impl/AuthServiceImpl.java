@@ -6,6 +6,10 @@
 
 package vn.edu.iuh.fit.services.impl;
 
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseAuthException;
+import com.google.firebase.auth.FirebaseToken;
+import io.jsonwebtoken.JwtException;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -17,12 +21,15 @@ import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.entities.RefreshToken;
 import vn.edu.iuh.fit.entities.User;
+import vn.edu.iuh.fit.exception.CustomJwtException;
+import vn.edu.iuh.fit.repositories.UserRepository;
 import vn.edu.iuh.fit.security.CustomUserDetails;
 import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
 import vn.edu.iuh.fit.dtos.request.AuthRequest;
 import vn.edu.iuh.fit.dtos.response.AuthResponse;
 import vn.edu.iuh.fit.services.AuthService;
 import vn.edu.iuh.fit.services.RefreshService;
+import vn.edu.iuh.fit.services.UserService;
 
 import java.util.List;
 import java.util.Optional;
@@ -47,6 +54,11 @@ public class AuthServiceImpl implements AuthService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     // entity to dto
     private UserResponse convertToDto(User user) {
@@ -96,4 +108,44 @@ public class AuthServiceImpl implements AuthService {
 
         return new AuthResponse(newAccessToken, refreshToken, roles, user.getUsername());
     }
+
+    @Override
+    public AuthResponse loginWithGoogle(String tokenId) throws CustomJwtException {
+        if(tokenId == null  || tokenId.isEmpty()) {
+            throw new CustomJwtException("Thieu Token ID tu google");
+        }
+
+        try {
+            FirebaseToken deToken = FirebaseAuth.getInstance().verifyIdToken(tokenId);
+            System.out.println("Token ID: " + deToken.getUid() + " - Email: " + deToken.getEmail() + " - Name: " + deToken.getName() + " - Picture: " + deToken.getPicture());
+            String name = deToken.getName();
+            String email = deToken.getEmail();
+            String uid = deToken.getUid();
+            String imageUrl = deToken.getPicture();
+
+            // Kiểm tra xem người dùng đã tồn tại trong hệ thống chưa. Neu chưa thì tạo mới
+            User user= userRepository.findByEmail(email).orElseGet(() -> userService.createGoogleUser(email, name, imageUrl));
+
+            System.out.println("user " + this.convertToDto(user));
+            // tao accessToken
+            CustomUserDetails customUserDetails = new CustomUserDetails(this.convertToDto(user));
+
+            String accessToken = jwtTokenProvider.generateAccessToken(customUserDetails);
+            System.out.println("Access Token: " + accessToken);
+
+            String refreshToken = refreshService.createRefreshToken(customUserDetails).getToken();
+            System.out.println("Refresh Token: " + refreshToken);
+
+            return new AuthResponse(accessToken, refreshToken,
+                    customUserDetails.getAuthorities()
+                    .stream()
+                    .map(GrantedAuthority::getAuthority)
+                    .collect(Collectors.toList()),
+                    customUserDetails.getUsername());
+
+        } catch (FirebaseAuthException e) {
+            throw new CustomJwtException("Token ID không hợp lệ: " + e.getMessage());
+        }
+    }
+
 }

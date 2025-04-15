@@ -21,13 +21,17 @@ import org.springframework.validation.BindingResult;
 import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.multipart.MultipartFile;
+import vn.edu.iuh.fit.dtos.EmailVerifyEntry;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.TopCustomerResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.entities.Role;
 import vn.edu.iuh.fit.entities.User;
+import vn.edu.iuh.fit.enums.TypeProviderAuth;
 import vn.edu.iuh.fit.exception.EmailAlreadyExistsException;
+import vn.edu.iuh.fit.exception.ItemNotFoundException;
+import vn.edu.iuh.fit.exception.SendEmailException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.repositories.OrderDetailRepository;
 import vn.edu.iuh.fit.repositories.RoleRepository;
@@ -35,13 +39,14 @@ import vn.edu.iuh.fit.repositories.UserRepository;
 import vn.edu.iuh.fit.repositories.RefreshTokenRepository;
 import vn.edu.iuh.fit.security.CustomUserDetails;
 import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
+import vn.edu.iuh.fit.services.EmailService;
 import vn.edu.iuh.fit.services.UserService;
 
+import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
+import java.util.*;
+import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
 import static vn.edu.iuh.fit.utils.ImageUtil.isValidSuffixImage;
@@ -76,6 +81,11 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private JwtTokenProvider jwtUtils;
+
+    @Autowired
+    private EmailService emailService;
+
+    private final Map<String, EmailVerifyEntry> emailVerifyMap = new ConcurrentHashMap<>();
 
     // Phương thức chuyển đổi User sang DTO với kiểu generic T
     private <T> T convertToDto(User user, Class<T> targetClass) {
@@ -168,8 +178,22 @@ public class UserServiceImpl implements UserService {
             user.setRole(role);
             user.setActive(false);
             user.setImage("avtdefault.jpg");
+            user.setProviderAuth(TypeProviderAuth.LOCAL);
 
             user = userRepository.save(user);
+
+            // Gửi email xác thực tài khoản
+            try {
+                String verifyToken = UUID.randomUUID().toString();
+                long now = Instant.now().toEpochMilli();
+
+                emailVerifyMap.put(user.getEmail(), new EmailVerifyEntry(verifyToken, now));
+
+                emailService.sendEmailToVerifyAccount(user.getLastname() + " " + user.getFirstname(),
+                        user.getEmail(), verifyToken);
+            } catch (SendEmailException e) {
+                throw new RuntimeException(e);
+            }
 
             return this.convertToDto(user, UserResponse.class);
         }
@@ -262,6 +286,7 @@ public class UserServiceImpl implements UserService {
             user.setActive(userRequest.isActive());
             user.setCreatedAt(LocalDateTime.now());
             user.setUpdatedAt(LocalDateTime.now());
+            user.setProviderAuth(TypeProviderAuth.LOCAL);
 
             // Mã hóa mật khẩu trước khi lưu
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
@@ -340,5 +365,58 @@ public class UserServiceImpl implements UserService {
         modelMapper.map(userRequest, user);
         User updatedUser = userRepository.save(user);
         return this.convertToDto(updatedUser, UserResponse.class);
+    }
+
+    @Override
+    public boolean verifyAccount(String email,String token) {
+        System.out.println("verifyAccount: " + email + " " + token);
+
+        EmailVerifyEntry entry = emailVerifyMap.get(email);
+        System.out.println("entry: " + entry);
+        if(entry == null) return false;
+
+        long currentTime = Instant.now().toEpochMilli();
+        long TTL_MILLIS = 3 * 60 * 1000; // 3 phút
+        if(currentTime - entry.getTimestamp() > TTL_MILLIS) {
+            // Token đã hết hạn
+            emailVerifyMap.remove(email);
+            return false;
+        }
+        if(entry.getTokenVerify().equals(token)) {
+            User user = userRepository.findByEmail(email).orElseThrow(() -> new ItemNotFoundException("Can not find User with email: " + email));
+            user.setActive(true);
+
+            userRepository.save(user);
+
+            emailVerifyMap.remove(email);
+            // Xóa token sau khi xác thực thành công
+            return true;
+        }
+        return false;
+    }
+
+    @Override
+    public User createGoogleUser(String email, String name, String imageUrl) {
+        Role role = roleRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 1"));
+        Random random = new Random();
+        String username = email.substring(0, email.indexOf("@")) + random.nextInt(1000);
+        User user = User.builder()
+                .username(username)
+                .email(email)
+                .firstname(name)
+                .image(imageUrl)
+                .providerAuth(TypeProviderAuth.GOOGLE)
+                .active(true)
+                .role(role)
+                .build();
+        user.setCreatedAt(LocalDateTime.now());
+        user = userRepository.save(user);
+        return user;
+    }
+
+    @Override
+    public UserResponse getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ItemNotFoundException("Can not find User with email: " + email));
+        return this.convertToDto(user, UserResponse.class);
     }
 }
