@@ -126,11 +126,13 @@ public class AuthServiceImpl implements AuthService {
             // Kiểm tra xem người dùng đã tồn tại trong hệ thống chưa. Neu chưa thì tạo mới
             User user= userRepository.findByEmail(email).orElseGet(() -> userService.createGoogleUser(email, name, imageUrl));
 
+            System.out.println("user " + this.convertToDto(user));
             // tao accessToken
             CustomUserDetails customUserDetails = new CustomUserDetails(this.convertToDto(user));
+
             String accessToken = jwtTokenProvider.generateAccessToken(customUserDetails);
             System.out.println("Access Token: " + accessToken);
-            
+
             String refreshToken = refreshService.createRefreshToken(customUserDetails).getToken();
             System.out.println("Refresh Token: " + refreshToken);
 

@@ -91,6 +91,7 @@ public class AuthRestController {
         } else {
             String idToken = request.get("idToken");
             AuthResponse authResponse = authService.loginWithGoogle(idToken);
+            System.out.println(authResponse);
 
             // Return the token in the response
             response.put("status", HttpStatus.OK.value());
