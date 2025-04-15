@@ -27,6 +27,75 @@ const ProductUser = () => {
         image: "../../../public/images/product/samsung-galaxy-z-flip6.jpg",
         newPrice: "12.000.000",
         oldPrice: "14.400.000",
+      },      {
+        name: "Dell G15",
+        image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
+        newPrice: "15.000.000",
+        oldPrice: "18.000.000",
+      },
+      {
+        name: "HP ProBook",
+        image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
+        newPrice: "12.000.000",
+        oldPrice: "14.400.000",
+      },      
+      {
+        name: "HP ProBook",
+        image: "../../../public/images/product/oppo-a38-black-1.jpeg",
+        newPrice: "12.000.000",
+        oldPrice: "14.400.000",
+      },
+      {
+        name: "HP ProBook",
+        image: "../../../public/images/product/samsung-galaxy-z-flip6.jpg",
+        newPrice: "12.000.000",
+        oldPrice: "14.400.000",
+      },      {
+        name: "Dell G15",
+        image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
+        newPrice: "15.000.000",
+        oldPrice: "18.000.000",
+      },
+      {
+        name: "HP ProBook",
+        image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
+        newPrice: "12.000.000",
+        oldPrice: "14.400.000",
+      },      
+      {
+        name: "HP ProBook",
+        image: "../../../public/images/product/oppo-a38-black-1.jpeg",
+        newPrice: "12.000.000",
+        oldPrice: "14.400.000",
+      },
+      {
+        name: "HP ProBook",
+        image: "../../../public/images/product/samsung-galaxy-z-flip6.jpg",
+        newPrice: "12.000.000",
+        oldPrice: "14.400.000",
+      },      {
+        name: "Dell G15",
+        image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
+        newPrice: "15.000.000",
+        oldPrice: "18.000.000",
+      },
+      {
+        name: "HP ProBook",
+        image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
+        newPrice: "12.000.000",
+        oldPrice: "14.400.000",
+      },      
+      {
+        name: "HP ProBook",
+        image: "../../../public/images/product/oppo-a38-black-1.jpeg",
+        newPrice: "12.000.000",
+        oldPrice: "14.400.000",
+      },
+      {
+        name: "HP ProBook",
+        image: "../../../public/images/product/samsung-galaxy-z-flip6.jpg",
+        newPrice: "12.000.000",
+        oldPrice: "14.400.000",
       },
     ];
 
