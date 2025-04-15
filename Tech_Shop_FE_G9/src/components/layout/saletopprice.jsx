@@ -2,7 +2,7 @@ import React, { useEffect, useState } from "react";
 import "../../../src/assets/css/saletopprice.css";
 import { FaBolt, FaAngleRight } from "react-icons/fa";
 
-const saletopprice = () => {
+const Saletopprice = () => {
   const [timeLeft, setTimeLeft] = useState({
     hours: 0,
     minutes: 0,
@@ -33,24 +33,24 @@ const saletopprice = () => {
   const formatNumber = (num) => (num < 10 ? `0${num}` : num);
 
   return (
-    <div className="sale-top-container">
-      <div className="timer-box">
+    <div className="sale-top__container">
+      <div className="sale-top__timer-box">
         <span>{formatNumber(timeLeft.hours)}</span>:
         <span>{formatNumber(timeLeft.minutes)}</span>:
         <span>{formatNumber(timeLeft.seconds)}</span>
       </div>
-      <div className="title-sale">
-        <FaBolt className="bolt-icon" />
+      <div className="sale-top__title-sale">
+        <FaBolt className="sale-top__bolt-icon" />
         <span>
           <strong>LAP SALE </strong>
           <strong style={{ fontStyle: "italic" }}>GIÁ TOP</strong>
         </span>
       </div>
-      <div className="view-detail">
+      <div className="sale-top__view-detail">
         <a href="#">Xem chi tiết <FaAngleRight /></a>
       </div>
     </div>
   );
 };
 
-export default saletopprice;
+export default Saletopprice;
