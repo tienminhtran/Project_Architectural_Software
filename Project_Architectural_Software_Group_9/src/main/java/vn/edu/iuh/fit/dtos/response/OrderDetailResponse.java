@@ -8,6 +8,7 @@ package vn.edu.iuh.fit.dtos.response;
 
 import lombok.*;
 
+import java.io.Serializable;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
 import java.util.List;
@@ -23,7 +24,7 @@ import java.util.List;
 @AllArgsConstructor
 @NoArgsConstructor
 @Builder
-public class OrderDetailResponse {
+public class OrderDetailResponse implements Serializable {
     private Long orderId;
     private String customerName;
     private LocalDateTime createdAt;

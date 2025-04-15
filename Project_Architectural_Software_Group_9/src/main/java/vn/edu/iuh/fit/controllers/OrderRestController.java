@@ -212,5 +212,30 @@ public class OrderRestController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @GetMapping("/filter/all")
+    public ResponseEntity<BaseResponse<?>> filterByAll(
+            @RequestParam(required = false) String firstname,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(required = false) String payment,
+            @RequestParam(required = false) OrderStatus status,
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        if (pageNo == null) {
+            pageNo = 0;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        PageResponse<?> pageResponse = orderService.filterByAll(firstname, phoneNumber, payment, status, pageNo, pageSize);
+        if (pageResponse.getValues().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Filter by all")
+                .response(pageResponse)
+                .build());
+    }
 
 }
