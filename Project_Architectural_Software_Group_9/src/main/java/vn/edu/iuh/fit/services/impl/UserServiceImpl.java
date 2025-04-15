@@ -28,6 +28,7 @@ import vn.edu.iuh.fit.dtos.response.TopCustomerResponse;
 import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.entities.Role;
 import vn.edu.iuh.fit.entities.User;
+import vn.edu.iuh.fit.enums.TypeProviderAuth;
 import vn.edu.iuh.fit.exception.EmailAlreadyExistsException;
 import vn.edu.iuh.fit.exception.ItemNotFoundException;
 import vn.edu.iuh.fit.exception.SendEmailException;
@@ -44,10 +45,7 @@ import vn.edu.iuh.fit.services.UserService;
 import java.time.Instant;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.List;
-import java.util.Map;
-import java.util.Objects;
-import java.util.UUID;
+import java.util.*;
 import java.util.concurrent.ConcurrentHashMap;
 import java.util.stream.Collectors;
 
@@ -180,6 +178,7 @@ public class UserServiceImpl implements UserService {
             user.setRole(role);
             user.setActive(false);
             user.setImage("avtdefault.jpg");
+            user.setProviderAuth(TypeProviderAuth.LOCAL);
 
             user = userRepository.save(user);
 
@@ -287,6 +286,7 @@ public class UserServiceImpl implements UserService {
             user.setActive(userRequest.isActive());
             user.setCreatedAt(LocalDateTime.now());
             user.setUpdatedAt(LocalDateTime.now());
+            user.setProviderAuth(TypeProviderAuth.LOCAL);
 
             // Mã hóa mật khẩu trước khi lưu
             user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
@@ -393,5 +393,30 @@ public class UserServiceImpl implements UserService {
             return true;
         }
         return false;
+    }
+
+    @Override
+    public User createGoogleUser(String email, String name, String imageUrl) {
+        Role role = roleRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 1"));
+        Random random = new Random();
+        String username = email.substring(0, email.indexOf("@")) + random.nextInt(1000);
+        User user = User.builder()
+                .username(username)
+                .email(email)
+                .firstname(name)
+                .image(imageUrl)
+                .providerAuth(TypeProviderAuth.GOOGLE)
+                .active(true)
+                .role(role)
+                .build();
+        user.setCreatedAt(LocalDateTime.now());
+        user = userRepository.save(user);
+        return user;
+    }
+
+    @Override
+    public UserResponse getUserByEmail(String email) {
+        User user = userRepository.findByEmail(email).orElseThrow(() -> new ItemNotFoundException("Can not find User with email: " + email));
+        return this.convertToDto(user, UserResponse.class);
     }
 }

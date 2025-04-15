@@ -10,7 +10,9 @@ import { useSelector } from "react-redux";
 import usePaginationQuery from "./usePaginationQuery";
 
 const useUser = (pageNo, pageSize) => {
+  
   const { user } = useSelector((state) => state.auth);
+  console.log("user name ", user);
   const queryClient = useQueryClient();
 
   const getUser = useQuery({
