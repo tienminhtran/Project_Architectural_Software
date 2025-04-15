@@ -1,4 +1,4 @@
-import React, { useRef } from "react";
+import React, { useRef, useEffect } from "react";
 import "../../../src/assets/css/ProductsYouViewed.css";
 import { FaAngleDoubleLeft, FaAngleDoubleRight, FaGetPocket } from "react-icons/fa";
 
@@ -82,6 +82,21 @@ const ProductUser = () => {
 //     const percent = Math.round(((oldP - newP) / oldP) * 100);
 //     return `-${percent}%`;
 //   };
+    useEffect(() => {
+      const interval = setInterval(() => {
+        const { current } = scrollRef;
+        if (current) {
+          // Nếu đã scroll đến gần cuối, quay về đầu
+          if (current.scrollLeft + current.offsetWidth >= current.scrollWidth - 5) {
+            current.scrollLeft = 0;
+          } else {
+            current.scrollLeft += 350;
+          }
+        }
+      }, 30000);
+
+      return () => clearInterval(interval);
+    }, []);
 
   return (
     <div className="products-viewed">
@@ -92,7 +107,7 @@ const ProductUser = () => {
     </div>
       <div className="products-viewed__products-container-wrapper">
         <button className="products-viewed__scroll-btn left" onClick={() => handleScroll("left")}>
-          <FaAngleDoubleLeft />
+          <FaAngleDoubleLeft size={24}/>
         </button>
         <div className="products-viewed__products-container" ref={scrollRef}>
           {productData.map((product, index) => (
@@ -108,7 +123,7 @@ const ProductUser = () => {
           ))}
         </div>
         <button className="products-viewed__scroll-btn right" onClick={() => handleScroll("right")}>
-          <FaAngleDoubleRight />
+          <FaAngleDoubleRight size={24}/>
         </button>
       </div>
     </div>

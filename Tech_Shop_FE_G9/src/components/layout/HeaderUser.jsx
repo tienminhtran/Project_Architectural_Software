@@ -5,7 +5,7 @@ import "../../../src/assets/css/HeaderUser.css";
 import AnnouncementBar from "./AnnouncementBar.jsx";
 import useDashboardData from "../../hooks/useDashboardData "; // Hook lấy dữ liệu dashboard
 import useUser from "../../hooks/useUser.js"; // Hook lấy thông tin người dùng
-import saletopprice from "./saletopprice.jsx";
+import SaleTopPrice from "./Saletopprice.jsx"; // Đúng
 const HeaderUser = () => {
   const { userInfor } = useUser(0, 1);
   const categories = ["Computer", "Phone", "Accessory"];
@@ -201,7 +201,7 @@ const HeaderUser = () => {
                 />
               </div>
             )}
-            <saletopprice />
+            <SaleTopPrice />
 
           </div>
 
