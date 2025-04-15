@@ -42,11 +42,10 @@ const CheckCodePage = () => {
 
   const handleDeleteCode = async () => {
     try {
-      await deleteCode(code); // Call the delete function with the code to delete
-      alert("Mã code đã được xóa!");
-      navigate("/"); // Redirect to a different page after deletion
+      await deleteCode(code); 
+      navigate("/common/formVoucher"); 
     } catch (error) {
-      alert("Đã xảy ra lỗi khi xóa mã code.");
+      // alert("Đã xảy ra lỗi khi xóa mã code.");
       console.error("Lỗi xóa code:", error);
     }
   };
@@ -84,8 +83,7 @@ const CheckCodePage = () => {
           {errorMessage && <p className="check-code__error-message">{errorMessage}</p>}
 
           <div className="check-code__form-actions">
-            <button type="submit" onClick={handleDeleteCode} className="check-code__submit-button">Kiểm tra</button>
-            {/* <button type="button" onClick={handleDeleteCode} className="check-code__delete-button">Xóa Mã Code</button> */}
+            <button type="submit" onClick={handleDeleteCode} className="check-code__submit-button">Submit code</button>
           </div>
         </form>
 

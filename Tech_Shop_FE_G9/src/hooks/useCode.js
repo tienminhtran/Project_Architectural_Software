@@ -21,7 +21,7 @@ const useCode = () => {
   const deleteCodes = useMutation({
     mutationFn: (id) => deleteCode(id),
     onSuccess: () => {
-      alert("Xóa mã CODE thành công!");
+      // alert("Xóa mã CODE thành công!");
     },
     onError: (error) => {
       console.error("Xóa mã CODE thất bại:", error);
