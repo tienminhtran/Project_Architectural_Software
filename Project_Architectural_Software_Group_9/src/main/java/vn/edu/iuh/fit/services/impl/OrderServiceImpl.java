@@ -185,6 +185,37 @@ public class OrderServiceImpl implements OrderService {
     return response;
 }
 
+    @Override
+    public PageResponse<OrderResponse> filterByStatus(OrderStatus status, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Order> orders = orderRepository.filterByStatus(status, pageable);
+        PageResponse<OrderResponse> response = new PageResponse<>();
+        if (orders.hasContent()) {
+            response.setPage(pageNo);
+            response.setSize(pageSize);
+            response.setTotal(orders.getNumberOfElements());
+            response.setTotalPages(orders.getTotalPages());
+            response.setValues(orders.stream().map(this::convertToDto).collect(Collectors.toList()));
+        }
+        return response;
+    }
+
+    @Override
+    public PageResponse<OrderResponse> filterByPayment(String payment, int pageNo, int pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Order> orders = orderRepository.filterByPayment(payment, pageable);
+        PageResponse<OrderResponse> response = new PageResponse<>();
+        if (orders.hasContent()) {
+            response.setPage(pageNo);
+            response.setSize(pageSize);
+            response.setTotal(orders.getNumberOfElements());
+            response.setTotalPages(orders.getTotalPages());
+            response.setValues(orders.stream().map(this::convertToDto).collect(Collectors.toList()));
+        }
+        return response;
+    }
+
+
 //    @Override
 //    public List<OrderResponse> findByPayment(String payment) {
 //        List<Order> orders = orderRepository.findByPayment(payment);
