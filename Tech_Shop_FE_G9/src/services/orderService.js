@@ -54,3 +54,17 @@ export const searchOrder = async (pageNo, pageSize, keyword) => {
     );
     return response.data;
 };
+
+export const filterOrderByStatus = async (pageNo, pageSize, status) => {
+    const response = await axiosInstance.get(
+        `/orders/filter/status/${status}?pageNo=${pageNo}&pageSize=${pageSize}`
+    );
+    return response.data;
+};
+
+export const filterOrderByPayment = async (pageNo, pageSize, payment) => {
+    const response = await axiosInstance.get(
+        `/orders/filter/payment/${payment}?pageNo=${pageNo}&pageSize=${pageSize}`
+    );
+    return response.data;
+};
