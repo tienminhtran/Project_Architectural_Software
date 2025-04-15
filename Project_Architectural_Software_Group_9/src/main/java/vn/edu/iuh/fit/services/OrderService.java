@@ -7,6 +7,7 @@
 package vn.edu.iuh.fit.services;
 
 import vn.edu.iuh.fit.dtos.response.*;
+import vn.edu.iuh.fit.entities.Order;
 import vn.edu.iuh.fit.enums.OrderStatus;
 
 import java.util.List;
@@ -54,5 +55,6 @@ public interface OrderService {
 
     PageResponse<OrderResponse> filterByPayment(String payment, int pageNo, int pageSize);
 
+    PageResponse<OrderResponse> filterByAll(String firstname, String phoneNumber, String payment, OrderStatus status, int pageNo, int pageSize);
 
 }
