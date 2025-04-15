@@ -47,12 +47,12 @@ public interface OrderService {
     boolean delete(Long id);
 
     public Double getTotalAmountByOrderId(Long orderId);
+
     PageResponse<OrderResponse> searchOrder(String keyword, int pageNo, int pageSize);
 
-    // tìm payment
-//    List<OrderResponse> findByPayment(String payment);
+    PageResponse<OrderResponse> filterByStatus(OrderStatus status, int pageNo, int pageSize);
 
-//    Chuyển status sang Cancelled
+    PageResponse<OrderResponse> filterByPayment(String payment, int pageNo, int pageSize);
 
 
 }

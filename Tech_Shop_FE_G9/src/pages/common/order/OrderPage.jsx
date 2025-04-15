@@ -15,16 +15,35 @@ const OrderPage = () => {
     const pageSize = 10;
     const [selectedRows, setSelectedRows] = useState([]);
     const [orderSearch, setOrderSearch] = useState("");
+    const [selectedStatus, setSelectedStatus] = useState("");
+    const [selectedPayment, setSelectedPayment] = useState("");
     const debouncedSearchTerm = useDebounce(orderSearch, 500);
     const [totalAmounts, setTotalAmounts] = useState({});
 
-    const { orders_paging, search_paging } = useOrder(
+    const isSearchMode = debouncedSearchTerm.trim().length > 0;
+    const isFilterByStatus = selectedStatus !== "";
+    const isFilterByPayment = selectedPayment !== "";
+
+    const {
+        orders_paging,
+        search_paging,
+        filterOrderByStatus,
+        filterOrderByPayment,
+    } = useOrder(
         pageNo,
         pageSize,
-        orderSearch
+        debouncedSearchTerm,
+        selectedStatus,
+        selectedPayment
     );
-    const { data, isLoading, isError, error } =
-        debouncedSearchTerm.trim().length > 0 ? search_paging : orders_paging;
+
+    const { data, isError, error, isFetching } = isSearchMode
+        ? search_paging
+        : isFilterByStatus
+        ? filterOrderByStatus
+        : isFilterByPayment
+        ? filterOrderByPayment
+        : orders_paging;
 
     const orders = useMemo(() => data?.values || [], [data]);
 
@@ -85,11 +104,8 @@ const OrderPage = () => {
         }
     };
 
-    if (isLoading) return <p>Loading orders...</p>;
-    if (isError) return <p>Error: {error.message}</p>;
-    console.log("Search Term:", debouncedSearchTerm);
-    console.log("Orders Data:", data);
-    console.log("Displayed Orders:", orders);
+    if (isError && !data) return <p>Error: {error.message}</p>;
+
     return (
         <div className="page-wrapper">
             {/* Header */}
@@ -101,19 +117,57 @@ const OrderPage = () => {
             </div>
 
             <div className="page-content">
-                {/* Search box */}
-                <div className="input-group w-25 mb-3">
-                    <span className="input-group-text">
-                        <BsSearch />
-                    </span>
-                    <input
-                        type="text"
-                        className="form-control"
-                        name="search"
-                        placeholder="Search..."
-                        value={orderSearch}
-                        onChange={(e) => setOrderSearch(e.target.value)}
-                    />
+                {/* Search + Filter */}
+                <div className="d-flex gap-3 align-items-center mb-3">
+                    {/* Search box */}
+                    <div className="input-group w-25">
+                        <span className="input-group-text">
+                            <BsSearch />
+                        </span>
+                        <input
+                            type="text"
+                            className="form-control"
+                            name="search"
+                            placeholder="Search..."
+                            value={orderSearch}
+                            onChange={(e) => {
+                                setOrderSearch(e.target.value);
+                                setPageNo(0);
+                            }}
+                        />
+                    </div>
+
+                    {/* Filter: Status */}
+                    <select
+                        className="form-select w-auto"
+                        value={selectedStatus}
+                        onChange={(e) => {
+                            setSelectedStatus(e.target.value);
+                            setPageNo(0);
+                        }}
+                    >
+                        <option value="">All Statuses</option>
+                        <option value="PENDING">Pending</option>
+                        <option value="DELIVERED">Delivered</option>
+                        <option value="CANCELLED">Cancelled</option>
+                        <option value="REFUND">Refund</option>
+                        <option value="COMPLETED">Completed</option>
+                    </select>
+
+                    {/* Filter: Payment */}
+                    <select
+                        className="form-select w-auto"
+                        value={selectedPayment}
+                        onChange={(e) => {
+                            setSelectedPayment(e.target.value);
+                            setPageNo(0);
+                        }}
+                    >
+                        <option value="">All Payments</option>
+                        <option value="COD">COD</option>
+                        <option value="BANKING">VNPay</option>
+                        <option value="PAYPAL">PayPal</option>
+                    </select>
                 </div>
 
                 {/* Table */}
@@ -139,79 +193,97 @@ const OrderPage = () => {
                         </tr>
                     </thead>
                     <tbody>
-                        {orders.map((order) => (
-                            <tr key={order.id} className="align-middle">
-                                <td>
-                                    <input
-                                        type="checkbox"
-                                        checked={selectedRows.includes(
-                                            order.id
-                                        )}
-                                        onChange={() =>
-                                            handleSelectRow(order.id)
-                                        }
-                                        className="form-check-input"
-                                    />
-                                </td>
-                                <td>{order.user.firstname}</td>
-                                <td className="text-end text-success fw-semibold">
-                                    {totalAmounts[order.id] != null
-                                        ? `${totalAmounts[
-                                              order.id
-                                          ].toLocaleString("vi-VN")} VND`
-                                        : "Loading..."}
-                                </td>
-                                <td className="text-center">
-                                    <span
-                                        className={` p-1 rounded rounded-3 text-light  status-${order.status.toLowerCase()}`}
-                                    >
-                                        {order.status}
-                                    </span>
-                                </td>
-                                <td>{order.payment.paymentName}</td>
-                                <td>
-                                    {new Date(order.createdAt).toLocaleString()}
-                                </td>
-                                <td>
-                                    <div className="d-flex gap-3">
-                                        <BsEye
-                                            className="text-secondary fs-5"
-                                            role="button"
-                                        />
-                                        <BsTrash
-                                            onClick={() =>
-                                                handleDelete(order.id)
-                                            }
-                                            className="text-danger fs-5"
-                                            role="button"
-                                        />
-                                    </div>
+                        {isFetching ? (
+                            <tr>
+                                <td colSpan="7" className="text-center">
+                                    Loading...
                                 </td>
                             </tr>
-                        ))}
+                        ) : orders.length > 0 ? (
+                            orders.map((order) => (
+                                <tr key={order.id} className="align-middle">
+                                    <td>
+                                        <input
+                                            type="checkbox"
+                                            checked={selectedRows.includes(
+                                                order.id
+                                            )}
+                                            onChange={() =>
+                                                handleSelectRow(order.id)
+                                            }
+                                            className="form-check-input"
+                                        />
+                                    </td>
+                                    <td>{order.user.firstname}</td>
+                                    <td className="text-end text-success fw-semibold">
+                                        {totalAmounts[order.id] != null
+                                            ? `${totalAmounts[
+                                                  order.id
+                                              ].toLocaleString("vi-VN")} VND`
+                                            : "Loading..."}
+                                    </td>
+                                    <td className="text-center">
+                                        <span
+                                            className={`p-1 rounded rounded-3 text-light status-${order.status.toLowerCase()}`}
+                                        >
+                                            {order.status}
+                                        </span>
+                                    </td>
+                                    <td>{order.payment.paymentName}</td>
+                                    <td>
+                                        {new Date(
+                                            order.createdAt
+                                        ).toLocaleString()}
+                                    </td>
+                                    <td>
+                                        <div className="d-flex gap-3">
+                                            <BsEye
+                                                className="text-secondary fs-5"
+                                                role="button"
+                                            />
+                                            <BsTrash
+                                                onClick={() =>
+                                                    handleDelete(order.id)
+                                                }
+                                                className="text-danger fs-5"
+                                                role="button"
+                                            />
+                                        </div>
+                                    </td>
+                                </tr>
+                            ))
+                        ) : (
+                            <tr>
+                                <td colSpan="7" className="text-center">
+                                    No orders found.
+                                </td>
+                            </tr>
+                        )}
                     </tbody>
                 </table>
 
                 {/* Pagination */}
-                <ReactPaginate
-                    previousLabel={"←"}
-                    nextLabel={"→"}
-                    breakLabel={"..."}
-                    pageCount={data.totalPages}
-                    onPageChange={handlePageChange}
-                    containerClassName={
-                        "pagination d-flex justify-content-end mt-3"
-                    }
-                    pageClassName={"page-item"}
-                    pageLinkClassName={"page-link"}
-                    previousClassName={"page-item"}
-                    previousLinkClassName={"page-link"}
-                    nextClassName={"page-item"}
-                    nextLinkClassName={"page-link"}
-                    breakClassName={"page-item"}
-                    breakLinkClassName={"page-link"}
-                    activeClassName={"active"}
-                />
+                {data?.totalPages > 1 && (
+                    <ReactPaginate
+                        previousLabel={"←"}
+                        nextLabel={"→"}
+                        breakLabel={"..."}
+                        pageCount={data.totalPages}
+                        onPageChange={handlePageChange}
+                        containerClassName={
+                            "pagination d-flex justify-content-end mt-3"
+                        }
+                        pageClassName={"page-item"}
+                        pageLinkClassName={"page-link"}
+                        previousClassName={"page-item"}
+                        previousLinkClassName={"page-link"}
+                        nextClassName={"page-item"}
+                        nextLinkClassName={"page-link"}
+                        breakClassName={"page-item"}
+                        breakLinkClassName={"page-link"}
+                        activeClassName={"active"}
+                    />
+                )}
             </div>
         </div>
     );
