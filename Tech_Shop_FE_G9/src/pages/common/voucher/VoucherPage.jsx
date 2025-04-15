@@ -5,8 +5,11 @@ import { BsPencil, BsTrash, BsSearch } from "react-icons/bs";
 import useVoucher from "../../../hooks/useVoucher";
 import ReactPaginate from "react-paginate";
 import { useDebounce } from "../../../hooks/useDebounce"; // Thư viện giúp giảm tải khi gõ nhanh và tối ưu hóa hiệu suất khi tìm kiếm
+import { useSelector } from "react-redux";
 
 const VoucherPage = () => {
+    // xử lý quyền thêm , xóa, sửa
+  const { roles } = useSelector((state) => state.auth);
   const navigate = useNavigate();
 
   const [selectedRows, setSelectedRows] = useState([]);
@@ -92,7 +95,8 @@ const VoucherPage = () => {
           <h3>Product Voucher list</h3>
           <p>View/Search Voucher</p>
         </div>
-        <div className="header-action">
+        {roles.includes("ROLE_ADMIN") &&
+                <div className="header-action">
           <Link
             to="/common/formVoucher"
             className="btn btn-warning text-white fw-bold rounded px-4 py-2 text-decoration-none"
@@ -100,6 +104,12 @@ const VoucherPage = () => {
             Create voucher
           </Link>
         </div>
+        
+        
+        }
+
+
+        
       </div>
 
       <div className="page-content">
@@ -132,41 +142,46 @@ const VoucherPage = () => {
               <th>Value</th>
               <th>Quantity</th>
               <th>Expiration Date</th>
-              <th>Action</th>
+              {roles.includes("ROLE_ADMIN") && <th>Actions</th>}
             </tr>
           </thead>
           <tbody>
-            {vouchers.map((voucher) => (
-              <tr key={voucher.id} className="align-middle">
-                <td>
-                  <input
-                    type="checkbox"
-                    checked={selectedRows.includes(voucher.id)}
-                    onChange={() => handleSelectRow(voucher.id)}
-                    className="form-check-input"
-                  />
-                </td>
-                <td>{voucher.name}</td>
-                <td>{voucher.value}</td>
-                <td>{voucher.quantity}</td>
-                <td>{voucher.expiredDate}</td>
-                <td>
-                  <div className="d-flex gap-3">
-                    <BsPencil
-                      className="text-secondary fs-5"
-                      role="button"
-                      onClick={() => handleNavigate(voucher)}
+          {vouchers_response.map((voucher, index) => (
+              <tr key={voucher.id}>
+                  <td>
+                    <input
+                      type="checkbox"
+                      checked={selectedRows.includes(voucher.id)}
+                      onChange={() => handleSelectRow(voucher.id)}
                     />
+                  </td>
+                  <td>{voucher.name}</td>
+                  <td>{voucher.value}</td>
+                  <td>{voucher.quantity}</td>
+                  <td>{voucher.expiredDate}</td>
+    
+              {/* Chỉ hiển thị nút sửa và xóa nếu là ADMIN */}
+                {roles.includes("ROLE_ADMIN") && (
+                  <td>
+                
+                    <div className="d-flex gap-3">
+                      <BsPencil
+                        className="text-secondary fs-5"
+                        role="button"
+                        onClick={() => handleNavigate(voucher)}
+                      />
 
-                    <BsTrash
-                      className="text-danger fs-5"
-                      role="button"
-                      onClick={() => handleDelete(voucher.id)}
-                    />
-                  </div>
-                </td>
+                      <BsTrash
+                        className="text-danger fs-5"
+                        role="button"
+                        onClick={() => handleDelete(voucher.id)}
+                      />
+                    </div>
+                  </td>
+                )}
               </tr>
             ))}
+
           </tbody>
         </table>
       </div>

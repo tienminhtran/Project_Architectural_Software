@@ -199,7 +199,7 @@ function App() {
           />
         </Route>
 
-        <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} />}>
+        <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]} />}>
           <Route
               path="/common/vouchers"
               element={
