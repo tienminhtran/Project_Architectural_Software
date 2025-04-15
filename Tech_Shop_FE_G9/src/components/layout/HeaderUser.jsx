@@ -4,10 +4,11 @@ import "../../../src/assets/css/HeaderUser.css";
 import AnnouncementBar from "./AnnouncementBar.jsx";
 import useDashboardData from "../../hooks/useDashboardData ";
 
-
+import useUser from "../../hooks/useUser.js";
 
 
 const HeaderUser = () => {
+  const { userInfor} = useUser(0,1);
   const categories = ["Computer", "Phone", "Accessory"];
 
   const {recentlyProduct} = useDashboardData();
@@ -110,7 +111,7 @@ const HeaderUser = () => {
               </div>
               <div className="header-user__icon-item">
                 <FaUser />
-                <span className="header-user__username">Minh Tiến</span>
+                <span className="header-user__username">{userInfor.firstname}</span>
               </div>
             </div>
           </div>

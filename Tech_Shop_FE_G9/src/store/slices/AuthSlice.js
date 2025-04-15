@@ -19,6 +19,8 @@ const AuthSlice = createSlice({
       state.error = null;
     },
     loginSuccess: (state, action) => {
+      console.log("login success");
+      console.log(action.payload);
       state.user = action.payload.username;
       state.token = action.payload.accessToken;
       state.roles = action.payload.roles;

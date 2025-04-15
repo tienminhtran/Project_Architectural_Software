@@ -5,6 +5,9 @@ import { login, saveAccessToken, getAccessToken } from "../../services/authServi
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess, handleFailure } from "../../store/slices/AuthSlice.js";
 import { toast } from "react-toastify";
+import SignInwithGoogle from "./LoginWithGoogle.jsx";
+
+
 const LoginForm = () => {
   const [username, setUsername] = useState("");
   const [password, setPassword] = useState("");
@@ -86,6 +89,9 @@ const LoginForm = () => {
             Forget password?
           </Link>
         </div>
+
+        <SignInwithGoogle />
+        
       </Form>
     </div>
   );
