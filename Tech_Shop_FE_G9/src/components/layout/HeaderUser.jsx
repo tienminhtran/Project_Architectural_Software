@@ -5,16 +5,21 @@ import "../../../src/assets/css/HeaderUser.css";
 import AnnouncementBar from "./AnnouncementBar.jsx";
 import useDashboardData from "../../hooks/useDashboardData "; // Hook lấy dữ liệu dashboard
 import useUser from "../../hooks/useUser.js"; // Hook lấy thông tin người dùng
-import SaleTopPrice from "./Saletopprice.jsx"; // Đúng
+import SaleTopPrice from "./Saletopprice.jsx";
+import { useNavigate } from 'react-router-dom';
+
 const HeaderUser = () => {
+
+  const navigate = useNavigate();
+
   const { userInfor } = useUser(0, 1);
-  const categories = ["Computer", "Phone", "Accessory"];
+  // const categories = ["LapTop", "Phone", "Accessory"];
 
   const { recentlyProduct } = useDashboardData();
 
-  const userMenuRef = useRef(); // ✅ Gán useRef cho menu
+  const userMenuRef = useRef(); //  Gán useRef cho menu
 
-  // 🔧 Xử lý dữ liệu banner từ sản phẩm gần đây
+  //  Xử lý dữ liệu banner từ sản phẩm gần đây
   const banners =
     Array.isArray(recentlyProduct) && recentlyProduct.length > 0
       ? recentlyProduct.slice(0, 3).map((product, index) => ({
@@ -114,7 +119,7 @@ const HeaderUser = () => {
           <div className="col-7">
             <ul className="header-user__menu">
               <li><a href="#" className="active">Home</a></li>
-              <li><a href="#">Shop</a></li>
+              <li><a  onClick={() => navigate('/user')}>Shop</a></li>
               <li><a href="#">Pages</a></li>
               <li><a href="#">About</a></li>
               <li><a href="#">Blog</a></li>
@@ -137,10 +142,10 @@ const HeaderUser = () => {
                 <span className="header-user__username">{userInfor?.firstname || "User"}</span>
                 {showMenu && (
                   <div className="header-user__dropdown">
-                    <div className="header-user__dropdown-item">Login</div>
-                    <div className="header-user__dropdown-item">Logout</div>
+                    <div className="header-user__dropdown-item" onClick={() => navigate('/login')} > Login </div>
+                    <div className="header-user__dropdown-item" onClick={() => navigate('/')} >Logout</div>
                     <div className="header-user__dropdown-item">Manager</div>
-                    <div className="header-user__dropdown-item">Admin</div>
+                    <div className="header-user__dropdown-item" >Admin</div>
                   </div>
                 )}
               </div>
@@ -154,12 +159,18 @@ const HeaderUser = () => {
           {/* Danh sách danh mục */}
           <div className="col-3 text-center text-md-start">
             <ul className="header-user__category-list">
-              {categories.map((cat, index) => (
-                <li key={index} className="header-user__category-item">
-                  {cat}
-                  <FaChevronDown className="header-user__chevron-icon" />
-                </li>
-              ))}
+              <li className="header-user__category-item" onClick={() => navigate('/categories')} >
+                LapTop
+                <FaChevronDown className="header-user__chevron-icon" />
+              </li>
+              <li className="header-user__category-item">
+                Phone
+                <FaChevronDown className="header-user__chevron-icon" />
+              </li>
+              <li className="header-user__category-item">
+                Accessory
+                <FaChevronDown className="header-user__chevron-icon" />
+              </li>
             </ul>
           </div>
 

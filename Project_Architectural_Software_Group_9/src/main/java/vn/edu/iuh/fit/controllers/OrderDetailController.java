@@ -24,14 +24,14 @@ import vn.edu.iuh.fit.services.OrderDetailService;
  * @version:    1.0
  */
 @RestController
-@RequestMapping("/api/v1/order-details")
+@RequestMapping("/api/v1/order-detail")
 public class OrderDetailController {
     @Autowired
     private OrderDetailService orderDetailService;
 
-    @PreAuthorize("hasRole('MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @GetMapping("/{orderId}")
-    public ResponseEntity<BaseResponse<OrderDetailResponse>> getOrderDetails(@PathVariable Long orderId) {
+    public ResponseEntity<BaseResponse<OrderDetailResponse>> getOrderDetail(@PathVariable Long orderId) {
         OrderDetailResponse orderDetailResponse = orderDetailService.getOrderDetailsByOrderId(orderId);
         return ResponseEntity.ok(BaseResponse.<OrderDetailResponse>builder().status("SUCCESS").message("Get order-details by orderId success").response(orderDetailResponse).build());
     }

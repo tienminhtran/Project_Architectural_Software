@@ -48,23 +48,16 @@ export const getTotalAmountByOrderId = async (orderId) => {
     return response.data;
 };
 
-export const searchOrder = async (pageNo, pageSize, keyword) => {
+export const filterOrderAll = async (
+    pageNo,
+    pageSize,
+    firstname,
+    phoneNumber,
+    payment,
+    status
+) => {
     const response = await axiosInstance.get(
-        `/orders/search/${keyword}?pageNo=${pageNo}&pageSize=${pageSize}`
-    );
-    return response.data;
-};
-
-export const filterOrderByStatus = async (pageNo, pageSize, status) => {
-    const response = await axiosInstance.get(
-        `/orders/filter/status/${status}?pageNo=${pageNo}&pageSize=${pageSize}`
-    );
-    return response.data;
-};
-
-export const filterOrderByPayment = async (pageNo, pageSize, payment) => {
-    const response = await axiosInstance.get(
-        `/orders/filter/payment/${payment}?pageNo=${pageNo}&pageSize=${pageSize}`
+        `/orders/filter/all?firstname=${firstname}&phoneNumber=${phoneNumber}&payment=${payment}&status=${status}&pageNo=${pageNo}&pageSize=${pageSize}`
     );
     return response.data;
 };

@@ -7,12 +7,14 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import "../assets/css/HomePage.css";
 import ProductUser from "../components/layout/ProductUser"; 
 import ProductsYouViewed from "../components/layout/ProductsYouViewed"; 
+import Brand from "../components/layout/Brand";
 const HomePage = () => {
     return (
         <div>
             <HeardUser />
             <ProductsYouViewed />
             <ProductUser />
+            <Brand />
             <FooterUser />
         </div>
     );

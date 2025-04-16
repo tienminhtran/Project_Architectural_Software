@@ -4,13 +4,13 @@ import { BsArrowReturnLeft } from "react-icons/bs";
 import { IoMdMail } from "react-icons/io";
 import { FiPhoneCall } from "react-icons/fi";
 import '../../assets/css/FooterUser.css';
-import Brand from './Brand.jsx';
+// import Brand from './Brand.jsx';
 const Footer = () => {
   return (
 
     <footer className="footer">
       <div className="footer-top">
-        <Brand />
+        {/* <Brand /> */}
       </div>
       
       {/* Top features */}

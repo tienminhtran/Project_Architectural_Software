@@ -32,3 +32,16 @@
     width: 110px !important;
     background-color: #6c757d !important;
 }
+
+.btn-clear {
+    background-color: #ffc107 !important;
+    color: white !important;
+    border: none !important;
+    padding: 10px 20px !important;
+    border-radius: 5px !important;
+    cursor: pointer !important;
+}
+
+.btn-clear:hover {
+    background-color: #e0a800 !important;
+}
