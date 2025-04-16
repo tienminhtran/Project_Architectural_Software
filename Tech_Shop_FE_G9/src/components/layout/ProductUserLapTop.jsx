@@ -150,7 +150,7 @@ const ProductUser = () => {
                 {brand}
               </h2>
             ))}
-            <a href="/all" className="see-all"> <h2>Xem tất cả</h2> </a>
+            <a href="/categories" className="see-all"> <h2>Xem tất cả</h2> </a>
         </div>
       </div>
 
