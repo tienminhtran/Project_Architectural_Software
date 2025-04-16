@@ -8,6 +8,7 @@ import useUser from "../../hooks/useUser.js"; // Hook lấy thông tin người 
 import SaleTopPrice from "./Saletopprice.jsx";
 import { useNavigate } from 'react-router-dom';
 
+
 const HeaderUser = () => {
 
   const navigate = useNavigate();

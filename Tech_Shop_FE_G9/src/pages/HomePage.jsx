@@ -5,15 +5,19 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import "bootstrap/dist/js/bootstrap.bundle.min.js";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import "../assets/css/HomePage.css";
-import ProductUser from "../components/layout/ProductUser"; 
+import ProductUserLapTop from "../components/layout/ProductUserLapTop"; 
 import ProductsYouViewed from "../components/layout/ProductsYouViewed"; 
 import Brand from "../components/layout/Brand";
+import ProductUserPhone from "../components/layout/ProductUserPhone";
+import ProductUserAccessory from "../components/layout/ProductUserAccessory"
 const HomePage = () => {
     return (
         <div>
             <HeardUser />
             <ProductsYouViewed />
-            <ProductUser />
+            <ProductUserLapTop />
+            <ProductUserPhone/>
+            <ProductUserAccessory/>
             <Brand />
             <FooterUser />
         </div>

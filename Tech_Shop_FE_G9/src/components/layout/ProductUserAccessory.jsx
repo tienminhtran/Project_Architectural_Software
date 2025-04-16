@@ -10,98 +10,55 @@ import "../../../src/assets/css/ProductUser.css";
 
 const ProductUser = () => {
   const productData = [
+    // Chuột máy tính
     {
-      name: "Dell G15",
-      image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
-      newPrice: "15.000.000",
-      oldPrice: "18.000.000",
+      name: "Logitech G102",
+      image: "../../../public/images/product/mouse1.jpg",
+      newPrice: "450.000",
+      oldPrice: "600.000",
+      discount: "25%",
+    },
+    {
+      name: "Razer DeathAdder Essential",
+      image: "../../../public/images/product/mouse2.jpg",
+      newPrice: "790.000",
+      oldPrice: "990.000",
       discount: "20%",
-      battery: "60000mAh",
-      monitor: "15.6 inch",
-      os: "Windows 10",
-      ram: "16GB",
     },
     {
-      name: "HP ProBook",
-      image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
-      newPrice: "12.000.000",
-      oldPrice: "14.400.000",
-      discount: "17%",
-      battery: "50000mAh",
-      monitor: "14 inch",
-      os: "Windows 11",
-      ram: "8GB",
-    },
-    {
-      name: "Dell G15",
-      image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
-      newPrice: "15.000.000",
-      oldPrice: "18.000.000",
+      name: "Fuhlen G90",
+      image: "../../../public/images/product/mouse3.jpg",
+      newPrice: "520.000",
+      oldPrice: "650.000",
       discount: "20%",
-      battery: "60000mAh",
-      monitor: "15.6 inch",
-      os: "Windows 10",
-      ram: "16GB",
     },
+  
+    // Bàn phím
     {
-      name: "HP ProBook",
-      image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
-      newPrice: "12.000.000",
-      oldPrice: "14.400.000",
+      name: "Akko 3068B Multi-mode",
+      image: "../../../public/images/product/keyboard1.jpg",
+      newPrice: "1.500.000",
+      oldPrice: "1.800.000",
       discount: "17%",
-      battery: "50000mAh",
-      monitor: "14 inch",
-      os: "Windows 11",
-      ram: "8GB",
     },
     {
-      name: "Dell G15",
-      image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
-      newPrice: "15.000.000",
-      oldPrice: "18.000.000",
+      name: "Logitech K380",
+      image: "../../../public/images/product/keyboard2.jpg",
+      newPrice: "680.000",
+      oldPrice: "850.000",
       discount: "20%",
-      battery: "60000mAh",
-      monitor: "15.6 inch",
-      os: "Windows 10",
-      ram: "16GB",
     },
     {
-      name: "HP ProBook",
-      image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
-      newPrice: "12.000.000",
-      oldPrice: "14.400.000",
+      name: "Keychron K2 V2",
+      image: "../../../public/images/product/keyboard3.jpg",
+      newPrice: "1.900.000",
+      oldPrice: "2.300.000",
       discount: "17%",
-      battery: "50000mAh",
-      monitor: "14 inch",
-      os: "Windows 11",
-      ram: "8GB",
-    },
-    {
-      name: "Dell G15",
-      image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
-      newPrice: "15.000.000",
-      oldPrice: "18.000.000",
-      discount: "20%",
-      battery: "60000mAh",
-      monitor: "15.6 inch",
-      os: "Windows 10",
-      ram: "16GB",
-    },
-    {
-      name: "HP ProBook",
-      image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
-      newPrice: "12.000.000",
-      oldPrice: "14.400.000",
-      discount: "17%",
-      battery: "50000mAh",
-      monitor: "14 inch",
-      os: "Windows 11",
-      ram: "8GB",
     },
   ];
+  
 
-  const brands = ["ASUS", "ACER", "MSI", "LENOVO", "GIGABYTE", "DELL"];
-
+  const brands = [ "AKKO", "ASUS", "Cooler Master", "Corsair", "DareU", "E-Dra", "Glorious" ];
 
   const scrollRef = useRef();
 
@@ -176,12 +133,12 @@ const ProductUser = () => {
                 <span className="product-user__price-new">{product.newPrice} ₫</span>{" "}
                 <del className="product-user__price-old">{product.oldPrice} ₫</del>
               </p>
-              <ul className="product-user__product-specs">
+              {/* <ul className="product-user__product-specs">
                 <li>RAM: {product.ram}</li>
                 <li>Màn hình: {product.monitor}</li>
                 <li>Pin: {product.battery}</li>
                 <li>Hệ điều hành: {product.os}</li>
-              </ul>
+              </ul> */}
               <button className="product-user__add-to-cart">
                 <FaShoppingCart /> Thêm giỏ hàng
               </button>
