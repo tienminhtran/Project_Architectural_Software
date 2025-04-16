@@ -1,85 +1,259 @@
 import React, { useState } from 'react';
+import { FaFilter, FaAngleDown, FaTimesCircle } from "react-icons/fa";
 import '../../../../src/assets/css/ShopProduct.css';
-import { FaAngleDoubleLeft, FaAngleDoubleRight, FaGetPocket } from 'react-icons/fa';
-
-const filterOptions = {
-  "Tình trạng sản phẩm": ["Hết hàng", "Còn hàng"],
-  "Giá": ["Dưới 10 triệu", "10-20 triệu", "Trên 20 triệu"],
-  "Hãng": ["ASUS", "HP", "Dell", "Không thương hiệu"],
-  "CPU": ["AMD Ryzen 5", "AMD Ryzen 7", "Intel Core i5", "Intel Core i7"],
-  "Kích thước màn hình": ["14 inch", "15.6 inch", "17 inch"],
-  "Nhu cầu sử dụng": ["Gaming", "Văn phòng"],
-  "RAM": ["8 GB", "16 GB", "32 GB"],
-  "SSD": ["512 GB", "1 TB"],
-  "VGA": ["RTX 3050", "RTX 3060", "RTX 3070Ti", "AMD Radeon"]
-};
 
 export default function ShopProduct() {
-  const [openFilter, setOpenFilter] = useState(null); // store open filter name
-  const [showAllFilters, setShowAllFilters] = useState(false); // for "Bộ lọc" toggle
+  const [openFilter, setOpenFilter] = useState(null);
+  const [showAllFilters, setShowAllFilters] = useState(false);
 
   const handleFilterClick = (filterName) => {
-    if (openFilter === filterName) {
-      setOpenFilter(null); // toggle off
-    } else {
-      setOpenFilter(filterName); // open specific filter
-      setShowAllFilters(false); // hide "show all filters"
-    }
+    setOpenFilter(openFilter === filterName ? null : filterName);
+    setShowAllFilters(false);
   };
+
+  // Giá
+  const [min, setMin] = useState(11690000);
+  const [max, setMax] = useState(41490000);
+  const minValue = 10000000;
+  const maxValue = 50000000;
+
+  const formatCurrency = (value) =>
+    new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' })
+      .format(value)
+      .replace('₫', 'đ');
+
+  const handleMinChange = (e) => setMin(Math.min(Number(e.target.value), max));
+  const handleMaxChange = (e) => setMax(Math.max(Number(e.target.value), min));
+  const resetRange = () => {
+    setMin(minValue);
+    setMax(maxValue);
+  };
+
+  // Bộ lọc
+  const [selectedFilters, setSelectedFilters] = useState({});
+
+  const toggleFilter = (category, value) => {
+    setSelectedFilters((prev) => {
+      const categoryFilters = prev[category] || [];
+      const newFilters = categoryFilters.includes(value)
+        ? categoryFilters.filter((item) => item !== value)
+        : [...categoryFilters, value];
+
+      const updated = { ...prev, [category]: newFilters };
+      if (newFilters.length === 0) delete updated[category];
+      return updated;
+    });
+  };
+
+  const renderFilterItems = (category, options) => (
+    options.map((option, index) => (
+      <li
+        key={index}
+        className={`shop-product__filter-option-item ${selectedFilters[category]?.includes(option) ? 'selected' : ''}`}
+        onClick={() => toggleFilter(category, option)}
+      >
+        {option}
+      </li>
+    ))
+  );
 
   return (
     <div>
-      <div className="filter-bar">
+      <div className="shop-product__filter-bar">
         <button
-          className={`filter-button ${showAllFilters ? 'active' : ''}`}
+          className={`shop-product__filter-button ${showAllFilters ? 'active' : ''}`}
           onClick={() => {
             setShowAllFilters(!showAllFilters);
-            setOpenFilter(null); // close any individual filter when showing all
+            setOpenFilter(null);
           }}
         >
-           Bộ lọc
+          <FaFilter /> Bộ lọc
         </button>
 
-        {Object.keys(filterOptions).map((filterName) => (
+        {/* Tình trạng sản phẩm */}
+        <div className="shop-product__filter-wrapper">
           <button
-            key={filterName}
-            className={`filter-button ${openFilter === filterName ? 'active' : ''}`}
-            onClick={() => handleFilterClick(filterName)}
+            className={`shop-product__filter-button ${openFilter === "Tình trạng sản phẩm" ? 'active' : ''}`}
+            onClick={() => handleFilterClick("Tình trạng sản phẩm")}
           >
-            {filterName} ⌄
+            Tình trạng sản phẩm <FaAngleDown />
           </button>
-        ))}
-      </div>
+          {openFilter === "Tình trạng sản phẩm" && !showAllFilters && (
+            <div className="shop-product__filter-dropdown shop-product__individual">
+              <ul className="shop-product__filter-option">
+                <li className="shop-product__filter-option-item">Hết hàng</li>
+                <li className="shop-product__filter-option-item">Còn hàng</li>
+              </ul>
+            </div>
+          )}
+        </div>
 
-      {/* All filters open (when "Bộ lọc" is clicked) */}
-      {showAllFilters && (
-        <div className="filter-dropdown" style={{ position: 'relative', zIndex: 100 }}>
-          <div style={{ display: 'flex', flexWrap: 'wrap', gap: '20px', padding: '16px' }}>
-            {Object.entries(filterOptions).map(([category, options]) => (
-              <div key={category}>
-                <strong>{category}</strong>
-                <div className="filter-option">
-                  {options.map((option) => (
-                    <div className="filter-option-item" key={option}>
-                      {option}
-                    </div>
-                  ))}
+        {/* Hãng */}
+        <div className="shop-product__filter-wrapper">
+          <button
+            className={`shop-product__filter-button ${openFilter === "Hãng" ? 'active' : ''}`}
+            onClick={() => handleFilterClick("Hãng")}
+          >
+            Hãng <FaAngleDown />
+          </button>
+          {openFilter === "Hãng" && !showAllFilters && (
+            <div className="shop-product__filter-dropdown shop-product__individual">
+              <ul className="shop-product__filter-option">
+                <li className="shop-product__filter-option-item">ASUS</li>
+                <li className="shop-product__filter-option-item">HP</li>
+                <li className="shop-product__filter-option-item">Dell</li>
+                <li className="shop-product__filter-option-item">Không thương hiệu</li>
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* CPU */}
+        <div className="shop-product__filter-wrapper">
+          <button
+            className={`shop-product__filter-button ${openFilter === "CPU" ? 'active' : ''}`}
+            onClick={() => handleFilterClick("CPU")}
+          >
+            CPU <FaAngleDown />
+          </button>
+          {openFilter === "CPU" && !showAllFilters && (
+            <div className="shop-product__filter-dropdown shop-product__individual">
+              <ul className="shop-product__filter-option">
+                <li className="shop-product__filter-option-item">AMD Ryzen 5</li>
+                <li className="shop-product__filter-option-item">AMD Ryzen 7</li>
+                <li className="shop-product__filter-option-item">Intel Core i5</li>
+                <li className="shop-product__filter-option-item">Intel Core i7</li>
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* Kích thước màn hình */}
+        <div className="shop-product__filter-wrapper">
+          <button
+            className={`shop-product__filter-button ${openFilter === "size" ? 'active' : ''}`}
+            onClick={() => handleFilterClick("size")}
+          >
+            Kích thước <FaAngleDown />
+          </button>
+          {openFilter === "size" && !showAllFilters && (
+            <div className="shop-product__filter-dropdown shop-product__individual">
+              <ul className="shop-product__filter-option">
+                <li className="shop-product__filter-option-item">14 inch</li>
+                <li className="shop-product__filter-option-item">15.6 inch</li>
+                <li className="shop-product__filter-option-item">17 inch</li>
+              </ul>
+            </div>
+          )}
+        </div>
+
+        {/* Giá */}
+        <div className="shop-product__filter-wrapper">
+          <button
+            className={`shop-product__filter-button ${openFilter === "price" ? 'active' : ''}`}
+            onClick={() => handleFilterClick("price")}
+          >
+            Giá <FaAngleDown />
+          </button>
+          {openFilter === "price" && !showAllFilters && (
+            <div className="shop-product__filter-dropdown shop-product__individual">
+              <div className="shop-product__price-range">
+                <div className="shop-product__price-inputs">
+                  <input type="text" value={formatCurrency(min)} readOnly />
+                  <input type="text" value={formatCurrency(max)} readOnly />
+                </div>
+                <div className="shop-product__range-sliders">
+                  <input type="range" min={minValue} max={maxValue} value={min} onChange={handleMinChange} />
+                  <input type="range" min={minValue} max={maxValue} value={max} onChange={handleMaxChange} />
+                </div>
+                <div className="shop-product__range-buttons">
+                  <button onClick={resetRange} className="shop-product__reset-button">Bỏ chọn</button>
+                  <button className="shop-product__submit-button">Xem kết quả</button>
                 </div>
               </div>
-            ))}
-          </div>
+            </div>
+          )}
         </div>
-      )}
+      </div>
 
-      {/* Individual dropdown */}
-      {openFilter && !showAllFilters && (
-        <div className="filter-dropdown">
-          <div className="filter-option">
-            {filterOptions[openFilter].map((option) => (
-              <div className="filter-option-item" key={option}>
-                {option}
+      {/* Hiển thị các tiêu chí đã chọn */}
+      {/* {Object.keys(selectedFilters).length > 0 && (
+        <div className="shop-product__selected-filters">
+          <strong>Tiêu chí đã chọn:</strong>
+          {Object.entries(selectedFilters).map(([category, values]) =>
+            values.map((value, idx) => (
+              <span key={`${category}-${idx}`} className="shop-product__selected-filter">
+                {category}: {value}
+                <button onClick={() => toggleFilter(category, value)}><FaTimesCircle size={12} /></button>
+              </span>
+            ))
+          )}
+        </div>
+      )} */}
+
+      {/* Bộ lọc toàn phần */}
+      {showAllFilters && (
+        <div className="shop-product__filter-dropdown shop-product__full">
+                {/* Hiển thị các tiêu chí đã chọn */}
+          {Object.keys(selectedFilters).length > 0 && (
+            <div className="shop-product__selected-filters">
+              <strong>Tiêu chí đã chọn:</strong>
+              {Object.entries(selectedFilters).map(([category, values]) =>
+                values.map((value, idx) => (
+                  <span key={`${category}-${idx}`} className="shop-product__selected-filter">
+                    {category}: {value}
+                    <button onClick={() => toggleFilter(category, value)}><FaTimesCircle size={12} /></button>
+                  </span>
+                ))
+              )}
+            </div>
+          )}
+          <div className="shop-product__full-wrapper">
+            <div>
+              <strong>Tình trạng sản phẩm</strong>
+              <ul>{renderFilterItems("Tình trạng sản phẩm", ["Hết hàng", "Còn hàng"])}</ul>
+
+              <strong>Giá</strong>
+              <div className="shop-product__price-range">
+                <div className="shop-product__price-inputs">
+                  <input type="text" value={formatCurrency(min)} readOnly />
+                  <input type="text" value={formatCurrency(max)} readOnly />
+                </div>
+                <div className="shop-product__range-sliders">
+                  <input type="range" min={minValue} max={maxValue} value={min} onChange={handleMinChange} />
+                  <input type="range" min={minValue} max={maxValue} value={max} onChange={handleMaxChange} />
+                </div>
               </div>
-            ))}
+            </div>
+            <div>
+              <strong>Hãng</strong>
+              <ul>{renderFilterItems("Hãng", ["ASUS", "HP", "Dell", "Không thương hiệu"])}</ul>
+
+              <strong>CPU</strong>
+              <ul>{renderFilterItems("CPU", ["AMD Ryzen 5", "AMD Ryzen 7", "Intel Core i5", "Intel Core i7"])}</ul>
+
+              <strong>Kích thước màn hình</strong>
+              <ul>{renderFilterItems("Kích thước màn hình", ["14 inch", "15.6 inch", "17 inch"])}</ul>
+            </div>
+
+            <div>
+              <strong>Nhu cầu sử dụng</strong>
+              <ul>{renderFilterItems("Nhu cầu sử dụng", ["Gaming", "Văn phòng"])}</ul>
+
+              <strong>RAM</strong>
+              <ul>{renderFilterItems("RAM", ["8 GB", "16 GB", "32 GB"])}</ul>
+
+              <strong>SSD</strong>
+              <ul>{renderFilterItems("SSD", ["512 GB", "1 TB"])}</ul>
+
+              <strong>VGA</strong>
+              <ul>{renderFilterItems("VGA", ["RTX 3050", "RTX 3060", "RTX 3070Ti", "AMD Radeon"])}</ul>
+            </div>
+          </div>
+
+          <div className="shop-product__range-buttons">
+            <button onClick={resetRange} className="shop-product__reset-button">Bỏ chọn</button>
+            <button className="shop-product__submit-button">Xem kết quả</button>
           </div>
         </div>
       )}
