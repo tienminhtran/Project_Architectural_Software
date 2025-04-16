@@ -33,7 +33,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import UpdateUserPage from "./pages/common/user/UpdateUserPage";
 import AdminCodeControllerPage from "./pages/admin/AdminCodeControllerPage";
 import CheckCodeModal from "./components/layout/CheckCodeModal"; // đường dẫn đúng
-
+import ProductCategories from "./components/layout/Categories/ProductCategories"; // đường dẫn đúng
 
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
@@ -244,6 +244,7 @@ function App() {
 
 
         <Route path="/" element={<HomePage />} />
+        <Route path="/categories" element={<ProductCategories />} />
       </Routes>
     </Router>
   );
