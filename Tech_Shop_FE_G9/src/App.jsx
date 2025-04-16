@@ -280,7 +280,9 @@ function App() {
 
 
         <Route path="/" element={<HomePage />} />
-        <Route path="/categories" element={<ProductCategories />} />
+        <Route path="/categories-all-phone" element={<ProductCategories />} />
+        <Route path="/categories-all-laptop" element={<ProductCategories />} />
+        <Route path="/categories-all-accessory" element={<ProductCategories />} />
       </Routes>
     </Router>
   );

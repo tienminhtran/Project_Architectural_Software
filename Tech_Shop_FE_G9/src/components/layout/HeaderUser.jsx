@@ -160,15 +160,15 @@ const HeaderUser = () => {
           {/* Danh sách danh mục */}
           <div className="col-3 text-center text-md-start">
             <ul className="header-user__category-list">
-              <li className="header-user__category-item" onClick={() => navigate('/categories')} >
+              <li className="header-user__category-item" onClick={() => navigate('/categories-all-laptop')} >
                 LapTop
                 <FaChevronDown className="header-user__chevron-icon" />
               </li>
-              <li className="header-user__category-item">
+              <li className="header-user__category-item" onClick={() => navigate('/categories-all-phone')}>
                 Phone
                 <FaChevronDown className="header-user__chevron-icon" />
               </li>
-              <li className="header-user__category-item">
+              <li className="header-user__category-item" onClick={() => navigate('/categories-all-accessory')}>
                 Accessory
                 <FaChevronDown className="header-user__chevron-icon" />
               </li>

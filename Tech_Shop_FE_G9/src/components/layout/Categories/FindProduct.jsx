@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
 import { FaFilter, FaAngleDown, FaTimesCircle } from "react-icons/fa";
-import '../../../../src/assets/css/ShopProduct.css';
+import '../../../../src/assets/css/FindProduct.css';
 
 export default function ShopProduct() {
   const [openFilter, setOpenFilter] = useState(null);
@@ -176,27 +176,12 @@ export default function ShopProduct() {
         </div>
       </div>
 
-      {/* Hiển thị các tiêu chí đã chọn */}
-      {/* {Object.keys(selectedFilters).length > 0 && (
-        <div className="shop-product__selected-filters">
-          <strong>Tiêu chí đã chọn:</strong>
-          {Object.entries(selectedFilters).map(([category, values]) =>
-            values.map((value, idx) => (
-              <span key={`${category}-${idx}`} className="shop-product__selected-filter">
-                {category}: {value}
-                <button onClick={() => toggleFilter(category, value)}><FaTimesCircle size={12} /></button>
-              </span>
-            ))
-          )}
-        </div>
-      )} */}
-
       {/* Bộ lọc toàn phần */}
       {showAllFilters && (
         <div className="shop-product__filter-dropdown shop-product__full">
-                {/* Hiển thị các tiêu chí đã chọn */}
+          {/* Hiển thị các tiêu chí đã chọn */}
           {Object.keys(selectedFilters).length > 0 && (
-            <div className="shop-product__selected-filters">
+          <div className="shop-product__selected-filters">
               <strong>Tiêu chí đã chọn:</strong>
               {Object.entries(selectedFilters).map(([category, values]) =>
                 values.map((value, idx) => (
@@ -239,18 +224,14 @@ export default function ShopProduct() {
             <div>
               <strong>Nhu cầu sử dụng</strong>
               <ul>{renderFilterItems("Nhu cầu sử dụng", ["Gaming", "Văn phòng"])}</ul>
-
               <strong>RAM</strong>
               <ul>{renderFilterItems("RAM", ["8 GB", "16 GB", "32 GB"])}</ul>
-
               <strong>SSD</strong>
               <ul>{renderFilterItems("SSD", ["512 GB", "1 TB"])}</ul>
-
               <strong>VGA</strong>
               <ul>{renderFilterItems("VGA", ["RTX 3050", "RTX 3060", "RTX 3070Ti", "AMD Radeon"])}</ul>
             </div>
           </div>
-
           <div className="shop-product__range-buttons">
             <button onClick={resetRange} className="shop-product__reset-button">Bỏ chọn</button>
             <button className="shop-product__submit-button">Xem kết quả</button>
