@@ -1,0 +1,64 @@
+/* modernFilter.css */
+
+.filter-bar {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    padding: 10px;
+    position: relative;
+    background-color: #fff;
+    border-bottom: 1px solid #ddd;
+    z-index: 1;
+  }
+  
+  .filter-button {
+    position: relative;
+    color:  #333;
+    padding: 8px 12px;
+    border: 1px solid #ccc;
+    background: white;
+    border-radius: 6px;
+    cursor: pointer;
+    user-select: none;
+    transition: background 0.2s, box-shadow 0.2s;
+  }
+  
+  .filter-button:hover {
+    background: #f4f4f4;
+  }
+  
+  .filter-button.active {
+    background-color: #007bff;
+    color: rgb(0, 0, 0);
+    border-color: #007bff;
+    z-index: 999;
+  }
+  
+  .filter-dropdown {
+    position: absolute;
+    top: 60px;
+    left: 0;
+    background: white;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+    border-radius: 8px;
+    min-width: 220px;
+    z-index: 1000;
+  }
+  
+  .filter-option {
+    display: flex;
+    flex-direction: column;
+    padding: 8px;
+  }
+  
+  .filter-option-item {
+    padding: 6px 10px;
+    cursor: pointer;
+    border-radius: 4px;
+    transition: background 0.2s;
+  }
+  
+  .filter-option-item:hover {
+    background: #f1f1f1;
+  }
+  
