@@ -1,39 +1,47 @@
 import { useMutation, useQueryClient, useQuery } from "@tanstack/react-query";
+import usePaginationQuery from "./usePaginationQuery";
 
 import {
     deleteOrder as deleteOrderService,
     getAllOrder_Paging,
-    searchOrder,
-    getDailyCategory,
+    filterOrderAll,
     getDailyOrders,
-    filterOrderByStatus,
-    filterOrderByPayment,
+    getDailyCategory,
 } from "../services/orderService";
-import usePaginationQuery from "./usePaginationQuery";
 
-const useOrder = (pageNo, pageSize, orderSearch, status = "", payment = "") => {
-    // Lấy danh sách đơn hàng theo ngày
-    const dailyOrders = useQuery({
-        queryKey: ["dailyOrders"],
-        queryFn: () => getDailyOrders(),
-    });
-
-    const dailyCategory = useQuery({
-        queryKey: ["dailyCategory"],
-        queryFn: () => getDailyCategory(),
-    });
-
+const useOrder = (
+    pageNo,
+    pageSize,
+    status = "",
+    payment = "",
+    firstname = "",
+    phoneNumber = ""
+) => {
     const queryClient = useQueryClient();
+
+    // Xóa đơn hàng
     const deleteOrder = useMutation({
         mutationFn: (id) => deleteOrderService(id),
         onSuccess: () => {
-            queryClient.invalidateQueries("getAllOrder_Paging");
-            alert("Delete order successfully!!");
+            queryClient.invalidateQueries(["getAllOrder_Paging"]);
+            alert("Delete order successfully!");
         },
         onError: (error) => {
             console.error("Delete order failed:", error);
-            alert("Delete order fail. Please try again!");
+            alert("Delete order failed. Please try again!");
         },
+    });
+
+    // Đơn hàng theo ngày
+    const dailyOrders = useQuery({
+        queryKey: ["dailyOrders"],
+        queryFn: getDailyOrders,
+    });
+
+    // Danh mục đơn hàng theo ngày
+    const dailyCategory = useQuery({
+        queryKey: ["dailyCategory"],
+        queryFn: getDailyCategory,
     });
 
     return {
@@ -43,30 +51,24 @@ const useOrder = (pageNo, pageSize, orderSearch, status = "", payment = "") => {
             pageNo,
             pageSize
         ),
-        search_paging: usePaginationQuery(
-            "searchOrder",
-            searchOrder,
+
+        filterOrderAllPaging: usePaginationQuery(
+            "filterOrderAll",
+            (page, size) =>
+                filterOrderAll(
+                    page,
+                    size,
+                    firstname,
+                    phoneNumber,
+                    payment,
+                    status
+                ),
             pageNo,
             pageSize,
-            orderSearch,
+            `${firstname}-${phoneNumber}-${payment}-${status}`,
             true
         ),
-        filterOrderByStatus: usePaginationQuery(
-            "filterOrderByStatus",
-            (page, size) => filterOrderByStatus(page, size, status),
-            pageNo,
-            pageSize,
-            status,
-            true
-        ),
-        filterOrderByPayment: usePaginationQuery(
-            "filterOrderByPayment",
-            (page, size) => filterOrderByPayment(page, size, payment),
-            pageNo,
-            pageSize,
-            payment,
-            true
-        ),
+
         deleteOrder: deleteOrder.mutate,
         dailyOrders: dailyOrders.data?.response || 0,
         dailyCategory: dailyCategory.data?.response || 0,
