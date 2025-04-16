@@ -8,10 +8,12 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 // import ProductUser from "../components/layout/ProductUser"; 
 import ProductsYouViewed from "../../../components/layout/ProductsYouViewed"; 
 import Brand from "../../../components/layout/Brand";
+import ShopProduct from "./ShopProduct";
 const ProductCategories = () => {
     return (
         <div>
             <HeardUser />
+            <ShopProduct />
             <ProductsYouViewed />
             <Brand />
             <FooterUser />
