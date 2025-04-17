@@ -49,7 +49,7 @@ export default function ShopProduct() {
     options.map((option, index) => (
       <li
         key={index}
-        className={`shop-product__filter-option-item ${selectedFilters[category]?.includes(option) ? 'selected' : ''}`}
+        className={`shop-product__filter-option-items ${selectedFilters[category]?.includes(option) ? 'selected' : ''}`}
         onClick={() => toggleFilter(category, option)}
       >
         {option}
@@ -79,7 +79,7 @@ export default function ShopProduct() {
             Tình trạng sản phẩm <FaAngleDown />
           </button>
           {openFilter === "Tình trạng sản phẩm" && !showAllFilters && (
-            <div className="shop-product__filter-dropdown shop-product__individual">
+            <div className="shop-product__individual">
               <ul className="shop-product__filter-option">
                 <li className="shop-product__filter-option-item">Hết hàng</li>
                 <li className="shop-product__filter-option-item">Còn hàng</li>
@@ -97,7 +97,7 @@ export default function ShopProduct() {
             Hãng <FaAngleDown />
           </button>
           {openFilter === "Hãng" && !showAllFilters && (
-            <div className="shop-product__filter-dropdown shop-product__individual">
+            <div className="shop-product__individual">
               <ul className="shop-product__filter-option">
                 <li className="shop-product__filter-option-item">ASUS</li>
                 <li className="shop-product__filter-option-item">HP</li>
@@ -117,7 +117,7 @@ export default function ShopProduct() {
             CPU <FaAngleDown />
           </button>
           {openFilter === "CPU" && !showAllFilters && (
-            <div className="shop-product__filter-dropdown shop-product__individual">
+            <div className="shop-product__individual">
               <ul className="shop-product__filter-option">
                 <li className="shop-product__filter-option-item">AMD Ryzen 5</li>
                 <li className="shop-product__filter-option-item">AMD Ryzen 7</li>
@@ -137,7 +137,7 @@ export default function ShopProduct() {
             Kích thước <FaAngleDown />
           </button>
           {openFilter === "size" && !showAllFilters && (
-            <div className="shop-product__filter-dropdown shop-product__individual">
+            <div className="shop-product__individual">
               <ul className="shop-product__filter-option">
                 <li className="shop-product__filter-option-item">14 inch</li>
                 <li className="shop-product__filter-option-item">15.6 inch</li>
@@ -156,7 +156,7 @@ export default function ShopProduct() {
             Giá <FaAngleDown />
           </button>
           {openFilter === "price" && !showAllFilters && (
-            <div className="shop-product__filter-dropdown shop-product__individual">
+            <div className="shop-product__individual">
               <div className="shop-product__price-range">
                 <div className="shop-product__price-inputs">
                   <input type="text" value={formatCurrency(min)} readOnly />
@@ -166,7 +166,7 @@ export default function ShopProduct() {
                   <input type="range" min={minValue} max={maxValue} value={min} onChange={handleMinChange} />
                   <input type="range" min={minValue} max={maxValue} value={max} onChange={handleMaxChange} />
                 </div>
-                <div className="shop-product__range-buttons">
+                <div className="shop-product__range-button">
                   <button onClick={resetRange} className="shop-product__reset-button">Bỏ chọn</button>
                   <button className="shop-product__submit-button">Xem kết quả</button>
                 </div>
@@ -178,7 +178,7 @@ export default function ShopProduct() {
 
       {/* Bộ lọc toàn phần */}
       {showAllFilters && (
-        <div className="shop-product__filter-dropdown shop-product__full">
+        <div className="shop-product__full">
           {/* Hiển thị các tiêu chí đã chọn */}
           {Object.keys(selectedFilters).length > 0 && (
           <div className="shop-product__selected-filters">
@@ -187,7 +187,7 @@ export default function ShopProduct() {
                 values.map((value, idx) => (
                   <span key={`${category}-${idx}`} className="shop-product__selected-filter">
                     {category}: {value}
-                    <button onClick={() => toggleFilter(category, value)}><FaTimesCircle size={12} /></button>
+                    <button onClick={() => toggleFilter(category, value)}><FaTimesCircle size={24} style={{border: '1px solid #90caf9', borderRadius:'60%', backgroundColor:'#ed1a44' }} /></button>
                   </span>
                 ))
               )}
