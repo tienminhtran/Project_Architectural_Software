@@ -109,9 +109,9 @@ const ProductUser = () => {
         <button className="products-viewed__scroll-btn left" onClick={() => handleScroll("left")}>
           <FaAngleDoubleLeft size={24}/>
         </button>
-        <div className="products-viewed__products-container" ref={scrollRef}>
-          {productData.map((product, index) => (
-            <div className="products-viewed__product-card" key={index}>
+        <div className="products-viewed__products-container" ref={scrollRef}   >
+            {productData.map((product, index) => (
+            <div className="products-viewed__product-card" key={index} onClick={() => console.log(product.name)}>
               <img src={product.image} alt={product.name} />
               <h4>{product.name}</h4>
               <div className="products-viewed__prices">
