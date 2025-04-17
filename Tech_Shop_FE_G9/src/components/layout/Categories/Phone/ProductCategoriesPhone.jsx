@@ -1,12 +1,15 @@
-import React from "react";
+import React, { useState } from "react";
 import {
   FaShoppingCart,
   FaHeart,
   FaEye,
 } from "react-icons/fa";
 import "../../../../../src/assets/css/ProductCategoriesPhone.css"; 
+import { useNavigate } from "react-router-dom";
 
 const ProductCategoriesPhone = () => {
+  const navigate = useNavigate();
+  const [activeIndex, setActiveIndex] = useState(0);
   const productData = [
     {
       name: "iPhone 14 Pro Max",
@@ -150,7 +153,7 @@ const ProductCategoriesPhone = () => {
         ram: "8GB",
       },
       {
-        name: "Google Pixel 8",
+        name: "Google Pixel 9",
         image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
         newPrice: "17.990.000",
         oldPrice: "20.490.000",
@@ -162,35 +165,40 @@ const ProductCategoriesPhone = () => {
       },
   ];
 
-//   const brands = ["Apple", "Samsung", "Xiaomi", "OPPO", "Vivo", "Realme", "Nokia"];
+
+
 
   return (
     <div className="product-user-phone__product-container">
-      {/* <div className="product-user-phone__product-header">
-        <h2>
-          <FaShoppingCart className="product-user-phone__products-icon" /> Our Products Phone
-        </h2>
-        <div className="brand-list">
-          {brands.map((brand, index) => (
-            <h2 key={index} className="brand-item">
-              {brand}
-            </h2>
-          ))}
-          <a href="/all" className="see-all">
-            <h2>Xem tất cả</h2>
-          </a>
-        </div>
-      </div> */}
-
       <div className="product-user-phone__product-grid">
         {productData.map((product, index) => (
-          <div className="product-user-phone__product-card" key={index}>
+          <button
+            className="product-user-phone__product-card"
+            key={index}
+            onClick={() => navigate('/1')}
+          >
             <div className="product-user-phone__product-img-wrapper">
               <img src={product.image} alt={product.name} className="product-user-phone__product-img" />
               <span className="product-user-phone__product-discount">{product.discount} OFF</span>
               <div className="product-user-phone__product-actions">
-                <button className="product-user-phone__icon-btn-love"><FaHeart /></button>
-                <button className="product-user-phone__icon-btn-eye"><FaEye /></button>
+                <button 
+                  className="product-user-phone__icon-btn-love" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    console.log("Clicked love icon");
+                  }}
+                >
+                  <FaHeart />
+                </button>
+                <button 
+                  className="product-user-phone__icon-btn-eye" 
+                  onClick={(e) => {
+                    e.stopPropagation();
+                    console.log("Clicked eye icon");
+                  }}
+                >
+                  <FaEye />
+                </button>
               </div>
             </div>
             <div className="product-user-phone__product-info">
@@ -205,11 +213,17 @@ const ProductCategoriesPhone = () => {
                 <li>Pin: {product.battery}</li>
                 <li>Hệ điều hành: {product.os}</li>
               </ul>
-              <button className="product-user-phone__add-to-cart">
+              <button
+                className="product-user-phone__add-to-cart"
+                onClick={(e) => {
+                  e.stopPropagation();
+                  console.log("Added to cart");
+                }}
+              >
                 <FaShoppingCart /> Thêm giỏ hàng
               </button>
             </div>
-          </div>
+          </button>
         ))}
       </div>
     </div>
