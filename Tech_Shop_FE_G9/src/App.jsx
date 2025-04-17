@@ -34,6 +34,7 @@ import UpdateUserPage from "./pages/common/user/UpdateUserPage";
 import AdminCodeControllerPage from "./pages/admin/AdminCodeControllerPage";
 import CheckCodeModal from "./components/layout/CheckCodeModal"; // đường dẫn đúng
 import ProductCategories from "./components/layout/Categories/ProductCategories"; // đường dẫn đúng
+import HomeProductDetail from "./components/layout/HomeProductDetail";  
 
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
@@ -283,6 +284,7 @@ function App() {
         <Route path="/categories-all-phone" element={<ProductCategories />} />
         <Route path="/categories-all-laptop" element={<ProductCategories />} />
         <Route path="/categories-all-accessory" element={<ProductCategories />} />
+        <Route path="/1" element={<HomeProductDetail />} />
       </Routes>
     </Router>
   );

@@ -232,7 +232,7 @@
   .see-all:hover {
     text-decoration: underline;
   }
-  .product-user-phone__product-grid {
+  .product-user-phone__product-grid  {
     display: grid;
     grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
     gap: 16px;
