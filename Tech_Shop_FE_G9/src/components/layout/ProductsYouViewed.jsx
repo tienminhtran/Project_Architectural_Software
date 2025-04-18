@@ -1,8 +1,11 @@
 import React, { useRef, useEffect } from "react";
 import "../../../src/assets/css/ProductsYouViewed.css";
 import { FaAngleDoubleLeft, FaAngleDoubleRight, FaGetPocket } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 const ProductUser = () => {
+    const navigate = useNavigate();
+  
   const scrollRef = useRef(null);
 
   const productData = [
@@ -105,27 +108,47 @@ const ProductUser = () => {
             <FaGetPocket className="products-viewed__products-icon" /> Products you viewed
         </h2>
     </div>
-      <div className="products-viewed__products-container-wrapper">
-        <button className="products-viewed__scroll-btn left" onClick={() => handleScroll("left")}>
-          <FaAngleDoubleLeft size={24}/>
-        </button>
-        <div className="products-viewed__products-container" ref={scrollRef}   >
-            {productData.map((product, index) => (
-            <div className="products-viewed__product-card" key={index} onClick={() => console.log(product.name)}>
-              <img src={product.image} alt={product.name} />
-              <h4>{product.name}</h4>
-              <div className="products-viewed__prices">
-                <span className="products-viewed__old">{product.oldPrice}đ</span>
-                <span className="products-viewed__new">{product.newPrice}đ</span>
-              </div>
-              <div className="products-viewed__discount">{product.discount}</div>
-            </div>
-          ))}
+    <div className="products-viewed__products-container-wrapper">
+  {/* Nút cuộn trái */}
+  <button className="products-viewed__scroll-btn left" onClick={() => handleScroll("left")}>
+    <FaAngleDoubleLeft size={24} />
+  </button>
+
+  {/* Danh sách sản phẩm */}
+  <div className="products-viewed__products-container" ref={scrollRef}>
+    {productData.map((product, index) => (
+      <button
+        className="products-viewed__product-card"
+        key={index}
+        onClick={() => navigate('/1')}
+      >
+        <img src={product.image} alt={product.name} />
+        <h4>{product.name}</h4>
+        <div className="products-viewed__prices">
+          <span className="products-viewed__old">{product.oldPrice}đ</span>
+          <span className="products-viewed__new">{product.newPrice}đ</span>
         </div>
-        <button className="products-viewed__scroll-btn right" onClick={() => handleScroll("right")}>
-          <FaAngleDoubleRight size={24}/>
-        </button>
-      </div>
+        <div className="products-viewed__discount">{product.discount}</div>
+      </button>
+    ))}
+  </div>
+
+  {/* Nút cuộn phải */}
+  <button className="products-viewed__scroll-btn right" onClick={() => handleScroll("right")}>
+    <FaAngleDoubleRight size={24} />
+  </button>
+</div>
+
+
+
+
+
+
+
+
+
+
+
     </div>
   );
 };
