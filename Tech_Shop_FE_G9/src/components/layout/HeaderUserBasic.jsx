@@ -52,14 +52,14 @@ const HeaderUserBasic = () => {
       <div className="container-fluid py-3">
         {/* Top Header */}
         <div className="row align-items-center">
-          <div className="col-3 text-center text-md-start">
+          <button className="col-3 text-center text-md-start bg-white" onClick={() => navigate('/')}>
             <img
               src="/images/logo/logo-large.png"
               alt="TechMart Logo"
               className="img-fluid"
               style={{ maxHeight: "50px" }}
             />
-          </div>
+          </button>
 
           <div className="col-7">
             <form className="d-flex">
@@ -127,7 +127,7 @@ const HeaderUserBasic = () => {
           <div className="col-7">
             <ul className="header-user-basic__menu">
               <li>
-                <a href="#" className="active">
+                <a className="active" onClick={() => navigate('/')}>
                   Home
                 </a>
               </li>
