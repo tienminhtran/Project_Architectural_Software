@@ -34,9 +34,13 @@ import UpdateUserPage from "./pages/common/user/UpdateUserPage";
 import AdminCodeControllerPage from "./pages/admin/AdminCodeControllerPage";
 import CheckCodeModal from "./components/layout/CheckCodeModal"; // đường dẫn đúng
 import ProductCategories from "./components/layout/Categories/ProductCategories"; // đường dẫn đúng
-import HomeProductDetail from "./components/layout/HomeProductDetail";
+import HomeProductDetail from "./components/layout/HomeProductDetail";  
+import Step1Cart from "./pages/carts/CartBuyOrderBox"; // đường dẫn đúng
+import Step2Cart from "./pages/carts/OrderInfoForm"; // đường dẫn đúng
+import Step3Cart from "./pages/carts/OrderPayment"; // đường dẫn đúng
+import Step4Cart from "./pages/carts/OrderComplete"; // đường dẫn đúng
+import HomeCart from "./pages/carts/HomeCart"; // đường dẫn đúng
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
   <div className="axil-signin-area">
@@ -272,7 +276,13 @@ function App() {
 
         <Route path="/" element={<HomePage />} />
         <Route path="/categories-all-phone" element={<ProductCategories />} />
-        <Route path="/categories-all-laptop" element={<ProductCategories />} />
+        <Route path="/categories-all-accessory" element={<ProductCategories />} />
+        <Route path="/cart-buy-order-box" element={<Step1Cart />} />
+        <Route path="/order-info-form" element={<Step2Cart />} />
+        <Route path="/order-payment" element={<Step3Cart />} />
+        <Route path="/order-complete" element={<Step4Cart />} />
+        <Route path="/cart" element={<HomeCart />} />
+
         <Route
           path="/categories-all-accessory"
           element={<ProductCategories />}

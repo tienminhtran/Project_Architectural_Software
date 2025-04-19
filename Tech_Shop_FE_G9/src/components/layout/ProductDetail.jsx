@@ -1,6 +1,7 @@
 import React, { useEffect, useState, useRef } from "react";
 import "../../assets/css/ProductDetail.css";
 import { FaCheckCircle } from "react-icons/fa";
+import { useNavigate } from "react-router-dom";
 
 
 // Hàm kiểm tra ảnh có tồn tại không
@@ -46,6 +47,7 @@ const FlashSaleTimer = ({ endTime }) => {
 };
 
 const ProductDetail = () => {
+  const navigate = useNavigate();
   const [thumbUrls, setThumbUrls] = useState([]);
   const endTimeRef = useRef(new Date().getTime() + 4 * 60 * 60 * 1000); // Giữ cố định thời gian kết thúc
 
@@ -93,8 +95,7 @@ const ProductDetail = () => {
             <span className="discount-box">-1%</span>
           </div>
         </div>
-
-        <button className="productdetail__buy-button">
+        <button className="productdetail__buy-button"  onClick={() => navigate("/cart")}>
                 MUA NGAY 
                 <br></br>
         Giao tận nơi hoặc nhận tại cửa hàng

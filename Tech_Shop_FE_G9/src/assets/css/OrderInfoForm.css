@@ -1,0 +1,103 @@
+.OrderInfoForm__container {
+    max-width: 850px;
+    margin: 40px auto;
+    padding: 32px;
+    background: #fff;
+    border-radius: 18px;
+    box-shadow: 0 10px 40px rgba(0, 0, 0, 0.08);
+    font-family: 'Segoe UI', sans-serif;
+}
+
+.OrderInfoForm__title {
+    font-size: 22px;
+    font-weight: 600;
+    margin-bottom: 20px;
+    color: #1f1f1f;
+}
+
+.OrderInfoForm__section {
+    margin-top: 24px;
+}
+
+.OrderInfoForm__row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-bottom: 18px;
+}
+
+.OrderInfoForm__row input,
+.OrderInfoForm__row select {
+    flex: 1;
+    padding: 12px 14px;
+    border: 1px solid #d0d0d0;
+    background-color: #e3eefb;
+    border-radius: 10px;
+    font-size: 16px;
+    transition: border-color 0.25s ease;
+    color: #000000;
+}
+
+.OrderInfoForm__row input:focus,
+.OrderInfoForm__row select:focus,
+textarea:focus {
+    border-color: #007aff;
+    outline: none;
+}
+
+.OrderInfoForm__row label {
+    font-size: 16px;
+    font-weight: 500;
+    display: flex;
+    align-items: center;
+    gap: 6px;
+}
+
+.OrderInfoForm__deliveryRow {
+    margin-bottom: 20px;
+    font-size: 16px;
+    font-weight: 500;
+}
+
+textarea {
+    width: 100%;
+    padding: 12px;
+    font-size: 16px;
+    border: 1px solid #d0d0d0;
+    border-radius: 10px;
+    resize: vertical;
+    margin-bottom: 20px;
+}
+
+.OrderInfoForm__totalRow {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 28px;
+    padding-top: 18px;
+    border-top: 1px solid #eaeaea;
+}
+
+.OrderInfoForm__totalPrice {
+    color: #e53935;
+}
+
+.OrderInfoForm__submitBtn {
+    width: 100%;
+    padding: 16px;
+    background-color: #e53935;
+    color: white;
+    font-size: 18px;
+    font-weight: bold;
+    border: none;
+    border-radius: 12px;
+    margin-top: 24px;
+    cursor: pointer;
+    transition: background-color 0.3s ease;
+}
+
+.OrderInfoForm__submitBtn:hover {
+    background-color: #d32f2f;
+}
