@@ -8,6 +8,8 @@ package vn.edu.iuh.fit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
@@ -26,10 +28,12 @@ import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.*;
 import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.exception.EmailAlreadyExistsException;
+import vn.edu.iuh.fit.exception.MissingTokenException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.security.CustomUserDetails;
 import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
 import vn.edu.iuh.fit.services.UserService;
+import vn.edu.iuh.fit.utils.FormatPhoneNumber;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -264,7 +268,63 @@ public class UserRestController {
                 .build());
     }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<BaseResponse<?>> resetPassword(@RequestBody Map<String, String> request) throws MissingTokenException {
+        String idToken = request.get("idToken");
+        String newPassword = request.get("newPassword");
+
+        if (idToken == null || idToken.isEmpty()) {
+            throw new MissingTokenException("Thiếu ID Token trong request!");
+        }
+
+        if (newPassword == null || newPassword.length() < 8) {
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("ERROR")
+                    .message("Mật khẩu mới phải có ít nhất 8 ký tự!")
+                    .build());
+        }
+
+        try {
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
+            System.out.println("Decoded Token: " + decodedToken.getClaims());
+            String phoneNumber = decodedToken.getClaims().get("phone_number").toString();
+            phoneNumber= FormatPhoneNumber.formatPhoneNumberTo0(phoneNumber);
 
 
+            // Kiểm tra xem số điện thoại đã tồn tại chưa
+            if (!userService.existsPhone(phoneNumber)) {
+                return ResponseEntity.badRequest().body(BaseResponse.builder()
+                        .status("ERROR")
+                        .message("Số điện thoại không tồn tại!")
+                        .build());
+            }
 
+            // Cập nhật mật khẩu
+            userService.updatePassword(phoneNumber, newPassword);
+
+            return ResponseEntity.ok(BaseResponse.builder()
+                    .status("SUCCESS")
+                    .message("Đặt lại mật khẩu thành công cho số điện thoại: " + phoneNumber)
+                    .build());
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("ERROR")
+                    .message("Đặt lại mật khẩu thất bại: " + e.getMessage())
+                    .build());
+        }
+    }
+
+    @PostMapping("/check-phone")
+    public ResponseEntity<Map<String, Boolean>> checkPhone(@RequestBody Map<String, String> request) {
+        String phone = request.get("phone");
+        if (phone == null || phone.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        boolean exists = userService.existsPhone(phone);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+        return ResponseEntity.ok(response);
+    }
 }

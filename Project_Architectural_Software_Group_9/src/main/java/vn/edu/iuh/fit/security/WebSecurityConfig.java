@@ -57,7 +57,7 @@ public class WebSecurityConfig {
     CorsConfig corsConfig;
 
     private final String[] PUBLIC_ENDPOINTS = {"/register", "/user/home", "/forgot-password", "/api/v1/auth/verify",
-            "/login","/user/assets/**", "/user/customize/**", "/admin/assets/**"
+            "/login","/user/assets/**", "/user/customize/**", "/admin/assets/**", "/user/reset-password", "/user/check-phone",
     };
 
     @Bean
@@ -91,7 +91,7 @@ public class WebSecurityConfig {
                         configure -> configure
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/login/google").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/register","/api/v1/user/check-phone", "api/v1/user/reset-password").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/auth/verify", "/api/v1/auth/verify/**").permitAll()
 
