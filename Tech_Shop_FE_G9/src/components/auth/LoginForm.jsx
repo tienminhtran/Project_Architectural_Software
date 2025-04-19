@@ -1,12 +1,15 @@
 import React, { useState } from "react";
 import { Col, Form, Button, Alert } from "react-bootstrap";
 import { Link, useNavigate } from "react-router-dom";
-import { login, saveAccessToken, getAccessToken } from "../../services/authService";
+import {
+  login,
+  saveAccessToken,
+  getAccessToken,
+} from "../../services/authService";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess, handleFailure } from "../../store/slices/AuthSlice.js";
 import { toast } from "react-toastify";
 import SignInwithGoogle from "./LoginWithGoogle.jsx";
-
 
 const LoginForm = () => {
   const [username, setUsername] = useState("");
@@ -28,26 +31,28 @@ const LoginForm = () => {
 
       console.log(getAccessToken());
       console.log(response.token);
-      
+
       dispatch(loginSuccess(response.token)); // login success, save infomation to redux
       console.log(response.token.roles);
 
-      if(response.token.roles[0] === 'ROLE_USER'){
-        navigate('/');
+      if (response.token.roles[0] === "ROLE_USER") {
+        navigate("/");
       }
-      
-      navigate(`/${response.token.roles[0].toLowerCase().replace('role_', '')}/dashboard`);  // navigate to
-      
+
+      navigate(
+        `/${response.token.roles[0]
+          .toLowerCase()
+          .replace("role_", "")}/dashboard`
+      ); // navigate to
     } catch (error) {
       console.error("Login error:", error.response.data.message);
-      dispatch(handleFailure(error.response.data)); 
+      dispatch(handleFailure(error.response.data));
       toast.error(error.response.data.message, {
-        position: 'top-center',
+        position: "top-center",
         autoClose: 3000,
-      }); 
-
+      });
     }
-  }
+  };
 
   return (
     <div>
@@ -80,7 +85,7 @@ const LoginForm = () => {
 
         <div className="d-flex align-items-center justify-content-between gap-5">
           <Button variant="primary" type="submit" size="lg" disabled={loading}>
-            {loading ? 'Signing In...' : 'Sign In'}
+            {loading ? "Signing In..." : "Sign In"}
           </Button>
           <Link
             to="/forgot-password"
@@ -91,7 +96,6 @@ const LoginForm = () => {
         </div>
 
         <SignInwithGoogle />
-        
       </Form>
     </div>
   );

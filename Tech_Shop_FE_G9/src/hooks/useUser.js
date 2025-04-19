@@ -4,13 +4,14 @@ import {
   updateProfile,
   getAllUsersPaging,
   createUserRoleManager,
+  checkPhoneExistsService,
   // getAllUsersNoPage,
 } from "../services/userService";
 import { useSelector } from "react-redux";
 import usePaginationQuery from "./usePaginationQuery";
+import { resetPasswordService } from "../services/userService";
 
 const useUser = (pageNo, pageSize) => {
-  
   const { user } = useSelector((state) => state.auth);
   console.log("user name ", user);
   const queryClient = useQueryClient();
@@ -64,6 +65,32 @@ const useUser = (pageNo, pageSize) => {
       alert("Update fail successfully. Please try again!");
     },
   });
+  const resetPassword = useMutation({
+    mutationFn: ({ idToken, newPassword }) => {
+      return resetPasswordService({ idToken, newPassword });
+    },
+    onSuccess: () => {
+      alert("Reset password successfully!");
+    },
+    onError: (error) => {
+      console.error("Reset password failed:", error);
+      alert("Reset password failed. Please try again!");
+    },
+  });
+
+  // Mutation để kiểm tra số điện thoại đã tồn tại hay chưa
+  const {
+    mutate: checkPhoneExists,
+    mutateAsync: checkPhoneExistsAsync,
+    isLoading: isCheckingPhone,
+    isError: isCheckPhoneError,
+    error: checkPhoneError,
+  } = useMutation({
+    mutationFn: checkPhoneExistsService,
+    onError: (error) => {
+      console.log(error.message || "Lỗi khi kiểm tra số điện thoại");
+    },
+  });
 
   return {
     user_paging: userPaging,
@@ -71,6 +98,12 @@ const useUser = (pageNo, pageSize) => {
     createManager: createRoleManager,
     userInfor: getUser.data?.response || {},
     updateUser: updateProfileUser.mutate,
+    resetPassword: resetPassword.mutate,
+    checkPhoneExists,
+    checkPhoneExistsAsync,
+    isCheckingPhone,
+    isCheckPhoneError,
+    checkPhoneError,
   };
 };
 export default useUser;

@@ -3,12 +3,17 @@ import { motion } from 'framer-motion';
 import CheckoutStepper from './CheckoutStepper';
 import '../../assets/css/OrderPayment.css';
 import { useNavigate } from "react-router-dom";
+import { toast, ToastContainer } from 'react-toastify';
+
 
 const OrderPayment = () => {
     const navigate = useNavigate();
     const handlePayment = () => {
-        alert('Thanh toán thành công!');
-        navigate('/order-complete'); // Chuyển hướng đến trang hoàn tất đơn hàng
+        toast.success('Thanh toán thành công!', {
+            position: 'top-center',
+            autoClose: 1500,
+            onClose: () => navigate('/order-complete'),
+        });
     };
 
     return (

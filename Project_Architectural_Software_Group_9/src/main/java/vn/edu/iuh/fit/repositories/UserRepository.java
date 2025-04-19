@@ -31,4 +31,6 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     @Query("SELECT COUNT(u) FROM User u JOIN Role r on u.role.id = r.id WHERE r.code = ?1")
     int countByRoleUser(String code);
+
+    Optional<User> findByPhoneNumber(String phoneNumber);
 }

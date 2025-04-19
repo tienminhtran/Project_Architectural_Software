@@ -94,6 +94,7 @@ const Menu_Header = () => {
                     <li className="menu-item logout">
                         <Link to="/login" role="button" onClick={handleLogout}>
                             <FaSignOutAlt /> Logout
+                            {/* hiển thị thông báo logout thành công */}
                         </Link>
                     </li>
 

@@ -419,4 +419,12 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new ItemNotFoundException("Can not find User with email: " + email));
         return this.convertToDto(user, UserResponse.class);
     }
+
+    @Override
+    public void updatePassword(String phoneNumber, String password) {
+        User user = userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new ItemNotFoundException("Can not find User with phone: " + phoneNumber));
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
+    }
 }
