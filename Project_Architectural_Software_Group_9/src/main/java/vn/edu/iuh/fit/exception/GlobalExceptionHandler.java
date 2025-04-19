@@ -90,5 +90,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                 .build()
                 );
     }
-
+    @ExceptionHandler(MissingTokenException.class)
+    public ResponseEntity<BaseResponse<?>> missingTokenExceptionHandler(MissingTokenException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        BaseResponse.builder()
+                                .status("FAILED")
+                                .message(ex.getMessage())
+                                .build()
+                );
+    }
 }

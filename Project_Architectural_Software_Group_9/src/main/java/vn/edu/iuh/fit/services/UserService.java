@@ -69,4 +69,6 @@ public interface UserService {
     User createGoogleUser(String email, String name, String imageUrl);
 
     UserResponse getUserByEmail(String email);
+
+    void updatePassword(String phoneNumber, String password);
 }
