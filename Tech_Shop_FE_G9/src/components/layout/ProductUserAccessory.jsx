@@ -7,8 +7,10 @@ import {
   FaAngleDoubleRight,
 } from "react-icons/fa";
 import "../../../src/assets/css/ProductUser.css";
+import { useNavigate } from 'react-router-dom';
 
 const ProductUser = () => {
+  const navigate = useNavigate();
   const productData = [
     // Chuột máy tính
     {
@@ -107,7 +109,7 @@ const ProductUser = () => {
                 {brand}
               </h2>
             ))}
-            <a href="/all" className="see-all"> <h2>Xem tất cả</h2> </a>
+            <a href="/categories-all-accessory" className="see-all"> <h2>Xem tất cả</h2> </a>
         </div>
       </div>
 
@@ -116,36 +118,68 @@ const ProductUser = () => {
       </button>
 
       <div className="product-user__product-scroll" ref={scrollRef}>
-        {productData.map((product, index) => (
-          <div className="product-user__product-card" key={index}>
-            <div className="product-user__product-img-wrapper">
-              <img src={product.image} alt={product.name} className="product-user__product-img" />
-              <span className="product-user__product-discount">{product.discount} OFF</span>
-              <div className="product-user__product-actions">
-                <button className="product-user__icon-btn-love"><FaHeart /></button>
-                <button className="product-user__icon-btn-eye"><FaEye /></button>
-              </div>
-            </div>
+  {productData.map((product, index) => (
+    <div
+      className="product-user__product-card"
+      key={index}
+      onClick={() => navigate('/1')}
+      >
+      <div className="product-user__product-img-wrapper">
+        <img
+          src={product.image}
+          alt={product.name}
+          className="product-user__product-img"
+        />
+        <span className="product-user__product-discount">
+          {product.discount} OFF
+        </span>
 
-            <div className="product-user__product-info">
-              <h5>{product.name}</h5>
-              <p>
-                <span className="product-user__price-new">{product.newPrice} ₫</span>{" "}
-                <del className="product-user__price-old">{product.oldPrice} ₫</del>
-              </p>
-              {/* <ul className="product-user__product-specs">
-                <li>RAM: {product.ram}</li>
-                <li>Màn hình: {product.monitor}</li>
-                <li>Pin: {product.battery}</li>
-                <li>Hệ điều hành: {product.os}</li>
-              </ul> */}
-              <button className="product-user__add-to-cart">
-                <FaShoppingCart /> Thêm giỏ hàng
-              </button>
-            </div>
-          </div>
-        ))}
+        <div className="product-user__product-actions">
+          <button
+            className="product-user__icon-btn-love"
+            onClick={(e) => {
+              e.stopPropagation(); // Ngừng sự kiện lan ra ngoài
+              console.log("Đã thêm yêu thích:", product.name);
+              // TODO: Xử lý thêm yêu thích sản phẩm
+            }}
+          >
+            <FaHeart />
+          </button>
+
+          <button
+            className="product-user__icon-btn-eye"
+            onClick={(e) => {
+              e.stopPropagation(); // Ngừng sự kiện lan ra ngoài
+              console.log("Xem nhanh sản phẩm:", product.name);
+              // TODO: Mở modal xem nhanh sản phẩm
+            }}
+          >
+            <FaEye />
+          </button>
+        </div>
       </div>
+
+      <div className="product-user__product-info">
+        <h5>{product.name}</h5>
+        <p>
+          <span className="product-user__price-new">{product.newPrice} ₫</span>{" "}
+          <del className="product-user__price-old">{product.oldPrice} ₫</del>
+        </p>
+        <button
+          className="product-user__add-to-cart"
+          onClick={(e) => {
+            e.stopPropagation(); // Ngừng sự kiện lan ra ngoài
+            console.log("Đã thêm vào giỏ hàng:", product.name);
+            // TODO: Xử lý thêm giỏ hàng
+          }}
+        >
+          <FaShoppingCart /> Thêm giỏ hàng
+        </button>
+      </div>
+    </div>
+  ))}
+</div>
+
 
       <button className="product-user__scroll-btn product-user__scroll-right" onClick={() => handleScroll("right")}>
         <FaAngleDoubleRight size={24} />
