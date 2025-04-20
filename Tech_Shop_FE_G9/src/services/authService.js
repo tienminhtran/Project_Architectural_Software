@@ -2,6 +2,7 @@ import React from "react";
 
 import axiosInstance from "../api/axios";
 
+
 export const saveAccessToken = (token) => {
   localStorage.setItem("accessToken", token); // Lưu token vào localStorage
 };
@@ -9,9 +10,18 @@ export const saveAccessToken = (token) => {
 export const getAccessToken = () => {
   return localStorage.getItem("accessToken"); // Lấy token từ localStorage
 };
+export const saveRefreshToken = (token) => {
+  localStorage.setItem("refreshToken", token); // Lưu refresh token vào localStorage
+};
+
+export const getRefreshToken = () => {
+  return localStorage.getItem("refreshToken"); // Lấy refresh token từ localStorage
+};
 
 export const removeAccessToken = () => {
   localStorage.removeItem("accessToken"); // Xóa token khỏi localStorage
+  localStorage.removeItem("refreshToken");
+  
 };
 
 export const login = async (credential) => {

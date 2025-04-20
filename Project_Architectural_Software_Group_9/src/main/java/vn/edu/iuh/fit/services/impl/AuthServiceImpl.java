@@ -28,6 +28,7 @@ import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
 import vn.edu.iuh.fit.dtos.request.AuthRequest;
 import vn.edu.iuh.fit.dtos.response.AuthResponse;
 import vn.edu.iuh.fit.services.AuthService;
+import vn.edu.iuh.fit.services.CartService;
 import vn.edu.iuh.fit.services.RefreshService;
 import vn.edu.iuh.fit.services.UserService;
 
@@ -59,6 +60,11 @@ public class AuthServiceImpl implements AuthService {
     private UserService userService;
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private CartService cartService;
+
+
 
     // entity to dto
     private UserResponse convertToDto(User user) {
@@ -125,6 +131,9 @@ public class AuthServiceImpl implements AuthService {
 
             // Kiểm tra xem người dùng đã tồn tại trong hệ thống chưa. Neu chưa thì tạo mới
             User user= userRepository.findByEmail(email).orElseGet(() -> userService.createGoogleUser(email, name, imageUrl));
+
+            // Create a cart for the user
+            cartService.createCart(user.getId());
 
             System.out.println("user " + this.convertToDto(user));
             // tao accessToken

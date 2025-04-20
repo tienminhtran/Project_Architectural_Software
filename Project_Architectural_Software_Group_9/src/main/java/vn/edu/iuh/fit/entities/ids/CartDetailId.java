@@ -15,13 +15,14 @@ import java.util.Objects;
 @Embeddable
 public class CartDetailId implements Serializable {
     private static final long serialVersionUID = 4979460586920811238L;
-    @NotNull
-    @Column(name = "cart_id", nullable = false)
+    @Column(name = "cart_id")
     private Long cartId;
 
-    @NotNull
-    @Column(name = "product_id", nullable = false)
+    @Column(name = "product_id")
     private Long productId;
+
+    public CartDetailId() {
+    }
 
     @Override
     public boolean equals(Object o) {

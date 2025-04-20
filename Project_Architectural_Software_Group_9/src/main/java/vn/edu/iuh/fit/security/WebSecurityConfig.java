@@ -95,7 +95,9 @@ public class WebSecurityConfig {
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/auth/verify", "/api/v1/auth/verify/**").permitAll()
 
-                                .requestMatchers(HttpMethod.GET, "/api/v1/user","/api/v1/user/**", "/api/v1/cart/**").hasAnyRole("ADMIN", "USER", "MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/user","/api/v1/user/**").hasAnyRole("ADMIN", "USER", "MANAGER")
+                                .requestMatchers("/api/v1/cart/**", "/api/v1/cart/me/**").hasAnyRole("ADMIN", "USER", "MANAGER")
+
                                 .requestMatchers(HttpMethod.GET, "/api/v1/voucher","/api/v1/voucher/**").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.POST, "/api/v1/voucher").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/v1/voucher/**").hasAnyRole("ADMIN", "MANAGER")

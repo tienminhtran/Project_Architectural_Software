@@ -32,6 +32,7 @@ import vn.edu.iuh.fit.exception.MissingTokenException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.security.CustomUserDetails;
 import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
+import vn.edu.iuh.fit.services.CartService;
 import vn.edu.iuh.fit.services.UserService;
 import vn.edu.iuh.fit.utils.FormatPhoneNumber;
 
@@ -60,6 +61,9 @@ public class UserRestController {
     @Autowired
     private Validator validator;
 
+    @Autowired
+    private CartService cartService;
+
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<UserResponse>> getUserById(@PathVariable Long id) {
         UserResponse userResponse = userService.findById(id);
@@ -78,10 +82,10 @@ public class UserRestController {
         return ResponseEntity.ok(BaseResponse.<UserResponse>builder().status("success").message("Get user by username success").response(userResponse).build());
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String token) {
+    @GetMapping("/roles-user")
+    public ResponseEntity<?> getRolesUserByToken(@RequestHeader("Authorization") String token) {
         try {
-            Map<String, Object> response = userService.getCurrentUser(token);
+            Map<String, Object> response = userService.getRolesUserByToken(token);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
@@ -125,6 +129,10 @@ public class UserRestController {
 
         // Gọi service để tạo user
         UserResponse userResponse = userService.createUserRoleManager(userRequest, bindingResult);
+
+        // Create a cart for the user
+        cartService.createCart(userResponse.getId());
+
         if (userResponse == null) {
             return ResponseEntity.badRequest().body(BaseResponse.builder()
                     .status("ERROR")
