@@ -87,7 +87,7 @@ const HeaderUserBasic = () => {
         </div>
 
         {/* Navigation Menu */}
-        <div className="row align-items-center mt-3">
+        <div className="row align-items-center mt-3 bg-light">
           {/* Categories */}
           <div className="col-3 text-center text-md-start" ref={categoryMenuRef}>
             <div
@@ -131,12 +131,11 @@ const HeaderUserBasic = () => {
                   Home
                 </a>
               </li>
-              <li>
-                <a onClick={() => navigate("/user")}>Shop</a>
-              </li>
-              <li>
-                <a href="#">About</a>
-              </li>
+              <li><a  onClick={() => navigate('/user')}>Shop</a></li>
+              <li><a href="#">Pages</a></li>
+              <li><a href="#">About</a></li>
+              <li><a href="#">Blog</a></li>
+              <li><a href="#">Contact</a></li>
             </ul>
           </div>
 
@@ -144,11 +143,11 @@ const HeaderUserBasic = () => {
           <div className="col-2 text-end">
             <div className="header-user-basic__menu-icons">
               <div className="header-user-basic__icon-item">
-                <FaShoppingCart style={{ color: "#838383" }} />
+                <FaShoppingCart style={{ color: "#838383" }} onClick={()=>navigate('/cart')}/>
                 <span className="header-user-basic__icon-badge-cart">2</span>
               </div>
               <div className="header-user-basic__icon-item">
-                <FaHeart style={{ color: "#838383" }} />
+                <FaHeart style={{ color: "#838383" }} onClick={()=>navigate('/favorite-products')}/>
                 <span className="header-user-basic__icon-badge-heart">12</span>
               </div>
               <div

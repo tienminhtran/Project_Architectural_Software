@@ -1,0 +1,118 @@
+.favorite-products {
+    padding: 20px;
+    max-width: 1000px;
+    margin: auto;
+    font-family: Arial, sans-serif;
+  }
+  
+  .favorite-product__title {
+    margin-bottom: 16px;
+    text-align: center;
+  }
+  
+  .favorite-product__table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-bottom: 16px;
+  }
+  
+  .favorite-product__table th,
+  .favorite-product__table td {
+    /* padding: 10px; */
+    text-align: center;
+    border: 1px solid #ddd;
+  }
+
+  .favorite-product__table td input[type="checkbox"] {
+    accent-color: white;    
+  }
+  
+  .favorite-product__image {
+    width: 60px;
+    height: 60px;
+    object-fit: cover;
+    border-radius: 8px;
+  }
+  
+  .favorite-product__price {
+    color: #d30000;
+    font-weight: bold;
+  }
+  
+  .favorite-product__original-price {
+    text-decoration: line-through;
+    color: #888;
+  }
+  
+  .favorite-product__btn {
+    padding: 6px 12px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    margin-right: 8px;
+    font-size: 14px;
+  }
+  
+  .favorite-product__btn--add {
+    background-color: #ffffff;
+    color: #0d8b2dae;
+  }
+  
+  .favorite-product__btn--add:hover {
+    text-decoration: underline;
+  }
+  
+  .favorite-product__btn--remove {
+    /* background-color: #dc3545; */
+    background-color: #ffffff;
+
+    color: rgb(207, 6, 6);
+  }
+  
+  .favorite-product__btn--remove:hover {
+    text-decoration: underline;
+  }
+  
+  .favorite-product__top-actions {
+    margin: 16px 0;
+    text-align: right;
+  }
+  
+  .favorite-product__mini-cart {
+    border-top: 2px solid #ccc;
+    padding-top: 12px;
+    margin-top: 20px;
+  }
+  
+  .favorite-product__mini-cart h3 {
+    margin-bottom: 8px;
+  }
+  
+  .favorite-product__mini-cart ul {
+    list-style: none;
+    padding: 0;
+  }
+  
+  .favorite-product__mini-cart li {
+    margin-bottom: 4px;
+  }
+  
+  .favorite-product__see-more {
+    text-align: center;
+    margin-top: 12px;
+  }
+  
+  .favorite-product__see-more button {
+    padding: 8px 16px;
+    background-color: #ffffff;
+    color: #0a0efdae;
+    /* border: 1px solid #ccc; */
+    border-radius: 6px;
+    cursor: pointer;
+  }
+  
+  .favorite-product__see-more button:hover {
+    /* background-color: #ddd; */
+    text-decoration: underline;
+  }
+  
