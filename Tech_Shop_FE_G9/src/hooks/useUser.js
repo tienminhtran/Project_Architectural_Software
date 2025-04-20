@@ -20,6 +20,7 @@ const useUser = (pageNo, pageSize) => {
     queryKey: ["getUser", user], // Dùng user là username làm key của query
     queryFn: () => getUserInfo(user),
     enabled: !!user, // Chỉ gọi API nếu user có giá trị
+    refetchOnWindowFocus: false,
   });
 
   const userPaging = usePaginationQuery(
@@ -40,10 +41,7 @@ const useUser = (pageNo, pageSize) => {
     },
   });
 
-  // const userNoPaging = useQuery({
-  //   queryKey: ["getAllUsersNoPage"],
-  //   queryFn: getAllUsersNoPage,
-  // });
+
   //sử dụng useMuntation để update thông tin user
   const updateProfileUser = useMutation({
     mutationFn: ({ userid, formData }) => {
@@ -57,12 +55,12 @@ const useUser = (pageNo, pageSize) => {
       }));
       queryClient.invalidateQueries(["getUser", user]); // Invalidate the query to refetch the user data
       queryClient.invalidateQueries(["getAllUsersPaging"]); // Invalidate the query to refetch the user data
-
+      
       alert("Update user successfully!!");
     },
     onError: (error) => {
       console.error("Update user failed:", error);
-      alert("Update fail successfully. Please try again!");
+      alert("Update failed. Please try again!");
     },
   });
   const resetPassword = useMutation({
