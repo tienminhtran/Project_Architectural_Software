@@ -109,7 +109,7 @@ const HeaderUser = () => {
         </div>
 
         {/* Menu điều hướng & danh mục */}
-        <div className="row align-items-center mt-3">
+        <div className="row align-items-center mt-3 bg-light">
           <div className="col-3 text-center text-md-start">
             <div className="header-user__category-header">
               <FaBars className="header-user__menu-icon" />
@@ -131,11 +131,11 @@ const HeaderUser = () => {
           <div className="col-2 text-end">
             <div className="header-user__menu-icons">
               <div className="header-user__icon-item">
-                <FaShoppingCart style={{color:'#838383' }}/>
+                <FaShoppingCart style={{color:'#838383' }} onClick={()=>navigate('/cart')}/>
                 <span className="header-user__icon-badge-cart">2</span>
               </div>
               <div className="header-user__icon-item">
-                <FaHeart style={{color:'#838383' }} />
+                <FaHeart style={{color:'#838383' }}onClick={()=>navigate('/favorite-products')} />
                 <span className="header-user__icon-badge-heart">12</span>
               </div>
               <div className="header-user__icon-item" onClick={toggleMenu} ref={userMenuRef}>

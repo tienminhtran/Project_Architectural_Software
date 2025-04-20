@@ -1,6 +1,6 @@
 import React, { useState } from "react";
 import CheckoutStepper from "./CheckoutStepper";
-import { FaTrash } from 'react-icons/fa';
+import { FaTrash, FaAngleDown , FaAngleUp } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
 import { confirmAlert } from 'react-confirm-alert';
@@ -111,7 +111,13 @@ const CartBuyOrderBox = () => {
     };
 
     return (
-        <div className="CartBuy-OrderBox__container">
+        <div style={{display: "flex"}} >
+            <div>
+                <img src="../../../public/images/bg/thu-cu-doi-moi.png" alt="Logo" className="CartBuy-OrderBox__logo"
+                style={{ width: "160px"}} />
+            </div>
+
+            <div className="CartBuy-OrderBox__container">
             <div className="CartBuy-OrderBox__nav">
                 <a href="#" className="CartBuy-OrderBox__navLink">&lt; Mua thêm sản phẩm khác</a>
             </div>
@@ -128,9 +134,9 @@ const CartBuyOrderBox = () => {
                             <span className="CartBuy-OrderBox__original">{formatPrice(item.originalPrice)}</span>
                         </div>
                         <div className="CartBuy-OrderBox__actions">
-                            <button onClick={() => handleQuantityChange(index, item.quantity - 1)} disabled={item.quantity <= 1}>−</button>
+                            <button className="CartBuy-OrderBox__sl" onClick={() => handleQuantityChange(index, item.quantity - 1)} disabled={item.quantity <= 1}>−</button>
                             <span>{item.quantity}</span>
-                            <button onClick={() => handleQuantityChange(index, item.quantity + 1)}>+</button>
+                            <button className="CartBuy-OrderBox__sl" onClick={() => handleQuantityChange(index, item.quantity + 1)}>+</button>
                             <button onClick={() => handleRemove(index)} className="CartBuy-OrderBox__deleteBtn">
                                 <FaTrash /> <span style={{ marginLeft: 4 }}>Xoá</span>
                             </button>
@@ -138,11 +144,18 @@ const CartBuyOrderBox = () => {
                     </div>
                 </div>
             ))}
-
             {cartItems.length > 2 && (
                 <div className="CartBuy-OrderBox__toggleList">
                     <button onClick={() => setShowAllItems(!showAllItems)}>
-                        {showAllItems ? "Thu gọn sản phẩm ▲" : "Mở tất cả sản phẩm ▼"}
+                        {showAllItems ? (
+                            <>
+                                Thu gọn sản phẩm <FaAngleUp />
+                            </>
+                        ) : (
+                            <>
+                                Mở tất cả sản phẩm <FaAngleDown />
+                            </>
+                        )}
                     </button>
                 </div>
             )}
@@ -150,7 +163,7 @@ const CartBuyOrderBox = () => {
             <div className="CartBuy-OrderBox__discount">
                 <div onClick={() => setShowDiscountInput(!showDiscountInput)}>
                     <span>Sử dụng mã giảm giá</span>
-                    <span>{showDiscountInput ? "▲" : "▼"}</span>
+                    <span>{showDiscountInput ? <FaAngleUp /> : <FaAngleDown />}</span>
                 </div>
 
                 {showDiscountInput && (
@@ -179,7 +192,14 @@ const CartBuyOrderBox = () => {
             </button>
 
             <ToastContainer position="top-center" />
+            </div>
+            
+            <div>
+                <img src="../../../public/images/bg/mua-he-ruc-ro.png" alt="Logo" className="CartBuy-OrderBox__logo"
+                style={{ width: "160px"}} />
+            </div>
         </div>
+
     );
 };
 
