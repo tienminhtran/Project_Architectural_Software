@@ -16,6 +16,7 @@ import vn.edu.iuh.fit.entities.Cart;
 import vn.edu.iuh.fit.entities.CartDetail;
 import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.repositories.CartRepository;
+import vn.edu.iuh.fit.repositories.UserRepository;
 import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
 import vn.edu.iuh.fit.services.CartService;
 import vn.edu.iuh.fit.services.UserService;
@@ -36,6 +37,8 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private CartRepository cartRepository;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private JwtTokenProvider jwtUtils;
@@ -73,7 +76,6 @@ public class CartServiceImpl implements CartService {
     }
 
 
-
     @Override
     public CartResponse getCartByUserId(String token) {
         if(token == null || token.isEmpty()) {
@@ -100,22 +102,19 @@ public class CartServiceImpl implements CartService {
                 .build();
     }
 
-    @Override
-    public List<CartItemResponse> getCartItemsByCartId(String token) {
-        if(token == null || token.isEmpty()) {
-            return null;
-        }
-
-        UserResponse userResponse = userService.getCurrentUser(token);
-        Cart cart = cartRepository.findByUserId(userResponse.getId());
-        List<CartDetail> cartDetails = cart.getCartDetails();
-        return cartDetails.stream().map(this::convertToDto).collect(Collectors.toList());
-    }
 
     @Override
     public CartResponse createCart(Long idUser) {
-        return null;
-    }
+        User user = userRepository.findById(idUser).orElse(null);
 
+        Cart cart = cartRepository.findByUserId(user.getId());
+        if (cart != null) {
+            return this.convertToDto(cart);
+        }
+        cart = new Cart();
+        cart.setUserId(user);
+        cart = cartRepository.save(cart);
+        return this.convertToDto(cart);
+    }
 
 }

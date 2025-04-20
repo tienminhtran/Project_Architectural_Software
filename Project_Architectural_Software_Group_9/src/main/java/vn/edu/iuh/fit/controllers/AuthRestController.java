@@ -22,6 +22,7 @@ import vn.edu.iuh.fit.exception.CustomJwtException;
 import vn.edu.iuh.fit.exception.EmailAlreadyExistsException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.services.AuthService;
+import vn.edu.iuh.fit.services.CartService;
 import vn.edu.iuh.fit.services.UserService;
 
 import javax.naming.Binding;
@@ -44,6 +45,8 @@ public class AuthRestController {
 
     @Autowired
     private UserService userService;
+    @Autowired
+    private CartService cartService;
 
     @PostMapping("/login")
     public ResponseEntity<Map<String, Object>> login(@Valid @RequestBody AuthRequest authRequest,
@@ -146,6 +149,8 @@ public class AuthRestController {
         } else {
 
             UserResponse userResponse = userService.createUser(authRequest, bindingResult);
+            // Create a cart for the user
+            cartService.createCart(userResponse.getId());
 
             // Return the token in the response
             response.put("status", HttpStatus.OK.value());

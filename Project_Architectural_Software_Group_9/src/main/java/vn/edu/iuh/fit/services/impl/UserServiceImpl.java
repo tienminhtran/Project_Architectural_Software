@@ -317,6 +317,7 @@ public class UserServiceImpl implements UserService {
             // Lưu user vào database
             user = userRepository.save(user);
 
+
             return this.convertToDto(user, UserResponse.class);
         } catch (Exception e) {
             log.error("Error creating user: {}", e.getMessage());

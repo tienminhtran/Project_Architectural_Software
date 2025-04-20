@@ -6,6 +6,7 @@
 
 package vn.edu.iuh.fit.repositories;
 
+import org.springframework.data.jpa.repository.JpaRepository;
 import vn.edu.iuh.fit.entities.CartDetail;
 
 /*
@@ -13,6 +14,8 @@ import vn.edu.iuh.fit.entities.CartDetail;
  * @author: Sinh Phan Tien
  * @date: 4/21/2025
  */
-public interface CartDetailRepository {
-    CartDetail findByIdProductAndIdCart(Long idProduct);
+public interface CartDetailRepository extends JpaRepository<CartDetail, Long> {
+    CartDetail findByCartIdAndProductId(Long cartId, Long productId);
+
+    void deleteByCartIdAndProductId(Long cartId, Long productId);
 }
