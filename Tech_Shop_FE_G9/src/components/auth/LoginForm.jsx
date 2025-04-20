@@ -5,6 +5,7 @@ import {
   login,
   saveAccessToken,
   getAccessToken,
+  saveRefreshToken,
 } from "../../services/authService";
 import { useDispatch, useSelector } from "react-redux";
 import { loginSuccess, handleFailure } from "../../store/slices/AuthSlice.js";
@@ -28,6 +29,7 @@ const LoginForm = () => {
 
       console.log(response.token.accessToken);
       saveAccessToken(response.token.accessToken); // save access token
+      saveRefreshToken(response.token.refreshToken); // save refresh token
 
       console.log(getAccessToken());
       console.log(response.token);
