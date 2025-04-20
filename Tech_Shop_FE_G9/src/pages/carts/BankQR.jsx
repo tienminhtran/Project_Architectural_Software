@@ -2,7 +2,7 @@ import React from 'react';
 
 const BankQR = ({ amount, orderCode }) => {
     const bankId = 'TCB'; // Techcombank
-    const accountNumber = '19038207576016'; // thay bằng STK thật của shop mình
+    const accountNumber = '19038207576016'; 
     const qrURL = `https://img.vietqr.io/image/${bankId}-${accountNumber}-compact2.jpg?amount=${amount}&addInfo=${orderCode}`;
 
     return (
