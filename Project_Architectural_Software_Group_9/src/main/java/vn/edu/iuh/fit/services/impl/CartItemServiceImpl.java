@@ -76,5 +76,48 @@ public class CartItemServiceImpl implements CartItemService {
         return cartDetails.stream().map(this::convertToDto).collect(Collectors.toList());
     }
 
+    @Transactional
+    @Override
+    public CartItemResponse addProductToCart(String token, CartItemRequest request) throws CustomJwtException {
+        if(token == null || token.isEmpty()) {
+            throw new CustomJwtException("Token is null or empty");
+        }
 
+        UserResponse userResponse = userService.getCurrentUser(token);
+        Cart cart = cartRepository.findByUserId(userResponse.getId());
+        // Kiem tra xem cart da ton tai hay chua. Neu chua ton tai thi tao moi
+        if(cart == null) {
+            cart = new Cart();
+            User user = userRepository.findById(userResponse.getId()).orElseThrow(() -> new ItemNotFoundException("User not found"));
+            cart.setUserId(user);
+            cart = cartRepository.save(cart);
+        }
+
+        Product product = productRepository.findById(request.getIdProduct()).orElseThrow(() -> new ItemNotFoundException("Product not found"));
+
+        CartDetail cartDetail = cartDetailRepository.findByCartIdAndProductId(cart.getId(), product.getId());
+        if(cartDetail != null) {
+            // Update quantity
+            int quantity = request.getQuantity();
+            if(quantity > product.getStockQuantity()) {
+                throw new ItemNotFoundException("Not enough stock quantity");
+            }
+            cartDetail.setQuantity(cartDetail.getQuantity() + quantity);
+            cartDetail =  cartDetailRepository.save(cartDetail);
+        } else {
+            // Create new cart detail
+            CartDetailId cartDetailId = new CartDetailId();
+            cartDetailId.setCartId(cart.getId());
+            cartDetailId.setProductId(product.getId());
+
+            CartDetail newCartDetail = CartDetail.builder()
+                    .id(cartDetailId)
+                    .quantity(request.getQuantity())
+                    .product(product)
+                    .cart(cart)
+                    .build();
+           cartDetail = cartDetailRepository.save(newCartDetail);
+        }
+        return this.convertToDto(cartDetail);
+    }
 }

@@ -21,4 +21,12 @@ public interface CartItemService {
 
     public List<CartItemResponse> getCartItemsByCartId(String token);
 
+    /**
+     * @description: Add product to cart
+     * @param token
+     * @param request
+     * @return CartItemResponse
+     */
+    CartItemResponse addProductToCart(String token, CartItemRequest request) throws CustomJwtException;
+
 }

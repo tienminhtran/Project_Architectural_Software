@@ -55,5 +55,13 @@ public class CartRestController {
 
     }
 
-
+    @PostMapping("/add")
+    public ResponseEntity<BaseResponse<?>> addProductToCart(@RequestHeader("Authorization") String token, @RequestBody CartItemRequest request)  {
+        try {
+            CartItemResponse cartItemResponse = cartItemService.addProductToCart(token, request);
+            return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Add product to cart success").response(cartItemResponse).build());
+        } catch (CustomJwtException e) {
+            return ResponseEntity.badRequest().body(BaseResponse.builder().status("FAIL").message(e.getMessage()).build());
+        }
+    }
 }
