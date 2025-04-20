@@ -16,10 +16,14 @@ import vn.edu.iuh.fit.entities.Cart;
 import vn.edu.iuh.fit.entities.CartDetail;
 import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.repositories.CartRepository;
+import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
 import vn.edu.iuh.fit.services.CartService;
+import vn.edu.iuh.fit.services.UserService;
 
 import java.math.BigDecimal;
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Objects;
 import java.util.stream.Collectors;
 
 /*
@@ -32,6 +36,12 @@ public class CartServiceImpl implements CartService {
 
     @Autowired
     private CartRepository cartRepository;
+
+    @Autowired
+    private JwtTokenProvider jwtUtils;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -65,12 +75,24 @@ public class CartServiceImpl implements CartService {
 
 
     @Override
-    public CartResponse getCartByUserId(Long userId) {
-        Cart cart = cartRepository.findByUserId(userId);
-        UserResponse userResponse = convertToDto(cart.getUserId());
+    public CartResponse getCartByUserId(String token) {
+        if(token == null || token.isEmpty()) {
+            return null;
+        }
+
+        UserResponse userResponse = userService.getCurrentUser(token);
+        Cart cart = cartRepository.findByUserId(userResponse.getId());
 
         List<CartDetail> cartDetails = cart.getCartDetails();
-        List<CartItemResponse> cartItemResponses = cartDetails.stream().map(this::convertToDto).collect(Collectors.toList());
+        List<CartItemResponse> cartItemResponses;
+        if(cartDetails == null || cartDetails.isEmpty() || cartDetails.size() == 0) {
+            cartItemResponses = new ArrayList<>();
+        } else {
+            cartItemResponses = cartDetails.stream()
+                    .map(this::convertToDto)
+                    .collect(Collectors.toList());
+        }
+
         return CartResponse.builder()
                 .id(cart.getId())
                 .user(userResponse)
@@ -79,9 +101,21 @@ public class CartServiceImpl implements CartService {
     }
 
     @Override
-    public List<CartItemResponse> getCartItemsByCartId(Long userId) {
-        Cart cart = cartRepository.findByUserId(userId);
+    public List<CartItemResponse> getCartItemsByCartId(String token) {
+        if(token == null || token.isEmpty()) {
+            return null;
+        }
+
+        UserResponse userResponse = userService.getCurrentUser(token);
+        Cart cart = cartRepository.findByUserId(userResponse.getId());
         List<CartDetail> cartDetails = cart.getCartDetails();
         return cartDetails.stream().map(this::convertToDto).collect(Collectors.toList());
     }
+
+    @Override
+    public CartResponse createCart(Long idUser) {
+        return null;
+    }
+
+
 }

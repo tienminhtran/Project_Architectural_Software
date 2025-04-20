@@ -147,7 +147,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> getCurrentUser(String token) {
+    public Map<String, Object> getRolesUserByToken(String token) {
         String jwt = token.replace("Bearer ", "");
         String username = jwtUtils.getUserNameFromJWT(jwt);
 
@@ -165,6 +165,16 @@ public class UserServiceImpl implements UserService {
                 "username", user.getUsername(),
                 "roles", roles
         );
+    }
+
+    @Override
+    public UserResponse getCurrentUser(String token) {
+        String jwt = token.replace("Bearer ", "");
+        String username = jwtUtils.getUserNameFromJWT(jwt);
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Can not find User with username: " + username));
+        return this.convertToDto(user, UserResponse.class);
     }
 
     @Override
