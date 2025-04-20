@@ -34,236 +34,209 @@ import UpdateUserPage from "./pages/common/user/UpdateUserPage";
 import AdminCodeControllerPage from "./pages/admin/AdminCodeControllerPage";
 import CheckCodeModal from "./components/layout/CheckCodeModal"; // đường dẫn đúng
 import ProductCategories from "./components/layout/Categories/ProductCategories"; // đường dẫn đúng
-
+import HomeProductDetail from "./components/layout/HomeProductDetail";  
+import Step1Cart from "./pages/carts/CartBuyOrderBox"; // đường dẫn đúng
+import Step2Cart from "./pages/carts/OrderInfoForm"; // đường dẫn đúng
+import Step3Cart from "./pages/carts/OrderPayment"; // đường dẫn đúng
+import Step4Cart from "./pages/carts/OrderComplete"; // đường dẫn đúng
+import HomeCart from "./pages/carts/HomeCart"; // đường dẫn đúng
+import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
-    <div className="axil-signin-area">
-        <div className="admin-dashboard">
-            <Menu />
-            <div className="admin-content">
-                <Menu_Header />
-                {children}
-            </div>
-        </div>
+  <div className="axil-signin-area">
+    <div className="admin-dashboard">
+      <Menu />
+      <div className="admin-content">
+        <Menu_Header />
+        {children}
+      </div>
     </div>
+  </div>
 );
 
 function App() {
-    return (
-        <Router>
-            <Routes>
-                <Route path="/login" element={<LoginPage />} />
-                <Route path="/register" element={<RegisterPage />} />
-                {/* Admin Page */}
+  return (
+    <Router>
+      <Routes>
+        <Route path="/login" element={<LoginPage />} />
+        <Route path="/register" element={<RegisterPage />} />
+        <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+        {/* Admin Page */}
 
-                <Route
-                    element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} />}
-                >
-                    <Route
-                        path="/admin/dashboard"
-                        element={
-                            <DashboardLayout>
-                                <AdminPage />
-                            </DashboardLayout>
-                        }
-                    />
+        <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} />}>
+          <Route
+            path="/admin/dashboard"
+            element={
+              <DashboardLayout>
+                <AdminPage />
+              </DashboardLayout>
+            }
+          />
 
-                    <Route
-                        path="/common/UserPage"
-                        element={
-                            <DashboardLayout>
-                                <UserPage />
-                            </DashboardLayout>
-                        }
-                    />
-                    <Route
-                        path="/common/AddUserPage"
-                        element={
-                            <DashboardLayout>
-                                <AddUserPage />
-                            </DashboardLayout>
-                        }
-                    />
-                    <Route
-                        path="/common/UpdateUserPage/"
-                        element={
-                            <DashboardLayout>
-                                <UpdateUserPage />
-                            </DashboardLayout>
-                        }
-                    />
-                    <Route
-                        path="/admin/code/"
-                        element={
-                            <DashboardLayout>
-                                <AdminCodeControllerPage />
-                            </DashboardLayout>
-                        }
-                    />
-                </Route>
+          <Route
+            path="/common/UserPage"
+            element={
+              <DashboardLayout>
+                <UserPage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/common/AddUserPage"
+            element={
+              <DashboardLayout>
+                <AddUserPage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/common/UpdateUserPage/"
+            element={
+              <DashboardLayout>
+                <UpdateUserPage />
+              </DashboardLayout>
+            }
+          />
+          <Route
+            path="/admin/code/"
+            element={
+              <DashboardLayout>
+                <AdminCodeControllerPage />
+              </DashboardLayout>
+            }
+          />
+        </Route>
 
-                {/* Common Page */}
-                <Route
-                    element={
-                        <ProtectedRoute
-                            allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}
-                        />
-                    }
-                >
-                    <Route
-                        path="/common/BrandPage"
-                        element={
-                            <DashboardLayout>
-                                <BrandPage />
-                            </DashboardLayout>
-                        }
-                    />
+        {/* Common Page */}
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]} />
+          }
+        >
+          <Route
+            path="/common/BrandPage"
+            element={
+              <DashboardLayout>
+                <BrandPage />
+              </DashboardLayout>
+            }
+          />
 
-                    <Route
-                        path="/common/ProfilePage"
-                        element={
-                            <DashboardLayout>
-                                <ProfilePage />
-                            </DashboardLayout>
-                        }
-                    />
+          <Route
+            path="/common/ProfilePage"
+            element={
+              <DashboardLayout>
+                <ProfilePage />
+              </DashboardLayout>
+            }
+          />
 
-                    <Route
-                        path="/common/ChangePassword"
-                        element={
-                            <DashboardLayout>
-                                <ChangePassword />
-                            </DashboardLayout>
-                        }
-                    />
+          <Route
+            path="/common/ChangePassword"
+            element={
+              <DashboardLayout>
+                <ChangePassword />
+              </DashboardLayout>
+            }
+          />
 
-                    <Route
-                        path="/common/AddBrandPage"
-                        element={
-                            <DashboardLayout>
-                                <AddBrandPage />
-                            </DashboardLayout>
-                        }
-                    />
+          <Route
+            path="/common/AddBrandPage"
+            element={
+              <DashboardLayout>
+                <AddBrandPage />
+              </DashboardLayout>
+            }
+          />
 
-                    <Route
-                        path="/common/CategoryPage"
-                        element={
-                            <DashboardLayout>
-                                <CategoryPage />
-                            </DashboardLayout>
-                        }
-                    />
-                    {/* ///common/AddCategoryPage */}
-                    <Route
-                        path="/common/AddCategoryPage"
-                        element={
-                            <DashboardLayout>
-                                <AddCategoryPage />
-                            </DashboardLayout>
-                        }
-                    />
+          <Route
+            path="/common/CategoryPage"
+            element={
+              <DashboardLayout>
+                <CategoryPage />
+              </DashboardLayout>
+            }
+          />
+          {/* ///common/AddCategoryPage */}
+          <Route
+            path="/common/AddCategoryPage"
+            element={
+              <DashboardLayout>
+                <AddCategoryPage />
+              </DashboardLayout>
+            }
+          />
 
-                    <Route
-                        path="/common/formProduct"
-                        element={
-                            <DashboardLayout>
-                                <FormProduct />
-                            </DashboardLayout>
-                        }
-                    />
+          <Route
+            path="/common/formProduct"
+            element={
+              <DashboardLayout>
+                <FormProduct />
+              </DashboardLayout>
+            }
+          />
 
-                    <Route
-                        path="/common/products"
-                        element={
-                            <DashboardLayout>
-                                <ProductPage />
-                            </DashboardLayout>
-                        }
-                    />
+          <Route
+            path="/common/products"
+            element={
+              <DashboardLayout>
+                <ProductPage />
+              </DashboardLayout>
+            }
+          />
 
-                    <Route
-                        path="/common/orders"
-                        element={
-                            <DashboardLayout>
-                                <OrderPage />
-                            </DashboardLayout>
-                        }
-                    />
+          <Route
+            path="/common/orders"
+            element={
+              <DashboardLayout>
+                <OrderPage />
+              </DashboardLayout>
+            }
+          />
 
-                    <Route
-                        path="/common/orders/detail"
-                        element={
-                            <DashboardLayout>
-                                <OrderDetailPage />
-                            </DashboardLayout>
-                        }
-                    />
-                </Route>
+          <Route
+            path="/common/orders/detail"
+            element={
+              <DashboardLayout>
+                <OrderDetailPage />
+              </DashboardLayout>
+            }
+          />
+        </Route>
 
-                <Route
-                    element={
-                        <ProtectedRoute
-                            allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]}
-                        />
-                    }
-                >
-                    <Route
-                        path="/common/vouchers"
-                        element={
-                            <DashboardLayout>
-                                <VoucherPage />
-                            </DashboardLayout>
-                        }
-                    />
+        <Route
+          element={
+            <ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]} />
+          }
+        >
+          <Route
+            path="/common/vouchers"
+            element={
+              <DashboardLayout>
+                <VoucherPage />
+              </DashboardLayout>
+            }
+          />
 
-                    <Route
-                        path="/common/formVoucher"
-                        element={
-                            <DashboardLayout>
-                                <FormVoucher />
-                            </DashboardLayout>
-                        }
-                    />
-                </Route>
-
-                <Route
-                    element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}
-                >
-                    <Route
-                        path="/common/checkCode"
-                        element={
-                            <DashboardLayout>
-                                <CheckCodeModal />
-                            </DashboardLayout>
-                        }
-                    />
-                </Route>
-
-                {/* Manager Page */}
-                <Route
-                    element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}
-                >
-                    <Route
-                        path="/manager/dashboard"
-                        element={
-                            <DashboardLayout>
-                                <ManagerPage />
-                            </DashboardLayout>
-                        }
-                    />
-                </Route>
-
+          <Route
+            path="/common/formVoucher"
+            element={
+              <DashboardLayout>
+                <FormVoucher />
+              </DashboardLayout>
+            }
+          />
+        </Route>
 
         <Route element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}>
           <Route
-              path="/common/checkCode"
-              element={
-                <DashboardLayout>
-                  <CheckCodeModal />
-                </DashboardLayout>
-              }
-            />
+            path="/common/checkCode"
+            element={
+              <DashboardLayout>
+                <CheckCodeModal />
+              </DashboardLayout>
+            }
+          />
         </Route>
 
         {/* Manager Page */}
@@ -278,9 +251,43 @@ function App() {
           />
         </Route>
 
+        <Route element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}>
+          <Route
+            path="/common/checkCode"
+            element={
+              <DashboardLayout>
+                <CheckCodeModal />
+              </DashboardLayout>
+            }
+          />
+        </Route>
+
+        {/* Manager Page */}
+        <Route element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}>
+          <Route
+            path="/manager/dashboard"
+            element={
+              <DashboardLayout>
+                <ManagerPage />
+              </DashboardLayout>
+            }
+          />
+        </Route>
 
         <Route path="/" element={<HomePage />} />
-        <Route path="/categories" element={<ProductCategories />} />
+        <Route path="/categories-all-phone" element={<ProductCategories />} />
+        <Route path="/categories-all-accessory" element={<ProductCategories />} />
+        <Route path="/cart-buy-order-box" element={<Step1Cart />} />
+        <Route path="/order-info-form" element={<Step2Cart />} />
+        <Route path="/order-payment" element={<Step3Cart />} />
+        <Route path="/order-complete" element={<Step4Cart />} />
+        <Route path="/cart" element={<HomeCart />} />
+
+        <Route
+          path="/categories-all-accessory"
+          element={<ProductCategories />}
+        />
+        <Route path="/1" element={<HomeProductDetail />} />
       </Routes>
     </Router>
   );

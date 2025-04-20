@@ -39,7 +39,6 @@ const OrderPage = () => {
     const { orders_paging, filterOrderAllPaging } = useOrder(
         pageNo,
         pageSize,
-        "", // Bỏ search
         selectedStatus,
         selectedPayment,
         firstname,

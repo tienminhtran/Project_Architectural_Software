@@ -8,6 +8,7 @@ import useUser from "../../hooks/useUser.js"; // Hook lấy thông tin người 
 import SaleTopPrice from "./Saletopprice.jsx";
 import { useNavigate } from 'react-router-dom';
 
+
 const HeaderUser = () => {
 
   const navigate = useNavigate();
@@ -71,14 +72,14 @@ const HeaderUser = () => {
         {/* Header trên cùng */}
         <div className="row align-items-center">
           {/* Logo */}
-          <div className="col-3 text-center text-md-start">
+          <button className="col-3 text-center text-md-start bg-white" onClick={() => navigate('/')}>
             <img
               src="/images/logo/logo-large.png"
               alt="TechMart Logo"
               className="img-fluid"
               style={{ maxHeight: "50px" }}
             />
-          </div>
+          </button>
 
           {/* Ô tìm kiếm */}
           <div className="col-7">
@@ -118,7 +119,7 @@ const HeaderUser = () => {
 
           <div className="col-7">
             <ul className="header-user__menu">
-              <li><a href="#" className="active">Home</a></li>
+              <li><a onClick={() => navigate('/')}  className="active">Home</a></li>
               <li><a  onClick={() => navigate('/user')}>Shop</a></li>
               <li><a href="#">Pages</a></li>
               <li><a href="#">About</a></li>
@@ -143,9 +144,9 @@ const HeaderUser = () => {
                 {showMenu && (
                   <div className="header-user__dropdown">
                     <div className="header-user__dropdown-item" onClick={() => navigate('/login')} > Login </div>
-                    <div className="header-user__dropdown-item" onClick={() => navigate('/')} >Logout</div>
-                    <div className="header-user__dropdown-item">Manager</div>
-                    <div className="header-user__dropdown-item" >Admin</div>
+                    <div className="header-user__dropdown-item" onClick={() => navigate('/login')} >Logout</div>
+                    <div className="header-user__dropdown-item" onClick={() => navigate('/manager')} >Manager</div>
+                    <div className="header-user__dropdown-item" onClick={() => navigate('/admin')} >Admin</div>
                   </div>
                 )}
               </div>
@@ -159,15 +160,15 @@ const HeaderUser = () => {
           {/* Danh sách danh mục */}
           <div className="col-3 text-center text-md-start">
             <ul className="header-user__category-list">
-              <li className="header-user__category-item" onClick={() => navigate('/categories')} >
+              <li className="header-user__category-item" onClick={() => navigate('/categories-all-laptop')} >
                 LapTop
                 <FaChevronDown className="header-user__chevron-icon" />
               </li>
-              <li className="header-user__category-item">
+              <li className="header-user__category-item" onClick={() => navigate('/categories-all-phone')}>
                 Phone
                 <FaChevronDown className="header-user__chevron-icon" />
               </li>
-              <li className="header-user__category-item">
+              <li className="header-user__category-item" onClick={() => navigate('/categories-all-accessory')}>
                 Accessory
                 <FaChevronDown className="header-user__chevron-icon" />
               </li>

@@ -5,15 +5,15 @@ const useCode = () => {
   const create = useMutation({
     mutationFn: (formData) => createCode(formData),
     onSuccess: (data) => {
-      alert("Tạo mã CODE thành công!");
+      // alert("Tạo mã CODE thành công!");
       console.log("Mã CODE được tạo:", data);
     },
     onError: (error) => {
       console.error("Tạo mã CODE thất bại:", error);
       if (error.response) {
-        alert(`Lỗi từ server: ${error.response.data.message || 'Vui lòng thử lại'}`);
+        // alert(`Lỗi từ server: ${error.response.data.message || 'Vui lòng thử lại'}`);
       } else {
-        alert("Tạo mã thất bại. Vui lòng thử lại!");
+        // alert("Tạo mã thất bại. Vui lòng thử lại!");
       }
     },
   });
@@ -25,7 +25,7 @@ const useCode = () => {
     },
     onError: (error) => {
       console.error("Xóa mã CODE thất bại:", error);
-      alert("Xóa mã CODE thất bại. Vui lòng thử lại!");
+      // alert("Xóa mã CODE thất bại. Vui lòng thử lại!");
     },
   });
 

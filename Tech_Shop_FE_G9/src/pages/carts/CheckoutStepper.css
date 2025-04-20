@@ -1,0 +1,44 @@
+.CheckoutStepper {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 12px;
+    flex-wrap: wrap;
+    font-family: Arial, sans-serif;
+    margin-bottom: 24px;
+}
+
+.CheckoutStepper__step {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    color: gray;
+    transition: all 0.3s ease-in-out;
+}
+
+.CheckoutStepper__step.active {
+    color: #00b894;
+    transform: scale(1.05);
+}
+
+.CheckoutStepper__icon {
+    font-size: 32px;
+    margin-bottom: 4px;
+}
+
+.CheckoutStepper__label {
+    font-size: 14px;
+    font-weight: 500;
+    text-align: center;
+}
+
+.CheckoutStepper__divider {
+    color: #ccc;
+    font-size: 16px;
+    user-select: none;
+    transition: color 0.3s;
+}
+
+.CheckoutStepper__divider.active {
+    color: #00b894;
+}
