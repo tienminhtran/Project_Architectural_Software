@@ -1,14 +1,17 @@
 import React, { useState } from "react";
 import CheckoutStepper from "./CheckoutStepper";
 import { FaTrash } from 'react-icons/fa';
-import '../../assets/css/CartBuyOrderBox.css';
+import { toast, ToastContainer } from 'react-toastify';
 import { useNavigate } from "react-router-dom";
+import { confirmAlert } from 'react-confirm-alert';
+import 'react-toastify/dist/ReactToastify.css';
+import 'react-confirm-alert/src/react-confirm-alert.css'; // Import style cho confirm-alert
+import '../../assets/css/CartBuyOrderBox.css';
 
 const CartBuyOrderBox = () => {
     const navigate = useNavigate();
 
-
-    const [currentStep] = useState(0); // Đang ở bước "Giỏ hàng"
+    const [currentStep] = useState(0); // Bước: Giỏ hàng
     const [cartItems, setCartItems] = useState([
         {
             name: "Tấm lót chuột Steelseries Qck Mini Mousepad",
@@ -49,10 +52,28 @@ const CartBuyOrderBox = () => {
     };
 
     const handleRemove = (index) => {
-        if (window.confirm("Bạn có chắc chắn muốn xoá sản phẩm này?")) {
-            const updated = cartItems.filter((_, i) => i !== index);
-            setCartItems(updated);
-        }
+        confirmAlert({
+            title: 'Xác nhận xóa',
+            message: 'Bạn có chắc chắn muốn xoá sản phẩm này không?',
+            buttons: [
+                {
+                    label: 'Có',
+                    onClick: () => {
+                        const productName = cartItems[index].name;
+                        const updated = cartItems.filter((_, i) => i !== index);
+                        setCartItems(updated);
+                        toast.success(`${productName} đã được xóa thành công!`, {
+                            position: "top-center",
+                            autoClose: 3000,
+                        });
+                    }
+                },
+                {
+                    label: 'Không',
+                    onClick: () => { /* Không làm gì khi bấm 'Không' */ }
+                }
+            ]
+        });
     };
 
     const handleApplyDiscount = () => {
@@ -60,7 +81,10 @@ const CartBuyOrderBox = () => {
             setDiscount(0.1);
         } else {
             setDiscount(0);
-            alert("Mã giảm giá không hợp lệ");
+            toast.error("Mã giảm giá không hợp lệ", {
+                position: "top-center",
+                autoClose: 3000,
+            });
         }
     };
 
@@ -72,13 +96,26 @@ const CartBuyOrderBox = () => {
     const finalPrice = totalPrice * (1 - discount);
     const displayedItems = showAllItems ? cartItems : cartItems.slice(0, 2);
 
+    // Lưu dữ liệu giỏ hàng vào sessionStorage khi nhấn vào "NHẬP THÔNG TIN KHÁCH HÀNG"
+    const handleCheckout = () => {
+        const cartData = {
+            cartItems, // Danh sách sản phẩm trong giỏ hàng
+            totalPrice: finalPrice, // Tổng tiền sau khi áp dụng giảm giá
+        };
+
+        // Lưu trữ dữ liệu vào sessionStorage
+        sessionStorage.setItem('cartData', JSON.stringify(cartData));
+
+        // Điều hướng tới trang Step 2 (Thông tin khách hàng)
+        navigate("/order-info-form");
+    };
+
     return (
         <div className="CartBuy-OrderBox__container">
             <div className="CartBuy-OrderBox__nav">
                 <a href="#" className="CartBuy-OrderBox__navLink">&lt; Mua thêm sản phẩm khác</a>
             </div>
 
-            {/* 🧩 Gọi component stepper */}
             <CheckoutStepper currentStep={currentStep} />
 
             {displayedItems.map((item, index) => (
@@ -124,9 +161,7 @@ const CartBuyOrderBox = () => {
                             value={code}
                             onChange={(e) => setCode(e.target.value)}
                         />
-                        <button onClick={handleApplyDiscount}>
-                            Áp dụng
-                        </button>
+                        <button onClick={handleApplyDiscount}>Áp dụng</button>
                     </div>
                 )}
             </div>
@@ -136,7 +171,14 @@ const CartBuyOrderBox = () => {
                 <span className="CartBuy-OrderBox__totalPrice">{formatPrice(finalPrice)}</span>
             </div>
 
-            <button className="CartBuy-OrderBox__checkoutBtn" onClick={() => navigate("/order-info-form")}>NHẬP THÔNG TIN KHÁCH HÀNG</button>
+            <button
+                className="CartBuy-OrderBox__checkoutBtn"
+                onClick={handleCheckout}  // Gọi hàm lưu trữ và điều hướng
+            >
+                NHẬP THÔNG TIN KHÁCH HÀNG
+            </button>
+
+            <ToastContainer position="top-center" />
         </div>
     );
 };

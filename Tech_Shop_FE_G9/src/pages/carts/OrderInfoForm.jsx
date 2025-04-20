@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import { motion } from 'framer-motion';
 import CheckoutStepper from './CheckoutStepper';
+import { useNavigate } from 'react-router-dom';
 import '../../assets/css/OrderInfoForm.css';
-import { useNavigate } from "react-router-dom";
 
 const OrderInfoForm = () => {
     const navigate = useNavigate();
@@ -15,7 +15,20 @@ const OrderInfoForm = () => {
     const [address, setAddress] = useState('');
     const [note, setNote] = useState('');
     const [invoice, setInvoice] = useState(false);
+    const [cartData, setCartData] = useState(null);
 
+    useEffect(() => {
+        const storedData = sessionStorage.getItem('cartData');
+        if (storedData) {
+            setCartData(JSON.parse(storedData));
+        } else {
+            navigate('/'); // Nếu không có dữ liệu, điều hướng về trang giỏ hàng
+        }
+    }, [navigate]);
+
+    if (!cartData) {
+        return <div>Loading...</div>;
+    }
 
     return (
         <div className="OrderInfoForm__container">
@@ -27,6 +40,7 @@ const OrderInfoForm = () => {
                 transition={{ duration: 0.6 }}
                 className="OrderInfoForm__section"
             >
+                {/* Thông tin khách hàng */}
                 <div className="OrderInfoForm__title">Thông tin khách mua hàng</div>
                 <div className="OrderInfoForm__row">
                     <label>
@@ -105,9 +119,10 @@ const OrderInfoForm = () => {
                     </label>
                 </div>
 
+                {/* Hiển thị chỉ tổng giá giỏ hàng */}
                 <div className="OrderInfoForm__totalRow">
                     <span>Tổng tiền:</span>
-                    <span className="OrderInfoForm__totalPrice">219.000đ</span>
+                    <span className="OrderInfoForm__totalPrice">{cartData.totalPrice}đ</span>
                 </div>
 
                 <button className="OrderInfoForm__submitBtn" onClick={() => navigate('/order-payment')}>
