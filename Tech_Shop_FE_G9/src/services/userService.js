@@ -35,7 +35,7 @@ export const getUsers_Auth = async () => {
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) return;
 
-  const response = await axiosInstance.get("/user/me");
+  const response = await axiosInstance.get("/user/roles-user");
   return response.data;
 };
 
