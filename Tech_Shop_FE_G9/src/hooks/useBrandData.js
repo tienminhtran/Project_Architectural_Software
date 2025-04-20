@@ -16,6 +16,7 @@ const useBrandData = (pageNo, pageSize, brandSearch) => {
     const brandAll = useQuery({
         queryKey: ["brandAll"],
         queryFn: () => getBrandAll(),
+        refetchOnWindowFocus: false,
         onSuccess: (data) => {
             console.log("Brand data fetched successfully:", data);
         },
@@ -28,6 +29,7 @@ const useBrandData = (pageNo, pageSize, brandSearch) => {
     const createBra = useMutation({
         mutationFn: ({ formData }) => createBrand(formData),
         onSuccess: () => {
+            queryClient.invalidateQueries("getAllBrand_Paging");
             alert("Create brand successfully!!");
         },
         onError: (error) => {
