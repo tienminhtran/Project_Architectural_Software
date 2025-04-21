@@ -8,100 +8,117 @@ import {
 } from "react-icons/fa";
 import "../../../src/assets/css/ProductUser.css";
 import { useNavigate } from "react-router-dom";
+import { filterProductLaptop } from "../../services/productService";
+
+// const productData = [
+//   {
+//     name: "Dell G15",
+//     image: "../../../public/images/product/laptop1.jpg",
+//     newPrice: "15.000.000",
+//     oldPrice: "18.000.000",
+//     discount: "20%",
+//     battery: "60000mAh",
+//     monitor: "15.6 inch",
+//     os: "Windows 10",
+//     ram: "16GB",
+//   },
+//   {
+//     name: "HP ProBook",
+//     image: "../../../public/images/product/laptop2.jpg",
+//     newPrice: "12.000.000",
+//     oldPrice: "14.400.000",
+//     discount: "17%",
+//     battery: "50000mAh",
+//     monitor: "14 inch",
+//     os: "Windows 11",
+//     ram: "8GB",
+//   },
+//   {
+//     name: "Dell G15",
+//     image: "../../../public/images/product/laptop3.jpg",
+//     newPrice: "15.000.000",
+//     oldPrice: "18.000.000",
+//     discount: "20%",
+//     battery: "60000mAh",
+//     monitor: "15.6 inch",
+//     os: "Windows 10",
+//     ram: "16GB",
+//   },
+//   {
+//     name: "HP ProBook",
+//     image: "../../../public/images/product/laptop4.jpg",
+//     newPrice: "12.000.000",
+//     oldPrice: "14.400.000",
+//     discount: "17%",
+//     battery: "50000mAh",
+//     monitor: "14 inch",
+//     os: "Windows 11",
+//     ram: "8GB",
+//   },
+//   {
+//     name: "Dell G15",
+//     image: "../../../public/images/product/laptop2.jpg",
+//     newPrice: "15.000.000",
+//     oldPrice: "18.000.000",
+//     discount: "20%",
+//     battery: "60000mAh",
+//     monitor: "15.6 inch",
+//     os: "Windows 10",
+//     ram: "16GB",
+//   },
+//   {
+//     name: "HP ProBook",
+//     image: "../../../public/images/product/laptop3.jpg",
+//     newPrice: "12.000.000",
+//     oldPrice: "14.400.000",
+//     discount: "17%",
+//     battery: "50000mAh",
+//     monitor: "14 inch",
+//     os: "Windows 11",
+//     ram: "8GB",
+//   },
+//   {
+//     name: "Dell G15",
+//     image: "../../../public/images/product/laptop1.jpg",
+//     newPrice: "15.000.000",
+//     oldPrice: "18.000.000",
+//     discount: "20%",
+//     battery: "60000mAh",
+//     monitor: "15.6 inch",
+//     os: "Windows 10",
+//     ram: "16GB",
+//   },
+//   {
+//     name: "HP ProBook",
+//     image: "../../../public/images/product/laptop3.jpg",
+//     newPrice: "12.000.000",
+//     oldPrice: "14.400.000",
+//     discount: "17%",
+//     battery: "50000mAh",
+//     monitor: "14 inch",
+//     os: "Windows 11",
+//     ram: "8GB",
+//   },
+// ];
 
 const ProductUser = () => {
-      const navigate = useNavigate();
+  const navigate = useNavigate();
   
-  const productData = [
-    {
-      name: "Dell G15",
-      image: "../../../public/images/product/laptop1.jpg",
-      newPrice: "15.000.000",
-      oldPrice: "18.000.000",
-      discount: "20%",
-      battery: "60000mAh",
-      monitor: "15.6 inch",
-      os: "Windows 10",
-      ram: "16GB",
-    },
-    {
-      name: "HP ProBook",
-      image: "../../../public/images/product/laptop2.jpg",
-      newPrice: "12.000.000",
-      oldPrice: "14.400.000",
-      discount: "17%",
-      battery: "50000mAh",
-      monitor: "14 inch",
-      os: "Windows 11",
-      ram: "8GB",
-    },
-    {
-      name: "Dell G15",
-      image: "../../../public/images/product/laptop3.jpg",
-      newPrice: "15.000.000",
-      oldPrice: "18.000.000",
-      discount: "20%",
-      battery: "60000mAh",
-      monitor: "15.6 inch",
-      os: "Windows 10",
-      ram: "16GB",
-    },
-    {
-      name: "HP ProBook",
-      image: "../../../public/images/product/laptop4.jpg",
-      newPrice: "12.000.000",
-      oldPrice: "14.400.000",
-      discount: "17%",
-      battery: "50000mAh",
-      monitor: "14 inch",
-      os: "Windows 11",
-      ram: "8GB",
-    },
-    {
-      name: "Dell G15",
-      image: "../../../public/images/product/laptop2.jpg",
-      newPrice: "15.000.000",
-      oldPrice: "18.000.000",
-      discount: "20%",
-      battery: "60000mAh",
-      monitor: "15.6 inch",
-      os: "Windows 10",
-      ram: "16GB",
-    },
-    {
-      name: "HP ProBook",
-      image: "../../../public/images/product/laptop3.jpg",
-      newPrice: "12.000.000",
-      oldPrice: "14.400.000",
-      discount: "17%",
-      battery: "50000mAh",
-      monitor: "14 inch",
-      os: "Windows 11",
-      ram: "8GB",
-    },
-    {
-      name: "Dell G15",
-      image: "../../../public/images/product/laptop1.jpg",
-      newPrice: "15.000.000",
-      oldPrice: "18.000.000",
-      discount: "20%",
-      battery: "60000mAh",
-      monitor: "15.6 inch",
-      os: "Windows 10",
-      ram: "16GB",
-    },
-    {
-      name: "HP ProBook",
-      image: "../../../public/images/product/laptop3.jpg",
-      newPrice: "12.000.000",
-      oldPrice: "14.400.000",
-      discount: "17%",
-      battery: "50000mAh",
-      monitor: "14 inch",
-      os: "Windows 11",
-      ram: "8GB",
-    },
-  ];
+  const [products, setProducts] = React.useState([]);
+
+
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await filterProductLaptop();
+        // console.log("products", response);
+        setProducts(response.response); // Giả sử response.content chứa danh sách sản phẩm
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
   const brands = ["ASUS", "ACER", "MSI", "LENOVO", "GIGABYTE", "DELL"];
 
@@ -162,15 +179,15 @@ const ProductUser = () => {
       </button>
 
     <div className="product-user__product-scroll" ref={scrollRef}>
-      {productData.map((product, index) => (
-        <button
+      {products?.map((product, index) => (
+        <div
           className="product-user__product-card"
           key={index}
           onClick={() => navigate('/1')}
         >
           <div className="product-user__product-img-wrapper">
             <img
-              src={product.image}
+              src={product.thumbnail}
               alt={product.name}
               className="product-user__product-img"
             />
@@ -183,7 +200,7 @@ const ProductUser = () => {
                 className="product-user__icon-btn-love"
                 onClick={(e) => {
                   e.stopPropagation(); // Chặn click lan ra ngoài
-                  console.log("Đã thêm yêu thích:", product.name);
+                  console.log("Đã thêm yêu thích:", product.productName);
                   // TODO: Gọi API hoặc set state yêu thích
                 }}
               >
@@ -194,7 +211,7 @@ const ProductUser = () => {
                 className="product-user__icon-btn-eye"
                 onClick={(e) => {
                   e.stopPropagation(); // Chặn click lan ra ngoài
-                  console.log("Xem nhanh sản phẩm:", product.name);
+                  console.log("Xem nhanh sản phẩm:", product.productName);
                   // TODO: Mở modal xem nhanh
                 }}
               >
@@ -204,10 +221,10 @@ const ProductUser = () => {
           </div>
 
           <div className="product-user__product-info">
-            <h5>{product.name}</h5>
+            <h5>{product.productName}</h5>
             <p>
               <span className="product-user__price-new">
-                {product.newPrice} ₫
+                {product.price} ₫
               </span>{' '}
               <del className="product-user__price-old">
                 {product.oldPrice} ₫
@@ -223,14 +240,14 @@ const ProductUser = () => {
               className="product-user__add-to-cart"
               onClick={(e) => {
                 e.stopPropagation(); // Chặn click lan ra ngoài
-                console.log("Đã thêm vào giỏ hàng:", product.name);
+                console.log("Đã thêm vào giỏ hàng:", product.productName);
                 // TODO: Xử lý thêm giỏ hàng
               }}
             >
               <FaShoppingCart /> Thêm giỏ hàng
             </button>
           </div>
-        </button>
+        </div>
       ))}
     </div>
 
