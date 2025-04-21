@@ -14,26 +14,19 @@
   border-radius: 8px;
 }
 
-.productinfo__table {
+/* .productinfo__table {
   width: 100%;
-  border-collapse: collapse;
-  border: #8a8a8a 1px solid;
-  /* margin-top: 12px; */
+  
 }
 
 .productinfo__table th {
   text-align: left;
-  color: #0044ffd5;  border: #8a8a8a 1px solid;
-
-  /* width: 100px; */
-  /* vertical-align: top; */
 }
 
 .productinfo__table td {
   padding-left: 8px;
-  border: #8a8a8a 1px solid;
 
-}
+} */
 
 .productinfo__toggle {
   color: #0011ff;

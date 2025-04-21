@@ -2,6 +2,7 @@ import React, { useEffect, useState, useRef } from "react";
 import "../../assets/css/ProductDetail.css";
 import { FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
+import { formatPrice } from "../../utils/FormatPrice";
 
 
 // Hàm kiểm tra ảnh có tồn tại không
@@ -46,10 +47,12 @@ const FlashSaleTimer = ({ endTime }) => {
   );
 };
 
-const ProductDetail = () => {
+const ProductDetail = ({product}) => {
   const navigate = useNavigate();
-  const [thumbUrls, setThumbUrls] = useState([]);
+  const [thumbUrls,setThumbUrls] = useState([]);
   const endTimeRef = useRef(new Date().getTime() + 4 * 60 * 60 * 1000); // Giữ cố định thời gian kết thúc
+
+  console.log("product", product);
 
   useEffect(() => {
     const loadThumbnails = async () => {
@@ -65,22 +68,31 @@ const ProductDetail = () => {
     loadThumbnails();
   }, []);
 
+  const handleRatingStar = (ratings) => {
+    let star = 0;
+    ratings.forEach((rating) => {
+      star += rating.star;
+    });
+    return (star / ratings.length).toFixed(1);
+  }
+
   return (
     <div className="productdetail__container">
       {/* Hình ảnh sản phẩm */}
       <div className="productdetail__image-group">
-        <img src="/images/product/iphone-14-pro-max.jpg" alt="MSI Thin 15" className="productdetail__main-image" />
+        <img src={product?.thumbnail || "/images/product/avtdefault.jpg"} alt="MSI Thin 15" className="productdetail__main-image" />
         <div className="productdetail__thumbnail-group">
-          {thumbUrls.map((thumbUrl, index) => (
+          {product?.images.map((thumbUrl, index) => (
             <img key={index} src={thumbUrl} alt={`Thumbnail ${index + 1}`} className="productdetail__thumbnail" />
           ))}
         </div>
       </div>
 
+      
       {/* Thông tin sản phẩm */}
       <div>
-        <h1 className="productdetail__title">Laptop gaming MSI Thin 15 B13UC 2044VN</h1>
-        <p className="productdetail__rating">⭐ 5.0 • Xem đánh giá</p>
+        <h1 className="productdetail__title">{product?.productName}</h1>
+        <p className="productdetail__rating">⭐ {handleRatingStar(product?.ratings)} • Xem đánh giá</p>
 
         {/* Flash Sale */}
         <div className="flash-sale-box">
@@ -90,7 +102,7 @@ const ProductDetail = () => {
             <FlashSaleTimer endTime={endTimeRef.current} />
           </div>
           <div className="flash-sale-body">
-            <span className="price-new">19.290.000₫</span>
+            <span className="price-new">{formatPrice(product?.price)}</span>
             <span className="price-old">19.490.000₫</span>
             <span className="discount-box">-1%</span>
           </div>

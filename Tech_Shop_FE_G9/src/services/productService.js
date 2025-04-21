@@ -89,3 +89,17 @@ export const searchProduct = async (pageNo, pageSize,keyword) => {
         throw error; 
     }
 }
+
+
+ export const getProductId = async (id) => {
+    
+    console.log("getProductId", id);
+    try {
+        const response = await axiosInstance.get(`/products/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error getting product by ID:", error);
+        throw error; 
+    }
+}
+

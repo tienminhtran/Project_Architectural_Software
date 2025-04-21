@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../../../src/assets/css/ProductInformation.css';
 
-const ProductInformation = () => {
+const ProductInformation = ({product}) => {
   const [isExpanded, setIsExpanded] = useState(false);
 
   const handleToggle = () => {
@@ -13,44 +13,62 @@ const ProductInformation = () => {
       <div className="productinfo__left">
         <h2>Thông tin sản phẩm</h2>
         <h3>Thông số kĩ thuật:</h3>
-        <table className="productinfo__table">
+        <table className="productinfo__table table table-bordered table-striped">
           <tbody>
             <tr>
               <th>CPU</th>
-              <td>Intel Core i7-13620H (3.6GHz~4.9GHz) 10 Nhân 16 Luồng</td>
+              <td>{product?.cpu || 'Chưa có thông tin'}</td>
             </tr>
             <tr>
               <th>RAM</th>
-              <td>16GB (2 x 8GB) DDR4 3200MHz (2x SO-DIMM socket, up to 64GB SDRAM)</td>
+              <td>{product?.ram || 'Chưa có thông tin'}</td>
             </tr>
 
             {isExpanded && (
               <>
-            <tr>
-              <th>RAM</th>
-              <td>16GB (2 x 8GB) DDR4 3200MHz (2x SO-DIMM socket, up to 64GB SDRAM)</td>
-            </tr>
-            <tr>
-              <th>RAM</th>
-              <td>16GB (2 x 8GB) DDR4 3200MHz (2x SO-DIMM socket, up to 64GB SDRAM)</td>
-            </tr>
-            <tr>
-              <th>RAM</th>
-              <td>16GB (2 x 8GB) DDR4 3200MHz (2x SO-DIMM socket, up to 64GB SDRAM)</td>
-            </tr>
-            <tr>
-              <th>RAM</th>
-              <td>16GB (2 x 8GB) DDR4 3200MHz (2x SO-DIMM socket, up to 64GB SDRAM)</td>
-            </tr>
                 <tr>
-                  <th>Ổ cứng</th>
-                  <td>SSD NVMe PCIe 512GB Gen4x4 (1 khe)</td>
+                  <th>Monitor</th>
+                  <td>
+                    {product?.monitor}
+                  </td>
                 </tr>
+
+                <tr>
+                  <th>Hệ điều hành</th>
+                  <td>{product?.os || 'Chưa có thông tin'}</td>
+                </tr>
+
+                <tr>
+                  <th>Cổng port</th>
+                  <td>{product?.port || 'Chưa có thông tin'}</td>
+                </tr>
+
                 <tr>
                   <th>VGA</th>
                   <td>
-                    NVIDIA® GeForce RTX™ 3050 Laptop GPU<br />
+                    {product?.graphicCard}<br />
                     Up to 1172.5MHz Boost Clock 45W Maximum Graphics Power
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>Battery</th>
+                  <td>
+                    {product?.battery}                
+                  </td>
+                </tr>
+                
+                <tr>
+                  <th>RearCamera</th>
+                  <td>
+                    {product?.rearCamera}
+                  </td>
+                </tr>
+
+                <tr>
+                  <th>FrontCamera</th>
+                  <td>
+                    {product?.frontCamera}
                   </td>
                 </tr>
               </>
