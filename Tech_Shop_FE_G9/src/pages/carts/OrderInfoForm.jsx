@@ -3,6 +3,7 @@ import { motion } from 'framer-motion';
 import CheckoutStepper from './CheckoutStepper';
 import { useNavigate } from 'react-router-dom';
 import '../../assets/css/OrderInfoForm.css';
+import DeliveryWithGeolocation from './DeliveryWithGeolocation'; 
 
 const OrderInfoForm = () => {
     const navigate = useNavigate();
@@ -74,34 +75,7 @@ const OrderInfoForm = () => {
                         onChange={(e) => setPhone(e.target.value)}
                     />
                 </div>
-
-                <div className="OrderInfoForm__title">Địa chỉ giao hàng</div>
-                <div className="OrderInfoForm__row">
-                    <select value={province} onChange={(e) => setProvince(e.target.value)}>
-                        <option>Chọn Tỉnh, Thành phố</option>
-                        <option>TP. HCM</option>
-                        <option>Hà Nội</option>
-                    </select>
-                    <select value={district} onChange={(e) => setDistrict(e.target.value)}>
-                        <option>Chọn Quận, Huyện</option>
-                        <option>Quận 1</option>
-                        <option>Quận 3</option>
-                    </select>
-                </div>
-
-                <div className="OrderInfoForm__row">
-                    <select value={ward} onChange={(e) => setWard(e.target.value)}>
-                        <option>Chọn Phường, Xã</option>
-                        <option>Phường 1</option>
-                        <option>Phường 3</option>
-                    </select>
-                    <input
-                        type="text"
-                        placeholder="Số nhà, tên đường"
-                        value={address}
-                        onChange={(e) => setAddress(e.target.value)}
-                    />
-                </div>
+                <DeliveryWithGeolocation/>
 
                 <textarea
                     placeholder="Lưu ý, yêu cầu khác (Không bắt buộc)"
