@@ -39,6 +39,19 @@ export const getUsers_Auth = async () => {
   return response.data;
 };
 
+export const getCurrentUser= async () => {
+  const accessToken = localStorage.getItem("accessToken");
+  if (!accessToken) return;
+
+  try {
+    const response = await axiosInstance.get("/user/me");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    throw error; // Rethrow the error to handle it in the calling function
+  }
+};
+
 export const getLoyalCustomers = async () => {
   const response = await axiosInstance.get("/user/topCustomers");
   return response.data;

@@ -37,15 +37,18 @@ const LoginForm = () => {
       dispatch(loginSuccess(response.token)); // login success, save infomation to redux
       console.log(response.token.roles);
 
+
       if (response.token.roles[0] === "ROLE_USER") {
         navigate("/");
+      } else {
+
+        navigate(
+          `/${response.token.roles[0]
+            .toLowerCase()
+            .replace("role_", "")}/dashboard`
+        ); // navigate to
       }
 
-      navigate(
-        `/${response.token.roles[0]
-          .toLowerCase()
-          .replace("role_", "")}/dashboard`
-      ); // navigate to
     } catch (error) {
       console.error("Login error:", error.response.data.message);
       dispatch(handleFailure(error.response.data));

@@ -73,6 +73,21 @@ public class UserRestController {
         return ResponseEntity.ok(BaseResponse.<UserResponse>builder().status("success").message("Get user by id success").response(userResponse).build());
     }
 
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String token) {
+        try {
+            UserResponse response = userService.getCurrentUser(token);
+            return ResponseEntity.ok(BaseResponse.builder()
+                    .status("SUCCESS")
+                    .message("Get current user success")
+                    .response(response)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+    }
+
+
     @GetMapping("/information/{username}")
     public ResponseEntity<BaseResponse<UserResponse>> getUserByUsername(@PathVariable String username) {
         UserResponse userResponse = userService.getUserByUsername(username);

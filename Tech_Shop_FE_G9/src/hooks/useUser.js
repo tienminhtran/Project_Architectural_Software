@@ -9,7 +9,7 @@ import {
 } from "../services/userService";
 import { useSelector } from "react-redux";
 import usePaginationQuery from "./usePaginationQuery";
-import { resetPasswordService } from "../services/userService";
+import { resetPasswordService, getCurrentUser } from "../services/userService";
 
 const useUser = (pageNo, pageSize) => {
   const { user } = useSelector((state) => state.auth);
@@ -17,9 +17,8 @@ const useUser = (pageNo, pageSize) => {
   const queryClient = useQueryClient();
 
   const getUser = useQuery({
-    queryKey: ["getUser", user], // Dùng user là username làm key của query
-    queryFn: () => getUserInfo(user),
-    enabled: !!user, // Chỉ gọi API nếu user có giá trị
+    queryKey: ["getUser"], // Dùng user là username làm key của query
+    queryFn: () => getCurrentUser(),
     refetchOnWindowFocus: false,
   });
 
