@@ -11,6 +11,7 @@ const HomeCart = () => {
         <div>
             <HeardUserBasic />
             <CartBuyOrderBox />
+           
             <FooterUser />
         </div>
     );

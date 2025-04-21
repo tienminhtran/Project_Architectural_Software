@@ -41,6 +41,7 @@ import Step3Cart from "./pages/carts/OrderPayment"; // đường dẫn đúng
 import Step4Cart from "./pages/carts/OrderComplete"; // đường dẫn đúng
 import HomeCart from "./pages/carts/HomeCart"; // đường dẫn đúng
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
+import FavoriteProducts from "./components/layout/FavoriteProducts"; // đường dẫn đúng
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
   <div className="axil-signin-area">
