@@ -13,7 +13,8 @@ const HeaderUser = () => {
 
   const navigate = useNavigate();
 
-  const { userInfor } = useUser(0, 1);
+  const { userInfor } = useUser();
+  console.log("userInfor", userInfor);
   // const categories = ["LapTop", "Phone", "Accessory"];
 
   const { recentlyProduct } = useDashboardData();
