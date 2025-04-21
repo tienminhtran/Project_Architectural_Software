@@ -61,6 +61,18 @@ function App() {
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
+
+        <Route path="/" element={<HomePage />} />
+        <Route path="/categories-all-phone" element={<ProductCategories />} />
+        <Route path="/categories-all-accessory" element={<ProductCategories />} />
+        
+
+        <Route
+          path="/categories-all-accessory"
+          element={<ProductCategories />}
+        />
+        <Route path="/1" element={<HomeProductDetail />} />
+
         {/* Admin Page */}
 
         <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} />}>
@@ -107,7 +119,7 @@ function App() {
           />
         </Route>
 
-        {/* Common Page */}
+        {/* Common Page (admin and manager)*/}
         <Route
           element={
             <ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]} />
@@ -202,13 +214,7 @@ function App() {
               </DashboardLayout>
             }
           />
-        </Route>
 
-        <Route
-          element={
-            <ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER"]} />
-          }
-        >
           <Route
             path="/common/vouchers"
             element={
@@ -228,6 +234,8 @@ function App() {
           />
         </Route>
 
+
+        {/* Manager Page */}
         <Route element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}>
           <Route
             path="/common/checkCode"
@@ -237,10 +245,6 @@ function App() {
               </DashboardLayout>
             }
           />
-        </Route>
-
-        {/* Manager Page */}
-        <Route element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}>
           <Route
             path="/manager/dashboard"
             element={
@@ -251,43 +255,15 @@ function App() {
           />
         </Route>
 
-        <Route element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}>
-          <Route
-            path="/common/checkCode"
-            element={
-              <DashboardLayout>
-                <CheckCodeModal />
-              </DashboardLayout>
-            }
-          />
+        {/* User Routes (Nếu cần) */}
+        <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"]} />}>
+          <Route path="/cart" element={<HomeCart />} />
+          <Route path="/cart-buy-order-box" element={<Step1Cart />} />
+          <Route path="/order-info-form" element={<Step2Cart />} />
+          <Route path="/order-payment" element={<Step3Cart />} />
+          <Route path="/order-complete" element={<Step4Cart />} />
         </Route>
 
-        {/* Manager Page */}
-        <Route element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}>
-          <Route
-            path="/manager/dashboard"
-            element={
-              <DashboardLayout>
-                <ManagerPage />
-              </DashboardLayout>
-            }
-          />
-        </Route>
-
-        <Route path="/" element={<HomePage />} />
-        <Route path="/categories-all-phone" element={<ProductCategories />} />
-        <Route path="/categories-all-accessory" element={<ProductCategories />} />
-        <Route path="/cart-buy-order-box" element={<Step1Cart />} />
-        <Route path="/order-info-form" element={<Step2Cart />} />
-        <Route path="/order-payment" element={<Step3Cart />} />
-        <Route path="/order-complete" element={<Step4Cart />} />
-        <Route path="/cart" element={<HomeCart />} />
-
-        <Route
-          path="/categories-all-accessory"
-          element={<ProductCategories />}
-        />
-        <Route path="/1" element={<HomeProductDetail />} />
       </Routes>
     </Router>
   );
