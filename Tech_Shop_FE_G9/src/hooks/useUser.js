@@ -7,13 +7,10 @@ import {
   checkPhoneExistsService,
   // getAllUsersNoPage,
 } from "../services/userService";
-import { useSelector } from "react-redux";
 import usePaginationQuery from "./usePaginationQuery";
 import { resetPasswordService, getCurrentUser } from "../services/userService";
 
 const useUser = (pageNo, pageSize) => {
-  const { user } = useSelector((state) => state.auth);
-  console.log("user name ", user);
   const queryClient = useQueryClient();
 
   const getUser = useQuery({

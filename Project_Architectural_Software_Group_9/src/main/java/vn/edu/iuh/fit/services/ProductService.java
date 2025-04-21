@@ -53,4 +53,8 @@ public interface ProductService {
     PageResponse<ProductResponse> searchProduct(String keyword, int pageNo, int pageSize);
 
     boolean deleteProduct(Long id);
+
+    List<ProductResponse> filterProductLaptop();
+    public List<ProductResponse> filterProductPhone();
+
 }

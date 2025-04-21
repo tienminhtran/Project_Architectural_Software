@@ -63,6 +63,29 @@ export const searchProduct = async (pageNo, pageSize,keyword) => {
             'Content-Type': 'multipart/form-data'
         }
     });
-    console.log("Product updated:", response.data);
+    console.log("Product updated:", response.data);     
     return response.data;
+}
+
+ export const filterProductLaptop = async () => {
+    
+    try {
+        const response = await axiosInstance.get('/products/filter-laptop');
+        console.log("Filtered laptop products:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error filtering laptop products:", error);
+        throw error; 
+    }
+}
+ export const filterProductPhone = async () => {
+    
+    try {
+        const response = await axiosInstance.get('/products/filter-phone');
+        console.log("Filtered phone products:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error filtering phone products:", error);
+        throw error; 
+    }
 }

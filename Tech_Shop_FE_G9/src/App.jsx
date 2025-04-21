@@ -32,16 +32,16 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import UpdateUserPage from "./pages/common/user/UpdateUserPage";
 import AdminCodeControllerPage from "./pages/admin/AdminCodeControllerPage";
-import CheckCodeModal from "./components/layout/CheckCodeModal"; // đường dẫn đúng
-import ProductCategories from "./components/layout/Categories/ProductCategories"; // đường dẫn đúng
+import CheckCodeModal from "./components/layout/CheckCodeModal"; 
+import ProductCategories from "./components/layout/Categories/ProductCategories"; 
 import HomeProductDetail from "./components/layout/HomeProductDetail";  
-import Step1Cart from "./pages/carts/CartBuyOrderBox"; // đường dẫn đúng
-import Step2Cart from "./pages/carts/OrderInfoForm"; // đường dẫn đúng
-import Step3Cart from "./pages/carts/OrderPayment"; // đường dẫn đúng
-import Step4Cart from "./pages/carts/OrderComplete"; // đường dẫn đúng
-import HomeCart from "./pages/carts/HomeCart"; // đường dẫn đúng
+import Step1Cart from "./pages/carts/CartBuyOrderBox"; 
+import Step2Cart from "./pages/carts/OrderInfoForm"; 
+import Step3Cart from "./pages/carts/OrderPayment"; 
+import Step4Cart from "./pages/carts/OrderComplete"; 
+import HomeCart from "./pages/carts/HomeCart"; 
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import FavoriteProducts from "./components/layout/FavoriteProducts"; // đường dẫn đúng
+import FavoriteProducts from "./components/layout/FavoriteProducts"; 
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
   <div className="axil-signin-area">
