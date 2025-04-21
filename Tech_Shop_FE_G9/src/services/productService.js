@@ -90,6 +90,7 @@ export const searchProduct = async (pageNo, pageSize,keyword) => {
     }
 }
 
+
  export const getProductId = async (id) => {
     
     console.log("getProductId", id);
@@ -101,3 +102,4 @@ export const searchProduct = async (pageNo, pageSize,keyword) => {
         throw error; 
     }
 }
+
