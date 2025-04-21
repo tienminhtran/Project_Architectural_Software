@@ -7,17 +7,24 @@ import useDashboardData from "../../hooks/useDashboardData "; // Hook lấy dữ
 import useUser from "../../hooks/useUser.js"; // Hook lấy thông tin người dùng
 import SaleTopPrice from "./Saletopprice.jsx";
 import { useNavigate } from 'react-router-dom';
+import { useDispatch } from "react-redux";
+import { getAccessToken, removeAccessToken } from "../../services/authService.js";
+import { logout } from "../../store/slices/AuthSlice.js";
+import { confirmAlert } from 'react-confirm-alert';
+import { toast } from "react-toastify";
 
 
 const HeaderUser = () => {
 
   const navigate = useNavigate();
+  const dispatch = useDispatch();
 
   const { userInfor } = useUser();
-
   const user = useMemo(() => {
     return userInfor|| null;
   }, [userInfor]);
+
+  const token = getAccessToken();
 
   // console.log("userInfor", user);
   // const categories = ["LapTop", "Phone", "Accessory"];
@@ -68,6 +75,32 @@ const HeaderUser = () => {
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  const handleLogout = () => {
+    confirmAlert({
+      message: 'Bạn có chắc chắn muốn đăng xuất không?',
+      buttons: [
+        {
+          label: 'Tiếp tục',
+          onClick: () => {
+            dispatch(logout());
+            removeAccessToken();
+            localStorage.removeItem("lastDashboard");
+            navigate("/");
+            window.location.reload();
+            toast.success("Đăng xuất thành công", {
+              position: 'top-right',
+              autoClose: 2000,              
+            })
+          }
+        }, 
+        {
+          label: 'Hủy bỏ',
+          onClick: () => {}
+        }
+      ]
+    })
+  }
 
   return (
     <div className="header-user">
@@ -149,10 +182,34 @@ const HeaderUser = () => {
                 <span className="header-user__username">{user?.firstname || "User"}</span>
                 {showMenu && (
                   <div className="header-user__dropdown">
-                    <div className="header-user__dropdown-item" onClick={() => navigate('/login')} > Login </div>
-                    <div className="header-user__dropdown-item" onClick={() => navigate('/login')} >Logout</div>
-                    <div className="header-user__dropdown-item" onClick={() => navigate('/manager')} >Manager</div>
-                    <div className="header-user__dropdown-item" onClick={() => navigate('/admin')} >Admin</div>
+                    {!token ? (
+
+                      <div className="p-3" >
+                        <p className="">Xin chào, vui lòng đăng nhập</p>
+                        <button className="btn btn-primary rounder-3"  onClick={() => navigate('/login')}> 
+                          Login
+                        </button>
+                        <div className="d-flex justify-content-center align-items-center mt-2 gap-2" style={{ width: '100%' }}>
+                          <span className="text-muted"style={{fontSize: '12px'}}>No account yet?</span>
+                          <button className="btn btn-danger w-50" onClick={() => navigate('/register')}>Register</button>
+                        </div>
+                      </div>
+
+                    ) : (
+                      <div>
+                        <div className="header-user__dropdown-item" onClick={() => navigate('/my-account')} >My Account</div>
+                        
+                        {userInfor.role.code === "ADMIN" && (
+                            <div className="header-user__dropdown-item" onClick={() => navigate('/admin/dashboard')} >Admin</div>
+                        )}
+
+                        {(userInfor.role.code === "ADMIN" || userInfor.role.code === "MANAGER") && (
+                          <div className="header-user__dropdown-item" onClick={() => navigate('/manager/dashboard')} >Manager</div>
+                        )}
+
+                        <div className="header-user__dropdown-item" onClick={handleLogout} >Logout</div>
+                      </div>
+                    )}
                   </div>
                 )}
               </div>
