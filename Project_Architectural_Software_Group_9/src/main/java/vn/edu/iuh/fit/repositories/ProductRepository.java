@@ -52,4 +52,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "OR p.ram LIKE %:keyword% " +
             "OR p.warranty LIKE %:keyword% ")
     Page<Product> searchProduct(String keyword, Pageable pageable);
+
+    List<Product> findByCategory_Name(String categoryName);
 }

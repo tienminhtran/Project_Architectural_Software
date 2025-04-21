@@ -607,6 +607,22 @@ public class ProductRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Delete product success").build());
     }
 
+    @GetMapping("/filter-laptop")
+    public ResponseEntity<BaseResponse<?>> filterProductLaptop() {
+        List<ProductResponse> productResponses = productService.filterProductLaptop();
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Filter product laptop").response(productResponses).build());
+    }
 
+    @GetMapping("/filter-phone")
+    public ResponseEntity<BaseResponse<?>> filterProductPhone() {
+        List<ProductResponse> productResponses = productService.filterProductPhone();
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Filter product phone").response(productResponses).build());
+    }
 }
 

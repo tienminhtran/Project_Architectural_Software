@@ -140,6 +140,19 @@ public class ProductServiceImpl implements ProductService {
         return false;
 
     }
+
+    @Override
+    public List<ProductResponse> filterProductLaptop() {
+        List<Product> products = productRepository.findByCategory_Name("Computer");
+        return products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
+    }
+
+    @Override
+    public List<ProductResponse> filterProductPhone() {
+        List<Product> products = productRepository.findByCategory_Name("Phone");
+        return products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
+    }
+
     /**
      * total stock quantity
      *
