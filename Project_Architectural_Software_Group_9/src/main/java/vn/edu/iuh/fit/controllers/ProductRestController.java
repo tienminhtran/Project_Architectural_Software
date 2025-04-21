@@ -327,6 +327,7 @@ import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.ProductResponse;
 import vn.edu.iuh.fit.services.ProductService;
 
+import javax.annotation.security.PermitAll;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -392,7 +393,6 @@ public class ProductRestController {
     }
 
     @GetMapping("/recent")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getRecentProducts() {
         List<ProductResponse> productResponses = productService.getRecentProducts();
         if (productResponses.isEmpty()) {
@@ -422,6 +422,7 @@ public class ProductRestController {
      * @param fileImages
      * @return
      */
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse<?>> createProduct(
             @RequestPart("product")  @NotNull(message = "Product data is required") String productJson,
@@ -538,12 +539,14 @@ public class ProductRestController {
 
 
     @GetMapping("/count")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> countProducts() {
         int count = productService.countProducts();
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Count products").response(count).build());
     }
 
     @GetMapping("/countStock")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getTotalStockQuantity() {
         int count = productService.getTotalStockQuantity();
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Total stock quantity").response(count).build());
@@ -595,6 +598,7 @@ public class ProductRestController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> deleteProduct(@PathVariable Long id) {
         boolean isDeleted = productService.deleteProduct(id);
         if (!isDeleted) {
