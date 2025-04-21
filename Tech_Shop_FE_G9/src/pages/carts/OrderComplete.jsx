@@ -2,6 +2,7 @@ import React, { useState } from 'react';
 import { motion } from 'framer-motion';
 import CheckoutStepper from './CheckoutStepper';
 import '../../assets/css/OrderComplete.css';
+// import DeliveryWithGeolocation from './DeliveryWithGeolocation'; 
 
 const OrderComplete = () => {
     const [isModalOpen, setIsModalOpen] = useState(false);
@@ -66,6 +67,7 @@ const OrderComplete = () => {
                             <p><strong>Giờ giao:</strong> 10:00 - 12:00</p>
                             <p><strong>Địa chỉ:</strong> Số 123, Đường ABC, Quận 1, TP. HCM</p>
                             <p><strong>Ghi chú:</strong> Giao vào ngày cuối tuần, vui lòng liên hệ trước khi giao hàng.</p>
+                            {/* <DeliveryWithGeolocation /> Hiển thị bản đồ và thông tin giao hàng */}
                         </div>
                     </div>
                 </div>
