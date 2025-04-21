@@ -104,7 +104,6 @@ const Footer = () => {
 
       {/* Bottom Footer */}
       <div className="footer-bottom">
-        <p>© 2024. All rights reserved by 4 Con Đường Đế Team.</p>
         <div className="socials">
           <FaFacebookF className="icon" />
           <FaInstagram className="icon" />

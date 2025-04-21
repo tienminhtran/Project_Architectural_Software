@@ -1,5 +1,5 @@
 // Nhập các thư viện và hook cần thiết
-import React, { useEffect, useState,useRef } from "react";
+import React, { useEffect, useState,useRef, useMemo } from "react";
 import { FaBars, FaChevronDown, FaShoppingCart, FaUser, FaHeart, FaEye } from "react-icons/fa";
 import "../../../src/assets/css/HeaderUser.css";
 import AnnouncementBar from "./AnnouncementBar.jsx";
@@ -14,7 +14,12 @@ const HeaderUser = () => {
   const navigate = useNavigate();
 
   const { userInfor } = useUser();
-  console.log("userInfor", userInfor);
+
+  const user = useMemo(() => {
+    return userInfor|| null;
+  }, [userInfor]);
+
+  // console.log("userInfor", user);
   // const categories = ["LapTop", "Phone", "Accessory"];
 
   const { recentlyProduct } = useDashboardData();
@@ -141,7 +146,7 @@ const HeaderUser = () => {
               </div>
               <div className="header-user__icon-item" onClick={toggleMenu} ref={userMenuRef}>
                 <FaUser />
-                <span className="header-user__username">{userInfor?.firstname || "User"}</span>
+                <span className="header-user__username">{user?.firstname || "User"}</span>
                 {showMenu && (
                   <div className="header-user__dropdown">
                     <div className="header-user__dropdown-item" onClick={() => navigate('/login')} > Login </div>

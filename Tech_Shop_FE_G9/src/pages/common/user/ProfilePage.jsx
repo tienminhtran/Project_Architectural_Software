@@ -10,11 +10,12 @@ const ProfilePage = () => {
   const [activeUpdate, setActiveUpdate] = useState(false);
   const [imageName, setImageName] = useState("");
 
-  console.log(userInfor);
+  // console.log("haha",userInfor);
 
   // Khởi tạo giá trị cho form data từ userInfor
   const [formData, setFormData] = useState({ ...userInfor });
   console.log("Dữ liệu gửi lên:", formData);
+  // console.log("haha", userInfor);
 
   const [selectedFiles, setSelectedFiles] = useState(null);
 

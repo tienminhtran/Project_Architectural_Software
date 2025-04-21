@@ -48,11 +48,11 @@ const useUser = (pageNo, pageSize) => {
     }, // Gọi API update user, munationFn nhận vào 1 object có 2 key là userid và formData
     onSuccess: (data) => {
       // Cập nhật lại cache của user sau khi update thành công
-      queryClient.setQueryData(["getUser", user], (oldData) => ({
+      queryClient.setQueryData(["getUser"], (oldData) => ({
         ...oldData,
         response: { ...oldData?.response, ...data },
       }));
-      queryClient.invalidateQueries(["getUser", user]); // Invalidate the query to refetch the user data
+      queryClient.invalidateQueries(["getUser"]); // Invalidate the query to refetch the user data
       queryClient.invalidateQueries(["getAllUsersPaging"]); // Invalidate the query to refetch the user data
       
       alert("Update user successfully!!");

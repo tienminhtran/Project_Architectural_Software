@@ -43,7 +43,7 @@ const ProtectedRoute = ({ allowedRoles }) => {
   }
 
     // Kiểm tra role của người dùng có trong allowedRoles không
-  if (!allowedRoles.includes(roles[0])) {
+  if (!allowedRoles.includes(roles[0]) || !accessToken) {
     return <Navigate to="/" replace />; // Không có quyền truy cập -> chuyển hướng về trang chủ
   }
 
