@@ -183,7 +183,11 @@ const ProductUser = () => {
         <div
           className="product-user__product-card"
           key={index}
-          onClick={() => navigate('/1')}
+          onClick={() => {
+
+            navigate(`/product/${btoa(product.id)}`, {state: { product }});
+
+          }} 
         >
           <div className="product-user__product-img-wrapper">
             <img

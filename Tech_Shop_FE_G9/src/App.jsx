@@ -72,7 +72,7 @@ function App() {
           path="/categories-all-accessory"
           element={<ProductCategories />}
         />
-        <Route path="/1" element={<HomeProductDetail />} />
+        <Route path="/product/:id" element={<HomeProductDetail />} />
 
         {/* Admin Page */}
 
