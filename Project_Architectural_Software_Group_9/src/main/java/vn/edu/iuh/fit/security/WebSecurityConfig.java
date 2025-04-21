@@ -58,6 +58,7 @@ public class WebSecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {"/register", "/user/home", "/forgot-password", "/api/v1/auth/verify",
             "/login","/user/assets/**", "/user/customize/**", "/admin/assets/**", "/user/reset-password", "/user/check-phone",
+            "/api/v1/products", "/api/v1/products/{id}", "/api/v1/products/all", "/api/v1/products/search", "/api/v1/products/search/**",
     };
 
     @Bean
@@ -96,12 +97,12 @@ public class WebSecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/v1/auth/verify", "/api/v1/auth/verify/**").permitAll()
 
                                 .requestMatchers(HttpMethod.GET, "/api/v1/user","/api/v1/user/**").hasAnyRole("ADMIN", "USER", "MANAGER")
-                                .requestMatchers("/api/v1/cart/**", "/api/v1/cart/me/**").hasAnyRole("ADMIN", "USER", "MANAGER")
+                                .requestMatchers("/api/v1/cart/**", "/api/v1/cart/me/**").authenticated()
 
                                 .requestMatchers(HttpMethod.GET, "/api/v1/voucher","/api/v1/voucher/**").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.POST, "/api/v1/voucher").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/v1/voucher/**").hasAnyRole("ADMIN", "MANAGER")
-                                .requestMatchers(HttpMethod.GET, "/api/v1/products","/api/v1/products/**").hasAnyRole("ADMIN", "MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/products/**").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.POST, "/api/v1/products").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers("/api/v1/orders","/api/v1/orders/**").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers("/api/v1/orders/me", "/api/v1/orders/me/**").hasAnyRole("ADMIN", "USER", "MANAGER")
