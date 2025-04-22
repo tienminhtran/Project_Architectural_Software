@@ -70,9 +70,14 @@
   .CartBuy-OrderBox__img {
     width: 6rem;
     height: 6rem;
-    object-fit: cover;
-    border-radius: 0.25rem;
-    border: 1px solid #ccc;
+    object-fit: contain;
+    /* border-radius: 0.25rem; */
+    /* border: 1px solid #ccc; */
+    transition: transform 0.3s;
+  }
+  
+  .CartBuy-OrderBox__img:hover {
+    transform: scale(1.05);
   }
   
   .CartBuy-OrderBox__details {

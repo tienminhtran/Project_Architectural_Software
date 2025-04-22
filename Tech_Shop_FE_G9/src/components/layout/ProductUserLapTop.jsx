@@ -9,6 +9,8 @@ import {
 import "../../../src/assets/css/ProductUser.css";
 import { useNavigate } from "react-router-dom";
 import { filterProductLaptop } from "../../services/productService";
+import useCart from "../../hooks/useCart";
+import { toast } from "react-toastify";
 
 // const productData = [
 //   {
@@ -105,6 +107,7 @@ const ProductUser = () => {
   const navigate = useNavigate();
   
   const [products, setProducts] = React.useState([]);
+  const { addItem } = useCart(); 
 
 
   useEffect(() => {
@@ -157,6 +160,30 @@ const ProductUser = () => {
   
     return () => clearInterval(interval);
   }, []);
+
+  const handleAddtoCart = (product) => {
+    try {
+      const request = {
+        id_product: product?.id,
+        quantity: 1
+      }
+      addItem(request);
+
+      console.log("Đã thêm vào giỏ hàng:", product.productName);
+
+      toast.success("Đã thêm vào giỏ hàng ", {
+        position: 'top-right',
+        autoClose: 2000,              
+      })
+    } catch (error) {
+      
+      console.error("Error adding to cart:", error);
+      toast.error("Thêm vào giỏ hàng thất bại", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
+  } 
 
   return (
     <div className="product-user__product-container">
@@ -245,7 +272,7 @@ const ProductUser = () => {
               onClick={(e) => {
                 e.stopPropagation(); // Chặn click lan ra ngoài
                 console.log("Đã thêm vào giỏ hàng:", product.productName);
-                // TODO: Xử lý thêm giỏ hàng
+                handleAddtoCart(product);
               }}
             >
               <FaShoppingCart /> Thêm giỏ hàng
