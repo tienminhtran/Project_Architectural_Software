@@ -1,4 +1,4 @@
-import React, { useState, useMemo } from "react";
+import React, { useState, useEffect } from "react";
 import CheckoutStepper from "./CheckoutStepper";
 import { FaTrash, FaAngleDown , FaAngleUp } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
@@ -8,26 +8,26 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import style cho confirm-alert
 import '../../assets/css/CartBuyOrderBox.css';
 
-import useCart  from "../../hooks/useCart"; 
 import { formatPrice } from "../../utils/FormatPrice"; 
 
-const CartBuyOrderBox = () => {
+const CartBuyOrderBox = ({cartItems}) => {
+    console.log("cartItems 2", cartItems);
     const navigate = useNavigate();
-    const { carts, isLoading } = useCart();
-
-    const cartItems = useMemo(() => {
-        if(!carts) return [];
-        return carts.response;
-    }, [carts]);        
+          
 
     const [currentStep] = useState(0); // Bước: Giỏ hàng
-    const [items, setCartItems] = useState(cartItems);
+    const [items, setCartItems] = useState([]);
     console.log("items",items);
 
     const [code, setCode] = useState("");
     const [discount, setDiscount] = useState(0);
     const [showDiscountInput, setShowDiscountInput] = useState(false);
     const [showAllItems, setShowAllItems] = useState(false);
+
+    // refresh khi reload trang
+    useEffect(() => {
+        setCartItems(cartItems || []); // Cập nhật giỏ hàng từ props
+    }, [cartItems]);
 
     const handleQuantityChange = (index, newQuantity) => {
         if (newQuantity < 1) return;
