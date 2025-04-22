@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useMemo } from "react";
 import CheckoutStepper from "./CheckoutStepper";
 import { FaTrash, FaAngleDown , FaAngleUp } from 'react-icons/fa';
 import { toast, ToastContainer } from 'react-toastify';
@@ -8,45 +8,30 @@ import 'react-toastify/dist/ReactToastify.css';
 import 'react-confirm-alert/src/react-confirm-alert.css'; // Import style cho confirm-alert
 import '../../assets/css/CartBuyOrderBox.css';
 
+import useCart  from "../../hooks/useCart"; 
+import { formatPrice } from "../../utils/FormatPrice"; 
+
 const CartBuyOrderBox = () => {
     const navigate = useNavigate();
+    const { carts, isLoading } = useCart();
+
+    const cartItems = useMemo(() => {
+        if(!carts) return [];
+        return carts.response;
+    }, [carts]);        
 
     const [currentStep] = useState(0); // Bước: Giỏ hàng
-    const [cartItems, setCartItems] = useState([
-        {
-            name: "Tấm lót chuột Steelseries Qck Mini Mousepad",
-            image: "/images/product/mouse3.jpg",
-            price: 219000,
-            originalPrice: 250000,
-            quantity: 1,
-        },
-        {
-            name: "Chuột gaming Logitech G102",
-            image: "/images/product/mouse1.jpg",
-            price: 299000,
-            originalPrice: 390000,
-            quantity: 2,
-        },
-        {
-            name: "Bàn phím cơ DareU EK87",
-            image: "/images/product/keyboard.jpg",
-            price: 590000,
-            originalPrice: 690000,
-            quantity: 1,
-        }
-    ]);
+    const [items, setCartItems] = useState(cartItems);
+    console.log("items",items);
 
     const [code, setCode] = useState("");
     const [discount, setDiscount] = useState(0);
     const [showDiscountInput, setShowDiscountInput] = useState(false);
     const [showAllItems, setShowAllItems] = useState(false);
 
-    const formatPrice = (price) =>
-        price.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
-
     const handleQuantityChange = (index, newQuantity) => {
         if (newQuantity < 1) return;
-        const updated = [...cartItems];
+        const updated = [...items];
         updated[index].quantity = newQuantity;
         setCartItems(updated);
     };
@@ -59,8 +44,8 @@ const CartBuyOrderBox = () => {
                 {
                     label: 'Có',
                     onClick: () => {
-                        const productName = cartItems[index].name;
-                        const updated = cartItems.filter((_, i) => i !== index);
+                        const productName = items[index].name;
+                        const updated = items.filter((_, i) => i !== index);
                         setCartItems(updated);
                         toast.success(`${productName} đã được xóa thành công!`, {
                             position: "top-center",
@@ -88,18 +73,18 @@ const CartBuyOrderBox = () => {
         }
     };
 
-    const totalPrice = cartItems.reduce(
-        (acc, item) => acc + item.price * item.quantity,
-        0
+    const totalPrice = items.reduce(
+        (acc, item) => acc + item.price * item.quantity, 0
     );
 
     const finalPrice = totalPrice * (1 - discount);
-    const displayedItems = showAllItems ? cartItems : cartItems.slice(0, 2);
+    const displayedItems = showAllItems ? items : items.slice(0, 2);
+    console.log("displayedItems",displayedItems);
 
     // Lưu dữ liệu giỏ hàng vào sessionStorage khi nhấn vào "NHẬP THÔNG TIN KHÁCH HÀNG"
     const handleCheckout = () => {
         const cartData = {
-            cartItems, // Danh sách sản phẩm trong giỏ hàng
+            cartItems: items, // Updated to use 'items'
             totalPrice: finalPrice, // Tổng tiền sau khi áp dụng giảm giá
         };
 
@@ -126,12 +111,12 @@ const CartBuyOrderBox = () => {
 
             {displayedItems.map((item, index) => (
                 <div key={index} className="CartBuy-OrderBox__item">
-                    <img src={item.image} alt={item.name} className="CartBuy-OrderBox__img" />
+                    <img src={item.thumbnail} alt={item.name} className="CartBuy-OrderBox__img" />
                     <div className="CartBuy-OrderBox__details">
                         <div className="CartBuy-OrderBox__name">{item.name}</div>
                         <div className="CartBuy-OrderBox__prices">
                             <span className="CartBuy-OrderBox__price">{formatPrice(item.price)}</span>
-                            <span className="CartBuy-OrderBox__original">{formatPrice(item.originalPrice)}</span>
+                            <span className="CartBuy-OrderBox__original">{formatPrice(21000000)}</span>
                         </div>
                         <div className="CartBuy-OrderBox__actions">
                             <button className="CartBuy-OrderBox__sl" onClick={() => handleQuantityChange(index, item.quantity - 1)} disabled={item.quantity <= 1}>−</button>
@@ -144,7 +129,7 @@ const CartBuyOrderBox = () => {
                     </div>
                 </div>
             ))}
-            {cartItems.length > 2 && (
+            {items.length > 2 && (
                 <div className="CartBuy-OrderBox__toggleList">
                     <button onClick={() => setShowAllItems(!showAllItems)}>
                         {showAllItems ? (

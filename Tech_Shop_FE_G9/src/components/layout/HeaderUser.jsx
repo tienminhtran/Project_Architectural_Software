@@ -12,12 +12,18 @@ import { getAccessToken, removeAccessToken } from "../../services/authService.js
 import { logout } from "../../store/slices/AuthSlice.js";
 import { confirmAlert } from 'react-confirm-alert';
 import { toast } from "react-toastify";
+import useCart from "../../hooks/useCart.js";
 
 
 const HeaderUser = () => {
 
   const navigate = useNavigate();
   const dispatch = useDispatch();
+  const {carts} = useCart();
+  const cartItems = useMemo(() => {
+    if(!carts) return [];
+    return carts.response;
+  }, [carts]);
 
   const { userInfor } = useUser();
   const user = useMemo(() => {
@@ -171,7 +177,7 @@ const HeaderUser = () => {
             <div className="header-user__menu-icons">
               <div className="header-user__icon-item">
                 <FaShoppingCart style={{color:'#838383' }} onClick={()=>navigate('/cart')}/>
-                <span className="header-user__icon-badge-cart">2</span>
+                <span className="header-user__icon-badge-cart">{cartItems.length}</span>
               </div>
               <div className="header-user__icon-item">
                 <FaHeart style={{color:'#838383' }}onClick={()=>navigate('/favorite-products')} />
