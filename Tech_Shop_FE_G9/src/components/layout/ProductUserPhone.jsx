@@ -9,6 +9,9 @@ import {
 import "../../../src/assets/css/ProductUser.css";
 import { useNavigate } from 'react-router-dom';
 import { filterProductPhone } from "../../services/productService";
+import useCart from "../../hooks/useCart";
+import { toast } from "react-toastify";
+import { getAccessToken } from "../../services/authService";
 
 // const productData = [
 //   {
@@ -86,6 +89,9 @@ const ProductUser = () => {
   const brands = [ "Apple", "Samsung", "Xiaomi", "OPPO", "Vivo", "Realme", "Nokia"];
 
   const [products, setProducts] = React.useState([]);
+  const { addItem } = useCart(); 
+  const token = getAccessToken();
+
   
     console.log("products phone", products);
   
@@ -137,6 +143,30 @@ const ProductUser = () => {
     return () => clearInterval(interval);
   }, []);
 
+  const handleAddtoCart = (product) => {
+      try {
+        const request = {
+          id_product: product?.id,
+          quantity: 1
+        }
+        addItem(request);
+  
+        console.log("Đã thêm vào giỏ hàng:", product.productName);
+  
+        toast.success("Đã thêm vào giỏ hàng ", {
+          position: 'top-right',
+          autoClose: 2000,              
+        })
+      } catch (error) {
+        
+        console.error("Error adding to cart:", error);
+        toast.error("Thêm vào giỏ hàng thất bại", {
+          position: "top-right",
+          autoClose: 3000,
+        });
+      }
+    } 
+
   return (
     <div className="product-user__product-container">
       <div className="product-user__product-header">
@@ -162,7 +192,7 @@ const ProductUser = () => {
         <div
           className="product-user__product-card"
           key={index}
-          onClick={() => navigate('/1')}
+          onClick={() => navigate(`/product/${btoa(product.id)}`, {state: { product }})}
         >
           <div className="product-user__product-img-wrapper">
             <img
@@ -218,6 +248,7 @@ const ProductUser = () => {
               onClick={(e) => {
                 e.stopPropagation(); // Ngăn điều hướng
                 console.log("Thêm giỏ hàng:", product.productName);
+                token ? handleAddtoCart(product) : navigate("/login");
               }}
             >
               <FaShoppingCart /> Thêm giỏ hàng

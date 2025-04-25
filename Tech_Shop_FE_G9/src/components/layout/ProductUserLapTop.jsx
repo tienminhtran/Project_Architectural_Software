@@ -11,6 +11,7 @@ import { useNavigate } from "react-router-dom";
 import { filterProductLaptop } from "../../services/productService";
 import useCart from "../../hooks/useCart";
 import { toast } from "react-toastify";
+import { getAccessToken } from "../../services/authService";
 
 // const productData = [
 //   {
@@ -108,6 +109,7 @@ const ProductUser = () => {
   
   const [products, setProducts] = React.useState([]);
   const { addItem } = useCart(); 
+  const token = getAccessToken();
 
 
   useEffect(() => {
@@ -272,7 +274,7 @@ const ProductUser = () => {
               onClick={(e) => {
                 e.stopPropagation(); // Chặn click lan ra ngoài
                 console.log("Đã thêm vào giỏ hàng:", product.productName);
-                handleAddtoCart(product);
+                token ? handleAddtoCart(product) : navigate("/login");
               }}
             >
               <FaShoppingCart /> Thêm giỏ hàng

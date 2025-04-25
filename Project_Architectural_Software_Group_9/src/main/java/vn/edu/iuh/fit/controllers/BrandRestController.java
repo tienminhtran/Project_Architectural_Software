@@ -19,6 +19,7 @@ import vn.edu.iuh.fit.dtos.response.BrandResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.services.BrandService;
 
+import javax.annotation.security.PermitAll;
 import java.util.List;
 
 @RestController
@@ -46,7 +47,7 @@ public class BrandRestController {
     }
 
     @GetMapping("/all")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PermitAll
     public ResponseEntity<BaseResponse<?>> getAllBrand() {
         List<BrandResponse> brandResponses = brandService.getAllBrands();
         if (brandResponses.isEmpty()) {
