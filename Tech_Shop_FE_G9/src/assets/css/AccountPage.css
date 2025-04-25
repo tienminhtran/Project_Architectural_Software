@@ -1,0 +1,233 @@
+/* Layout chính */
+.account-page__container {
+    display: flex;
+    gap: 14px;
+    padding: 14px;
+    height: 800px;
+    background: linear-gradient(135deg, #f5f7fa 0%, #e4e7eb 100%);
+    box-sizing: border-box;
+  }
+  
+  /* Sidebar chiếm 30% */
+  .account-page__sidebar {
+    flex: 0 0 30%;
+    max-width: 30%;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 24px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+  }
+  
+  .account-page__sidebar:hover {
+    transform: translateY(-4px);
+  }
+  
+  /* Avatar và tên */
+  .account-page__avatar {
+    text-align: center;
+    margin-bottom: 24px;
+  }
+  
+  .account-page__avatar img {
+    width: 90px;
+    height: 90px;
+    border-radius: 50%;
+    object-fit: cover;
+    margin-bottom: 12px;
+    background: #f3b786;
+    border: 3px solid #e0e0e0;
+    transition: border-color 0.3s ease;
+  }
+  
+  .account-page__avatar img:hover {
+    border-color: #d60000;
+  }
+  
+  .account-page__avatar h3 {
+    font-size: 20px;
+    font-weight: 700;
+    color: #2d3436;
+    margin: 0;
+  }
+  
+  /* Danh sách menu */
+  .account-page__sidebar ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+  
+  .account-page__sidebar ul li {
+    display: flex;
+    align-items: center;
+    padding: 14px 16px;
+    border-radius: 10px;
+    cursor: pointer;
+    font-size: 16px;
+    color: #2d3436;
+    font-weight: 500;
+    transition: all 0.3s ease;
+    margin-bottom: 8px;
+  }
+  
+  .account-page__icon {
+    margin-right: 12px;
+    font-size: 18px;
+    color: #636e72;
+    transition: color 0.3s ease;
+  }
+  
+  .account-page__active,
+  .account-page__sidebar ul li:hover {
+    background: #ffe8e8;
+    color: #d60000;
+  }
+  
+  .account-page__active .account-page__icon,
+  .account-page__sidebar ul li:hover .account-page__icon {
+    color: #d60000;
+  }
+  
+  /* Main content chiếm 70% */
+  .account-page__main-content {
+    flex: 0 0 70%;
+    max-width: 69%;
+    background: #ffffff;
+    border-radius: 16px;
+    padding: 12px;
+    gap: 14px;
+    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.08);
+    transition: transform 0.3s ease;
+  }
+  
+  .account-page__main-content:hover {
+    transform: translateY(-4px);
+  }
+  
+  .account-page__main-content h2 {
+    font-size: 24px;
+    margin-bottom: 28px;
+    color: #2d3436;
+    font-weight: 700;
+    border-bottom: 2px solid #f1f1f1;
+    padding-bottom: 12px;
+  }
+  
+  /* Form group */
+  .account-page__form-group {
+    margin-bottom: 24px;
+  }
+  
+  .account-page__form-group label {
+    display: block;
+    font-size: 15px;
+    margin-bottom: 10px;
+    font-weight: 600;
+    color: #2d3436;
+  }
+  
+  .account-page__form-group input[type="text"],
+  .account-page__form-group input[type="email"],
+  .account-page__form-group input[type="date"],
+  .account-page__form-group select {
+    width: 100%;
+    padding: 12px 16px;
+    border: 1px solid #dfe6e9;
+    border-radius: 10px;
+    font-size: 15px;
+    background: #fafafa;
+    transition: all 0.3s ease;
+  }
+  
+  .account-page__form-group input:focus,
+  .account-page__form-group select:focus {
+    border-color: #d60000;
+    background: #ffffff;
+    box-shadow: 0 0 8px rgba(214, 0, 0, 0.1);
+    outline: none;
+  }
+  
+  .account-page__form-group input[readOnly] {
+    background: #f1f1f1;
+    cursor: not-allowed;
+  }
+  
+  /* Giới tính radio */
+  .account-page__gender-group {
+    display: flex;
+    align-items: center;
+    gap: 24px;
+    margin-top: 10px;
+  }
+  
+  .account-page__gender-group label {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-weight: 500;
+    font-size: 15px;
+    color: #2d3436;
+  }
+  
+  .account-page__gender-group input[type="radio"] {
+    accent-color: #d60000;
+  }
+  
+  /* Nút lưu */
+  .account-page__btn-save {
+    background: #d60000;
+    color: #ffffff;
+    border: none;
+    padding: 14px 32px;
+    font-size: 16px;
+    font-weight: 600;
+    border-radius: 10px;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    display: inline-flex;
+    align-items: center;
+    gap: PIPES_AND_CIGARS;
+  }
+  
+  .account-page__btn-save:hover {
+    background: #b30000;
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(214, 0, 0, 0.3);
+  }
+  
+  /* Responsive mobile */
+  @media (max-width: 768px) {
+    .account-page__container {
+      flex-direction: column;
+      padding: 16px;
+    }
+  
+    .account-page__sidebar,
+    .account-page__main-content {
+      max-width: 100%;
+      flex: 1;
+    }
+  
+    .account-page__sidebar {
+      padding: 20px;
+    }
+  
+    .account-page__main-content {
+      padding: 24px;
+    }
+  
+    .account-page__sidebar ul li {
+      font-size: 15px;
+      padding: 12px 14px;
+    }
+  
+    .account-page__main-content h2 {
+      font-size: 22px;
+    }
+  
+    .account-page__btn-save {
+      width: 100%;
+      justify-content: center;
+    }
+  }
