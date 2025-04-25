@@ -7,12 +7,47 @@ export default function DeliveryWithGeolocation() {
   const [manualAddress, setManualAddress] = useState("");
   const [selectedPosition, setSelectedPosition] = useState(null);
   const [selectedAddress, setSelectedAddress] = useState("");
+  const [estimatedDeliveryTime, setEstimatedDeliveryTime] = useState("");
 
   const mapRef = useRef(null);
   const markerRef = useRef(null);
   const mapContainerRef = useRef(null);
 
-  const storePosition = { lat: 10.8222031, lng: 106.6867649 }; // vị trí cửa hàng IUH
+  const storePosition = { lat: 10.8222031, lng: 106.6867649 }; // Vị trí cửa hàng IUH
+
+  // Hàm tính khoảng cách theo công thức Haversine (km)
+  const calculateDistance = (lat1, lon1, lat2, lon2) => {
+    const R = 6371; // Bán kính trái đất (km)
+    const dLat = (lat2 - lat1) * (Math.PI / 180);
+    const dLon = (lon2 - lon1) * (Math.PI / 180);
+
+    const a =
+      Math.sin(dLat / 2) * Math.sin(dLat / 2) +
+      Math.cos(lat1 * (Math.PI / 180)) *
+        Math.cos(lat2 * (Math.PI / 180)) *
+        Math.sin(dLon / 2) *
+        Math.sin(dLon / 2);
+    const c = 2 * Math.atan2(Math.sqrt(a), Math.sqrt(1 - a));
+
+    return R * c; // Khoảng cách (km)
+  };
+
+  // Hàm tính toán thời gian giao hàng
+  const calculateDeliveryTime = (coords) => {
+    if (coords && storePosition) {
+      const distance = calculateDistance(storePosition.lat, storePosition.lng, coords.lat, coords.lng);
+      const speed = 30; // Tốc độ di chuyển (km/h)
+      const dailyDriveTime = 5; // Thời gian chạy mỗi ngày (giờ)
+      const prepTime = 1; // Thời gian chuẩn bị (ngày)
+
+      const travelTimeInHours = distance / speed; // Tổng thời gian di chuyển (giờ)
+      const travelDays = Math.ceil(travelTimeInHours / dailyDriveTime); // Tính số ngày di chuyển
+
+      const totalTimeInDays = prepTime + travelDays; // Tổng thời gian (ngày)
+
+      setEstimatedDeliveryTime(`${totalTimeInDays} ngày`);
+    }
+  };
 
   const fetchAddress = async ({ lat, lng }) => {
     const res = await fetch(
@@ -34,6 +69,7 @@ export default function DeliveryWithGeolocation() {
         mapRef.current.setView(coords, 15);
         markerRef.current.setLatLng(coords);
       }
+      calculateDeliveryTime(coords); // Tính toán thời gian giao hàng
     } else {
       alert("Không tìm thấy địa chỉ. Vui lòng thử lại.");
     }
@@ -60,6 +96,7 @@ export default function DeliveryWithGeolocation() {
         const address = await fetchAddress(coords);
         setSelectedAddress(address);
         initMap(coords);
+        calculateDeliveryTime(coords); // Tính toán thời gian giao hàng
       },
       async (err) => {
         alert("Không thể truy cập vị trí! Dùng vị trí cửa hàng mặc định.");
@@ -67,6 +104,7 @@ export default function DeliveryWithGeolocation() {
         setSelectedPosition(fallback);
         setSelectedAddress(await fetchAddress(fallback));
         initMap(fallback);
+        calculateDeliveryTime(fallback); // Tính toán thời gian giao hàng
       }
     );
   };
@@ -90,6 +128,7 @@ export default function DeliveryWithGeolocation() {
 
       const newAddress = await fetchAddress(newCoords);
       setSelectedAddress(newAddress);
+      calculateDeliveryTime(newCoords); // Tính toán thời gian giao hàng
     });
 
     map.on("moveend", async () => {
@@ -99,6 +138,7 @@ export default function DeliveryWithGeolocation() {
       setSelectedPosition(newCoords);
       const newAddress = await fetchAddress(newCoords);
       setSelectedAddress(newAddress);
+      calculateDeliveryTime(newCoords); // Tính toán thời gian giao hàng
     });
   };
 
@@ -107,7 +147,7 @@ export default function DeliveryWithGeolocation() {
   }, []);
 
   return (
-    <div style={{}}>
+    <div>
       <h3>Giao hàng theo vị trí địa lý</h3>
       <div
         ref={mapContainerRef}
@@ -167,6 +207,7 @@ export default function DeliveryWithGeolocation() {
       <div>
         <p><strong>Địa chỉ giao hàng:</strong><br />{selectedAddress}</p>
         <p><strong>Tọa độ giao hàng:</strong> {selectedPosition?.lat.toFixed(6)}, {selectedPosition?.lng.toFixed(6)}</p>
+        <p><strong>Thời gian giao hàng dự kiến:</strong> {estimatedDeliveryTime}</p>
       </div>
     </div>
   );

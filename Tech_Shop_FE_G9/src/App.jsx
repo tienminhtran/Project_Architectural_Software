@@ -42,6 +42,7 @@ import Step4Cart from "./pages/carts/OrderComplete";
 import HomeCart from "./pages/carts/HomeCart"; 
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import FavoriteProducts from "./components/layout/FavoriteProducts"; 
+import AccountPage  from "./pages/common/user/AccountPage";
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
   <div className="axil-signin-area">
@@ -258,11 +259,14 @@ function App() {
 
         {/* User Routes (Nếu cần) */}
         <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"]} />}>
-          <Route path="/cart" element={<HomeCart />} />
+        <Route path="/cart" element={<HomeCart />} />
           <Route path="/cart-buy-order-box" element={<Step1Cart />} />
           <Route path="/order-info-form" element={<Step2Cart />} />
           <Route path="/order-payment" element={<Step3Cart />} />
           <Route path="/order-complete" element={<Step4Cart />} />
+          
+          <Route path ="/my-account" element={<AccountPage />} />
+
         </Route>
 
       </Routes>

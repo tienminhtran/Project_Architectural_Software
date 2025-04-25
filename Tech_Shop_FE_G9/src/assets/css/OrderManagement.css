@@ -1,0 +1,69 @@
+.order-management__container {
+  padding: 20px;
+  font-family: Arial, sans-serif;
+}
+
+.order-management__tabs {
+  display: flex;
+  gap: 10px;
+  border-bottom: 2px solid #ccc;
+  margin-bottom: 10px;
+}
+
+.order-management__tab {
+  background: none;
+  border: none;
+  padding: 10px 15px;
+  cursor: pointer;
+  font-weight: bold;
+  color: #000;
+}
+
+.order-management__tab--active {
+  border-bottom: 2px solid red;
+  color: red;
+}
+
+.order-management__search-box {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 20px;
+}
+
+.order-management__search-box input {
+  padding: 8px;
+  flex: 1;
+}
+
+.order-management__search-box input:focus {
+  border-color: #0af0f8;
+  box-shadow: 0 0 8px rgba(214, 0, 0, 0.1);
+  outline: none;
+}
+
+.order-management__search-btn {
+  padding: 8px 12px;
+  background-color: #ffffff;
+  border: 1px solid #ccc;
+  cursor: pointer;
+  color: #4400ff;
+}
+
+.order-management__order-empty {
+  text-align: center;
+  margin-top: 50px;
+}
+
+.order-management__order-empty img {
+  width: 100px;
+  margin-bottom: 20px;
+}
+
+.order-management__continue-btn {
+  padding: 10px 20px;
+  background-color: red;
+  color: white;
+  border: none;
+  cursor: pointer;
+}

@@ -93,7 +93,7 @@ const ProductUser = () => {
       const fetchProducts = async () => {
         try {
           const response = await filterProductPhone();
-          // console.log("products", response);
+          console.log("products", response);
           setProducts(response.response); // Giả sử response chứa danh sách sản phẩm
         } catch (error) {
           console.error("Error fetching products:", error);

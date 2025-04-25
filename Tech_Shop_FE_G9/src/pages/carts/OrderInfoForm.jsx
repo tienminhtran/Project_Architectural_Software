@@ -10,10 +10,10 @@ const OrderInfoForm = () => {
     const [gender, setGender] = useState('Anh');
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
-    const [province, setProvince] = useState('');
-    const [district, setDistrict] = useState('');
-    const [ward, setWard] = useState('');
-    const [address, setAddress] = useState('');
+    // const [province, setProvince] = useState('');
+    // const [district, setDistrict] = useState('');
+    // const [ward, setWard] = useState('');
+    // const [address, setAddress] = useState('');
     const [note, setNote] = useState('');
     const [invoice, setInvoice] = useState(false);
     const [cartData, setCartData] = useState(null);
