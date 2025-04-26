@@ -43,6 +43,9 @@ import HomeCart from "./pages/carts/HomeCart";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
 import FavoriteProducts from "./components/layout/FavoriteProducts"; 
 import AccountPage  from "./pages/common/user/AccountPage";
+import '@fortawesome/fontawesome-free/css/all.min.css';
+import CallButton from './components/layout/CallButton';
+
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
   <div className="axil-signin-area">
@@ -59,6 +62,9 @@ const DashboardLayout = ({ children }) => (
 function App() {
   return (
     <Router>
+
+<CallButton />
+
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
@@ -271,6 +277,7 @@ function App() {
 
       </Routes>
     </Router>
+
   );
 }
 
