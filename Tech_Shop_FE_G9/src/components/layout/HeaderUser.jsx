@@ -109,6 +109,7 @@ const HeaderUser = () => {
   }
 
   return (
+    <div>
     <div className="header-user">
       {/* Thanh thông báo đầu trang */}
       <AnnouncementBar />
@@ -302,6 +303,39 @@ const HeaderUser = () => {
       </div>
      
     </div>
+    <div className="contact-container">
+        <div className="contact-box">
+          <img src="/images/icon/phone-icon.png" alt="Phone" />
+          <div>
+            <p>Nhân viên kinh doanh 1</p>
+            <b>090 6979 036</b>
+          </div>
+        </div>
+        <div className="contact-box">
+          <img src="/images/icon/phone-icon.png" alt="Phone" />
+          <div>
+            <p>Nhân viên kinh doanh 2</p>
+            <b>0937 117 336</b>
+          </div>
+        </div>
+        <div className="contact-box">
+          <img src="/images/icon/phone-icon.png" alt="Phone" />
+          <div>
+            <p>Nhân viên kinh doanh 3</p>
+            <b>0909 68 2336</b>
+          </div>
+        </div>
+        <div className="contact-box">
+          <img src="/images/icon/phone-icon.png" alt="Phone" />
+          <div>
+            <p>Nhân viên kinh doanh 4</p>
+            <b>0909 12 2336</b>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
   );
 };
 

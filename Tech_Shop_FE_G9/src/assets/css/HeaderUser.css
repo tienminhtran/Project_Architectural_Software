@@ -420,3 +420,12 @@
   margin-left: 5px;
   font-size: 16px;
 }
+
+
+.contact-container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
+}

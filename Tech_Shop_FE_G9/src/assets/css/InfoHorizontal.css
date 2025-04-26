@@ -1,0 +1,47 @@
+.info-container {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 10px;
+    padding: 10px;
+  }
+  
+  .info-box {
+    border: 1px dashed #4caf50;
+    padding: 16px;
+    width: 250px;
+    border-radius: 8px;
+    text-align: center;
+  }
+  
+  .contact-container {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+    margin-top: 20px;
+  }
+  
+  .contact-box {
+    border: 1px solid #2196f3;
+    padding: 16px;
+    width: 250px;
+    border-radius: 8px;
+    display: flex;
+    align-items: center;
+    gap: 12px;
+  }
+  
+  .contact-box img {
+    width: 40px;
+    height: 40px;
+  }
+  
+  .contact-box p {
+    margin: 0;
+    font-size: 14px;
+  }
+  
+  .contact-box b {
+    color: #2196f3;
+  }
+  

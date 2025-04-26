@@ -5,7 +5,8 @@ import '../../assets/css/OrderPayment.css';
 import { useNavigate } from 'react-router-dom';
 import { toast } from 'react-toastify';
 import PayPalButton from './PayPalButton';
-
+import HeardUserBasic from "../../components/layout/HeaderUserBasic"; // Adjust the path as necessary
+import FooterUser from "../../components/layout/Footer";
 // Helper function to format currency
 const formatCurrency = (amount) => {
     return amount.toLocaleString('vi-VN', { style: 'currency', currency: 'VND' });
@@ -56,97 +57,117 @@ const OrderPayment = () => {
     }
 
     return (
-        <div className="OrderPayment__container">
-            <CheckoutStepper currentStep={2} />
+        <div>
+            <HeardUserBasic />
+            <div style={{ display: 'flex' }}>
 
-            <motion.div
-                initial={{ opacity: 0, y: 30 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ duration: 0.6 }}
-                className="OrderPayment__section"
-            >
-                <div className="OrderPayment__title">Phương thức thanh toán</div>
-
-                <div className="OrderPayment__method">
-                    <label>
-                        <input
-                            type="radio"
-                            name="payment"
-                            value="cod"
-                            checked={selectedMethod === 'cod'}
-                            onChange={() => setSelectedMethod('cod')}
-                        />
-                        Thanh toán khi nhận hàng (COD)
-                    </label>
-
-                    <label>
-                        <input
-                            type="radio"
-                            name="payment"
-                            value="bank"
-                            checked={selectedMethod === 'bank'}
-                            onChange={() => setSelectedMethod('bank')}
-                        />
-                        Chuyển khoản ngân hàng
-                    </label>
-
-                    <label>
-                        <input
-                            type="radio"
-                            name="payment"
-                            value="paypal"
-                            checked={selectedMethod === 'paypal'}
-                            onChange={() => setSelectedMethod('paypal')}
-                        />
-                        Thanh toán qua PayPal
-                    </label>
+                <div>
+                    <img src="../../../public/images/bg/thu-cu-doi-moi.png" alt="Logo" className="CartBuy-OrderBox__logo"
+                    style={{ width: "160px"}} />
                 </div>
 
-                {selectedMethod === 'bank' && (
-                    <>
-                        <div className="OrderPayment__bankInfo">
-                            <p><strong>Ngân hàng:</strong> Techcombank (TCB)</p>
-                            <p><strong>Số tài khoản:</strong> 0123456789</p>
-                            <p><strong>Chủ tài khoản:</strong> Công ty TNHH 4 CON ĐẾ</p>
+
+                <div className="OrderPayment__container">
+                    <CheckoutStepper currentStep={2} />
+
+                    <motion.div
+                        initial={{ opacity: 0, y: 30 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        transition={{ duration: 0.6 }}
+                        className="OrderPayment__section"
+                    >
+                        <div className="OrderPayment__title">Phương thức thanh toán</div>
+
+                        <div className="OrderPayment__method">
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="payment"
+                                    value="cod"
+                                    checked={selectedMethod === 'cod'}
+                                    onChange={() => setSelectedMethod('cod')}
+                                />
+                                Thanh toán khi nhận hàng (COD)
+                            </label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="payment"
+                                    value="bank"
+                                    checked={selectedMethod === 'bank'}
+                                    onChange={() => setSelectedMethod('bank')}
+                                />
+                                Chuyển khoản ngân hàng
+                            </label>
+
+                            <label>
+                                <input
+                                    type="radio"
+                                    name="payment"
+                                    value="paypal"
+                                    checked={selectedMethod === 'paypal'}
+                                    onChange={() => setSelectedMethod('paypal')}
+                                />
+                                Thanh toán qua PayPal
+                            </label>
                         </div>
 
-                        <BankQR amount={totalAmount} orderCode={orderCode} />
-                    </>
-                )}
+                        {selectedMethod === 'bank' && (
+                            <>
+                                <div className="OrderPayment__bankInfo">
+                                    <p><strong>Ngân hàng:</strong> Techcombank (TCB)</p>
+                                    <p><strong>Số tài khoản:</strong> 0123456789</p>
+                                    <p><strong>Chủ tài khoản:</strong> Công ty TNHH 4 CON ĐẾ</p>
+                                </div>
 
-                <div className="OrderPayment__summary">
-                    <div className="OrderPayment__row">
-                        <span>Tạm tính:</span>
-                        <span className="OrderInfoForm__totalPrice">{cartData ? formatCurrency(cartData.totalPrice) : '0đ'}</span>
-                    </div>
-                    <div className="OrderPayment__row">
-                        <span>Phí vận chuyển:</span>
-                        <span>{formatCurrency(19000)}</span>
-                    </div>
-                    <div className="OrderPayment__total">
-                        <strong>Tổng cộng:</strong>
-                        <strong>{cartData ? formatCurrency(totalAmount) : '0đ'}</strong>
-                    </div>
+                                <BankQR amount={totalAmount} orderCode={orderCode} />
+                            </>
+                        )}
+
+                        <div className="OrderPayment__summary">
+                            <div className="OrderPayment__row">
+                                <span>Tạm tính:</span>
+                                <span className="OrderInfoForm__totalPrice">{cartData ? formatCurrency(cartData.totalPrice) : '0đ'}</span>
+                            </div>
+                            <div className="OrderPayment__row">
+                                <span>Phí vận chuyển:</span>
+                                <span>{formatCurrency(19000)}</span>
+                            </div>
+                            <div className="OrderPayment__total">
+                                <strong>Tổng cộng:</strong>
+                                <strong>{cartData ? formatCurrency(totalAmount) : '0đ'}</strong>
+                            </div>
+                        </div>
+
+                        {selectedMethod === 'paypal' ? (
+                            <PayPalButton
+                                amount={totalAmount.toFixed(2)} // Ensure the amount is correctly formatted for PayPal
+                                onSuccess={(details) => {
+                                    toast.success(`Thanh toán thành công bởi ${details.payer.name.given_name}`, {
+                                        position: 'top-center',
+                                        autoClose: 2000,
+                                        onClose: () => navigate('/order-complete'),
+                                    });
+                                }}
+                            />
+                        ) : (
+                            <button className="OrderPayment__submitBtn" onClick={handlePayment}>
+                                XÁC NHẬN THANH TOÁN
+                            </button>
+                        )}
+                    </motion.div>
                 </div>
 
-                {selectedMethod === 'paypal' ? (
-                    <PayPalButton
-                        amount={totalAmount.toFixed(2)} // Ensure the amount is correctly formatted for PayPal
-                        onSuccess={(details) => {
-                            toast.success(`Thanh toán thành công bởi ${details.payer.name.given_name}`, {
-                                position: 'top-center',
-                                autoClose: 2000,
-                                onClose: () => navigate('/order-complete'),
-                            });
-                        }}
-                    />
-                ) : (
-                    <button className="OrderPayment__submitBtn" onClick={handlePayment}>
-                        XÁC NHẬN THANH TOÁN
-                    </button>
-                )}
-            </motion.div>
+                <div>
+                    <img src="../../../public/images/bg/mua-he-ruc-ro.png" alt="Logo" className="CartBuy-OrderBox__logo"
+                    style={{ width: "160px"}} />
+                </div>
+            </div>
+            <FooterUser />
         </div>
+
+
     );
 };
 
