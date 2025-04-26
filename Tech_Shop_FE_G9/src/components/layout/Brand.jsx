@@ -32,6 +32,7 @@ const Brand = () => {
                     ))}
                 </Swiper>
             </div>
+            
         </div>
     );
 };
