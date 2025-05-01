@@ -238,4 +238,30 @@
     gap: 16px;
     padding: 10px 0;
   }
+  .product-user-phone__pagination {
+    margin-top: 20px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    gap: 10px;
+  }
+  
+  .product-user-phone__pagination button {
+    background-color: #007bff;
+    border: none;
+    padding: 6px 12px;
+    border-radius: 6px;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+  
+  .product-user-phone__pagination button:disabled {
+    background-color: #ccc;
+    cursor: not-allowed;
+  }
+  
+  .product-user-phone__pagination button.active {
+    background-color: #28a745;
+  }
   

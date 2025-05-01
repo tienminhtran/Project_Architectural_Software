@@ -3,7 +3,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px;
-  padding: 16px;
+  padding: 26px;
   background-color: #f8f9fa;
   border-radius: 12px;
 }
@@ -76,7 +76,8 @@
 .shop-product__full-wrapper {
   display: flex;
   flex-wrap: wrap;
-  gap: 32px;
+  gap: 40px;
+  margin-left: 20px;
   padding: 20px 0;
   background-color: #ffffff;
   border-radius: 14px;

@@ -153,6 +153,18 @@ public class ProductServiceImpl implements ProductService {
         return products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
     }
 
+    @Override
+    public List<ProductResponse> filterProductTablet() {
+        Pageable pageable = PageRequest.of(0, 100); // Trang 0, lấy tối đa 100 sản phẩm
+        Page<Product> productsPage = productRepository.findProduct(null, null, null, pageable);
+
+        List<Product> products = productsPage.getContent(); // Lấy danh sách sản phẩm từ Page
+
+        return products.stream()
+                .map(product -> this.convertToDto(product, ProductResponse.class))
+                .toList();
+    }
+
     /**
      * total stock quantity
      *
