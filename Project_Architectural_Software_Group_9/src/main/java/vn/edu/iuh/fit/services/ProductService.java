@@ -57,4 +57,6 @@ public interface ProductService {
     List<ProductResponse> filterProductLaptop();
     public List<ProductResponse> filterProductPhone();
 
+    public List<ProductResponse> filterProductTablet();
+
 }

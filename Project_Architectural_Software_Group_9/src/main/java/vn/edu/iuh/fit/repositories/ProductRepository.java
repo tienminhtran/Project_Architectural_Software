@@ -11,10 +11,12 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.entities.Product;
 import vn.edu.iuh.fit.entities.Voucher;
 
+import java.math.BigDecimal;
 import java.util.List;
 import java.util.Optional;
 
@@ -53,5 +55,27 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
             "OR p.warranty LIKE %:keyword% ")
     Page<Product> searchProduct(String keyword, Pageable pageable);
 
+    // thêm côt giá từ đâu -
+
+    @Query("SELECT p FROM Product p " +
+            "WHERE (:keyword IS NULL OR " +
+            "LOWER(p.productName) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.battery) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.cpu) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.description) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.graphicCard) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.monitor) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.os) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.port) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.ram) LIKE LOWER(CONCAT('%', :keyword, '%')) " +
+            "OR LOWER(p.warranty) LIKE LOWER(CONCAT('%', :keyword, '%')))" +
+            "AND (:minPrice IS NULL OR p.price >= :minPrice) " +
+            "AND (:maxPrice IS NULL OR p.price <= :maxPrice)")
+    Page<Product> findProduct(
+            @Param("keyword") String keyword,
+            @Param("minPrice") BigDecimal minPrice,
+            @Param("maxPrice") BigDecimal maxPrice,
+            Pageable pageable
+    );
     List<Product> findByCategory_Name(String categoryName);
 }

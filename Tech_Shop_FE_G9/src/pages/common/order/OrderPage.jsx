@@ -182,7 +182,7 @@ const OrderPage = () => {
                     >
                         <option value="">All Payments</option>
                         <option value="COD">COD</option>
-                        <option value="BANKING">VNPay</option>
+                        <option value="VNPAY">VNPay</option>
                         <option value="PAYPAL">PayPal</option>
                     </select>
 

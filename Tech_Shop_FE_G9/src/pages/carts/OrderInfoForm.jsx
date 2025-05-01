@@ -4,17 +4,14 @@ import CheckoutStepper from './CheckoutStepper';
 import { useNavigate } from 'react-router-dom';
 import '../../assets/css/OrderInfoForm.css';
 import DeliveryWithGeolocation from './DeliveryWithGeolocation'; 
-import HeardUserBasic from "../../components/layout/HeaderUserBasic"; // Adjust the path as necessary
+import HeaderUserBasic from "../../components/layout/HeaderUserBasic";
 import FooterUser from "../../components/layout/Footer";
+
 const OrderInfoForm = () => {
     const navigate = useNavigate();
     const [gender, setGender] = useState('Anh');
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
-    // const [province, setProvince] = useState('');
-    // const [district, setDistrict] = useState('');
-    // const [ward, setWard] = useState('');
-    // const [address, setAddress] = useState('');
     const [note, setNote] = useState('');
     const [invoice, setInvoice] = useState(false);
     const [cartData, setCartData] = useState(null);
@@ -24,27 +21,55 @@ const OrderInfoForm = () => {
         if (storedData) {
             setCartData(JSON.parse(storedData));
         } else {
-            navigate('/'); // Nếu không có dữ liệu, điều hướng về trang giỏ hàng
+            navigate('/'); // Nếu không có dữ liệu, điều hướng về trang chủ hoặc giỏ hàng
         }
     }, [navigate]);
+
+    const validateForm = () => {
+        if (!name.trim()) {
+            alert('Vui lòng nhập họ tên.');
+            return false;
+        }
+        const phoneRegex = /^(0|\+84)[0-9]{9}$/;
+        if (!phoneRegex.test(phone)) {
+            alert('Vui lòng nhập số điện thoại hợp lệ.');
+            return false;
+        }
+        return true;
+    };
+
+    const handleSubmit = () => {
+        if (validateForm()) {
+            const orderInfo = {
+                gender,
+                name,
+                phone,
+                note,
+                invoice
+            };
+            sessionStorage.setItem('orderInfo', JSON.stringify(orderInfo));
+            navigate('/order-payment');
+        }
+    };
 
     if (!cartData) {
         return <div>Loading...</div>;
     }
 
     return (
-
         <div>
-            <HeardUserBasic />
-            <div style={{ display: 'flex' }}>     
-                {/* <HeardUserBasic /> */}
+            <HeaderUserBasic />
+            <div style={{ display: 'flex' }}>
                 <div>
-                    <img src="../../../public/images/bg/thu-cu-doi-moi.png" alt="Logo" className="CartBuy-OrderBox__logo"
-                    style={{ width: "160px"}} />
+                    <img
+                        src="/images/bg/thu-cu-doi-moi.png"
+                        alt="Banner trái"
+                        className="CartBuy-OrderBox__logo"
+                        style={{ width: "160px" }}
+                    />
                 </div>
 
                 <div className="OrderInfoForm__container">
-
                     <CheckoutStepper currentStep={1} />
 
                     <motion.div
@@ -53,8 +78,8 @@ const OrderInfoForm = () => {
                         transition={{ duration: 0.6 }}
                         className="OrderInfoForm__section"
                     >
-                        {/* Thông tin khách hàng */}
                         <div className="OrderInfoForm__title">Thông tin khách mua hàng</div>
+
                         <div className="OrderInfoForm__row">
                             <label>
                                 <input
@@ -73,6 +98,7 @@ const OrderInfoForm = () => {
                                 /> Chị
                             </label>
                         </div>
+
                         <div className="OrderInfoForm__row">
                             <input
                                 type="text"
@@ -87,7 +113,8 @@ const OrderInfoForm = () => {
                                 onChange={(e) => setPhone(e.target.value)}
                             />
                         </div>
-                        <DeliveryWithGeolocation/>
+
+                        <DeliveryWithGeolocation />
 
                         <textarea
                             placeholder="Lưu ý, yêu cầu khác (Không bắt buộc)"
@@ -105,29 +132,33 @@ const OrderInfoForm = () => {
                             </label>
                         </div>
 
-                        {/* Hiển thị chỉ tổng giá giỏ hàng */}
                         <div className="OrderInfoForm__totalRow">
                             <span>Tổng tiền:</span>
                             <span className="OrderInfoForm__totalPrice">{cartData.totalPrice}đ</span>
                         </div>
 
-                        <button className="OrderInfoForm__submitBtn" onClick={() => navigate('/order-payment')}>
+                        <motion.button
+                            whileHover={{ scale: 1.05 }}
+                            whileTap={{ scale: 0.95 }}
+                            className="OrderInfoForm__submitBtn"
+                            onClick={handleSubmit}
+                        >
                             THANH TOÁN
-                        </button>
+                        </motion.button>
                     </motion.div>
                 </div>
 
                 <div>
-                    <img src="../../../public/images/bg/mua-he-ruc-ro.png" alt="Logo" className="CartBuy-OrderBox__logo"
-                    style={{ width: "160px"}} />
+                    <img
+                        src="/images/bg/mua-he-ruc-ro.png"
+                        alt="Banner phải"
+                        className="CartBuy-OrderBox__logo"
+                        style={{ width: "160px" }}
+                    />
                 </div>
-
-                {/* <FooterUser /> */}
             </div>
             <FooterUser />
         </div>
-
-
     );
 };
 

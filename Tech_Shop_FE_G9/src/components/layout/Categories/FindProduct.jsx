@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { FaFilter, FaAngleDown, FaTimesCircle } from "react-icons/fa";
 import '../../../../src/assets/css/FindProduct.css';
 
-export default function ShopProduct() {
+export default function FindProduct() {
   const [openFilter, setOpenFilter] = useState(null);
   const [showAllFilters, setShowAllFilters] = useState(false);
 

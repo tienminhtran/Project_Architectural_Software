@@ -9,7 +9,7 @@ const CallButton = () => {
         </a>
   
         <a href="https://zalo.me/0869188704" className="call-icon zalo" target="_blank" rel="noopener noreferrer">
-          <i className="fab fa-facebook-messenger"></i> {/* có thể đổi icon zalo sau */}
+          <i className="fab fa-facebook-messenger"></i>
           <span className="call-text">Chat Zalo</span>
         </a>
       </div>

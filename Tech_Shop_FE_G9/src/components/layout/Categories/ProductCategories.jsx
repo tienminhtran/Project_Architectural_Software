@@ -14,7 +14,6 @@ import ProductCategoriesPhone from "./Phone/ProductCategoriesPhone";
 const ProductCategories = () => {
     return (
         <div>
-            <h1>PHONE</h1>
             <HeardUser />
             <FindProduct />
             <ProductCategoriesPhone/>

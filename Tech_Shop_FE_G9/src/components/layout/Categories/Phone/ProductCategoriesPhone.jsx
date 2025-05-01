@@ -1,188 +1,50 @@
-import React, { useState } from "react";
-import {
-  FaShoppingCart,
-  FaHeart,
-  FaEye,
-} from "react-icons/fa";
+import React, { useState, useEffect } from "react";
+import { FaShoppingCart, FaHeart, FaEye } from "react-icons/fa";
 import "../../../../../src/assets/css/ProductCategoriesPhone.css"; 
 import { useNavigate } from "react-router-dom";
+import { filterProductPhone } from "../../../../services/productService";
 
 const ProductCategoriesPhone = () => {
   const navigate = useNavigate();
-  const [activeIndex, setActiveIndex] = useState(0);
-  const productData = [
-    {
-      name: "iPhone 14 Pro Max",
-      image: "../../../public/images/product/iphone-14-pro-max.jpg",
-      newPrice: "26.990.000",
-      oldPrice: "30.990.000",
-      discount: "13%",
-      battery: "4323mAh",
-      monitor: "6.7 inch",
-      os: "iOS 17",
-      ram: "6GB",
-    },
-    {
-      name: "Samsung Galaxy S24 Ultra",
-      image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
-      newPrice: "28.490.000",
-      oldPrice: "31.990.000",
-      discount: "11%",
-      battery: "5000mAh",
-      monitor: "6.8 inch",
-      os: "Android 14",
-      ram: "12GB",
-    },
-    {
-      name: "Xiaomi 13T Pro",
-      image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
-      newPrice: "15.990.000",
-      oldPrice: "18.490.000",
-      discount: "14%",
-      battery: "5000mAh",
-      monitor: "6.67 inch",
-      os: "Android 13",
-      ram: "12GB",
-    },
-    {
-      name: "OPPO Find N3 Flip",
-      image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
-      newPrice: "21.990.000",
-      oldPrice: "24.990.000",
-      discount: "12%",
-      battery: "4300mAh",
-      monitor: "6.8 inch",
-      os: "Android 14",
-      ram: "12GB",
-    },
-    {
-      name: "Realme 12 Pro+",
-      image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
-      newPrice: "11.990.000",
-      oldPrice: "13.990.000",
-      discount: "14%",
-      battery: "5000mAh",
-      monitor: "6.7 inch",
-      os: "Android 14",
-      ram: "8GB",
-    },
-    {
-      name: "Google Pixel 8",
-      image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
-      newPrice: "17.990.000",
-      oldPrice: "20.490.000",
-      discount: "12%",
-      battery: "4575mAh",
-      monitor: "6.2 inch",
-      os: "Android 14",
-      ram: "8GB",
-    },{
-        name: "Xiaomi 13T Pro",
-        image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
-        newPrice: "15.990.000",
-        oldPrice: "18.490.000",
-        discount: "14%",
-        battery: "5000mAh",
-        monitor: "6.67 inch",
-        os: "Android 13",
-        ram: "12GB",
-      },
-      {
-        name: "OPPO Find N3 Flip",
-        image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
-        newPrice: "21.990.000",
-        oldPrice: "24.990.000",
-        discount: "12%",
-        battery: "4300mAh",
-        monitor: "6.8 inch",
-        os: "Android 14",
-        ram: "12GB",
-      },
-      {
-        name: "Realme 12 Pro+",
-        image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
-        newPrice: "11.990.000",
-        oldPrice: "13.990.000",
-        discount: "14%",
-        battery: "5000mAh",
-        monitor: "6.7 inch",
-        os: "Android 14",
-        ram: "8GB",
-      },
-      {
-        name: "Google Pixel 8",
-        image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
-        newPrice: "17.990.000",
-        oldPrice: "20.490.000",
-        discount: "12%",
-        battery: "4575mAh",
-        monitor: "6.2 inch",
-        os: "Android 14",
-        ram: "8GB",
-      },{
-        name: "Xiaomi 13T Pro",
-        image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
-        newPrice: "15.990.000",
-        oldPrice: "18.490.000",
-        discount: "14%",
-        battery: "5000mAh",
-        monitor: "6.67 inch",
-        os: "Android 13",
-        ram: "12GB",
-      },
-      {
-        name: "OPPO Find N3 Flip",
-        image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
-        newPrice: "21.990.000",
-        oldPrice: "24.990.000",
-        discount: "12%",
-        battery: "4300mAh",
-        monitor: "6.8 inch",
-        os: "Android 14",
-        ram: "12GB",
-      },
-      {
-        name: "Realme 12 Pro+",
-        image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
-        newPrice: "11.990.000",
-        oldPrice: "13.990.000",
-        discount: "14%",
-        battery: "5000mAh",
-        monitor: "6.7 inch",
-        os: "Android 14",
-        ram: "8GB",
-      },
-      {
-        name: "Google Pixel 9",
-        image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
-        newPrice: "17.990.000",
-        oldPrice: "20.490.000",
-        discount: "12%",
-        battery: "4575mAh",
-        monitor: "6.2 inch",
-        os: "Android 14",
-        ram: "8GB",
-      },
-  ];
+  const [products, setProducts] = useState([]);
+  
+  const [currentPage, setCurrentPage] = useState(0); // Trang hiện tại (0-indexed)
+  const [pageSize] = useState(8); // Số sản phẩm mỗi trang
 
+  useEffect(() => {
+    const fetchProducts = async () => {
+      try {
+        const response = await filterProductPhone();
+        console.log("products", response);
+        setProducts(response.response || []); 
+      } catch (error) {
+        console.error("Error fetching products:", error);
+      }
+    };
+    fetchProducts();
+  }, []);
 
+  // Tính tổng số trang
+  const totalPages = Math.ceil(products.length / pageSize);
 
+  // Cắt sản phẩm của trang hiện tại
+  const currentProducts = products.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
 
   return (
     <div className="product-user-phone__product-container">
       <div className="product-user-phone__product-grid">
-        {productData.map((product, index) => (
+        {currentProducts.map((product, index) => (
           <button
             className="product-user-phone__product-card"
             key={index}
-            onClick={() => navigate('/1')}
+            onClick={() => navigate(`/product/${btoa(product.id)}`, { state: { product } })}
           >
             <div className="product-user-phone__product-img-wrapper">
-              <img src={product.image} alt={product.name} className="product-user-phone__product-img" />
+              <img src={product.thumbnail} alt={product.name} className="product-user-phone__product-img" />
               <span className="product-user-phone__product-discount">{product.discount} OFF</span>
               <div className="product-user-phone__product-actions">
-                <button 
-                  className="product-user-phone__icon-btn-love" 
+                <button
+                  className="product-user-phone__icon-btn-love"
                   onClick={(e) => {
                     e.stopPropagation();
                     console.log("Clicked love icon");
@@ -190,8 +52,8 @@ const ProductCategoriesPhone = () => {
                 >
                   <FaHeart />
                 </button>
-                <button 
-                  className="product-user-phone__icon-btn-eye" 
+                <button
+                  className="product-user-phone__icon-btn-eye"
                   onClick={(e) => {
                     e.stopPropagation();
                     console.log("Clicked eye icon");
@@ -204,7 +66,7 @@ const ProductCategoriesPhone = () => {
             <div className="product-user-phone__product-info">
               <h5>{product.name}</h5>
               <p>
-                <span className="product-user-phone__price-new">{product.newPrice} ₫</span>{" "}
+                <span className="product-user-phone__price-new">{product.price} ₫</span>{" "}
                 <del className="product-user-phone__price-old">{product.oldPrice} ₫</del>
               </p>
               <ul className="product-user-phone__product-specs">
@@ -225,6 +87,34 @@ const ProductCategoriesPhone = () => {
             </div>
           </button>
         ))}
+      </div>
+
+      {/* Pagination */}
+      <div className="product-user-phone__pagination">
+        <button
+          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
+          disabled={currentPage === 0}
+        >
+          Prev
+        </button>
+
+        {/* Page Numbers */}
+        {Array.from({ length: totalPages }, (_, index) => (
+          <button
+            key={index}
+            onClick={() => setCurrentPage(index)}
+            className={currentPage === index ? "active" : ""}
+          >
+            {index + 1}
+          </button>
+        ))}
+
+        <button
+          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages - 1))}
+          disabled={currentPage === totalPages - 1}
+        >
+          Next
+        </button>
       </div>
     </div>
   );

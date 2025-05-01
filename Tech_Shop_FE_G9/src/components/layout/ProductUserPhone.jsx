@@ -13,7 +13,7 @@ import useCart from "../../hooks/useCart";
 import { toast } from "react-toastify";
 import { getAccessToken } from "../../services/authService";
 
-// const productData = [
+
 //   {
 //     name: "iPhone 14 Pro Max",
 //     image: "../../../public/images/product/iphone-14-pro-max.jpg",

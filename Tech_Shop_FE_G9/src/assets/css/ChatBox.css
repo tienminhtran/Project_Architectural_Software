@@ -1,0 +1,49 @@
+.chat-box {
+    position: fixed;
+    bottom: 100px;
+    right: 20px;
+    width: 250px;
+    background: white;
+    border-radius: 10px;
+    box-shadow: 0 0 15px rgba(0,0,0,0.2);
+    z-index: 1001;
+    overflow: hidden;
+    animation: slide-in 0.3s ease-out;
+  }
+  
+  .chat-header {
+    background-color: #4caf50;
+    color: white;
+    padding: 10px;
+    font-weight: bold;
+    text-align: center;
+    position: relative;
+  }
+  
+  .chat-close {
+    position: absolute;
+    right: 10px;
+    top: 5px;
+    background: transparent;
+    border: none;
+    color: white;
+    font-size: 20px;
+    cursor: pointer;
+  }
+  
+  .chat-body {
+    padding: 10px;
+    font-size: 14px;
+  }
+  
+  @keyframes slide-in {
+    from {
+      transform: translateX(100%);
+      opacity: 0;
+    }
+    to {
+      transform: translateX(0);
+      opacity: 1;
+    }
+  }
+  
