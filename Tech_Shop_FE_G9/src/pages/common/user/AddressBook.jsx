@@ -1,28 +1,46 @@
-import React, { useState } from "react"; 
+import React, { useState, useMemo, useEffect } from "react";
 import "../../../assets/css/AddressBook.css";
+import useUser from "../../../hooks/useUser";
+import AddressBookModal from "./AddressBookModal";
+import useAddress from "../../../hooks/useAddress";
 
 const AddressBook = () => {
-  const [addresses, setAddresses] = useState([
-    {
-      id: 1,
-      name: "tien tot",
-      phone: "0123456789",
-      address: "123 Đường A, TP.HCM",
-      isDefault: true,
-    },
-    {
-      id: 2,
-      name: "Nguyễn Văn B",
-      phone: "0987654321",
-      address: "456 Đường B, Hà Nội",
-      isDefault: false,
-    },
-  ]);
+  const { userInfor } = useUser(0, 1);
+  const user = useMemo(() => userInfor || null, [userInfor]);
 
+  const [addresses, setAddresses] = useState([]);
   const [editingAddress, setEditingAddress] = useState(null);
+  const [showModal, setShowModal] = useState(false);
+  const [newAddress, setNewAddress] = useState({
+    city: "",
+    district: "",
+    street: "",
+    detailLocation: "",
+  });
+
+  const { getAddress } = useAddress();
+
+  // Load addresses when user is available
+  useEffect(() => {
+    if (user?.id) {
+      getAddress(user.id)
+        .then((res) => {
+          if (res?.status === "SUCCESS") {
+            const formatted = res.response.map((addr, index) => ({
+              ...addr,
+              name: `${user.firstname} ${user.lastname}`,
+              phone: user.phone_number,
+              isDefault: index === 0,
+            }));
+            setAddresses(formatted);
+          }
+        })
+        .catch((err) => console.error("Không lấy được địa chỉ:", err));
+    }
+  }, [user]);
 
   const handleEditClick = (address) => {
-    setEditingAddress(address);
+    setEditingAddress({ ...address });
   };
 
   const handleInputChange = (e, field) => {
@@ -39,40 +57,91 @@ const AddressBook = () => {
     setEditingAddress(null);
   };
 
+  const handleAddAddress = () => {
+    const fullName = `${user.firstname} ${user.lastname}`;
+    const newAddr = {
+      id: Date.now(),
+      name: fullName,
+      phone: user.phone_number,
+      ...newAddress,
+      isDefault: false,
+    };
+    setAddresses([...addresses, newAddr]);
+    setShowModal(false);
+    setNewAddress({ city: "", district: "", street: "", detailLocation: "" });
+  };
+
+  const formatFullAddress = (addr) => {
+    return `${addr.detailLocation}, ${addr.street}, ${addr.district}, ${addr.city}`;
+  };
+
+  const fullName = `${user?.firstname || ""} ${user?.lastname || ""}`.trim();
+
+  // This function will be called when the modal is closed after adding an address
+  const handleModalClose = () => {
+    setShowModal(false);
+    if (user?.id) {
+      // Reload the address list after successfully adding a new one
+      getAddress(user.id)
+        .then((res) => {
+          if (res?.status === "SUCCESS") {
+            const formatted = res.response.map((addr, index) => ({
+              ...addr,
+              name: `${user.firstname} ${user.lastname}`,
+              phone: user.phone_number,
+              isDefault: index === 0,
+            }));
+            setAddresses(formatted);
+          }
+        })
+        .catch((err) => console.error("Không lấy được địa chỉ:", err));
+    }
+  };
+
   return (
     <div className="address-book__page">
-      <h2>Sổ địa chỉ</h2>
-      <button className="address-book__btn-add">+ Thêm địa chỉ</button>
+      <h2 style={{justifyContent:"space-between", display:"flex"}}>
+        <div>Sổ địa chỉ </div>
+        <button className="address-book__btn-add" onClick={() => setShowModal(true)}>+ Thêm địa chỉ</button>
+      </h2>
+
+      {showModal && user && (
+        <AddressBookModal
+          user={user}
+          newAddress={newAddress}
+          setNewAddress={setNewAddress}
+          onSave={handleAddAddress}
+          onClose={handleModalClose} // Close the modal and reload the address list
+        />
+      )}
+
       <div className="address-book__list">
         {addresses.map((addr) => (
-          <div className={`address-book__card ${addr.isDefault ? "address-book__default" : ""}`} key={addr.id}>
+          <div
+            className={`address-book__card ${addr.isDefault ? "address-book__default" : ""}`}
+            key={addr.id}
+          >
             {editingAddress?.id === addr.id ? (
               <div>
-                <label>Họ tên:</label>
-                <input
-                  type="text"
-                  value={editingAddress.name}
-                  onChange={(e) => handleInputChange(e, "name")}
-                />
-                <label>SĐT:</label>
-                <input
-                  type="text"
-                  value={editingAddress.phone}
-                  onChange={(e) => handleInputChange(e, "phone")}
-                />
-                <label>Địa chỉ:</label>
-                <input
-                  type="text"
-                  value={editingAddress.address}
-                  onChange={(e) => handleInputChange(e, "address")}
-                />
+                <label>Chi tiết:</label>
+                <input type="text" value={editingAddress.detailLocation} onChange={(e) => handleInputChange(e, "detailLocation")} />
+
+                <label>Đường:</label>
+                <input type="text" value={editingAddress.street} onChange={(e) => handleInputChange(e, "street")} />
+
+                <label>Quận/Huyện:</label>
+                <input type="text" value={editingAddress.district} onChange={(e) => handleInputChange(e, "district")} />
+
+                <label>Thành phố:</label>
+                <input type="text" value={editingAddress.city} onChange={(e) => handleInputChange(e, "city")} />
+
                 <button className="address-book__btn-save" onClick={handleSave}>Lưu</button>
               </div>
             ) : (
               <div>
-                <p><strong>Họ tên:</strong> {addr.name}</p>
+                <p><strong>Họ tên:</strong> {fullName}</p>
                 <p><strong>SĐT:</strong> {addr.phone}</p>
-                <p><strong>Địa chỉ:</strong> {addr.address}</p>
+                <p><strong>Địa chỉ:</strong> {formatFullAddress(addr)}</p>
                 {addr.isDefault && <span className="address-book__badge">Mặc định</span>}
                 <button className="address-book__btn-update" onClick={() => handleEditClick(addr)}>Cập nhật</button>
               </div>

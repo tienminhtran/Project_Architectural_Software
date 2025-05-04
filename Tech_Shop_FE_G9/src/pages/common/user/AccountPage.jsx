@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useMemo} from 'react';
 import "../../../assets/css/AccountPage.css";
 import { FaUser, FaMapMarkerAlt, FaBoxOpen, FaEye, FaSignOutAlt } from 'react-icons/fa';
 import AddressBook from "./AddressBook"; // Ensure path is correct
@@ -6,9 +6,19 @@ import OrderManagement from "./OrderManagement"; // Ensure path is correct
 import StoreLocator from './StoreLocator'; // Ensure path is correct
 import HeaderUserBasic from '../../../components/layout/HeaderUserBasic';
 import Footer from '../../../components/layout/Footer';
+import useUser from "../../../hooks/useUser";
+
 
 const AccountPage = () => {
   const [activeTab, setActiveTab] = useState("info");
+
+  // lấy thông tin người dùng từ hook useUser
+  const { userInfor } = useUser(0, 1);
+  const user = useMemo(() => {
+    return userInfor|| null;
+  }, [userInfor]);
+  console.log("user", user);
+
 
   const renderContent = () => {
     switch (activeTab) {
@@ -18,30 +28,51 @@ const AccountPage = () => {
             <h2>Thông tin tài khoản</h2>
             <div className="account-page__form-group">
               <label>Họ Tên</label>
-              <input type="text" defaultValue="tien tot" />
+              <input type="text" defaultValue={`${user?.firstname || ""} ${user?.lastname || ""}`.trim()} />
             </div>
 
-            <div className="account-page__form-group">
+            <div className="account-page__form-group"> 
+              
               <label>Giới tính</label>
               <div className="account-page__gender-group">
-                <label><input type="radio" name="gender" defaultChecked /> Nam</label>
-                <label><input type="radio" name="gender" /> Nữ</label>
+                <label>
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="male"
+                    checked={
+                      ["male", "nam", "Male", "Nam"].includes((user?.gender || "").toLowerCase())
+                    }
+                    
+                  /> Nam
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="gender"
+                    value="female"
+                    checked={
+                      ["female", "nữ", "nu", "Female", "Nữ"].includes((user?.gender || "").toLowerCase())
+                    }
+                  /> Nữ
+                </label>
               </div>
             </div>
 
+
             <div className="account-page__form-group">
               <label>Số điện thoại</label>
-              <input type="text" placeholder="Nhập số điện thoại" />
+              <input type="text" placeholder="Nhập số điện thoại"  value={user?.phone_number}/>
             </div>
 
             <div className="account-page__form-group">
               <label>Email</label>
-              <input type="email" defaultValue="tientot36@gmail.com" readOnly />
+              <input type="email" defaultValue="Nhập mail " readOnly  value={user?.email}/>
             </div>
 
             <div className="account-page__form-group">
               <label>Ngày sinh</label>
-              <input type="date" placeholder="Chọn ngày sinh" />
+              <input type="date" placeholder="Chọn ngày sinh" value={user?.dob}/>
             </div>
 
             <button className="account-page__btn-save">Lưu thay đổi</button>
@@ -53,8 +84,8 @@ const AccountPage = () => {
         return <OrderManagement />;
       case "store":
         return <StoreLocator />;
-      case "logout":
-        return <h2>Đăng xuất thành công</h2>;
+      // case "logout":
+      //   return <h2>Đăng xuất thành công</h2>;
       default:
         return null;
     }
@@ -71,8 +102,8 @@ const AccountPage = () => {
         
         <div className="account-page__sidebar">
           <div className="account-page__avatar">
-            <img src="/avatar.png" alt="avatar" />
-            <h3>tien tot</h3>
+          <img src={user?.image || "/avatar.png"} alt="avatar" />
+          <h3>tien tot</h3>
           </div>
           <ul>
             <li onClick={() => setActiveTab("info")} className={activeTab === "info" ? "account-page__active" : ""}>
@@ -87,9 +118,9 @@ const AccountPage = () => {
             <li onClick={() => setActiveTab("store")} className={activeTab === "store" ? "account-page__active" : ""}>
               <FaEye className="account-page__icon" /> Tìm cửa hàng
             </li>
-            <li onClick={() => setActiveTab("logout")} className={activeTab === "logout" ? "account-page__active" : ""}>
+            {/* <li onClick={() => setActiveTab("logout")} className={activeTab === "logout" ? "account-page__active" : ""}>
               <FaSignOutAlt className="account-page__icon" /> Đăng xuất
-            </li>
+            </li> */}
           </ul>
         </div>
 
