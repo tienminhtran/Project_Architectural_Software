@@ -22,5 +22,7 @@ public interface AddressService {
     List<AddressResponse> getAllAddressesByUserId(Long userId);
     public AddressResponse save(AddressRequest request, Long userId) ;
     AddressResponse update(AddressRequest request, Long id);
-
+    //update trang thai dia chi = false theo id
+    AddressResponse updateStatus(Long id);
+    //update dia chi
 }

@@ -1,48 +1,47 @@
-import React, { useState, useEffect } from "react";
+import React, { useEffect, useState } from "react";
 import "../../../assets/css/AddressBookModal.css";
-import useAddress from "../../../hooks/useAddress"; // Import the useAddress hook
+import useAddress from "../../../hooks/useAddress";
+import dvhcvn from "../../../json/dvhcvn.json"; // ✅ Dùng file nội bộ thay vì fetch
 
 const AddressBookModal = ({ user, newAddress, setNewAddress, onClose }) => {
-  const [errors, setErrors] = useState({ city: "", district: "", street: "" });
+  const [errors, setErrors] = useState({ city: "", district: "", street: "", detailLocation: "" });
+  const { addAddress } = useAddress();
 
-  const { getAddress, addAddress } = useAddress(); // Destructure the functions from the hook
+  const [rawData, setRawData] = useState([]);
+  const [districts, setDistricts] = useState([]);
+  const [streets, setStreets] = useState([]);
 
-  const cityList = ["TP.HCM", "Hà Nội", "Đà Nẵng"];
-  const districtList = {
-    "TP.HCM": ["Quận 1", "Quận 3", "Quận 5"],
-    "Hà Nội": ["Ba Đình", "Hoàn Kiếm", "Đống Đa"],
-    "Đà Nẵng": ["Hải Châu", "Thanh Khê", "Ngũ Hành Sơn"],
-  };
+  // ✅ Load dữ liệu tỉnh/thành phố từ file JSON nội bộ
+  useEffect(() => {
+    setRawData(dvhcvn.data || []);
+  }, []);
 
-  const streetList = {
-    "Quận 1": ["Nguyễn Huệ", "Lê Lợi"],
-    "Quận 3": ["Cách Mạng Tháng 8", "Pasteur"],
-    "Quận 5": ["Trần Hưng Đạo", "Châu Văn Liêm"],
-    "Ba Đình": ["Kim Mã", "Liễu Giai"],
-    "Hoàn Kiếm": ["Hàng Bài", "Đinh Tiên Hoàng"],
-    "Đống Đa": ["Xã Đàn", "Tôn Đức Thắng"],
-    "Hải Châu": ["Bạch Đằng", "Trần Phú"],
-    "Thanh Khê": ["Điện Biên Phủ", "Hà Huy Tập"],
-    "Ngũ Hành Sơn": ["Lê Văn Hiến", "Nguyễn Văn Thoại"],
-  };
+  useEffect(() => {
+    const city = rawData.find(c => c.name === newAddress.city);
+    setDistricts(city ? city.level2s : []);
+    setNewAddress(prev => ({ ...prev, district: "", street: "" }));
+  }, [newAddress.city]);
 
-  const districts = districtList[newAddress.city] || [];
-  const streets = streetList[newAddress.district] || [];
+  useEffect(() => {
+    const city = rawData.find(c => c.name === newAddress.city);
+    const district = city?.level2s.find(d => d.name === newAddress.district);
+    setStreets(district ? district.level3s.map(l3 => l3.name) : []);
+    setNewAddress(prev => ({ ...prev, street: "" }));
+  }, [newAddress.district]);
 
   const handleSave = async () => {
     const newErrors = {
       city: newAddress.city ? "" : "Vui lòng chọn thành phố",
       district: newAddress.district ? "" : "Vui lòng chọn quận/huyện",
-      street: newAddress.street ? "" : "Vui lòng chọn đường",
+      street: newAddress.street ? "" : "Vui lòng chọn phường/xã",
+      detailLocation: newAddress.detailLocation ? "" : "Vui lòng nhập địa chỉ chi tiết",
     };
-
     setErrors(newErrors);
 
-    const hasError = Object.values(newErrors).some((err) => err !== "");
-    if (!hasError) {
+    if (!Object.values(newErrors).some(err => err !== "")) {
       try {
         await addAddress({ userId: user.id, ...newAddress });
-        onClose(); // Close the modal after successfully adding the address
+        onClose();
       } catch (error) {
         console.error("Lỗi khi lưu địa chỉ:", error);
         alert("Thêm địa chỉ thất bại.");
@@ -61,13 +60,11 @@ const AddressBookModal = ({ user, newAddress, setNewAddress, onClose }) => {
         <label>Thành phố:</label>
         <select
           value={newAddress.city}
-          onChange={(e) =>
-            setNewAddress({ ...newAddress, city: e.target.value, district: "", street: "" })
-          }
+          onChange={(e) => setNewAddress({ ...newAddress, city: e.target.value })}
         >
           <option value="">-- Chọn thành phố --</option>
-          {cityList.map((city) => (
-            <option key={city} value={city}>{city}</option>
+          {rawData.map((city) => (
+            <option key={city.level1_id} value={city.name}>{city.name}</option>
           ))}
         </select>
         {errors.city && <p className="error-message">{errors.city}</p>}
@@ -75,32 +72,36 @@ const AddressBookModal = ({ user, newAddress, setNewAddress, onClose }) => {
         <label>Quận/Huyện:</label>
         <select
           value={newAddress.district}
-          onChange={(e) =>
-            setNewAddress({ ...newAddress, district: e.target.value, street: "" })
-          }
-          disabled={!newAddress.city}
+          onChange={(e) => setNewAddress({ ...newAddress, district: e.target.value })}
+          disabled={!districts.length}
         >
           <option value="">-- Chọn quận/huyện --</option>
           {districts.map((d) => (
-            <option key={d} value={d}>{d}</option>
+            <option key={d.level2_id} value={d.name}>{d.name}</option>
           ))}
         </select>
         {errors.district && <p className="error-message">{errors.district}</p>}
 
-        <label>Đường:</label>
+        <label>Phường/Xã:</label>
         <select
           value={newAddress.street}
-          onChange={(e) =>
-            setNewAddress({ ...newAddress, street: e.target.value })
-          }
-          disabled={!newAddress.district}
+          onChange={(e) => setNewAddress({ ...newAddress, street: e.target.value })}
+          disabled={!streets.length}
         >
-          <option value="">-- Chọn đường --</option>
-          {streets.map((s) => (
-            <option key={s} value={s}>{s}</option>
+          <option value="">-- Chọn phường/xã --</option>
+          {streets.map((s, index) => (
+            <option key={index} value={s}>{s}</option>
           ))}
         </select>
         {errors.street && <p className="error-message">{errors.street}</p>}
+
+        <label>Địa chỉ chi tiết:</label>
+        <input
+          type="text"
+          value={newAddress.detailLocation}
+          onChange={(e) => setNewAddress({ ...newAddress, detailLocation: e.target.value })}
+        />
+        {errors.detailLocation && <p className="error-message">{errors.detailLocation}</p>}
 
         <div className="modal-buttons">
           <button onClick={handleSave}>Lưu</button>

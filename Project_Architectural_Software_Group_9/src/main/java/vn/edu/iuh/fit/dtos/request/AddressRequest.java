@@ -8,10 +8,7 @@ package vn.edu.iuh.fit.dtos.request;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
-import lombok.Data;
-import lombok.NoArgsConstructor;
+import lombok.*;
 
 import java.io.Serializable;
 
@@ -20,7 +17,8 @@ import java.io.Serializable;
  * @author: Tien Minh Tran
  * @date: 5/4/2025
  */
-
+@Getter
+@Setter
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
