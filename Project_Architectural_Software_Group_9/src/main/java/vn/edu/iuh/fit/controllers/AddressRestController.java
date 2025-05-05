@@ -32,6 +32,8 @@ public class AddressRestController {
     @GetMapping("/user/{userId}")
     public ResponseEntity<BaseResponse<?>> getAddressesByUserId(@PathVariable Long userId) {
         List<AddressResponse> addresses = addressService.getAllAddressesByUserId(userId);
+        // nếu trang thai = 1 thi render
+
         if (addresses.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
@@ -53,12 +55,40 @@ public class AddressRestController {
                 .build());
     }
 
+
+
+    @PutMapping("/status/{id}")
+    public ResponseEntity<BaseResponse<?>> updateAddressStatus(@PathVariable Long id) {
+        AddressResponse updated = addressService.updateStatus(id);
+        if (updated == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Cập nhật trạng thái địa chỉ thành công")
+                .response(updated)
+                .build());
+    }
+
     @PutMapping("/{id}")
     public ResponseEntity<BaseResponse<?>> updateAddress(@PathVariable Long id,
                                                          @RequestBody AddressRequest request) {
+        // Validate request
+        if (request.getCity() == null || request.getDistrict() == null ||
+                request.getStreet() == null || request.getDetailLocation() == null) {
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("ERROR")
+                    .message("Thông tin địa chỉ không đầy đủ")
+                    .response(null)
+                    .build());
+        }
         AddressResponse updated = addressService.update(request, id);
         if (updated == null) {
-            return ResponseEntity.notFound().build();
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("ERROR")
+                    .message("Không tìm thấy địa chỉ với ID: " + id)
+                    .response(null)
+                    .build());
         }
         return ResponseEntity.ok(BaseResponse.builder()
                 .status("SUCCESS")

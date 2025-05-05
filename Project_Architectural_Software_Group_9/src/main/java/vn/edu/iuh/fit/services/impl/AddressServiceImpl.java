@@ -33,13 +33,19 @@ public class AddressServiceImpl implements AddressService {
     @Override
     public List<AddressResponse> getAllAddressesByUserId(Long userId) {
         List<Address> addresses = addressRepository.findAllByUserId(userId);
-        return addresses.stream().map(this::convertToDto).toList();
+        return addresses.stream()
+                .filter(Address::getStatus)
+                .map(this::convertToDto)
+                .toList();
     }
 
     @Override
     public AddressResponse save(AddressRequest request, Long userId) {
         Optional<User> optionalUser = userRepository.findById(userId);
-        if (optionalUser.isEmpty()) return null;
+        if (optionalUser.isEmpty()) {
+            System.out.println("User not found for ID: " + userId);
+            return null;
+        }
 
         User user = optionalUser.get();
         Address address = new Address();
@@ -48,15 +54,24 @@ public class AddressServiceImpl implements AddressService {
         address.setStreet(request.getStreet());
         address.setDetailLocation(request.getDetailLocation());
         address.setUser(user);
+        address.setStatus(true); // Default status for new address
 
-        Address saved = addressRepository.save(address);
-        return convertToDto(saved);
+        try {
+            Address saved = addressRepository.save(address);
+            return convertToDto(saved);
+        } catch (Exception e) {
+            System.err.println("Error saving address: " + e.getMessage());
+            return null;
+        }
     }
 
     @Override
     public AddressResponse update(AddressRequest request, Long id) {
         Optional<Address> optional = addressRepository.findById(id);
-        if (optional.isEmpty()) return null;
+        if (optional.isEmpty()) {
+            System.out.println("Address not found for ID: " + id);
+            return null;
+        }
 
         Address address = optional.get();
         address.setCity(request.getCity());
@@ -64,7 +79,32 @@ public class AddressServiceImpl implements AddressService {
         address.setStreet(request.getStreet());
         address.setDetailLocation(request.getDetailLocation());
 
-        Address updated = addressRepository.save(address);
-        return convertToDto(updated);
+        try {
+            Address updated = addressRepository.save(address);
+            return convertToDto(updated);
+        } catch (Exception e) {
+            System.err.println("Error updating address: " + e.getMessage());
+            return null;
+        }
+    }
+
+    @Override
+    public AddressResponse updateStatus(Long id) {
+        Optional<Address> optional = addressRepository.findById(id);
+        if (optional.isEmpty()) {
+            System.out.println("Address not found for ID: " + id);
+            return null;
+        }
+
+        Address address = optional.get();
+        address.setStatus(!address.getStatus());
+
+        try {
+            Address updated = addressRepository.save(address);
+            return convertToDto(updated);
+        } catch (Exception e) {
+            System.err.println("Error updating address status: " + e.getMessage());
+            return null;
+        }
     }
 }
