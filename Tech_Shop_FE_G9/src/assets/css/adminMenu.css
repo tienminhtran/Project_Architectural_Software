@@ -174,3 +174,16 @@
   /* padding: 20px; */
   background-color: #095caf;
 }
+.active-link {
+  font-weight: bold;
+  color: #007bff !important;
+  background-color: #e6f0ff;
+  border-radius: 4px;
+  padding: 4px 8px;
+  display: inline-block;
+}
+
+.menu-item.active > a,
+.menu-item.active {
+  background-color: #e6f0ff;
+}

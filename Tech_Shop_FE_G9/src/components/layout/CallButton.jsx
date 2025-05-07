@@ -3,6 +3,7 @@ import '../../assets/css/CallButton.css';
 const CallButton = () => {
     return (
       <div className="call-buttons">
+        
         <a href="tel:0869188704" className="call-icon phone">
           <i className="fas fa-phone"></i>
           <span className="call-text">086 9188 704</span>
@@ -12,6 +13,7 @@ const CallButton = () => {
           <i className="fab fa-facebook-messenger"></i>
           <span className="call-text">Chat Zalo</span>
         </a>
+        
       </div>
     );
   };

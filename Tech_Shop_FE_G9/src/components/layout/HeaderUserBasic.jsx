@@ -172,15 +172,11 @@ const HeaderUserBasic = () => {
           {/* Menu Items */}
           <div className="col-7">
             <ul className="header-user-basic__menu">
-              <li>
-                <a className="active" onClick={() => navigate('/')}>
-                  Home
-                </a>
-              </li>
+              <li><a  onClick={() => navigate('/')}> Home</a></li>
               <li><a  onClick={() => navigate('/user')}>Shop</a></li>
               <li><a href="#">Pages</a></li>
               <li><a href="#">About</a></li>
-              <li><a href="#">Blog</a></li>
+              <li><a  onClick={()=> navigate('/blogs/all')}>Blog</a></li>
               <li><a href="#">Contact</a></li>
             </ul>
           </div>

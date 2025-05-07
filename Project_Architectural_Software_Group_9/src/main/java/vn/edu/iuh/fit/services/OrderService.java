@@ -57,4 +57,6 @@ public interface OrderService {
 
     PageResponse<OrderResponse> filterByAll(String firstname, String phoneNumber, String payment, OrderStatus status, int pageNo, int pageSize);
 
+    List<OrderResponse> findByIDUser(Long idUser);
+
 }
