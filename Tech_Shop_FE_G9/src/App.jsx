@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from 'react';
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Menu from "/src/components/layout/Admin/Menu"; // Sidebar component
@@ -47,7 +47,7 @@ import '@fortawesome/fontawesome-free/css/all.min.css';
 import CallButton from './components/layout/CallButton';
 import ChatBox from "./components/layout/ChatBox";
 import BlogPosts from "./pages/common/blog/blogPosts"; // Import BlogPosts component
-
+import '../src/assets/css/ChatIcon.css'
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
   <div className="axil-signin-area">
@@ -62,11 +62,21 @@ const DashboardLayout = ({ children }) => (
 );
 
 function App() {
+  const [showChat, setShowChat] = useState(false);
+
   return (
     <Router>
 
       <CallButton />
-      <ChatBox />
+      <div>
+      {showChat ? (
+        <ChatBox onClose={() => setShowChat(false)} />
+      ) : (
+        <div className="chat-icon" onClick={() => setShowChat(true)}>
+          <i className="fas fa-comment-dots"></i>
+        </div>
+      )}
+    </div>
 
       <Routes>
         <Route path="/login" element={<LoginPage />} />
