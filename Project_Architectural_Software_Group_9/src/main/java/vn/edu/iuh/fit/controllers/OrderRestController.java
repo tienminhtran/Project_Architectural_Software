@@ -6,15 +6,19 @@
 
 package vn.edu.iuh.fit.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.fit.dtos.request.OrderRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.OrderResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.RecentOrderResponse;
 import vn.edu.iuh.fit.enums.OrderStatus;
+import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.services.OrderService;
 
 import java.util.List;
@@ -238,4 +242,13 @@ public class OrderRestController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
+    @PostMapping("/create")
+    public ResponseEntity<BaseResponse<?>> createOrder(@RequestBody @Valid OrderRequest orderRequest) throws UserAlreadyExistsException {
+        OrderResponse orderResponse = orderService.createOrder(orderRequest);
+        if (orderResponse == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.builder().status("FAIL").message("Create order failed").build());
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.builder().status("SUCCESS").message("Create order successfully").response(orderResponse).build());
+    }
 }
