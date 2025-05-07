@@ -624,5 +624,19 @@ public class ProductRestController {
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Filter product phone").response(productResponses).build());
     }
+
+
+
+    //localhost:8080/api/v1/products/filter-tablet
+    @GetMapping("/filter-tablet")
+    public ResponseEntity<BaseResponse<?>> filterProductTablet() {
+
+        List<ProductResponse> productResponses = productService.filterProductTablet();
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Filter product tablet").response(productResponses).build());
+
+    }
 }
 

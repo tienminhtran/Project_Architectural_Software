@@ -251,4 +251,13 @@ public class OrderRestController {
         }
         return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.builder().status("SUCCESS").message("Create order successfully").response(orderResponse).build());
     }
+
+    @GetMapping("/me/user/{idUser}")
+    public ResponseEntity<BaseResponse<?>> getOrdersByIDUser(@PathVariable Long idUser) {
+        List<OrderResponse> orderResponses = orderService.findByIDUser(idUser);
+        if (orderResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by id user").response(orderResponses).build());
+    }
 }

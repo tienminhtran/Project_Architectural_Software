@@ -103,3 +103,17 @@ export const searchProduct = async (pageNo, pageSize,keyword) => {
     }
 }
 
+
+//    //localhost:8080/api/v1/products/filter-tablet
+export const filterProductTablet = async () => {
+    
+    try {
+        const response = await axiosInstance.get('/products/filter-tablet');
+        console.log("Filtered tablet products:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error filtering tablet products:", error);
+        throw error; 
+    }
+}
+

@@ -60,4 +60,6 @@ public interface OrderService {
     PageResponse<OrderResponse> filterByAll(String firstname, String phoneNumber, String payment, OrderStatus status, int pageNo, int pageSize);
 
     OrderResponse createOrder(OrderRequest orderRequest) throws UserAlreadyExistsException;
+
+    List<OrderResponse> findByIDUser(Long idUser);
 }

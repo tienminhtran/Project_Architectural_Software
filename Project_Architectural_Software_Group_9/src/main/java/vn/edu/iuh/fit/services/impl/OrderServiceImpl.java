@@ -484,6 +484,11 @@ public class OrderServiceImpl implements OrderService {
 
         return response;
     }
+    @Override
+    public List<OrderResponse> findByIDUser(Long idUser) {
+        List<Order> orders = orderRepository.findByIDUser(idUser);
+        return orders.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
 
 //    @Override
 //    public List<OrderResponse> findByPayment(String payment) {
