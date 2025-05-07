@@ -6,9 +6,11 @@
 
 package vn.edu.iuh.fit.services;
 
+import vn.edu.iuh.fit.dtos.request.OrderRequest;
 import vn.edu.iuh.fit.dtos.response.*;
 import vn.edu.iuh.fit.entities.Order;
 import vn.edu.iuh.fit.enums.OrderStatus;
+import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 
 import java.util.List;
 
@@ -57,6 +59,7 @@ public interface OrderService {
 
     PageResponse<OrderResponse> filterByAll(String firstname, String phoneNumber, String payment, OrderStatus status, int pageNo, int pageSize);
 
-    List<OrderResponse> findByIDUser(Long idUser);
+    OrderResponse createOrder(OrderRequest orderRequest) throws UserAlreadyExistsException;
 
+    List<OrderResponse> findByIDUser(Long idUser);
 }

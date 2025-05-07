@@ -48,7 +48,7 @@ const ForgotPasswordPage = () => {
           "Số điện thoại không hợp lệ. Vui lòng nhập đúng định dạng và đủ 10 số.",
           { position: "top-center", autoClose: 2000 }
         );
-      }
+      }``
 
       // Kiểm tra số điện thoại tồn tại
       const exists = await checkPhoneExistsAsync(phone.trim());
