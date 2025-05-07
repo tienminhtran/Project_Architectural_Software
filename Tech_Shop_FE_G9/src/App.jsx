@@ -46,6 +46,7 @@ import AccountPage  from "./pages/common/user/AccountPage";
 import '@fortawesome/fontawesome-free/css/all.min.css';
 import CallButton from './components/layout/CallButton';
 import ChatBox from "./components/layout/ChatBox";
+import BlogPosts from "./pages/common/blog/blogPosts"; // Import BlogPosts component
 
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
@@ -75,6 +76,8 @@ function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/categories-all-phone" element={<ProductCategories />} />
         <Route path="/categories-all-accessory" element={<ProductCategories />} />
+
+        <Route path="blogs/all" element={<BlogPosts />} /> {/* Blog Posts Route */}
         
 
         <Route
@@ -274,6 +277,8 @@ function App() {
           <Route path="/order-complete" element={<Step4Cart />} />
           
           <Route path ="/my-account" element={<AccountPage />} />
+
+
 
         </Route>
 

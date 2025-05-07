@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../../../assets/css/OrderManagement.css";
 
-const tabs = ["TẤT CẢ", "MỚI", "ĐANG XỬ LÝ", "ĐANG VẬN CHUYỂN", "HOÀN THÀNH", "HUỶ"];
+const tabs = ["TẤT CẢ",  "CHƯA XỬ LÝ", "VẬN CHUYỂN", "HOÀN TRẢ", "HOÀN THÀNH", "HUỶ"];
 
 const OrderManagement = () => {
   const [activeTab, setActiveTab] = useState("TẤT CẢ");

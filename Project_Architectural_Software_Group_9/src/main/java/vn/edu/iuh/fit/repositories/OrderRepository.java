@@ -90,4 +90,11 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
                             @Param("payment") String payment,
                             @Param("status") OrderStatus status,
                             Pageable pageable);
+
+
+
+    @Query("SELECT o FROM Order o " +
+            "JOIN o.user u " +
+            "WHERE u.id = :idUser")
+    List<Order> findByIDUser(@Param("idUser") Long idUser);
 }
