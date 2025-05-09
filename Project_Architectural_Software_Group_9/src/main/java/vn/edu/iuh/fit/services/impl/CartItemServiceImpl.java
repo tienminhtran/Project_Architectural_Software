@@ -120,4 +120,23 @@ public class CartItemServiceImpl implements CartItemService {
         }
         return this.convertToDto(cartDetail);
     }
+
+    @Transactional
+    @Override
+    public boolean deleteCartItem(Long idCartItem, String token) {
+        if(token == null || token.isEmpty()) {
+            return false;
+        }
+        UserResponse userResponse = userService.getCurrentUser(token);
+        Cart cart = cartRepository.findByUserId(userResponse.getId());
+        if(cart == null) {
+            throw new ItemNotFoundException("Cart not found");
+        }
+        CartDetail cartDetail = cartDetailRepository.findByCartIdAndProductId(cart.getId(), idCartItem);
+        if(cartDetail != null) {
+            cartDetailRepository.delete(cartDetail);
+            return true;
+        }
+        return false;
+    }
 }

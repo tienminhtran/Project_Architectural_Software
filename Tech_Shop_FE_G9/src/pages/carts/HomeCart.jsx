@@ -22,7 +22,7 @@ const HomeCart = () => {
         <div>
             <HeardUserBasic />
             <CartBuyOrderBox cartItems={cartItems} />
-           
+        
             <FooterUser />
             <Loading isLoading={isLoading} />
         </div>

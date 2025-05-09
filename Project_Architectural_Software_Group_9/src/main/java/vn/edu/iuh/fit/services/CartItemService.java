@@ -29,4 +29,7 @@ public interface CartItemService {
      */
     CartItemResponse addProductToCart(String token, CartItemRequest request) throws CustomJwtException;
 
+    boolean deleteCartItem(Long idCartItem, String token);
+
+
 }

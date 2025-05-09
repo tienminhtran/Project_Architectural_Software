@@ -21,3 +21,13 @@ export const addItemToCart = async (request) => {
     throw error; // Rethrow the error to handle it in the calling function
   }
 };
+
+export const deleteItemToCart = async (id) => {
+  try {
+    const response = await axiosInstance.delete(`/cart/${id}/delete`);
+    return response.data;
+  } catch (error) {
+    console.error("Error deleting item from cart:", error);
+    throw error; 
+  }
+};

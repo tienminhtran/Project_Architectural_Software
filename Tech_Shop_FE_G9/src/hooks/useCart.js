@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getItemCartUser, addItemToCart } from "../services/cartService";
+import { getItemCartUser, addItemToCart, deleteItemToCart } from "../services/cartService";
 
 const useCart = () => {
   const queryClient = useQueryClient();
@@ -26,9 +26,21 @@ const useCart = () => {
     },
   });
 
+  const deleteItem = useMutation({
+    mutationFn: (id) => deleteItemToCart(id),
+    onSuccess: (data) => {
+      console.log("Item deleted from cart successfully:", data);
+      queryClient.invalidateQueries(["cartItems"]); // Invalidate the cart items query to refetch the updated data
+    },
+    onError: (error) => {
+      console.error("Error deleting item from cart:", error);
+    },
+  })
+
   return { 
     carts, isLoading, isError,
     addItem: addItem.mutate,
+    deleteItem: deleteItem.mutate,
   };
 };
 
