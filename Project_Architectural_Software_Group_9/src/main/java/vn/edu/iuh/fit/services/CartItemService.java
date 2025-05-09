@@ -29,7 +29,8 @@ public interface CartItemService {
      */
     CartItemResponse addProductToCart(String token, CartItemRequest request) throws CustomJwtException;
 
-    boolean deleteCartItem(Long idCartItem, String token);
+    boolean deleteCartItem(Long idProduct, String token);
 
+    CartItemResponse updateQuantity(Long idProduct, String token, int quantity);
 
 }

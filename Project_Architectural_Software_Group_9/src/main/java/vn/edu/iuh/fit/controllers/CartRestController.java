@@ -18,6 +18,7 @@ import vn.edu.iuh.fit.services.CartItemService;
 import vn.edu.iuh.fit.services.CartService;
 
 import java.util.List;
+import java.util.Map;
 
 /*
  * @description:
@@ -65,18 +66,34 @@ public class CartRestController {
         }
     }
 
-    @DeleteMapping("/{id}/delete")
-    public ResponseEntity<BaseResponse<?>> deleteProductToCart(@RequestHeader("Authorization") String token, @PathVariable Long id) {
-        if (id == null) {
+    @DeleteMapping("/{id_product}/delete")
+    public ResponseEntity<BaseResponse<?>> deleteProductToCart(@RequestHeader("Authorization") String token, @PathVariable Long id_product) {
+        if (id_product == null) {
             return ResponseEntity.badRequest().body(BaseResponse.builder().status("FAIL").message("Delete product to cart failed").build());
         }
 
-        boolean isDeleted = cartItemService.deleteCartItem(id, token);
+        boolean isDeleted = cartItemService.deleteCartItem(id_product, token);
         if (isDeleted) {
             return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Delete product to cart success").build());
         } else {
             return ResponseEntity.badRequest().body(BaseResponse.builder().status("FAIL").message("Delete product to cart failed").build());
         }
 
+    }
+
+    @PutMapping("/{id_product}/update")
+    public ResponseEntity<BaseResponse<?>> updateQuantity(@RequestHeader("Authorization") String token,
+                                                          @PathVariable Long id_product,
+                                                          @RequestBody Map<String, Integer> request) {
+        if (id_product == null || request.get("quantity") == null) {
+            return ResponseEntity.badRequest().body(BaseResponse.builder().status("FAIL").message("Update product to cart failed").build());
+        }
+        int quantity = request.get("quantity");
+        CartItemResponse cartItemResponse = cartItemService.updateQuantity(id_product, token, quantity);
+        if (cartItemResponse != null) {
+            return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Update product to cart success").response(cartItemResponse).build());
+        } else {
+            return ResponseEntity.badRequest().body(BaseResponse.builder().status("FAIL").message("Update product to cart failed").build());
+        }
     }
 }
