@@ -123,7 +123,7 @@ public class CartItemServiceImpl implements CartItemService {
 
     @Transactional
     @Override
-    public boolean deleteCartItem(Long idCartItem, String token) {
+    public boolean deleteCartItem(Long idProduct, String token) {
         if(token == null || token.isEmpty()) {
             return false;
         }
@@ -132,11 +132,44 @@ public class CartItemServiceImpl implements CartItemService {
         if(cart == null) {
             throw new ItemNotFoundException("Cart not found");
         }
-        CartDetail cartDetail = cartDetailRepository.findByCartIdAndProductId(cart.getId(), idCartItem);
+        CartDetail cartDetail = cartDetailRepository.findByCartIdAndProductId(cart.getId(), idProduct);
         if(cartDetail != null) {
             cartDetailRepository.delete(cartDetail);
             return true;
         }
         return false;
+    }
+
+    @Override
+    public CartItemResponse updateQuantity(Long idProduct, String token, int quantity) {
+        if(token == null || token.isEmpty()) {
+            return null;
+        }
+
+        if(quantity < 1) {
+            throw new ItemNotFoundException("Quantity must be greater than 0");
+        }
+
+        UserResponse userResponse = userService.getCurrentUser(token);
+        Cart cart = cartRepository.findByUserId(userResponse.getId());
+        if(cart == null) {
+            throw new ItemNotFoundException("Cart not found");
+        }
+
+        CartDetail cartDetail = cartDetailRepository.findByCartIdAndProductId(cart.getId(), idProduct);
+        if(cartDetail == null) {
+            throw new ItemNotFoundException("Cart detail not found");
+        }
+        Product product = productRepository.findById(cartDetail.getProduct().getId())
+                .orElseThrow(() -> new ItemNotFoundException("Product not found"));
+
+        if(quantity > product.getStockQuantity()) {
+            throw new ItemNotFoundException("Not enough stock quantity");
+        }
+
+        cartDetail.setQuantity(quantity);
+        cartDetail = cartDetailRepository.save(cartDetail);
+
+        return this.convertToDto(cartDetail);
     }
 }

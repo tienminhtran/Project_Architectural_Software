@@ -14,8 +14,7 @@ import useCart from "../../hooks/useCart";
 const CartBuyOrderBox = ({cartItems}) => {
     console.log("cartItems 2", cartItems);
     const navigate = useNavigate();
-    const { deleteItem } = useCart(); 
-          
+    const { deleteItem, updateQuantity, error} = useCart(); 
 
     const [currentStep] = useState(0); // Bước: Giỏ hàng
     const [items, setCartItems] = useState([]);
@@ -31,11 +30,16 @@ const CartBuyOrderBox = ({cartItems}) => {
         setCartItems(cartItems || []); // Cập nhật giỏ hàng từ props
     }, [cartItems]);
 
-    const handleQuantityChange = (index, newQuantity) => {
+    const handleQuantityChange = (id_product, newQuantity) => {
         if (newQuantity < 1) return;
+
+        const index = items.findIndex(item => item.id_product === id_product);
+        if (index === -1) return; // Nếu không tìm thấy sản phẩm trong giỏ hàng
+
         const updated = [...items];
-        updated[index].quantity = newQuantity;
+        updated[index] = { ...updated[index], quantity: newQuantity }; // Cập nhật số lượng sản phẩm
         setCartItems(updated);
+        updateQuantity({id: id_product, quantity: newQuantity}); 
     };
 
     const handleRemove = (id_product) => {
@@ -122,13 +126,18 @@ const CartBuyOrderBox = ({cartItems}) => {
                             <span className="CartBuy-OrderBox__original">{formatPrice(21000000)}</span>
                         </div>
                         <div className="CartBuy-OrderBox__actions">
-                            <button className="CartBuy-OrderBox__sl" onClick={() => handleQuantityChange(index, item.quantity - 1)} disabled={item.quantity <= 1}>−</button>
+                            <button className="CartBuy-OrderBox__sl" onClick={() => handleQuantityChange(item.id_product, item.quantity - 1)} disabled={item.quantity <= 1}>−</button>
                             <span>{item.quantity}</span>
-                            <button className="CartBuy-OrderBox__sl" onClick={() => handleQuantityChange(index, item.quantity + 1)}>+</button>
+                            <button className="CartBuy-OrderBox__sl" onClick={() => handleQuantityChange(item.id_product, item.quantity + 1)} disabled={error[item.id_product]}>+</button>
+
                             <button onClick={() => handleRemove(item.id_product)} className="CartBuy-OrderBox__deleteBtn">
                                 <FaTrash /> <span style={{ marginLeft: 4 }}>Xoá</span>
                             </button>
                         </div>
+
+                        {error[item.id_product] && (
+                            <span className="fs-6 text-danger">{error[item.id_product]}</span>
+                        )}
                     </div>
                 </div>
             ))}
