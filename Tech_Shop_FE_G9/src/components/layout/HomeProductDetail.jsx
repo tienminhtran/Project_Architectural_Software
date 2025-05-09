@@ -6,7 +6,7 @@ import ProductCarousel from './Product-Carousel';
 import ProductInformation from './ProductInformation';
 import Footer from './Footer';
 import { useParams } from 'react-router-dom';
-import { getProductId, filterProductLaptop, filterProductPhone } from '../../services/productService';
+import { getProductId, filterProductByCategory } from '../../services/productService';
 import Loading from '../common/Loading';
 const HomeProductDetail = () => {
   const { id } = useParams(); // lấy id từ URL
@@ -31,22 +31,15 @@ const HomeProductDetail = () => {
         const response = await getProductId(decodedId);
         console.log('API response:', response);
 
-        if (!response?.response?.category?.name) {
+        if (!response?.response?.category?.id) {
           throw new Error('Invalid product data');
         }
 
-        const category = response.response.category.name;
-        let similarProducts = [];
-        if (category === 'Computer') {
-          const responseSimilar = await filterProductLaptop();
-          similarProducts = responseSimilar.response || [];
-        } else if (category === 'Phone') {
-          const responseSimilar = await filterProductPhone();
-          similarProducts = responseSimilar.response || [];
-        }
-
+        const categoryId = response.response?.category?.id;
+        const responseCategory = await filterProductByCategory(categoryId);
+        
         setProduct(response.response);
-        setProductSimilar(similarProducts);
+        setProductSimilar(responseCategory.response);
         setIsLoading(false);
       } catch (error) {
         console.error('Error fetching product:', error);
