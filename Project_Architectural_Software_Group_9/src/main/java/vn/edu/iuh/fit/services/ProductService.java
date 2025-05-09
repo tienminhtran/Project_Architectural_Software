@@ -59,6 +59,8 @@ public interface ProductService {
 
     public List<ProductResponse> filterProductTablet();
 
+    public List<ProductResponse> filterProductByCategory(Long id);
+
 
 
 }

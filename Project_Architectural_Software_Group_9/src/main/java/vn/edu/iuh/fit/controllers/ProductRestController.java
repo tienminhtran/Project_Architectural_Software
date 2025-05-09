@@ -625,6 +625,14 @@ public class ProductRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Filter product phone").response(productResponses).build());
     }
 
+    @GetMapping("/{id}/category")
+    public ResponseEntity<BaseResponse<?>> filterProductByCategory(@PathVariable Long id) {
+        List<ProductResponse> productResponses = productService.filterProductByCategory(id);
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Filter product by category").response(productResponses).build());
+    }
 
 
     //localhost:8080/api/v1/products/filter-tablet
