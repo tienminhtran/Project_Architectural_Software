@@ -31,3 +31,16 @@ export const deleteItemToCart = async (id) => {
     throw error; 
   }
 };
+export const updateQuatityItemCart = async (id, quantity) => {
+  console.log("id", id);
+  console.log("quantity", quantity);
+  try {
+    const response = await axiosInstance.put(`/cart/${id}/update`, {
+      quantity: Number(quantity),
+    });
+    return response.data;
+  } catch (error) {
+    console.error("Error updating item quantity in cart:", error);
+    throw error; 
+  }
+};

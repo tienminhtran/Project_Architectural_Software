@@ -167,10 +167,7 @@ public class CartItemServiceImpl implements CartItemService {
             throw new ItemNotFoundException("Not enough stock quantity");
         }
 
-        cartDetail.setQuantity(cartDetail.getQuantity() + quantity);
-        if(cartDetail.getQuantity() > product.getStockQuantity()) {
-            throw new ItemNotFoundException("Not enough stock quantity");
-        }
+        cartDetail.setQuantity(quantity);
         cartDetail = cartDetailRepository.save(cartDetail);
 
         return this.convertToDto(cartDetail);
