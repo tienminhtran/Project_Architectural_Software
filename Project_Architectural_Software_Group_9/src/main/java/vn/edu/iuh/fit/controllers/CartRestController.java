@@ -35,7 +35,7 @@ public class CartRestController {
     private CartItemService cartItemService;
 
     @GetMapping("/me")
-    public ResponseEntity<BaseResponse<?>> getCartOfMe(@RequestHeader("Authorization") String token){
+    public ResponseEntity<BaseResponse<?>> getCartOfMe(@RequestHeader("Authorization") String token) {
         CartResponse cartResponse = cartService.getCartByUserId(token);
 
         if (cartResponse == null) {
@@ -46,7 +46,7 @@ public class CartRestController {
     }
 
     @GetMapping("/me/items")
-    public ResponseEntity<BaseResponse<?>> getCartItemOfMe(@RequestHeader("Authorization") String token){
+    public ResponseEntity<BaseResponse<?>> getCartItemOfMe(@RequestHeader("Authorization") String token) {
         List<?> cartResponse = cartItemService.getCartItemsByCartId(token);
         if (cartResponse == null) {
             return ResponseEntity.noContent().build();
@@ -56,12 +56,27 @@ public class CartRestController {
     }
 
     @PostMapping("/add")
-    public ResponseEntity<BaseResponse<?>> addProductToCart(@RequestHeader("Authorization") String token, @RequestBody CartItemRequest request)  {
+    public ResponseEntity<BaseResponse<?>> addProductToCart(@RequestHeader("Authorization") String token, @RequestBody CartItemRequest request) {
         try {
             CartItemResponse cartItemResponse = cartItemService.addProductToCart(token, request);
             return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Add product to cart success").response(cartItemResponse).build());
         } catch (CustomJwtException e) {
             return ResponseEntity.badRequest().body(BaseResponse.builder().status("FAIL").message(e.getMessage()).build());
         }
+    }
+
+    @DeleteMapping("/{id}/delete")
+    public ResponseEntity<BaseResponse<?>> deleteProductToCart(@RequestHeader("Authorization") String token, @PathVariable Long id) {
+        if (id == null) {
+            return ResponseEntity.badRequest().body(BaseResponse.builder().status("FAIL").message("Delete product to cart failed").build());
+        }
+
+        boolean isDeleted = cartItemService.deleteCartItem(id, token);
+        if (isDeleted) {
+            return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Delete product to cart success").build());
+        } else {
+            return ResponseEntity.badRequest().body(BaseResponse.builder().status("FAIL").message("Delete product to cart failed").build());
+        }
+
     }
 }
