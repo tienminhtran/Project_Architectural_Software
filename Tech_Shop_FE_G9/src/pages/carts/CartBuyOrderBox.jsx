@@ -14,8 +14,7 @@ import useCart from "../../hooks/useCart";
 const CartBuyOrderBox = ({cartItems}) => {
     console.log("cartItems 2", cartItems);
     const navigate = useNavigate();
-    const { deleteItem, updateQuantity } = useCart(); 
-          
+    const { deleteItem, updateQuantity, error} = useCart(); 
 
     const [currentStep] = useState(0); // Bước: Giỏ hàng
     const [items, setCartItems] = useState([]);
@@ -129,11 +128,16 @@ const CartBuyOrderBox = ({cartItems}) => {
                         <div className="CartBuy-OrderBox__actions">
                             <button className="CartBuy-OrderBox__sl" onClick={() => handleQuantityChange(item.id_product, item.quantity - 1)} disabled={item.quantity <= 1}>−</button>
                             <span>{item.quantity}</span>
-                            <button className="CartBuy-OrderBox__sl" onClick={() => handleQuantityChange(item.id_product, item.quantity + 1)} >+</button>
+                            <button className="CartBuy-OrderBox__sl" onClick={() => handleQuantityChange(item.id_product, item.quantity + 1)} disabled={error[item.id_product]}>+</button>
+
                             <button onClick={() => handleRemove(item.id_product)} className="CartBuy-OrderBox__deleteBtn">
                                 <FaTrash /> <span style={{ marginLeft: 4 }}>Xoá</span>
                             </button>
                         </div>
+
+                        {error[item.id_product] && (
+                            <span className="fs-6 text-danger">{error[item.id_product]}</span>
+                        )}
                     </div>
                 </div>
             ))}
