@@ -9,10 +9,12 @@ import 'react-confirm-alert/src/react-confirm-alert.css'; // Import style cho co
 import '../../assets/css/CartBuyOrderBox.css';
 
 import { formatPrice } from "../../utils/FormatPrice"; 
+import useCart from "../../hooks/useCart";
 
 const CartBuyOrderBox = ({cartItems}) => {
     console.log("cartItems 2", cartItems);
     const navigate = useNavigate();
+    const { deleteItem } = useCart(); 
           
 
     const [currentStep] = useState(0); // Bước: Giỏ hàng
@@ -36,7 +38,7 @@ const CartBuyOrderBox = ({cartItems}) => {
         setCartItems(updated);
     };
 
-    const handleRemove = (index) => {
+    const handleRemove = (id_product) => {
         confirmAlert({
             title: 'Xác nhận xóa',
             message: 'Bạn có chắc chắn muốn xoá sản phẩm này không?',
@@ -44,9 +46,10 @@ const CartBuyOrderBox = ({cartItems}) => {
                 {
                     label: 'Có',
                     onClick: () => {
-                        const productName = items[index].name;
-                        const updated = items.filter((_, i) => i !== index);
-                        setCartItems(updated);
+                        const productName = items.find(item => item.id_product === id_product)?.name || "Sản phẩm";
+                        const updatedItems = items.filter(item => item.id_product !== id_product);
+                        setCartItems(updatedItems);
+                        deleteItem(id_product); // Gọi hàm xóa sản phẩm từ giỏ hàng
                         toast.success(`${productName} đã được xóa thành công!`, {
                             position: "top-center",
                             autoClose: 3000,
@@ -122,7 +125,7 @@ const CartBuyOrderBox = ({cartItems}) => {
                             <button className="CartBuy-OrderBox__sl" onClick={() => handleQuantityChange(index, item.quantity - 1)} disabled={item.quantity <= 1}>−</button>
                             <span>{item.quantity}</span>
                             <button className="CartBuy-OrderBox__sl" onClick={() => handleQuantityChange(index, item.quantity + 1)}>+</button>
-                            <button onClick={() => handleRemove(index)} className="CartBuy-OrderBox__deleteBtn">
+                            <button onClick={() => handleRemove(item.id_product)} className="CartBuy-OrderBox__deleteBtn">
                                 <FaTrash /> <span style={{ marginLeft: 4 }}>Xoá</span>
                             </button>
                         </div>
