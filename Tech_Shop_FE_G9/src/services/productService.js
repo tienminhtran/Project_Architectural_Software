@@ -90,6 +90,16 @@ export const searchProduct = async (pageNo, pageSize,keyword) => {
     }
 }
 
+ export const filterProductByCategory = async (categoryId) => {
+    
+    try {
+        const response = await axiosInstance.get(`/products/${categoryId}/category`);
+        return response.data;
+    } catch (error) {
+        console.error("Error filtering products by category:", error);
+        throw error; 
+    }
+}
 
  export const getProductId = async (id) => {
     

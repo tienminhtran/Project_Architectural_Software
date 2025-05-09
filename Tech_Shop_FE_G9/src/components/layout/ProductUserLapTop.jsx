@@ -8,125 +8,15 @@ import {
 } from "react-icons/fa";
 import "../../../src/assets/css/ProductUser.css";
 import { useNavigate } from "react-router-dom";
-import { filterProductLaptop } from "../../services/productService";
 import useCart from "../../hooks/useCart";
 import { toast } from "react-toastify";
 import { getAccessToken } from "../../services/authService";
 
-// const productData = [
-//   {
-//     name: "Dell G15",
-//     image: "../../../public/images/product/laptop1.jpg",
-//     newPrice: "15.000.000",
-//     oldPrice: "18.000.000",
-//     discount: "20%",
-//     battery: "60000mAh",
-//     monitor: "15.6 inch",
-//     os: "Windows 10",
-//     ram: "16GB",
-//   },
-//   {
-//     name: "HP ProBook",
-//     image: "../../../public/images/product/laptop2.jpg",
-//     newPrice: "12.000.000",
-//     oldPrice: "14.400.000",
-//     discount: "17%",
-//     battery: "50000mAh",
-//     monitor: "14 inch",
-//     os: "Windows 11",
-//     ram: "8GB",
-//   },
-//   {
-//     name: "Dell G15",
-//     image: "../../../public/images/product/laptop3.jpg",
-//     newPrice: "15.000.000",
-//     oldPrice: "18.000.000",
-//     discount: "20%",
-//     battery: "60000mAh",
-//     monitor: "15.6 inch",
-//     os: "Windows 10",
-//     ram: "16GB",
-//   },
-//   {
-//     name: "HP ProBook",
-//     image: "../../../public/images/product/laptop4.jpg",
-//     newPrice: "12.000.000",
-//     oldPrice: "14.400.000",
-//     discount: "17%",
-//     battery: "50000mAh",
-//     monitor: "14 inch",
-//     os: "Windows 11",
-//     ram: "8GB",
-//   },
-//   {
-//     name: "Dell G15",
-//     image: "../../../public/images/product/laptop2.jpg",
-//     newPrice: "15.000.000",
-//     oldPrice: "18.000.000",
-//     discount: "20%",
-//     battery: "60000mAh",
-//     monitor: "15.6 inch",
-//     os: "Windows 10",
-//     ram: "16GB",
-//   },
-//   {
-//     name: "HP ProBook",
-//     image: "../../../public/images/product/laptop3.jpg",
-//     newPrice: "12.000.000",
-//     oldPrice: "14.400.000",
-//     discount: "17%",
-//     battery: "50000mAh",
-//     monitor: "14 inch",
-//     os: "Windows 11",
-//     ram: "8GB",
-//   },
-//   {
-//     name: "Dell G15",
-//     image: "../../../public/images/product/laptop1.jpg",
-//     newPrice: "15.000.000",
-//     oldPrice: "18.000.000",
-//     discount: "20%",
-//     battery: "60000mAh",
-//     monitor: "15.6 inch",
-//     os: "Windows 10",
-//     ram: "16GB",
-//   },
-//   {
-//     name: "HP ProBook",
-//     image: "../../../public/images/product/laptop3.jpg",
-//     newPrice: "12.000.000",
-//     oldPrice: "14.400.000",
-//     discount: "17%",
-//     battery: "50000mAh",
-//     monitor: "14 inch",
-//     os: "Windows 11",
-//     ram: "8GB",
-//   },
-// ];
-
-const ProductUser = () => {
+const ProductUser = ({products, brands}) => {
   const navigate = useNavigate();
   
-  const [products, setProducts] = React.useState([]);
   const { addItem } = useCart(); 
   const token = getAccessToken();
-
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await filterProductLaptop();
-        // console.log("products", response);
-        setProducts(response.response); // Giả sử response.content chứa danh sách sản phẩm
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-    fetchProducts();
-  }, []);
-
-  const brands = ["ASUS", "ACER", "MSI", "LENOVO", "GIGABYTE", "DELL"];
-
 
   const scrollRef = useRef();
 

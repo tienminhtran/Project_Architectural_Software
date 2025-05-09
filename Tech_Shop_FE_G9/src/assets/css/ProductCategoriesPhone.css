@@ -83,7 +83,7 @@
   .product-user-phone__product-img {
     width: 100%;
     height: 180px;
-    object-fit: cover;
+    object-fit: contain;
   }
   
   .product-user-phone__product-discount {

@@ -165,6 +165,13 @@ public class ProductServiceImpl implements ProductService {
                 .toList();
     }
 
+    @Override
+    public List<ProductResponse> filterProductByCategory(Long id) {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Category not found"));
+        List<Product> products = productRepository.findByCategory_Id(category.getId());
+        return products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
+    }
+
     /**
      * total stock quantity
      *
