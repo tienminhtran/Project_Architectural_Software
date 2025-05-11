@@ -10,7 +10,6 @@ const useProduct = (pageNo, pageSize, productSearch) => {
     const createPro = useMutation({
         mutationFn: ({formData}) => createProduct(formData),
         onSuccess: () => {
-            alert("Create product successfully!!");
         },
         onError: (error) => {
             console.error("Create product failed:", error);
@@ -25,7 +24,6 @@ const useProduct = (pageNo, pageSize, productSearch) => {
           // Mà không cần reload
           queryClient.invalidateQueries("getAllProduct_Paging");
     
-          alert("Update voucher successfully!!");
         },
         onError: (error) => {
           console.error("Update product failed:", error);
@@ -52,8 +50,8 @@ const useProduct = (pageNo, pageSize, productSearch) => {
         products_paging: usePaginationQuery("getAllProduct_Paging", getAllProduct_Paging, pageNo, pageSize),
         // updateProduct: update.mutate,
         deleteProduct: deletePro.mutate,
-        createProduct: createPro.mutate,
-        updateProduct: update.mutate,
+        createProduct: createPro.mutateAsync,
+        updateProduct: update.mutateAsync,
         search_paging: usePaginationQuery("searchProduct", searchProduct, pageNo, pageSize, productSearch, true),
     }
 }
