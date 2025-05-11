@@ -11,6 +11,7 @@ const ProfilePage = () => {
   const [activeUpdate, setActiveUpdate] = useState(false);
   const [imageName, setImageName] = useState("");
   const [isLoading, setIsLoading] = useState(false);
+  console.log("loading", isLoading);
 
   // console.log("haha",userInfor);
 
@@ -71,9 +72,14 @@ const ProfilePage = () => {
       formDataUpdate.append("fileImage", selectedFiles[0]);
     }
 
-    updateUser({ userid: userInfor.id, formData: formDataUpdate });
-    setActiveUpdate(!activeUpdate);
-    setIsLoading(false);
+    try {
+      await updateUser({ userid: userInfor.id, formData: formDataUpdate }); // Chờ update xong
+      setActiveUpdate(false);
+    } catch (err) {
+      console.error("Lỗi cập nhật:", err);
+    } finally {
+      setIsLoading(false); // Chỉ tắt loading sau khi xong
+    }
   };
 
   return (

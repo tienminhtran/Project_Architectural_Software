@@ -51,8 +51,6 @@ const useUser = (pageNo, pageSize) => {
       }));
       queryClient.invalidateQueries(["getUser"]); // Invalidate the query to refetch the user data
       queryClient.invalidateQueries(["getAllUsersPaging"]); // Invalidate the query to refetch the user data
-      
-      alert("Update user successfully!!");
     },
     onError: (error) => {
       console.error("Update user failed:", error);
@@ -91,13 +89,14 @@ const useUser = (pageNo, pageSize) => {
     // user_nopaging: userNoPaging,
     createManager: createRoleManager,
     userInfor: getUser.data?.response || {},
-    updateUser: updateProfileUser.mutate,
+    updateUser: updateProfileUser.mutateAsync,
     resetPassword: resetPassword.mutate,
     checkPhoneExists,
     checkPhoneExistsAsync,
     isCheckingPhone,
     isCheckPhoneError,
     checkPhoneError,
+    loadingUpdateUser: updateProfileUser.isLoading,
   };
 };
 export default useUser;
