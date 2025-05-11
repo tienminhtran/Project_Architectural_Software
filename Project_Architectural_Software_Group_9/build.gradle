@@ -50,6 +50,8 @@ dependencies {
 
 	implementation 'com.google.firebase:firebase-admin:9.4.3'
 
+	implementation 'com.cloudinary:cloudinary-http44:1.32.0'
+
 }
 
 tasks.named('test') {

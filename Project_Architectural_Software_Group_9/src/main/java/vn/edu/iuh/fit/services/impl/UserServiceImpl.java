@@ -39,6 +39,7 @@ import vn.edu.iuh.fit.repositories.UserRepository;
 import vn.edu.iuh.fit.repositories.RefreshTokenRepository;
 import vn.edu.iuh.fit.security.CustomUserDetails;
 import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
+import vn.edu.iuh.fit.services.CloudinaryService;
 import vn.edu.iuh.fit.services.EmailService;
 import vn.edu.iuh.fit.services.UserService;
 
@@ -84,6 +85,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     private final Map<String, EmailVerifyEntry> emailVerifyMap = new ConcurrentHashMap<>();
 
@@ -232,7 +236,7 @@ public class UserServiceImpl implements UserService {
                 if (!isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
                     throw new BadRequestException("Invalid image format");
                 }
-                String image = saveFile(file);
+                String image = cloudinaryService.uploadImage(file);
                 user.setImage(image); // chỉ set nếu có file mới
             }
             System.out.println(user);

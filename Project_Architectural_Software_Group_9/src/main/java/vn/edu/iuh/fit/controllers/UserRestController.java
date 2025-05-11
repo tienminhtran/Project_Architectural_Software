@@ -253,6 +253,9 @@ public class UserRestController {
             @RequestPart("user") String userJson,
             @RequestPart(value = "fileImage", required = false) MultipartFile fileImages) {
 
+        System.out.println("id: " + id);
+        System.out.println("fileImage: " + fileImages);
+        System.out.println("userJson: " + userJson);
         // Chuyen string sang json
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
