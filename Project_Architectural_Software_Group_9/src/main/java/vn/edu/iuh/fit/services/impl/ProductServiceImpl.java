@@ -26,6 +26,7 @@ import vn.edu.iuh.fit.repositories.BrandRepository;
 import vn.edu.iuh.fit.repositories.CategoryRepository;
 import vn.edu.iuh.fit.repositories.OrderDetailRepository;
 import vn.edu.iuh.fit.repositories.ProductRepository;
+import vn.edu.iuh.fit.services.CloudinaryService;
 import vn.edu.iuh.fit.services.ProductService;
 
 import java.io.IOException;
@@ -62,6 +63,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
 
     //entity to dto
@@ -226,7 +230,7 @@ public class ProductServiceImpl implements ProductService {
                     throw new BadRequestException("Image is not valid");
                 }
                 // Handel thumbnail product
-                thumbnail = saveFile(firstImage);
+                thumbnail = cloudinaryService.uploadImage(firstImage);
 
                 //Handel images product
                 for (MultipartFile file : fileImage) {
@@ -234,7 +238,8 @@ public class ProductServiceImpl implements ProductService {
                         throw new BadRequestException("Invalid image format");
                     }
                     // function saveFile convert to type String -> add hashset images
-                    images.add(saveFile(file));
+                    String imageUrl = cloudinaryService.uploadImage(file);
+                    images.add(imageUrl);
                 }
 
             }
@@ -311,7 +316,7 @@ public class ProductServiceImpl implements ProductService {
                     throw new BadRequestException("Image is not valid");
                 }
                 // Handel thumbnail product
-                thumbnail = saveFile(firstImage);
+                thumbnail = cloudinaryService.uploadImage(firstImage);
 
 
                 //Handel images product
@@ -320,7 +325,8 @@ public class ProductServiceImpl implements ProductService {
                         throw new BadRequestException("Invalid image format");
                     }
                     // function saveFile convert to type String -> add hashset images
-                    images.add(saveFile(file));
+                    String imageUrl = cloudinaryService.uploadImage(file);
+                    images.add(imageUrl);
                 }
 
 
