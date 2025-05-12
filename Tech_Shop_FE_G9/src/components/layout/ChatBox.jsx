@@ -2,11 +2,8 @@ import React, { useState } from 'react';
 import axios from 'axios';
 import '../../assets/css/ChatBox.css';
 import { GoogleGenerativeAI } from '@google/generative-ai';
-// import pro
 
 const genAI = new GoogleGenerativeAI('AIzaSyD2JeiwtB4vBgqbhT_G_U-x6aS_Y22jKPM');
-// dùng env
-// const genAI = new GoogleGenerativeAI(process.env.REACT_APP_GOOGLE_API_KEY);
 const model = genAI.getGenerativeModel({ model: 'gemini-2.0-flash' });
 
 const ChatBox = ({ onClose }) => {
@@ -15,6 +12,19 @@ const ChatBox = ({ onClose }) => {
   const [products, setProducts] = useState([]);
   const [expanded, setExpanded] = useState(false);
 
+  // 1. Phân tích ý định từ câu hỏi người dùng
+  const getIntent = (msg) => {
+    const lower = msg.toLowerCase();
+    if (lower.includes("đơn hàng")) return "track_order";
+    if (lower.includes("liên hệ") || lower.includes("nhân viên")) return "contact_staff";
+    if (parsePriceRange(msg)) return "search_by_price";
+    if (lower.includes("thông số") || lower.includes("cấu hình")) return "product_specs";
+    if (lower.includes("đánh giá") || lower.includes("rating")) return "top_rated";
+    if (lower.includes("bán chạy") || lower.includes("mua nhiều")) return "best_seller";
+    return "search_general";
+  };
+  
+  // 2. Hàm phân tích khoảng giá
   const parsePriceRange = (msg) => {
     const cleaned = msg.toLowerCase().replace(/[^0-9\s]/g, '');
     const digits = cleaned.match(/\d+/g)?.map(Number) || [];
@@ -27,19 +37,38 @@ const ChatBox = ({ onClose }) => {
     return null;
   };
 
+  // 3. Gọi API lấy toàn bộ sản phẩm
+  const fetchAllProducts = async () => {
+    const res = await axios.get(`http://localhost:8080/api/v1/products`);
+    return res.data?.response?.values || [];
+  };
+
+  // 4. Gọi API tìm kiếm theo từ khoá
+  const searchProductsByQuery = async (query) => {
+    const res = await axios.get(`http://localhost:8080/api/v1/products/search/${encodeURIComponent(query)}`);
+    return res.data?.response?.values || [];
+  };
+
+  // 5. Gọi Gemini để trả lời tự động
+  const getGeminiResponse = async (question) => {
+    const res = await model.generateContent(question);
+    return res.response.text();
+  };
+
+  // 6. Gửi tin nhắn
   const sendMessage = async () => {
     if (!message.trim()) return;
 
     setChat(prev => [...prev, { sender: 'user', text: message }]);
-    const priceRange = parsePriceRange(message);
+
+    const intent = getIntent(message);
 
     try {
       let values = [];
 
-      if (priceRange) {
-        const res = await axios.get(`http://localhost:8080/api/v1/products`);
-        values = res.data?.response?.values || [];
-
+      if (intent === "search_by_price") {
+        const priceRange = parsePriceRange(message);
+        values = await fetchAllProducts();
         values = values.filter(p =>
           (!priceRange.min || p.price >= priceRange.min) &&
           (!priceRange.max || p.price <= priceRange.max)
@@ -48,38 +77,69 @@ const ChatBox = ({ onClose }) => {
         if (values.length > 0) {
           setChat(prev => [...prev, {
             sender: 'bot',
-            text: 'Đây là các sản phẩm phù hợp với mức giá bạn hỏi:'
+            text: '📦 Đây là các sản phẩm phù hợp với mức giá bạn hỏi:'
           }]);
         } else {
           setChat(prev => [...prev, {
             sender: 'bot',
-            text: 'Không tìm thấy sản phẩm nào trong khoảng giá đó.'
+            text: '❌ Không tìm thấy sản phẩm nào trong khoảng giá đó.'
           }]);
         }
-      } else {
-        const res = await axios.get(`http://localhost:8080/api/v1/products/search/${encodeURIComponent(message)}`);
-        values = res.data?.response?.values || [];
 
+      } else if (intent === "search_general") {
+        values = await searchProductsByQuery(message);
         if (values.length > 0) {
           setChat(prev => [...prev, {
             sender: 'bot',
-            text: 'Dưới đây là kết quả bạn cần:'
+            text: '🔍 Dưới đây là kết quả bạn cần:'
           }]);
         } else {
-          // Nếu không tìm thấy sản phẩm => hỏi Gemini
-          const geminiRes = await model.generateContent(message);
-          const geminiText = await geminiRes.response.text();
-
+          const geminiText = await getGeminiResponse(message);
           setChat(prev => [...prev, {
             sender: 'bot',
-            text: geminiText
+            text: `🤖 Trợ lý AI trả lời: ${geminiText}`
           }]);
         }
+
+      } else if (intent === "track_order") {
+        setChat(prev => [...prev, {
+          sender: 'bot',
+          text: '📦 Bạn có thể kiểm tra đơn hàng tại trang "Đơn hàng của tôi" hoặc nhập mã đơn hàng để tra cứu.'
+        }]);
+      } else if (intent === "contact_staff") {
+        setChat(prev => [...prev, {
+          sender: 'bot',
+          text: '📞 Vui lòng liên hệ nhân viên CSKH qua số 1800 0000 hoặc chat trực tiếp tại đây.'
+        }]);
+      } else if (intent === "product_specs") {
+        values = await searchProductsByQuery(message);
+        if (values.length > 0) {
+          setChat(prev => [...prev, {
+            sender: 'bot',
+            text: `📋 Thông số sản phẩm "${values[0].productName}": ${values[0].specs || 'Hiện chưa có thông tin chi tiết.'}`
+          }]);
+        } else {
+          const geminiText = await getGeminiResponse(message);
+          setChat(prev => [...prev, { sender: 'bot', text: `🤖 Trợ lý AI: ${geminiText}` }]);
+        }
+      
+      } else if (intent === "top_rated") {
+        values = await fetchAllProducts();
+        values = values.sort((a, b) => (b.rating || 0) - (a.rating || 0)).slice(0, 5);
+        setChat(prev => [...prev, { sender: 'bot', text: '🌟 Đây là các sản phẩm được đánh giá cao nhất:' }]);
+        setProducts(values);
+
+      } else if (intent === "best_seller") {
+        values = await fetchAllProducts();
+        values = values.sort((a, b) => (b.sold || 0) - (a.sold || 0)).slice(0, 5);
+        setChat(prev => [...prev, { sender: 'bot', text: '🔥 Đây là các sản phẩm bán chạy nhất:' }]);
+        setProducts(values);
       }
 
       setProducts(values);
     } catch (err) {
-      setChat(prev => [...prev, { sender: 'bot', text: 'Lỗi hệ thống. Vui lòng thử lại sau.' }]);
+      console.error('ChatBox error:', err);
+      setChat(prev => [...prev, { sender: 'bot', text: '❗ Lỗi hệ thống. Vui lòng thử lại sau.' }]);
     }
 
     setMessage('');
@@ -96,8 +156,18 @@ const ChatBox = ({ onClose }) => {
         <div className="chat-body">
           <p>👋 Xin chào! Mình có thể giúp gì cho bạn hôm nay?</p>
           <button className="chat-button" onClick={() => setExpanded(true)}>Hỏi về sản phẩm</button>
-          <button className="chat-button">Kiểm tra đơn hàng</button>
-          <button className="chat-button">Liên hệ nhân viên</button>
+          <button className="chat-button" onClick={() => {
+            setChat(prev => [...prev, { sender: 'user', text: 'Tôi muốn kiểm tra đơn hàng' }]);
+            setExpanded(true);
+            setMessage('Tôi muốn kiểm tra đơn hàng');
+            setTimeout(() => sendMessage(), 300);
+          }}>Kiểm tra đơn hàng</button>
+          <button className="chat-button" onClick={() => {
+            setChat(prev => [...prev, { sender: 'user', text: 'Tôi muốn liên hệ nhân viên' }]);
+            setExpanded(true);
+            setMessage('Tôi muốn liên hệ nhân viên');
+            setTimeout(() => sendMessage(), 300);
+          }}>Liên hệ nhân viên</button>
         </div>
       ) : (
         <>
