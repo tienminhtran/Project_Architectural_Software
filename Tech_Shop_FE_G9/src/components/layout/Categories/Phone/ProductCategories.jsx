@@ -4,25 +4,11 @@ import "../../../../../src/assets/css/ProductCategoriesPhone.css";
 import { useNavigate } from "react-router-dom";
 import { filterProductPhone } from "../../../../services/productService";
 
-const ProductCategoriesPhone = () => {
+const ProductCategories = ({ products }) => {
   const navigate = useNavigate();
-  const [products, setProducts] = useState([]);
   
   const [currentPage, setCurrentPage] = useState(0); // Trang hiện tại (0-indexed)
   const [pageSize] = useState(8); // Số sản phẩm mỗi trang
-
-  useEffect(() => {
-    const fetchProducts = async () => {
-      try {
-        const response = await filterProductPhone();
-        console.log("products", response);
-        setProducts(response.response || []); 
-      } catch (error) {
-        console.error("Error fetching products:", error);
-      }
-    };
-    fetchProducts();
-  }, []);
 
   // Tính tổng số trang
   const totalPages = Math.ceil(products.length / pageSize);
@@ -120,4 +106,4 @@ const ProductCategoriesPhone = () => {
   );
 };
 
-export default ProductCategoriesPhone;
+export default ProductCategories;
