@@ -33,7 +33,7 @@ import "bootstrap-icons/font/bootstrap-icons.css";
 import UpdateUserPage from "./pages/common/user/UpdateUserPage";
 import AdminCodeControllerPage from "./pages/admin/AdminCodeControllerPage";
 import CheckCodeModal from "./components/layout/CheckCodeModal"; 
-import ProductCategories from "./components/layout/Categories/ProductCategories"; 
+import ProductCategory from "./components/layout/Categories/ProductCategory"; 
 import HomeProductDetail from "./components/layout/HomeProductDetail";  
 import Step1Cart from "./pages/carts/CartBuyOrderBox"; 
 import Step2Cart from "./pages/carts/OrderInfoForm"; 
@@ -84,16 +84,10 @@ function App() {
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
 
         <Route path="/" element={<HomePage />} />
-        <Route path="/categories-all-phone" element={<ProductCategories />} />
-        <Route path="/categories-all-accessory" element={<ProductCategories />} />
+        <Route path="/categories/:category" element={<ProductCategory />} />
 
         <Route path="blogs/all" element={<BlogPosts />} /> {/* Blog Posts Route */}
-        
-
-        <Route
-          path="/categories-all-accessory"
-          element={<ProductCategories />}
-        />
+      
         <Route path="/product/:id" element={<HomeProductDetail />} />
 
         {/* Admin Page */}

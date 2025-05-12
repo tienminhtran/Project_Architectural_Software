@@ -13,6 +13,7 @@ import { logout } from "../../store/slices/AuthSlice.js";
 import { confirmAlert } from 'react-confirm-alert';
 import { toast } from "react-toastify";
 import useCart from "../../hooks/useCart.js";
+import useCategorie from "../../hooks/useCategorie.js";
 
 
 const HeaderUser = () => {
@@ -32,8 +33,7 @@ const HeaderUser = () => {
 
   const token = getAccessToken();
 
-  // console.log("userInfor", user);
-  // const categories = ["LapTop", "Phone", "Accessory"];
+  const { getCategories_NoPaging } = useCategorie();
 
   const { recentlyProduct } = useDashboardData();
 
@@ -230,18 +230,12 @@ const HeaderUser = () => {
           {/* Danh sách danh mục */}
           <div className="col-3 text-center text-md-start">
             <ul className="header-user__category-list">
-              <li className="header-user__category-item" onClick={() => navigate('/categories-all-laptop')} >
-                LapTop
-                <FaChevronDown className="header-user__chevron-icon" />
-              </li>
-              <li className="header-user__category-item" onClick={() => navigate('/categories-all-phone')}>
-                Phone
-                <FaChevronDown className="header-user__chevron-icon" />
-              </li>
-              <li className="header-user__category-item" onClick={() => navigate('/categories-all-accessory')}>
-                Accessory
-                <FaChevronDown className="header-user__chevron-icon" />
-              </li>
+              {getCategories_NoPaging && getCategories_NoPaging.map((category) => (
+                <li key={category.id} className="header-user__category-item" onClick={() => navigate(`/categories/${category.name.toLowerCase()}`, {state: { categoryId: category.id }})}>
+                  {category.name}
+                  <FaChevronDown className="header-user__chevron-icon" />
+                </li>
+              ))}
             </ul>
           </div>
 
