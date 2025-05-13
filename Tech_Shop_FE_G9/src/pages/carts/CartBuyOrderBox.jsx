@@ -11,7 +11,7 @@ import '../../assets/css/CartBuyOrderBox.css';
 import { formatPrice } from "../../utils/FormatPrice"; 
 import useCart from "../../hooks/useCart";
 
-const CartBuyOrderBox = ({cartItems}) => {
+const CartBuyOrderBox = ({cartItems, product_checked}) => {
     console.log("cartItems 2", cartItems);
     const navigate = useNavigate();
     const { deleteItem, updateQuantity, error} = useCart(); 
@@ -36,7 +36,10 @@ const CartBuyOrderBox = ({cartItems}) => {
     // refresh khi reload trang
     useEffect(() => {
         setCartItems(cartItems || []); // Cập nhật giỏ hàng từ props
-    }, [cartItems]);
+        if(cartItems && product_checked) {
+            setSelectedRows([product_checked]); 
+        }
+    }, [cartItems, product_checked]);
 
     const handleQuantityChange = (id_product, newQuantity) => {
         if (newQuantity < 1) return;
