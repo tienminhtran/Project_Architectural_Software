@@ -25,6 +25,14 @@ const CartBuyOrderBox = ({cartItems}) => {
     const [showDiscountInput, setShowDiscountInput] = useState(false);
     const [showAllItems, setShowAllItems] = useState(false);
 
+    // select item
+    const [selectedRows, setSelectedRows] = useState([]);
+
+    const handleSelectRow = (item) => {
+        setSelectedRows((prev) => prev.includes(item?.id_product) ? prev.filter((x) => x !== item?.id_product) : [...prev, item?.id_product]);
+    }
+    console.log("selectedRows", selectedRows);
+
     // refresh khi reload trang
     useEffect(() => {
         setCartItems(cartItems || []); // Cập nhật giỏ hàng từ props
@@ -81,7 +89,10 @@ const CartBuyOrderBox = ({cartItems}) => {
     };
 
     const totalPrice = items.reduce(
-        (acc, item) => acc + item.price * item.quantity, 0
+        (acc, item) => 
+            selectedRows.includes(item.id_product) ? 
+            acc + item.price * item.quantity : 
+            acc, 0
     );
 
     const finalPrice = totalPrice * (1 - discount);
@@ -115,9 +126,30 @@ const CartBuyOrderBox = ({cartItems}) => {
             </div>
 
             <CheckoutStepper currentStep={currentStep} />
+            <div className="d-flex flex-row gap-3">
+                <p className="fs-6">Chọn tất cả</p>
+                <input
+                    type="checkbox"
+                    checked={selectedRows.length === items.length}
+                    onChange={() => {
+                        if(selectedRows.length === items.length) {
+                            setSelectedRows([]);
+                        } else {
+                            setSelectedRows(items.map(item => item.id_product));
+                        }
+                    }}
+                    className="form-check-input"
+                />
+            </div>
 
             {displayedItems.map((item, index) => (
-                <div key={index} className="CartBuy-OrderBox__item">
+                <div key={index} className="CartBuy-OrderBox__item align-items-center">
+                    <input
+                        type="checkbox"
+                        checked={selectedRows.includes(item.id_product)}
+                        onChange={() => handleSelectRow(item)}
+                        className="form-check-input"
+                    />
                     <img src={item.thumbnail} alt={item.name} className="CartBuy-OrderBox__img" />
                     <div className="CartBuy-OrderBox__details">
                         <div className="CartBuy-OrderBox__name">{item.name}</div>
