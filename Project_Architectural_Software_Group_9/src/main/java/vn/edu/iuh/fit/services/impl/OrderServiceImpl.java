@@ -406,8 +406,9 @@ public class OrderServiceImpl implements OrderService {
                 orderDetail.setQuantity(requestedQuantity);
 
                 // Lưu chi tiết đơn hàng
-                orderDetailRepository.save(orderDetail);
-                orderDetails.add(orderDetail);
+                OrderDetail savedOrderDetail = orderDetailRepository.save(orderDetail);
+                orderDetails.add(savedOrderDetail);
+
 
                 // Tính toán tổng tiền đơn hàng
                 BigDecimal itemTotal = product.getPrice().multiply(BigDecimal.valueOf(requestedQuantity));
