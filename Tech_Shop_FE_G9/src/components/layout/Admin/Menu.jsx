@@ -72,6 +72,52 @@ const Menu = () => {
         );
     }
 
+    //active submenu
+    const isActive = (path) => {
+        return location.pathname.startsWith(path);
+    };
+
+    const MenuItem = ({ to, icon, label }) => (
+        <li className={`menu-item ${isActive(to) ? "active" : ""}`}>
+            {icon} <Link to={to}>{label}</Link>
+        </li>
+    );
+
+    // tự động mở menu con nếu có đường dẫn khớp với menu
+    useEffect(() => {
+        if (location.pathname.startsWith("/common/products")) {
+            setOpenMenus((prev) => ({ ...prev, product: true }));
+        }
+
+        if (location.pathname.startsWith("/common/formProduct")) {
+            setOpenMenus((prev) => ({ ...prev, product: true }));
+        }
+
+        if (location.pathname.startsWith("/common/orders")) {
+            setOpenMenus((prev) => ({ ...prev, order: true }));
+        }
+
+        if (location.pathname.startsWith("/common/BrandPage") || location.pathname.startsWith("/common/AddBrandPage")) {
+            setOpenMenus((prev) => ({ ...prev, brand: true }));
+        }
+
+
+        if (location.pathname.startsWith("/common/CategoryPage") || location.pathname.startsWith("/common/AddCategoryPage")) {
+            setOpenMenus((prev) => ({ ...prev, category: true }));
+        }
+
+        if (location.pathname.startsWith("/common/UserPage") || location.pathname.startsWith("/common/AddUserPage")) {
+            setOpenMenus((prev) => ({ ...prev, user: true }));
+        }
+
+        if (location.pathname.startsWith("/common/formVoucher") || location.pathname.startsWith("/common/vouchers") || location.pathname.startsWith("/common/checkCode")) {
+            setOpenMenus((prev) => ({ ...prev, voucher: true }));
+        }
+        
+        // thêm các submenu khác tương tự
+    }, [location.pathname]);
+
+
     return (
         <div className="sidebar">
             <div className="logo">
@@ -93,16 +139,8 @@ const Menu = () => {
                             <FaTachometerAlt /> Product{" "}
                             <IoIosArrowForward className="arrow" />
                             <ul className="submenu">
-                                <li>
-                                    <Link to="/common/products">
-                                        List Products
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/common/formProduct">
-                                        Form Product
-                                    </Link>
-                                </li>
+                                <MenuItem to="/common/products" label="List Products" />
+                                <MenuItem to="/common/formProduct" label="Form Product" />
                             </ul>
                         </li>
                     )}
@@ -118,9 +156,7 @@ const Menu = () => {
                             <FaFileInvoice /> Order
                             <IoIosArrowForward className="arrow" />
                             <ul className="submenu">
-                                <li>
-                                    <Link to="/common/orders">List Orders</Link>
-                                </li>
+                                <MenuItem to="/common/orders" label="List Orders" />
                             </ul>
                         </li>
                     )}
@@ -131,12 +167,8 @@ const Menu = () => {
                     >
                         <FaTags /> Brand <IoIosArrowForward className="arrow" />
                         <ul className="submenu">
-                            <li>
-                                <Link to="/common/BrandPage">List Brands</Link>
-                            </li>
-                            <li>
-                                <Link to="/common/AddBrandPage">Add Brand</Link>
-                            </li>
+                            <MenuItem to="/common/BrandPage" label="List Brands" />
+                            <MenuItem to="/common/AddBrandPage" label="Add Brand" />
                         </ul>
                     </li>
 
@@ -149,16 +181,8 @@ const Menu = () => {
                         <BiCategoryAlt /> Category{" "}
                         <IoIosArrowForward className="arrow" />
                         <ul className="submenu">
-                            <li>
-                                <Link to="/common/CategoryPage">
-                                    List Category
-                                </Link>
-                            </li>
-                            <li>
-                                <Link to="/common/AddCategoryPage">
-                                    Add Category
-                                </Link>
-                            </li>
+                            <MenuItem to="/common/CategoryPage" label="List Category" />
+                            <MenuItem to="/common/AddCategoryPage" label="Add Category" />
                         </ul>
                     </li>
 
@@ -172,16 +196,8 @@ const Menu = () => {
                             <FaUsers /> User{" "}
                             <IoIosArrowForward className="arrow" />
                             <ul className="submenu">
-                                <li>
-                                    <Link to="/common/UserPage">
-                                        List Users
-                                    </Link>
-                                </li>
-                                <li>
-                                    <Link to="/common/AddUserPage">
-                                        Add User
-                                    </Link>
-                                </li>
+                                <MenuItem  to="/common/UserPage" label="List Users" />
+                                <MenuItem to="/common/AddUserPage" label="Add User" />
                             </ul>
                         </li>
                     )}
@@ -196,26 +212,12 @@ const Menu = () => {
                         <IoIosArrowForward className="arrow" />
                         <ul className="submenu">
                             {localStorage.getItem("lastDashboard") === "admin" && (
-                                <li >
-                            
-                                    <Link to="/common/formVoucher" >
-                                    Create Voucher
-                                    </Link>
-                                </li>
+                                <MenuItem to="/common/formVoucher" label="Create Voucher" />
                             )}
                             {localStorage.getItem("lastDashboard") === "manager" && (
-                                <li >
-                                   
-                                    <Link to="/common/checkCode" >
-                                    Create Voucher
-                                    </Link>
-                                </li>
+                                <MenuItem to="/common/checkCode" label="Create Voucher" />
                             )}
-                            <li>
-                                <Link to="/common/vouchers">
-                                    Manage Vouchers
-                                </Link>
-                            </li>
+                            <MenuItem to="/common/vouchers" label="Manage Vouchers" />
                         </ul>
                     </li>
 
@@ -236,11 +238,7 @@ const Menu = () => {
                         </li>
                     )}
                     {localStorage.getItem("lastDashboard") === "admin" && (
-                        <li className="menu-item">
-                            <Link to="/admin/code" className="fw-normal">
-                                <FaRegPaperPlane /> Task
-                            </Link>
-                        </li>
+                       <MenuItem to="/admin/code" label="Task" icon={<FaRegPaperPlane />} />
                     )}
 
                     {localStorage.getItem("lastDashboard") === "manager" &&
