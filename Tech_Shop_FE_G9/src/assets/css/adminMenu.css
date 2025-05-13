@@ -141,7 +141,7 @@
 } */
 
 /* Khi menu con mở, mũi tên quay xuống */
-.menu-item .open .arrow {
+.menu-item.open .arrow {
   transform: rotate(90deg);
 }
 
@@ -155,6 +155,10 @@
 
 .menu-item.open .submenu {
   display: block; /* Hiển thị khi mở */
+}
+
+.menu-item:hover .submenu {
+  display: block;
 }
 
 .submenu li {
