@@ -3,6 +3,7 @@ import "../../assets/css/ProductDetail.css";
 import { FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { formatPrice } from "../../utils/FormatPrice";
+import useCart from "../../hooks/useCart";
 
 
 // Hàm kiểm tra ảnh có tồn tại không
@@ -54,6 +55,9 @@ const ProductDetail = ({product}) => {
 
   console.log("product", product);
 
+  const { addItem } = useCart(); 
+
+
   useEffect(() => {
     const loadThumbnails = async () => {
       const thumbs = [];
@@ -75,6 +79,20 @@ const ProductDetail = ({product}) => {
     });
     return (star / ratings.length).toFixed(1);
   }
+  const handleAddToCart = (product) => {
+    try {
+      const request = {
+        id_product: product?.id,
+        quantity: 1
+      };
+      addItem(request);
+
+      navigate("/cart", { state: { product_id: product?.id } });
+
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+    }
+  };
 
   return (
     <div className="productdetail__container">
@@ -107,7 +125,7 @@ const ProductDetail = ({product}) => {
             <span className="discount-box">-1%</span>
           </div>
         </div>
-        <button className="productdetail__buy-button"  onClick={() => navigate("/cart")}>
+        <button className="productdetail__buy-button"  onClick={() => handleAddToCart(product)}>
                 MUA NGAY 
                 <br></br>
         Giao tận nơi hoặc nhận tại cửa hàng

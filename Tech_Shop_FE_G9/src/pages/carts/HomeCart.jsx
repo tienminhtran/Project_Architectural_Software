@@ -8,7 +8,11 @@ import "../../assets/css/HomePage.css";
 import CartBuyOrderBox from "./CartBuyOrderBox";
 import useCart from "../../hooks/useCart";
 import Loading from "../../components/common/Loading";
+import { useLocation } from "react-router-dom";
 const HomeCart = () => {
+    const location = useLocation();
+    const { product_id } = location.state || {};
+
     const { carts, isLoading } = useCart();
     console.log("carts", carts);
 
@@ -21,8 +25,8 @@ const HomeCart = () => {
     return (
         <div>
             <HeardUserBasic />
-            <CartBuyOrderBox cartItems={cartItems} />
-        
+            <CartBuyOrderBox cartItems={cartItems} product_checked={product_id} />
+
             <FooterUser />
             <Loading isLoading={isLoading} />
         </div>
