@@ -63,7 +63,10 @@ const DashboardLayout = ({ children }) => (
 
 function App() {
   const [showChat, setShowChat] = useState(false);
-
+  const [currentStep, setCurrentStep] = useState(1); // Bắt đầu từ bước 1
+  const handleStepClick = (stepIndex) => {
+      setCurrentStep(stepIndex);
+  };
   return (
     <Router>
 
@@ -275,11 +278,11 @@ function App() {
         {/* User Routes (Nếu cần) */}
         <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"]} />}>
         <Route path="/cart" element={<HomeCart />} />
-          <Route path="/cart-buy-order-box" element={<Step1Cart />} />
-          <Route path="/order-info-form" element={<Step2Cart />} />
-          <Route path="/order-payment" element={<Step3Cart />} />
-          <Route path="/order-complete" element={<Step4Cart />} />
-          
+<Route path="/cart" element={<Step1Cart currentStep={0} />} />
+<Route path="/order-info-form" element={<Step2Cart currentStep={1} />} />
+<Route path="/order-payment" element={<Step3Cart currentStep={2} />} />
+<Route path="/order-complete" element={<Step4Cart currentStep={3} />} />
+
           <Route path ="/my-account" element={<AccountPage />} />
 
 
