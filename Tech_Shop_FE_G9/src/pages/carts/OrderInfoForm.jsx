@@ -1,30 +1,50 @@
-import React, { useEffect, useState } from 'react';
+import React, { useEffect, useState, useMemo } from 'react';
 import { motion } from 'framer-motion';
 import CheckoutStepper from './CheckoutStepper';
 import { useNavigate } from 'react-router-dom';
 import '../../assets/css/OrderInfoForm.css';
-import DeliveryWithGeolocation from './DeliveryWithGeolocation'; 
+import DeliveryWithGeolocation from './DeliveryWithGeolocation';
 import HeaderUserBasic from "../../components/layout/HeaderUserBasic";
 import FooterUser from "../../components/layout/Footer";
+import ModalAddress from './ModalAddress'; 
+import AddressBookModal from '../../../src/pages/common/user/AddressBookModal';
+import useUser from "../../hooks/useUser";
 
-const OrderInfoForm = () => {
+const OrderInfoForm = ({userid}) => {
     const navigate = useNavigate();
-    const [gender, setGender] = useState('Anh');
     const [name, setName] = useState('');
     const [phone, setPhone] = useState('');
     const [note, setNote] = useState('');
     const [invoice, setInvoice] = useState(false);
     const [cartData, setCartData] = useState(null);
+    const [showAddressModal, setShowAddressModal] = useState(false); 
+    const [selectedAddress, setSelectedAddress] = useState('');       
 
+    // Lấy thông tin người dùng
+    const { userInfor } = useUser(0, 1);
+    const user = useMemo(() => userInfor || null, [userInfor]);
+
+    console.log('userInfor--------', userInfor);
+    console.log('user-----------------------------', user);
+    // Lấy thông tin giỏ hàng từ sessionStorage
     useEffect(() => {
         const storedData = sessionStorage.getItem('cartData');
         if (storedData) {
             setCartData(JSON.parse(storedData));
         } else {
-            navigate('/'); // Nếu không có dữ liệu, điều hướng về trang chủ hoặc giỏ hàng
+            navigate('/');
         }
     }, [navigate]);
 
+    // Cập nhật thông tin người dùng khi có thay đổi
+    useEffect(() => {
+        if (user) {
+            setName(`${user.firstname} ${user.lastname}`);
+            setPhone(user.phone_number);
+        }
+    }, [user]);
+
+    // Kiểm tra tính hợp lệ của form
     const validateForm = () => {
         if (!name.trim()) {
             alert('Vui lòng nhập họ tên.');
@@ -35,23 +55,30 @@ const OrderInfoForm = () => {
             alert('Vui lòng nhập số điện thoại hợp lệ.');
             return false;
         }
+        if (!selectedAddress) {
+            alert('Vui lòng chọn địa chỉ giao hàng.');
+            return false;
+        }
         return true;
     };
 
+    // Xử lý khi người dùng nhấn nút "Thanh toán"
     const handleSubmit = () => {
         if (validateForm()) {
             const orderInfo = {
-                gender,
+       
                 name,
                 phone,
                 note,
-                invoice
+                invoice,
+                address: selectedAddress
             };
             sessionStorage.setItem('orderInfo', JSON.stringify(orderInfo));
             navigate('/order-payment');
         }
     };
 
+    // Nếu giỏ hàng chưa có dữ liệu, hiển thị thông báo loading
     if (!cartData) {
         return <div>Loading...</div>;
     }
@@ -81,40 +108,34 @@ const OrderInfoForm = () => {
                         <div className="OrderInfoForm__title">Thông tin khách mua hàng</div>
 
                         <div className="OrderInfoForm__row">
-                            <label>
-                                <input
-                                    type="radio"
-                                    value="Anh"
-                                    checked={gender === 'Anh'}
-                                    onChange={(e) => setGender(e.target.value)}
-                                /> Anh
-                            </label>
-                            <label>
-                                <input
-                                    type="radio"
-                                    value="Chị"
-                                    checked={gender === 'Chị'}
-                                    onChange={(e) => setGender(e.target.value)}
-                                /> Chị
-                            </label>
-                        </div>
-
-                        <div className="OrderInfoForm__row">
                             <input
                                 type="text"
                                 placeholder="Nhập họ tên"
                                 value={name}
                                 onChange={(e) => setName(e.target.value)}
+                                readOnly
                             />
                             <input
                                 type="text"
                                 placeholder="Nhập số điện thoại"
                                 value={phone}
                                 onChange={(e) => setPhone(e.target.value)}
+                                readOnly
                             />
                         </div>
 
-                        <DeliveryWithGeolocation />
+                        <div className="OrderInfoForm__row">
+                            <button
+                                type="button"
+                                className="OrderInfoForm__selectAddressBtn"
+                                onClick={() => setShowAddressModal(true)}
+                            >
+                                Chọn địa chỉ giao hàng
+                            </button>
+                            {selectedAddress && (
+                                <p>Địa chỉ đã chọn: <strong>{selectedAddress}</strong></p>
+                            )}
+                        </div>
 
                         <textarea
                             placeholder="Lưu ý, yêu cầu khác (Không bắt buộc)"
@@ -157,6 +178,16 @@ const OrderInfoForm = () => {
                     />
                 </div>
             </div>
+
+            {/* Modal địa chỉ */}
+            <ModalAddress
+                isOpen={showAddressModal}
+                onClose={() => setShowAddressModal(false)}
+                onSelect={(address) => setSelectedAddress(address)}
+                userId={user?.id} // Truyền ID người dùng vào modal
+                
+            />
+
             <FooterUser />
         </div>
     );
