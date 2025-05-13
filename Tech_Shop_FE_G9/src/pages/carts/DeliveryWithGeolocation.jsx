@@ -2,7 +2,7 @@ import React, { useState, useEffect, useRef } from "react";
 import L from "leaflet";
 import "leaflet/dist/leaflet.css";
 
-export default function DeliveryWithGeolocation() {
+export default function DeliveryWithGeolocation({ onClose, onSelectAddress }) {
   const [isInputVisible, setIsInputVisible] = useState(false); // Trạng thái hiển thị ô nhập liệu
   const [manualAddress, setManualAddress] = useState("");
   const [selectedPosition, setSelectedPosition] = useState(null);
@@ -200,15 +200,22 @@ export default function DeliveryWithGeolocation() {
             >
               Xác nhận địa chỉ
             </button>
+            
           </div>
         )}
       </div>
-
       <div>
         <p><strong>Địa chỉ giao hàng:</strong><br />{selectedAddress}</p>
-        <p><strong>Tọa độ giao hàng:</strong> {selectedPosition?.lat.toFixed(6)}, {selectedPosition?.lng.toFixed(6)}</p>
+        {/* <p><strong>Tọa độ giao hàng:</strong> {selectedPosition?.lat.toFixed(6)}, {selectedPosition?.lng.toFixed(6)}</p> */}
         <p><strong>Thời gian giao hàng dự kiến:</strong> {estimatedDeliveryTime}</p>
       </div>
+      <button className="btn confirm" onClick={() => onSelectAddress(selectedAddress)}>
+        Dùng địa chỉ này
+      </button>
+      <button className="btn cancel" onClick={onClose}>
+        Đóng
+      </button>
+
     </div>
   );
 }
