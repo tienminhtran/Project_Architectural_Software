@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from "react";
 import "../../../assets/css/AddressBookModal.css";
 import useAddress from "../../../hooks/useAddress";
-import dvhcvn from "../../../json/dvhcvn.json"; // ✅ Dùng file nội bộ thay vì fetch
+import dvhcvn from "../../../json/dvhcvn.json"; 
 
 const AddressBookModal = ({ user, newAddress, setNewAddress, onClose }) => {
   const [errors, setErrors] = useState({ city: "", district: "", street: "", detailLocation: "" });
@@ -11,7 +11,6 @@ const AddressBookModal = ({ user, newAddress, setNewAddress, onClose }) => {
   const [districts, setDistricts] = useState([]);
   const [streets, setStreets] = useState([]);
 
-  // ✅ Load dữ liệu tỉnh/thành phố từ file JSON nội bộ
   useEffect(() => {
     setRawData(dvhcvn.data || []);
   }, []);
