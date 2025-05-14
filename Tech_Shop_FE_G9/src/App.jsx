@@ -278,12 +278,12 @@ function App() {
         {/* User Routes (Nếu cần) */}
         <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"]} />}>
         <Route path="/cart" element={<HomeCart />} />
-<Route path="/cart" element={<Step1Cart currentStep={0} />} />
-<Route path="/order-info-form" element={<Step2Cart currentStep={1} />} />
-<Route path="/order-payment" element={<Step3Cart currentStep={2} />} />
-<Route path="/order-complete" element={<Step4Cart currentStep={3} />} />
+          <Route path="/cart" element={<Step1Cart currentStep={0} />} />
+          <Route path="/order-info-form" element={<Step2Cart currentStep={1} />} />
+          <Route path="/order-payment" element={<Step3Cart currentStep={2} />} />
+          <Route path="/order-complete" element={<Step4Cart currentStep={3} />} />
 
-          <Route path ="/my-account" element={<AccountPage />} />
+          <Route path="/my-account" element={<AccountPage />} />
 
 
 
