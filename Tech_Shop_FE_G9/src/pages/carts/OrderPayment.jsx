@@ -47,6 +47,7 @@ const OrderPayment = () => {
 
   useEffect(() => {
     const storedData = sessionStorage.getItem("cartData");
+    console.log("storedData", storedData);
     if (storedData) {
       setCartData(JSON.parse(storedData));
     } else {
@@ -56,6 +57,7 @@ const OrderPayment = () => {
 
   const totalAmount = cartData ? cartData.totalPrice + 19000 : 0; // Tạm tính + phí vận chuyển
 
+  console.log("CartData", cartData);
   const handleCreateOrder = async () => {
     try {
       setIsLoading(true);
@@ -72,10 +74,10 @@ const OrderPayment = () => {
         return;
       }
 
-      //   // Get voucher if applied
-      //   const appliedVoucher = sessionStorage.getItem("appliedVoucher")
-      //     ? JSON.parse(sessionStorage.getItem("appliedVoucher"))
-      //     : null;
+      // Lấy voucher đã áp dụng từ sessionStorage
+      const appliedVoucher = cartData.appliedVoucher;
+
+      console.log("appliedVoucher", appliedVoucher);
 
       // Kiểm tra giỏ hàng có sản phẩm không
       if (!cartData || !cartData.cartItems || cartData.cartItems.length === 0) {
@@ -93,7 +95,7 @@ const OrderPayment = () => {
       const orderRequest = {
         userId: userId,
         paymentMethod: selectedMethod,
-        // voucherId: appliedVoucher ? appliedVoucher.id : null,
+        voucherId: appliedVoucher ? appliedVoucher.id : null,
         addressId: addressId,
         orderDetails: orderDetails,
       };

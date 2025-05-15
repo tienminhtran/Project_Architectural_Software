@@ -1,0 +1,99 @@
+.voucher-modal-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background-color: rgba(0, 0, 0, 0.5);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    z-index: 1000;
+}
+
+.voucher-modal {
+    background-color: white;
+    border-radius: 8px;
+    width: 90%;
+    max-width: 500px;
+    max-height: 80vh;
+    overflow-y: auto;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.2);
+}
+
+.voucher-modal-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 15px 20px;
+    border-bottom: 1px solid #ddd;
+}
+
+.voucher-modal-header h3 {
+    margin: 0;
+    font-size: 1.2rem;
+}
+
+.close-button {
+    background: none;
+    border: none;
+    font-size: 1.5rem;
+    cursor: pointer;
+    color: #555;
+}
+
+.voucher-modal-body {
+    padding: 20px;
+}
+
+.voucher-modal-title {
+    font-weight: bold;
+    margin-bottom: 15px;
+    color: #333;
+}
+
+.voucher-modal-list {
+    display: flex;
+    flex-direction: column;
+    gap: 15px;
+}
+
+.voucher-item {
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    padding: 15px;
+    cursor: pointer;
+    transition: all 0.2s;
+    background: linear-gradient(to right, #ffffff, #f8f9fa);
+}
+
+.voucher-item:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    border-color: #4a90e2;
+}
+
+.voucher-code {
+    font-weight: bold;
+    color: #4a90e2;
+    font-size: 1.1rem;
+}
+
+.voucher-value {
+    font-size: 0.9rem;
+    color: #e53935;
+    font-weight: bold;
+    margin: 5px 0;
+}
+
+.voucher-expiry {
+    font-size: 0.8rem;
+    color: #757575;
+}
+
+.no-voucher-message {
+    text-align: center;
+    padding: 20px;
+    color: #757575;
+    font-style: italic;
+}

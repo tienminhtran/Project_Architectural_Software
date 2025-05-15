@@ -1,12 +1,20 @@
 import React, { useState, useEffect } from "react";
 import CheckoutStepper from "./CheckoutStepper";
-import { FaTrash, FaAngleDown, FaAngleUp } from "react-icons/fa";
+import {
+  FaTrash,
+  FaAngleDown,
+  FaAngleUp,
+  FaTicketAlt,
+  FaAngleRight,
+} from "react-icons/fa";
 import { toast, ToastContainer } from "react-toastify";
 import { useNavigate } from "react-router-dom";
 import { confirmAlert } from "react-confirm-alert";
 import "react-toastify/dist/ReactToastify.css";
 import "react-confirm-alert/src/react-confirm-alert.css"; // Import style cho confirm-alert
 import "../../assets/css/CartBuyOrderBox.css";
+import useVoucher from "../../hooks/useVoucher";
+import VoucherModal from "./VoucherModal";
 
 import { formatPrice } from "../../utils/FormatPrice";
 import useCart from "../../hooks/useCart";
@@ -22,11 +30,13 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
 
   const [code, setCode] = useState("");
   const [discount, setDiscount] = useState(0);
-  const [showDiscountInput, setShowDiscountInput] = useState(false);
+  // const [showDiscountInput, setShowDiscountInput] = useState(false);
   const [showAllItems, setShowAllItems] = useState(false);
 
   // select item
   const [selectedRows, setSelectedRows] = useState([]);
+  // Add state for modal control
+  const [showVoucherModal, setShowVoucherModal] = useState(false);
 
   const handleSelectRow = (item) => {
     setSelectedRows((prev) =>
@@ -37,10 +47,36 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
   };
   console.log("selectedRows", selectedRows);
 
+  const { vouchers_paging } = useVoucher(0, 100); // Lấy danh sách voucher
+  const [vouchers, setVouchers] = useState([]);
+  const [selectedVoucher, setSelectedVoucher] = useState(null);
+
   // refresh khi reload trang
   useEffect(() => {
     setCartItems(cartItems || []); // Cập nhật giỏ hàng từ props
-    if (cartItems && product_checked) {
+
+    // Kiểm tra xem có dữ liệu cartData trong sessionStorage không
+    const storedCartData = sessionStorage.getItem("cartData");
+
+    if (storedCartData) {
+      const parsedCartData = JSON.parse(storedCartData);
+
+      // Khôi phục selectedRows từ cartItems trong cartData
+      if (parsedCartData.cartItems && parsedCartData.cartItems.length > 0) {
+        // Lấy danh sách productId từ cartItems để thiết lập selectedRows
+        const selectedProductIds = parsedCartData.cartItems.map(
+          (item) => item.productId
+        );
+        setSelectedRows(selectedProductIds);
+      }
+
+      // Khôi phục selectedVoucher và discount từ appliedVoucher
+      if (parsedCartData.appliedVoucher) {
+        setSelectedVoucher(parsedCartData.appliedVoucher);
+        setDiscount(parsedCartData.appliedVoucher.value / 100);
+      }
+    } else if (cartItems && product_checked) {
+      // Nếu không có cartData nhưng có product_checked
       setSelectedRows([product_checked]);
     }
   }, [cartItems, product_checked]);
@@ -56,6 +92,19 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
     setCartItems(updated);
     updateQuantity({ id: id_product, quantity: newQuantity });
   };
+
+  useEffect(() => {
+    if (vouchers_paging?.data?.values) {
+      // Lọc các voucher hợp lệ
+      const validVouchers = vouchers_paging.data.values.filter((voucher) => {
+        const today = new Date();
+        const expiryDate = new Date(voucher.expiredDate);
+        return voucher.quantity > 0 && expiryDate >= today;
+      });
+
+      setVouchers(validVouchers);
+    }
+  }, [vouchers_paging.data]);
 
   const handleRemove = (id_product) => {
     confirmAlert({
@@ -89,17 +138,17 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
     });
   };
 
-  const handleApplyDiscount = () => {
-    if (code === "GIAM10") {
-      setDiscount(0.1);
-    } else {
-      setDiscount(0);
-      toast.error("Mã giảm giá không hợp lệ", {
-        position: "top-center",
-        autoClose: 3000,
-      });
-    }
-  };
+  // const handleApplyDiscount = () => {
+  //   if (code === "GIAM10") {
+  //     setDiscount(0.1);
+  //   } else {
+  //     setDiscount(0);
+  //     toast.error("Mã giảm giá không hợp lệ", {
+  //       position: "top-center",
+  //       autoClose: 3000,
+  //     });
+  //   }
+  // };
 
   const totalPrice = items.reduce(
     (acc, item) =>
@@ -136,6 +185,13 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
     const cartData = {
       cartItems: cartItemsWithQuantity, // Updated to use 'items'
       totalPrice: finalPrice, // Tổng tiền sau khi áp dụng giảm giá
+      appliedVoucher: selectedVoucher
+        ? {
+            id: selectedVoucher.id,
+            name: selectedVoucher.name,
+            value: selectedVoucher.value,
+          }
+        : null,
     };
 
     // Lưu trữ dữ liệu vào sessionStorage
@@ -143,6 +199,50 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
 
     // Điều hướng tới trang Step 2 (Thông tin khách hàng)
     navigate("/order-info-form");
+  };
+
+  // Hàm lọc các voucher dựa trên tổng giá trị giỏ hàng
+  const getEligibleVouchers = () => {
+    if (!vouchers || vouchers.length === 0) return [];
+
+    if (totalPrice < 1000000) return [];
+
+    return vouchers.filter((voucher) => {
+      if (totalPrice >= 1000000 && totalPrice < 5000000 && voucher.value > 5) {
+        return false;
+      }
+
+      if (totalPrice >= 5000000 && voucher.value > 10) {
+        return false;
+      }
+
+      return true;
+    });
+  };
+
+  // Hàm áp dụng voucher
+  const handleApplyVoucher = (voucher) => {
+    if (!voucher) {
+      setDiscount(0);
+      setSelectedVoucher(null);
+      toast.info("Đã hủy áp dụng voucher", {
+        position: "top-center",
+        autoClose: 1000,
+      });
+      return;
+    }
+
+    setSelectedVoucher(voucher);
+    setDiscount(voucher.value / 100); // Chuyển đổi giá trị giảm giá thành tỷ lệ
+    setCode(voucher.name);
+
+    toast.success(
+      `Đã áp dụng voucher ${voucher.name} (Giảm ${voucher.value}%)`,
+      {
+        position: "top-center",
+        autoClose: 1000,
+      }
+    );
   };
 
   return (
@@ -260,20 +360,44 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
         )}
 
         <div className="CartBuy-OrderBox__discount">
-          <div onClick={() => setShowDiscountInput(!showDiscountInput)}>
-            <span>Sử dụng mã giảm giá</span>
-            <span>{showDiscountInput ? <FaAngleUp /> : <FaAngleDown />}</span>
+          <div
+            onClick={() => setShowVoucherModal(true)}
+            style={{ cursor: "pointer" }}
+          >
+            <span>
+              <FaTicketAlt /> Sử dụng mã giảm giá
+              {selectedVoucher && (
+                <span className="selected-voucher-badge">
+                  {" "}
+                  {selectedVoucher.name} (-{selectedVoucher.value}%)
+                </span>
+              )}
+            </span>
+            <span>
+              <FaAngleRight />
+            </span>
           </div>
 
-          {showDiscountInput && (
-            <div>
-              <input
-                type="text"
-                placeholder="Nhập mã giảm giá/Phiếu mua hàng"
-                value={code}
-                onChange={(e) => setCode(e.target.value)}
-              />
-              <button onClick={handleApplyDiscount}>Áp dụng</button>
+          {/* Modal hiển thị voucher */}
+          <VoucherModal
+            show={showVoucherModal}
+            onClose={() => setShowVoucherModal(false)}
+            totalPrice={totalPrice}
+            vouchers={vouchers}
+            selectedVoucher={selectedVoucher}
+            handleApplyVoucher={handleApplyVoucher}
+            getEligibleVouchers={getEligibleVouchers}
+          />
+          {/* Hiển thị thông tin voucher được chọn */}
+          {selectedVoucher && (
+            <div className="CartBuy-OrderBox__selected-voucher">
+              <p>
+                Đã áp dụng: {selectedVoucher.name} (Giảm {selectedVoucher.value}
+                %)
+              </p>
+              <button onClick={() => handleApplyVoucher(null)}>
+                Hủy voucher
+              </button>
             </div>
           )}
         </div>

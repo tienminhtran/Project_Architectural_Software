@@ -9,6 +9,7 @@ import FooterUser from "../../components/layout/Footer";
 import ModalAddress from "./ModalAddress";
 import AddressBookModal from "../../../src/pages/common/user/AddressBookModal";
 import useUser from "../../hooks/useUser";
+import { formatPrice } from "../../utils/FormatPrice";
 
 const OrderInfoForm = ({ userid }) => {
   const navigate = useNavigate();
@@ -165,7 +166,7 @@ const OrderInfoForm = ({ userid }) => {
             <div className="OrderInfoForm__totalRow">
               <span>Tổng tiền:</span>
               <span className="OrderInfoForm__totalPrice">
-                {cartData.totalPrice}đ
+                {formatPrice(cartData.totalPrice)}
               </span>
             </div>
 
