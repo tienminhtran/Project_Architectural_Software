@@ -54,7 +54,29 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
   // refresh khi reload trang
   useEffect(() => {
     setCartItems(cartItems || []); // Cập nhật giỏ hàng từ props
-    if (cartItems && product_checked) {
+
+    // Kiểm tra xem có dữ liệu cartData trong sessionStorage không
+    const storedCartData = sessionStorage.getItem("cartData");
+
+    if (storedCartData) {
+      const parsedCartData = JSON.parse(storedCartData);
+
+      // Khôi phục selectedRows từ cartItems trong cartData
+      if (parsedCartData.cartItems && parsedCartData.cartItems.length > 0) {
+        // Lấy danh sách productId từ cartItems để thiết lập selectedRows
+        const selectedProductIds = parsedCartData.cartItems.map(
+          (item) => item.productId
+        );
+        setSelectedRows(selectedProductIds);
+      }
+
+      // Khôi phục selectedVoucher và discount từ appliedVoucher
+      if (parsedCartData.appliedVoucher) {
+        setSelectedVoucher(parsedCartData.appliedVoucher);
+        setDiscount(parsedCartData.appliedVoucher.value / 100);
+      }
+    } else if (cartItems && product_checked) {
+      // Nếu không có cartData nhưng có product_checked
       setSelectedRows([product_checked]);
     }
   }, [cartItems, product_checked]);
