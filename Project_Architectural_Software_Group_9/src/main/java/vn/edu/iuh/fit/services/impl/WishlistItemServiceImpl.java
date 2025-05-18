@@ -88,8 +88,20 @@ public class WishlistItemServiceImpl implements WishlistItemService {
         if (wishlistItems.isEmpty()) {
             return null;
         }
+        // Custom mapping để lấy thông tin sản phẩm đầy đủ
         List<WishlistItemResponse> wishlistItemResponses = wishlistItems.stream()
-                .map(item -> modelMapper.map(item, WishlistItemResponse.class))
+                .map(item -> {
+                    Product product = item.getProduct();
+                    WishlistItemResponse response = new WishlistItemResponse();
+                    response.setProductId(product.getId());
+                    response.setTitle(product.getProductName());
+                    response.setThumbnail(product.getThumbnail());
+                    response.setUnitPrice(product.getPrice().toString());
+                    response.setStatus(item.getStatus());
+                    // Nếu WishlistItemResponse có trường urlImg, bạn có thể set ở đây
+                    // response.setUrlImg(product.getUrlImg());
+                    return response;
+                })
                 .toList();
         return wishlistItemResponses;
     }

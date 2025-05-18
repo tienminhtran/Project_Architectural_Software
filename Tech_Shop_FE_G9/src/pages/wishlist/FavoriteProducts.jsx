@@ -7,74 +7,85 @@ import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import HeaderUserBasic from "../../components/layout/HeaderUserBasic";
 import FooterUser from "../../components/layout/Footer";
+import useWishlist from "../../hooks/useWishlist";
 
-const sampleProducts = [
-  {
-    id: 1,
-    name: "Tấm lót chuột Steelseries Qck Mini Mousepad",
-    image: "/images/product/mouse3.jpg",
-    price: 219000,
-    originalPrice: 250000,
-  },
-  {
-    id: 2,
-    name: "Chuột gaming Logitech G102",
-    image: "/images/product/mouse1.jpg",
-    price: 299000,
-    originalPrice: 390000,
-  },
-  {
-    id: 3,
-    name: "Bàn phím cơ DareU EK87",
-    image: "/images/product/mouse1.jpg",
-    price: 590000,
-    originalPrice: 690000,
-  },
-  {
-    id: 4,
-    name: "Tấm lót chuột Steelseries Qck Mini Mousepad",
-    image: "/images/product/mouse3.jpg",
-    price: 219000,
-    originalPrice: 250000,
-  },
-  {
-    id: 5,
-    name: "Chuột gaming Logitech G102",
-    image: "/images/product/mouse1.jpg",
-    price: 299000,
-    originalPrice: 390000,
-  },
-  {
-    id: 6,
-    name: "Bàn phím cơ DareU EK87",
-    image: "/images/product/mouse1.jpg",
-    price: 590000,
-    originalPrice: 690000,
-  },
-  {
-    id: 7,
-    name: "Tấm lót chuột Steelseries Qck Mini Mousepad",
-    image: "/images/product/mouse1.jpg",
-    price: 219000,
-    originalPrice: 250000,
-  },
-  {
-    id: 8,
-    name: "Chuột gaming Logitech G102",
-    image: "/images/product/mouse1.jpg",
-    price: 299000,
-    originalPrice: 390000,
-  },
-  {
-    id: 9,
-    name: "Bàn phím cơ DareU EK87",
-    image: "/images/product/mouse1.jpg",
-    price: 590000,
-    originalPrice: 690000,
-  },
-];
+// const wishlistItems = [
+//   {
+//     id: 1,
+//     name: "Tấm lót chuột Steelseries Qck Mini Mousepad",
+//     image: "/images/product/mouse3.jpg",
+//     price: 219000,
+//     originalPrice: 250000,
+//   },
+//   {
+//     id: 2,
+//     name: "Chuột gaming Logitech G102",
+//     image: "/images/product/mouse1.jpg",
+//     price: 299000,
+//     originalPrice: 390000,
+//   },
+//   {
+//     id: 3,
+//     name: "Bàn phím cơ DareU EK87",
+//     image: "/images/product/mouse1.jpg",
+//     price: 590000,
+//     originalPrice: 690000,
+//   },
+//   {
+//     id: 4,
+//     name: "Tấm lót chuột Steelseries Qck Mini Mousepad",
+//     image: "/images/product/mouse3.jpg",
+//     price: 219000,
+//     originalPrice: 250000,
+//   },
+//   {
+//     id: 5,
+//     name: "Chuột gaming Logitech G102",
+//     image: "/images/product/mouse1.jpg",
+//     price: 299000,
+//     originalPrice: 390000,
+//   },
+//   {
+//     id: 6,
+//     name: "Bàn phím cơ DareU EK87",
+//     image: "/images/product/mouse1.jpg",
+//     price: 590000,
+//     originalPrice: 690000,
+//   },
+//   {
+//     id: 7,
+//     name: "Tấm lót chuột Steelseries Qck Mini Mousepad",
+//     image: "/images/product/mouse1.jpg",
+//     price: 219000,
+//     originalPrice: 250000,
+//   },
+//   {
+//     id: 8,
+//     name: "Chuột gaming Logitech G102",
+//     image: "/images/product/mouse1.jpg",
+//     price: 299000,
+//     originalPrice: 390000,
+//   },
+//   {
+//     id: 9,
+//     name: "Bàn phím cơ DareU EK87",
+//     image: "/images/product/mouse1.jpg",
+//     price: 590000,
+//     originalPrice: 690000,
+//   },
+// ];
 
 export default function FavoriteProducts() {
+  const { wishlists, isLoading, isError } = useWishlist();
+  const wishlistItems = (wishlists?.response || []).map((item) => ({
+    id: item.productId,
+    name: item.title || "Không có tên",
+    price: item.unitPrice || 0,
+    originalPrice: item.unitPrice || 0,
+    image: item.thumbnail || "/images/product/default.jpg",
+  }));
+  // console.log("Wishlist Items:", wishlistItems);
+
   const [selectedItems, setSelectedItems] = useState([]);
   const [showAll, setShowAll] = useState(false);
   const [isAllSelected, setIsAllSelected] = useState(false);
@@ -88,7 +99,7 @@ export default function FavoriteProducts() {
     if (isAllSelected) {
       setSelectedItems([]);
     } else {
-      setSelectedItems(sampleProducts.map((product) => product.id));
+      setSelectedItems(wishlistItems.map((product) => product.id));
     }
     setIsAllSelected(!isAllSelected);
   };
@@ -98,7 +109,7 @@ export default function FavoriteProducts() {
   };
 
   const handleRemoveFavorite = (id) => {
-    const product = sampleProducts.find((p) => p.id === id);
+    const product = wishlistItems.find((p) => p.id === id);
     confirmAlert({
       title: "Xác nhận",
       message: `Bạn có chắc muốn xóa "${product.name}" khỏi danh sách yêu thích?`,
@@ -118,7 +129,9 @@ export default function FavoriteProducts() {
   };
   // xóa tất cả sản phẩm
 
-  const productsToShow = showAll ? sampleProducts : sampleProducts.slice(0, 5);
+  const productsToShow = showAll ? wishlistItems : wishlistItems.slice(0, 5);
+  if (isLoading) return <div>Đang tải...</div>;
+  if (isError) return <div>Lỗi khi tải danh sách sản phẩm yêu thích.</div>;
 
   return (
     <div>
@@ -151,11 +164,13 @@ export default function FavoriteProducts() {
           <table className="favorite-product__table">
             <thead>
               <tr>
-                <input
-                  type="checkbox"
-                  onChange={toggleSelectAll}
-                  checked={isAllSelected}
-                />
+                <th>
+                  <input
+                    type="checkbox"
+                    onChange={toggleSelectAll}
+                    checked={isAllSelected}
+                  />
+                </th>
                 <th>Hình ảnh</th>
                 <th>Tên sản phẩm</th>
                 <th>Giá</th>
@@ -164,51 +179,66 @@ export default function FavoriteProducts() {
               </tr>
             </thead>
             <tbody>
-              {productsToShow.map((product) => (
-                <tr key={product.id}>
-                  <td>
-                    <input
-                      type="checkbox"
-                      checked={selectedItems.includes(product.id)}
-                      onChange={() => toggleCheckbox(product.id)}
-                    />
-                  </td>
-                  <td>
-                    <img
-                      className="favorite-product__image"
-                      src={product.image}
-                      alt={product.name}
-                    />
-                  </td>
-                  <td>{product.name}</td>
-                  <td className="favorite-product__price">
-                    {product.price.toLocaleString()}₫
-                  </td>
-                  <td className="favorite-product__original-price">
-                    {product.originalPrice.toLocaleString()}₫
-                  </td>
+              {wishlistItems.length === 0 ? (
+                <tr>
                   <td
+                    colSpan={6}
                     style={{
-                      display: "",
-                      alignItems: "center",
-                      justifyContent: "space-between",
+                      textAlign: "center",
+                      color: "#888",
+                      padding: "24px",
                     }}
                   >
-                    <button
-                      className="favorite-product__btn favorite-product__btn--add"
-                      onClick={handleAddToCart}
-                    >
-                      <FaCartPlus />{" "}
-                    </button>
-                    <button
-                      className="favorite-product__btn favorite-product__btn--remove"
-                      onClick={() => handleRemoveFavorite(product.id)}
-                    >
-                      <FaRegTrashAlt />{" "}
-                    </button>
+                    Chưa có sản phẩm yêu thích
                   </td>
                 </tr>
-              ))}
+              ) : (
+                productsToShow.map((product) => (
+                  <tr key={product.id}>
+                    <td>
+                      <input
+                        type="checkbox"
+                        checked={selectedItems.includes(product.id)}
+                        onChange={() => toggleCheckbox(product.id)}
+                      />
+                    </td>
+                    <td>
+                      <img
+                        className="favorite-product__image"
+                        src={product.image}
+                        alt={product.name}
+                      />
+                    </td>
+                    <td>{product.name}</td>
+                    <td className="favorite-product__price">
+                      {product.price.toLocaleString()}₫
+                    </td>
+                    <td className="favorite-product__original-price">
+                      {product.originalPrice.toLocaleString()}₫
+                    </td>
+                    <td
+                      style={{
+                        display: "",
+                        alignItems: "center",
+                        justifyContent: "space-between",
+                      }}
+                    >
+                      <button
+                        className="favorite-product__btn favorite-product__btn--add"
+                        onClick={handleAddToCart}
+                      >
+                        <FaCartPlus />{" "}
+                      </button>
+                      <button
+                        className="favorite-product__btn favorite-product__btn--remove"
+                        onClick={() => handleRemoveFavorite(product.id)}
+                      >
+                        <FaRegTrashAlt />{" "}
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              )}
             </tbody>
           </table>
 
@@ -223,7 +253,7 @@ export default function FavoriteProducts() {
               <h3>Giỏ hàng nhanh</h3>
               <ul>
                 {selectedItems.map((id) => {
-                  const product = sampleProducts.find((p) => p.id === id);
+                  const product = wishlistItems.find((p) => p.id === id);
                   return (
                     <li key={id}>
                       {product.name} – {product.price.toLocaleString()}₫
