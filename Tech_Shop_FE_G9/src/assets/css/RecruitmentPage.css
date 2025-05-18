@@ -8,7 +8,7 @@
   background-color: #f9f9f9;
 }
 
-.sidebar {
+.recruitment-page__sidebar {
   width: 280px;
   background-color: #fff;
   border-radius: 12px;
@@ -17,11 +17,11 @@
   margin-right: 20px;
 }
 
-.job-listings {
+.recruitment-page__job-listings {
   flex: 1;
 }
 
-.job-listings h1 {
+.recruitment-page__job-listings h1 {
   font-size: 24px;
   margin-bottom: 20px;
   color: #222;
@@ -30,7 +30,7 @@
 /* ==========================
    Job Card
 =========================== */
-.job-card {
+.recruitment-page__job-card {
   background-color: #fff;
   padding: 20px;
   border-radius: 12px;
@@ -39,22 +39,22 @@
   transition: transform 0.2s ease;
 }
 
-.job-card:hover {
+.recruitment-page__job-card:hover {
   transform: translateY(-4px);
 }
 
-.job-card h3 {
+.recruitment-page__job-card h3 {
   margin-bottom: 10px;
   color: #007bff;
 }
 
-.job-card p {
+.recruitment-page__job-card p {
   margin: 4px 0;
   color: #444;
   font-size: 14px;
 }
 
-.job-card i {
+.recruitment-page__job-card i {
   margin-right: 6px;
   color: #888;
 }
@@ -62,11 +62,11 @@
 /* ==========================
    Filter Section
 =========================== */
-.filter-section {
+.recruitment-page__filter-section {
   margin-bottom: 30px;
 }
 
-.filter-section h2 {
+.recruitment-page__filter-section h2 {
   font-size: 18px;
   margin-bottom: 12px;
   color: #333;
@@ -75,12 +75,12 @@
 /* ==========================
    Search Bar
 =========================== */
-.search-bar {
+.recruitment-page__search-bar {
   display: flex;
   margin-bottom: 10px;
 }
 
-.search-bar input {
+.recruitment-page__search-bar input {
   flex: 1;
   padding: 8px 12px;
   border: 1px solid #ccc;
@@ -89,7 +89,7 @@
   outline: none;
 }
 
-.search-bar button {
+.recruitment-page__search-bar button {
   background-color: #007bff;
   color: white;
   border: none;
@@ -99,22 +99,22 @@
   transition: background-color 0.3s ease;
 }
 
-.search-bar button:hover {
+.recruitment-page__search-bar button:hover {
   background-color: #0056b3;
 }
 
 /* ==========================
    Filter Options (Checkbox List)
 =========================== */
-.filter-options {
+.recruitment-page__filter-options {
   max-height: 200px;
   overflow-y: auto;
   padding-right: 8px;
 }
-.filter-options input{
+.recruitment-page__filter-options input{
     width: 18px;
 }
-.filter-options label {
+.recruitment-page__filter-options label {
   display: flex;
   /* align-items: center; */
   /* justify-content: space-between; */
@@ -122,7 +122,7 @@
   
 }
 
-.filter-options label:hover {
+.recruitment-page__filter-options label:hover {
   background-color: #f0f0f0;
 }
 
@@ -158,23 +158,23 @@
 }
 
 /* Optional: add margin if needed */
-.filter-options input[type="checkbox"] {
+.recruitment-page__filter-options input[type="checkbox"] {
   margin-right: 8px;
 }
 
 /* ==========================
    Scrollbar Styling
 =========================== */
-.filter-options::-webkit-scrollbar {
+.recruitment-page__filter-options::-webkit-scrollbar {
   width: 6px;
 }
 
-.filter-options::-webkit-scrollbar-thumb {
+.recruitment-page__filter-options::-webkit-scrollbar-thumb {
   background-color: #ccc;
   border-radius: 4px;
 }
 
-.filter-options::-webkit-scrollbar-track {
+.recruitment-page__filter-options::-webkit-scrollbar-track {
   background-color: transparent;
 }
 
@@ -185,7 +185,7 @@
 
 =========================== */
 .etra-content {
-  /* max-width: 900px; */
+  max-width: 900px;
   margin: 40px auto;
   padding: 30px;
   background-color: #ffffff;
