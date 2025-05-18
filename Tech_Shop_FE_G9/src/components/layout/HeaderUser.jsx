@@ -187,7 +187,7 @@ const HeaderUser = () => {
                   <a href="#">Pages</a>
                 </li>
                 <li>
-                  <a href="#">About</a>
+                  <a onClick={() => navigate("/recruitment")}>Recruitment</a>
                 </li>
                 <li>
                   <a onClick={() => navigate("blogs/all")}>Blog</a>

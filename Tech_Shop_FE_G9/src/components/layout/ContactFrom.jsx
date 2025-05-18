@@ -58,7 +58,7 @@ function ContactForm() {
   return (
     <div >
         <HeaderUserBasic />
-        <div style={{display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '20px'}}> 
+        <div style={{display: 'flex'}}> 
             <div>
                     <img
                     src="../../../public/images/bg/thu-cu-doi-moi.png"
@@ -214,6 +214,7 @@ const styles = {
     borderRadius: '4px',
     fontSize: '16px',
     backgroundColor: 'white',
+    color: '#333',
   },
   textarea: {
     width: '100%',
