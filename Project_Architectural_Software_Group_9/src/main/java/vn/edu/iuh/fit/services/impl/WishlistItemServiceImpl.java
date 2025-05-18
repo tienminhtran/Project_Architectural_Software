@@ -83,5 +83,12 @@ public class WishlistItemServiceImpl implements WishlistItemService {
         wishlistItem = wishlistItemRepository.save(wishlistItem);
         return modelMapper.map(wishlistItem, WishlistItemResponse.class);
     }
+
+    @Override
+    public void deleteById(Long wishlistItemId) {
+        WishlistItem item = wishlistItemRepository.findById(wishlistItemId).orElseThrow();
+        item.setStatus(false);
+        wishlistItemRepository.save(item);
+    }
 }
 

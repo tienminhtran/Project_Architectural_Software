@@ -22,7 +22,10 @@ import java.util.Optional;
  */
 public interface WishlistItemService {
     Optional<WishlistItemResponse> findById(Long id);
+
     Optional<WishlistItemResponse> findByName(String name);
+
     WishlistItemResponse save(WishlistRequest request);
 
+    void deleteById(Long wishlistItemId);
 }
