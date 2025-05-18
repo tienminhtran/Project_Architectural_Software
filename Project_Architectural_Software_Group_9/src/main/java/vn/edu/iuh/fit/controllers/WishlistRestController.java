@@ -8,7 +8,9 @@ package vn.edu.iuh.fit.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.fit.dtos.request.WishlistRequest;
 import vn.edu.iuh.fit.dtos.response.WishlistItemResponse;
+import vn.edu.iuh.fit.services.WishlistItemService;
 import vn.edu.iuh.fit.services.WishlistService;
 
 import java.util.List;
@@ -24,11 +26,18 @@ import java.util.List;
 public class WishlistRestController {
     @Autowired
     private WishlistService wishlistService;
+    @Autowired
+    private WishlistItemService wishlistItemService;
 
     @GetMapping("/{userId}/items")
     @ResponseBody
     public List<WishlistItemResponse> getWishlistItemsByUserId(@PathVariable Long userId) {
         return wishlistService.getWishlistByUserId(userId);
+    }
+
+    @PostMapping("/item")
+    public WishlistItemResponse addProductToWishlist(@RequestBody WishlistRequest request){
+        return wishlistItemService.save(request);
     }
 }
 

@@ -13,6 +13,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.dtos.request.WishlistRequest;
 import vn.edu.iuh.fit.dtos.response.WishlistItemResponse;
+import vn.edu.iuh.fit.entities.Product;
+import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.entities.Wishlist;
 import vn.edu.iuh.fit.entities.WishlistItem;
 import vn.edu.iuh.fit.repositories.ProductRepository;
@@ -65,7 +67,21 @@ public class WishlistItemServiceImpl implements WishlistItemService {
 
     @Override
     public WishlistItemResponse save(WishlistRequest request) {
-        return null;
+        Long userId = request.getUserId();
+        Wishlist wishlist = wishlistRepository.findByUserId(userId);
+        // Nếu không tìm thấy wishlist thì tạo mới
+        if (wishlist == null) {
+            wishlist = new Wishlist();
+            wishlist.setUser(new User(userId));
+            wishlist = wishlistRepository.save(wishlist);
+        }
+        Product product = productRepository.findById(request.getProductId()).orElseThrow();
+        WishlistItem wishlistItem = new WishlistItem();
+        wishlistItem.setProduct(product);
+        wishlistItem.setWishlist(wishlist);
+        wishlistItem.setStatus(true);
+        wishlistItem = wishlistItemRepository.save(wishlistItem);
+        return modelMapper.map(wishlistItem, WishlistItemResponse.class);
     }
 }
 
