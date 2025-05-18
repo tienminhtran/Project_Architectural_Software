@@ -109,6 +109,14 @@ public class WishlistItemServiceImpl implements WishlistItemService {
             wishlist = wishlistRepository.save(wishlist);
         }
         Product product = productRepository.findById(request.getIdProduct()).orElseThrow(() -> new CustomJwtException("Product not found"));
+        // Kiểm tra nếu sản phẩm đã có trong wishlist (status=true) thì không thêm
+        List<WishlistItem> existingItems = wishlistItemRepository.findByWishlistIdAndStatus(wishlist.getId(), true);
+        boolean exists = existingItems.stream()
+                .anyMatch(item -> item.getProduct().getId().equals(product.getId()));
+        if (exists) {
+            throw new CustomJwtException("Product already exists in wishlist");
+        }
+
         WishlistItem wishlistItem = new WishlistItem();
         wishlistItem.setProduct(product);
         wishlistItem.setWishlist(wishlist);
