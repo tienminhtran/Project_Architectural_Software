@@ -170,7 +170,8 @@ const HeaderUser = () => {
               <li><a href="#">Pages</a></li>
               <li><a href="#">About</a></li>
               <li><a onClick={()=> navigate('blogs/all')}>Blog</a></li>
-              <li><a href="#">Contact</a></li>
+              <li><a onClick={()=> navigate('/contact')}>Contact</a></li>
+              {/* ///contact */}
             </ul>
           </div>
 
