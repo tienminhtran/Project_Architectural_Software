@@ -23,9 +23,28 @@ const ProductCategory = () => {
     const { filterProduct, filterProductData } = useProduct(0 ,10);
 
     const [products, setProducts] = useState([]);
+    const [productsCategory, setProductsCategory] = useState([]);
 
     const [isLoading, setIsLoading] = useState(true);
 
+    console.log("products", products);
+
+    useEffect(() => {
+        if(categoryId) {
+            const fetchProducts = async() => {
+                setIsLoading(true);
+                try {
+                    const response = await filterProductByCategory(categoryId);
+                    setProductsCategory(response.response);           
+                } catch (error) {
+                    console.error("Error fetching products:", error);
+                } finally {
+                    setIsLoading(false);
+                }
+            };
+            fetchProducts();
+        }
+    }, [categoryId]);
     useEffect(() => {
         if(categoryId) {
             const fetchProducts = async() => {
@@ -34,7 +53,7 @@ const ProductCategory = () => {
                     const filterRequest = {
                         categoryId: categoryId,
                     };
-                    await filterProduct({filterRequest});
+                    await filterProduct({filterRequest});            
                 } catch (error) {
                     console.error("Error fetching products:", error);
                 } finally {
@@ -46,9 +65,9 @@ const ProductCategory = () => {
     }, [categoryId]);
 
     useEffect(() => {
-        if (filterProductData) {
-            setProducts(filterProductData);
-        }
+        
+        setProducts(filterProductData);
+        
     }, [filterProductData]);
 
     return (
@@ -58,7 +77,7 @@ const ProductCategory = () => {
                 <Loading isLoading={isLoading} />
             ) : (
                 <>
-                    <FindProduct />
+                    <FindProduct categoryId={categoryId} filterProduct={filterProduct} productsCategory={productsCategory} />
                     <ProductCategories products={products} />
                     <ProductsYouViewed />
                     <Brand />

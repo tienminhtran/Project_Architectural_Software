@@ -57,7 +57,8 @@
   position: absolute;
   z-index: 10;
   animation: fadeIn 0.3s ease;
-
+  width: 300px;
+  max-height: 500px;
 }
 
 /* Fade-in animation */
@@ -84,7 +85,9 @@
   box-shadow: 0 6px 16px rgba(0, 0, 0, 0.06);
   position: absolute;
   z-index: 10;
- 
+  max-height: 500px;
+  max-width: 1000px;
+  overflow-y: auto; 
 }
 
 .shop-product__full-wrapper > div {
@@ -140,9 +143,7 @@
   font-size: 14px;
   width: 50%;
 }
-.shop-product__individual{
-  width: 300px;
-}
+ 
 
 .shop-product__filter-option-items:hover {
   border-color: #1976d2;
@@ -215,8 +216,9 @@
   margin-top: 24px;
   position: absolute;
   z-index: 10;
-  margin-top: 500px;
+  margin-top: 300px;
   margin-left: 50px;
+  overflow-y: auto;
 }
 
 .shop-product__reset-button,

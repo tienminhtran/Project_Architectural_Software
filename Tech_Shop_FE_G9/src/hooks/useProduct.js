@@ -52,9 +52,16 @@ const useProduct = (pageNo, pageSize, productSearch) => {
     const filter = useMutation({
         mutationFn: ({filterRequest}) => filterProduct(filterRequest),
         onSuccess: (data) => {
-          setProducts(data?.response);
+          
+          console.log("Filter products mutation:", data?.response);
+          if(Array.isArray(data?.response)) {
+            setProducts(data?.response);
+          } else {
+            setProducts([]);
+          }
+          console.log("Filter products:", products.length);
         },
-        onError: (error) => { 
+        onError: (error) => {
           console.error("Filter products failed:", error);
           alert("Filter products fail. Please try again!");
         },

@@ -17,92 +17,104 @@ const ProductCategories = ({ products }) => {
   const currentProducts = products.slice(currentPage * pageSize, (currentPage + 1) * pageSize);
 
   return (
-    <div className="product-user-phone__product-container">
-      <div className="product-user-phone__product-grid">
-        {currentProducts.map((product, index) => (
-          <button
-            className="product-user-phone__product-card"
-            key={index}
-            onClick={() => navigate(`/product/${btoa(product.id)}`, { state: { product } })}
-          >
-            <div className="product-user-phone__product-img-wrapper">
-              <img src={product.thumbnail} alt={product.name} className="product-user-phone__product-img" />
-              <span className="product-user-phone__product-discount">{product.discount} OFF</span>
-              <div className="product-user-phone__product-actions">
+   
+
+      <div className="product-user-phone__product-container">
+         
+        {products.length > 0 ? (
+          <>
+            <div className="product-user-phone__product-grid">
+              {currentProducts.map((product, index) => (
                 <button
-                  className="product-user-phone__icon-btn-love"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    console.log("Clicked love icon");
-                  }}
+                  className="product-user-phone__product-card"
+                  key={index}
+                  onClick={() => navigate(`/product/${btoa(product.id)}`, { state: { product } })}
                 >
-                  <FaHeart />
+                  <div className="product-user-phone__product-img-wrapper">
+                    <img src={product.thumbnail} alt={product.name} className="product-user-phone__product-img" />
+                    <span className="product-user-phone__product-discount">{product.discount} OFF</span>
+                    <div className="product-user-phone__product-actions">
+                      <button
+                        className="product-user-phone__icon-btn-love"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log("Clicked love icon");
+                        }}
+                      >
+                        <FaHeart />
+                      </button>
+                      <button
+                        className="product-user-phone__icon-btn-eye"
+                        onClick={(e) => {
+                          e.stopPropagation();
+                          console.log("Clicked eye icon");
+                        }}
+                      >
+                        <FaEye />
+                      </button>
+                    </div>
+                  </div>
+                  <div className="product-user-phone__product-info">
+                    <h5>{product.name}</h5>
+                    <p>
+                      <span className="product-user-phone__price-new">{product.price} ₫</span>{" "}
+                      <del className="product-user-phone__price-old">{product.oldPrice} ₫</del>
+                    </p>
+                    <ul className="product-user-phone__product-specs">
+                      <li>RAM: {product.ram}</li>
+                      <li>Màn hình: {product.monitor}</li>
+                      <li>Pin: {product.battery}</li>
+                      <li>Hệ điều hành: {product.os}</li>
+                    </ul>
+                    <button
+                      className="product-user-phone__add-to-cart"
+                      onClick={(e) => {
+                        e.stopPropagation();
+                        console.log("Added to cart");
+                      }}
+                    >
+                      <FaShoppingCart /> Thêm giỏ hàng
+                    </button>
+                  </div>
                 </button>
-                <button
-                  className="product-user-phone__icon-btn-eye"
-                  onClick={(e) => {
-                    e.stopPropagation();
-                    console.log("Clicked eye icon");
-                  }}
-                >
-                  <FaEye />
-                </button>
-              </div>
+              ))}
             </div>
-            <div className="product-user-phone__product-info">
-              <h5>{product.name}</h5>
-              <p>
-                <span className="product-user-phone__price-new">{product.price} ₫</span>{" "}
-                <del className="product-user-phone__price-old">{product.oldPrice} ₫</del>
-              </p>
-              <ul className="product-user-phone__product-specs">
-                <li>RAM: {product.ram}</li>
-                <li>Màn hình: {product.monitor}</li>
-                <li>Pin: {product.battery}</li>
-                <li>Hệ điều hành: {product.os}</li>
-              </ul>
+
+            
+            <div className="product-user-phone__pagination">
               <button
-                className="product-user-phone__add-to-cart"
-                onClick={(e) => {
-                  e.stopPropagation();
-                  console.log("Added to cart");
-                }}
+                onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
+                disabled={currentPage === 0}
               >
-                <FaShoppingCart /> Thêm giỏ hàng
+                Prev
+              </button>
+
+              {/* Page Numbers */}
+              {Array.from({ length: totalPages }, (_, index) => (
+                <button
+                  key={index}
+                  onClick={() => setCurrentPage(index)}
+                  className={currentPage === index ? "active" : ""}
+                >
+                  {index + 1}
+                </button>
+              ))}
+
+              <button
+                onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages - 1))}
+                disabled={currentPage === totalPages - 1}
+              >
+                Next
               </button>
             </div>
-          </button>
-        ))}
+           </>
+        ) : (
+
+            <h2 className="text-center">Không có sản phẩm nào</h2>
+        )}
+       
       </div>
 
-      {/* Pagination */}
-      <div className="product-user-phone__pagination">
-        <button
-          onClick={() => setCurrentPage(prev => Math.max(prev - 1, 0))}
-          disabled={currentPage === 0}
-        >
-          Prev
-        </button>
-
-        {/* Page Numbers */}
-        {Array.from({ length: totalPages }, (_, index) => (
-          <button
-            key={index}
-            onClick={() => setCurrentPage(index)}
-            className={currentPage === index ? "active" : ""}
-          >
-            {index + 1}
-          </button>
-        ))}
-
-        <button
-          onClick={() => setCurrentPage(prev => Math.min(prev + 1, totalPages - 1))}
-          disabled={currentPage === totalPages - 1}
-        >
-          Next
-        </button>
-      </div>
-    </div>
   );
 };
 
