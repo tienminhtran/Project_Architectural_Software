@@ -210,6 +210,9 @@ public class ProductServiceImpl implements ProductService {
             spec = spec.and(ProductSpecifications.hashInStock(filterRequest.getInStock()));
         }
 
+        if(filterRequest.getGraphicCards() != null) {
+            spec = spec.and(ProductSpecifications.hashInGraphicCards(filterRequest.getGraphicCards()));
+        }
 
         List<Product> products = productRepository.findAll(spec);
         return products.stream()

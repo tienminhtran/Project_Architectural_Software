@@ -1,32 +1,68 @@
 import React, { useState } from 'react';
 import { FaFilter, FaAngleDown, FaTimesCircle } from "react-icons/fa";
 import '../../../../src/assets/css/FindProduct.css';
+import useProduct from '../../../hooks/useProduct';
+import { formatPrice } from '../../../utils/FormatPrice';
 
-export default function FindProduct() {
+export default function FindProduct({categoryId, filterProduct, productsCategory}) {
   const [openFilter, setOpenFilter] = useState(null);
-  const [showAllFilters, setShowAllFilters] = useState(false);
+  const [showAllFilters, setShowAllFilters] = useState(false);  
 
   const handleFilterClick = (filterName) => {
     setOpenFilter(openFilter === filterName ? null : filterName);
     setShowAllFilters(false);
   };
 
+  // Attrribute
+  const cpus = productsCategory?.slice(0,6).map((item) => item.cpu);
+  // console.log("cpus", cpus);
+  const cpusUnique = [...new Set(cpus)];
+
+  const brands = productsCategory?.slice(0,6).map((item) => item.brand.name);
+  const brandsUnique = [...new Set(brands)];
+
+  const monitors = productsCategory?.slice(0,6).map((item) => item.monitor);
+  const monitorsUnique = [...new Set(monitors)];
+
+  const rams = productsCategory?.slice(0,6).map((item) => item.ram);
+  const ramsUnique = [...new Set(rams)];
+
+  const vga = productsCategory?.slice(0,6).map((item) => item.graphicCard);
+  const vgaUnique = [...new Set(vga)];
+
   // Giá
-  const [min, setMin] = useState(11690000);
-  const [max, setMax] = useState(41490000);
+  const [min, setMin] = useState(0);
+  const [max, setMax] = useState(0);
   const minValue = 10000000;
   const maxValue = 50000000;
 
-  const formatCurrency = (value) =>
-    new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' })
-      .format(value)
-      .replace('₫', 'đ');
-
   const handleMinChange = (e) => setMin(Math.min(Number(e.target.value), max));
   const handleMaxChange = (e) => setMax(Math.max(Number(e.target.value), min));
-  const resetRange = () => {
-    setMin(minValue);
-    setMax(maxValue);
+  const resetFilter = () => {
+    setMin(0);
+    setMax(0);
+    setSelectedFilters({});
+    setSelectedStock({});
+  };
+
+  // isStock
+  const [isStock, setIsStock] = useState();
+  const [selectedStock, setSelectedStock] = useState({});
+  console.log("selectedStock", selectedStock);
+  const handleStockClick = (key,value) => {
+    setIsStock(value);
+    if(key === "het") { 
+      setSelectedStock((prev) => ({
+        ...prev,
+        [key]: value,
+        con: false,
+      }));
+    }
+    setSelectedStock((prev) => ({
+      ...prev,
+      [key]: value,
+      het: value,
+    }));
   };
 
   // Bộ lọc
@@ -49,13 +85,30 @@ export default function FindProduct() {
     options.map((option, index) => (
       <li
         key={index}
-        className={`shop-product__filter-option-items ${selectedFilters[category]?.includes(option) ? 'selected' : ''}`}
+        className={`shop-product__filter-option-item ${selectedFilters[category]?.includes(option) ? 'selected' : ''}`}
         onClick={() => toggleFilter(category, option)}
       >
         {option}
       </li>
     ))
   );
+
+  const handleFilterProduct = () => {
+    // const inStock =  selectedFilters['Tình trạng sản phẩm'] ? selectedFilters['Tình trạng sản phẩm']?.includes('Còn hàng') ? true : false : null;
+    console.log("InStock", isStock);
+    const filterRequest = {
+      categoryId,
+      minPrice: min,
+      maxPrice: max,
+      brands: selectedFilters['Brand'] || [],
+      cpus: selectedFilters['CPU'] || [],
+      monitors: selectedFilters['Monitor'] || [],
+      graphicCards: selectedFilters['VGA'] || [],
+      rams: selectedFilters['RAM'] || [],
+      inStock: isStock,
+    };
+    filterProduct({ filterRequest });
+  };
 
   return (
     <div>
@@ -81,9 +134,23 @@ export default function FindProduct() {
           {openFilter === "Tình trạng sản phẩm" && !showAllFilters && (
             <div className="shop-product__individual">
               <ul className="shop-product__filter-option">
-                <li className="shop-product__filter-option-item">Hết hàng</li>
-                <li className="shop-product__filter-option-item">Còn hàng</li>
+                <li
+                  className={`shop-product__filter-option-item ${selectedStock["het"] === false  ? 'selected' : ''}`}
+                  onClick={() => handleStockClick("het",false)}
+                >
+                  Hết hàng
+                </li>
+                <li
+                  className={`shop-product__filter-option-item ${selectedStock['con'] ? 'selected' : ''}`}
+                  onClick={() => handleStockClick("con",true)}
+                >
+                  Còn hàng
+                </li>
               </ul>
+              <div className="shop-product__range-button">
+                  <button onClick={resetFilter} className="shop-product__reset-button">Bỏ chọn</button>
+                  <button className="shop-product__submit-button" onClick={handleFilterProduct}>Xem kết quả</button>
+                </div>
             </div>
           )}
         </div>
@@ -91,19 +158,20 @@ export default function FindProduct() {
         {/* Hãng */}
         <div className="shop-product__filter-wrapper">
           <button
-            className={`shop-product__filter-button ${openFilter === "Hãng" ? 'active' : ''}`}
-            onClick={() => handleFilterClick("Hãng")}
+            className={`shop-product__filter-button ${openFilter === "Brand" ? 'active' : ''}`}
+            onClick={() => handleFilterClick("Brand")}
           >
             Hãng <FaAngleDown />
           </button>
-          {openFilter === "Hãng" && !showAllFilters && (
+          {openFilter === "Brand" && !showAllFilters && (
             <div className="shop-product__individual">
-              <ul className="shop-product__filter-option">
-                <li className="shop-product__filter-option-item">ASUS</li>
-                <li className="shop-product__filter-option-item">HP</li>
-                <li className="shop-product__filter-option-item">Dell</li>
-                <li className="shop-product__filter-option-item">Không thương hiệu</li>
+              <ul className="shop-product__filter-option">            
+                {renderFilterItems("Brand", brandsUnique)}
               </ul>
+              <div className="shop-product__range-button">
+                  <button onClick={resetFilter} className="shop-product__reset-button">Bỏ chọn</button>
+                  <button className="shop-product__submit-button" onClick={handleFilterProduct}>Xem kết quả</button>
+                </div>
             </div>
           )}
         </div>
@@ -119,11 +187,12 @@ export default function FindProduct() {
           {openFilter === "CPU" && !showAllFilters && (
             <div className="shop-product__individual">
               <ul className="shop-product__filter-option">
-                <li className="shop-product__filter-option-item">AMD Ryzen 5</li>
-                <li className="shop-product__filter-option-item">AMD Ryzen 7</li>
-                <li className="shop-product__filter-option-item">Intel Core i5</li>
-                <li className="shop-product__filter-option-item">Intel Core i7</li>
+                {renderFilterItems("CPU", cpusUnique)}
               </ul>
+              <div className="shop-product__range-button">
+                  <button onClick={resetFilter} className="shop-product__reset-button">Bỏ chọn</button>
+                  <button className="shop-product__submit-button" onClick={handleFilterProduct}>Xem kết quả</button>
+                </div>
             </div>
           )}
         </div>
@@ -139,10 +208,12 @@ export default function FindProduct() {
           {openFilter === "size" && !showAllFilters && (
             <div className="shop-product__individual">
               <ul className="shop-product__filter-option">
-                <li className="shop-product__filter-option-item">14 inch</li>
-                <li className="shop-product__filter-option-item">15.6 inch</li>
-                <li className="shop-product__filter-option-item">17 inch</li>
+                 {renderFilterItems("Monitor", monitorsUnique)}
               </ul>
+              <div className="shop-product__range-button">
+                  <button onClick={resetFilter} className="shop-product__reset-button">Bỏ chọn</button>
+                  <button className="shop-product__submit-button" onClick={handleFilterProduct}>Xem kết quả</button>
+                </div>
             </div>
           )}
         </div>
@@ -159,16 +230,16 @@ export default function FindProduct() {
             <div className="shop-product__individual">
               <div className="shop-product__price-range">
                 <div className="shop-product__price-inputs">
-                  <input type="text" value={formatCurrency(min)} readOnly />
-                  <input type="text" value={formatCurrency(max)} readOnly />
+                  <input type="text" value={formatPrice(min)} readOnly />
+                  <input type="text" value={formatPrice(max)} readOnly />
                 </div>
                 <div className="shop-product__range-sliders">
                   <input type="range" min={minValue} max={maxValue} value={min} onChange={handleMinChange} />
                   <input type="range" min={minValue} max={maxValue} value={max} onChange={handleMaxChange} />
                 </div>
                 <div className="shop-product__range-button">
-                  <button onClick={resetRange} className="shop-product__reset-button">Bỏ chọn</button>
-                  <button className="shop-product__submit-button">Xem kết quả</button>
+                  <button onClick={resetFilter} className="shop-product__reset-button">Bỏ chọn</button>
+                  <button className="shop-product__submit-button" onClick={handleFilterProduct}>Xem kết quả</button>
                 </div>
               </div>
             </div>
@@ -196,13 +267,26 @@ export default function FindProduct() {
           <div className="shop-product__full-wrapper">
             <div>
               <strong>Tình trạng sản phẩm</strong>
-              <ul>{renderFilterItems("Tình trạng sản phẩm", ["Hết hàng", "Còn hàng"])}</ul>
+              <ul className="shop-product__filter-option">
+                <li
+                  className={`shop-product__filter-option-item ${selectedStock["het"] === false  ? 'selected' : ''}`}
+                  onClick={() => handleStockClick("het",false)}
+                >
+                  Hết hàng
+                </li>
+                <li
+                  className={`shop-product__filter-option-item ${selectedStock['con'] ? 'selected' : ''}`}
+                  onClick={() => handleStockClick("con",true)}
+                >
+                  Còn hàng
+                </li>
+              </ul>
 
               <strong>Giá</strong>
               <div className="shop-product__price-range">
                 <div className="shop-product__price-inputs">
-                  <input type="text" value={formatCurrency(min)} readOnly />
-                  <input type="text" value={formatCurrency(max)} readOnly />
+                  <input type="text" value={formatPrice(min)} readOnly />
+                  <input type="text" value={formatPrice(max)} readOnly />
                 </div>
                 <div className="shop-product__range-sliders">
                   <input type="range" min={minValue} max={maxValue} value={min} onChange={handleMinChange} />
@@ -210,31 +294,36 @@ export default function FindProduct() {
                 </div>
               </div>
             </div>
+
             <div>
               <strong>Hãng</strong>
-              <ul>{renderFilterItems("Hãng", ["ASUS", "HP", "Dell", "Không thương hiệu"])}</ul>
+              <ul className="shop-product__filter-option">{renderFilterItems("Brand", brandsUnique)}</ul>
 
               <strong>CPU</strong>
-              <ul>{renderFilterItems("CPU", ["AMD Ryzen 5", "AMD Ryzen 7", "Intel Core i5", "Intel Core i7"])}</ul>
+              <ul className="shop-product__filter-option">{renderFilterItems("CPU", cpusUnique)}</ul>
 
               <strong>Kích thước màn hình</strong>
-              <ul>{renderFilterItems("Kích thước màn hình", ["14 inch", "15.6 inch", "17 inch"])}</ul>
+              <ul className="shop-product__filter-option">{renderFilterItems("Monitor", monitorsUnique)}</ul>
             </div>
 
             <div>
-              <strong>Nhu cầu sử dụng</strong>
-              <ul>{renderFilterItems("Nhu cầu sử dụng", ["Gaming", "Văn phòng"])}</ul>
+              
               <strong>RAM</strong>
-              <ul>{renderFilterItems("RAM", ["8 GB", "16 GB", "32 GB"])}</ul>
-              <strong>SSD</strong>
-              <ul>{renderFilterItems("SSD", ["512 GB", "1 TB"])}</ul>
-              <strong>VGA</strong>
-              <ul>{renderFilterItems("VGA", ["RTX 3050", "RTX 3060", "RTX 3070Ti", "AMD Radeon"])}</ul>
+              <ul className="shop-product__filter-option">{renderFilterItems("RAM", ramsUnique)}</ul>
+              {/* <strong>SSD</strong>
+              <ul>{renderFilterItems("SSD", ["512 GB", "1 TB"])}</ul> */}
+              {vgaUnique.includes("N/A") ? null : (
+                <>
+                  <strong>VGA</strong>
+                  <ul className="shop-product__filter-option">{renderFilterItems("VGA", vgaUnique)}</ul>
+                </>
+                
+              )}
             </div>
-          </div>
-          <div className="shop-product__range-buttons">
-            <button onClick={resetRange} className="shop-product__reset-button">Bỏ chọn</button>
-            <button className="shop-product__submit-button">Xem kết quả</button>
+            <div className="shop-product__range-buttons">
+              <button onClick={resetFilter} className="shop-product__reset-button">Bỏ chọn</button>
+              <button className="shop-product__submit-button" onClick={handleFilterProduct}>Xem kết quả</button>
+            </div>
           </div>
         </div>
       )}
