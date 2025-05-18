@@ -320,6 +320,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import vn.edu.iuh.fit.dtos.request.ProductFilterRequest;
 import vn.edu.iuh.fit.dtos.request.ProductRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.BestSellingProductResponse;
@@ -640,6 +641,17 @@ public class ProductRestController {
     public ResponseEntity<BaseResponse<?>> filterProductTablet() {
 
         List<ProductResponse> productResponses = productService.filterProductTablet();
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Filter product tablet").response(productResponses).build());
+
+    }
+
+    @PostMapping("/filter")
+    public ResponseEntity<BaseResponse<?>> filterProducts(@RequestBody ProductFilterRequest filterRequest) {
+
+        List<ProductResponse> productResponses = productService.getFilteredProducts(filterRequest);
         if (productResponses.isEmpty()) {
             return ResponseEntity.noContent().build();
         }
