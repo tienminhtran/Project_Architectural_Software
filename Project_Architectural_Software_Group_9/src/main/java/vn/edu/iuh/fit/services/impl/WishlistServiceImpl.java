@@ -14,6 +14,7 @@ import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.dtos.request.WishlistRequest;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.WishlistItemResponse;
+import vn.edu.iuh.fit.entities.Product;
 import vn.edu.iuh.fit.entities.Wishlist;
 import vn.edu.iuh.fit.entities.WishlistItem;
 import vn.edu.iuh.fit.repositories.WishlistItemRepository;
@@ -80,9 +81,21 @@ public class WishlistServiceImpl implements WishlistService {
 
     @Override
     public List<WishlistItemResponse> getWishlistByUserId(Long userId) {
-//        List<WishlistItem> wishlistItems = wishlistItemRepository.findByUserId(userId);
-//        return wishlistItems.stream().map(item -> modelMapper.map(item, WishlistItemResponse.class)).collect(Collectors.toList());
-        return null;
+        Wishlist wishlist = wishlistRepository.findByUserId(userId);
+        if (wishlist == null || wishlist.getItems() == null) {
+            return List.of();
+        }
+        return wishlist.getItems().stream().map(item -> {
+            Product product = item.getProduct();
+            return WishlistItemResponse.builder()
+                    .thumbnail(product.getThumbnail())
+                    .title(product.getProductName())
+                    .unitPrice(product.getPrice() != null ? product.getPrice().toString() : null)
+                    .status(Boolean.TRUE.equals(item.getStatus()))
+                    .productId(product.getId())
+                    .isUrlImg(product.getThumbnail() != null && (product.getThumbnail().startsWith("http://") || product.getThumbnail().startsWith("https://")))
+                    .build();
+        }).collect(Collectors.toList());
     }
 }
 

@@ -6,8 +6,12 @@
 
 package vn.edu.iuh.fit.controllers;
 
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.fit.dtos.response.WishlistItemResponse;
+import vn.edu.iuh.fit.services.WishlistService;
+
+import java.util.List;
 
 /*
  * @description:
@@ -18,6 +22,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/v1/wishlists")
 public class WishlistRestController {
+    @Autowired
+    private WishlistService wishlistService;
 
+    @GetMapping("/{userId}/items")
+    @ResponseBody
+    public List<WishlistItemResponse> getWishlistItemsByUserId(@PathVariable Long userId) {
+        return wishlistService.getWishlistByUserId(userId);
+    }
 }
 
