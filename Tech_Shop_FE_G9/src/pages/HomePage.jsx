@@ -51,7 +51,7 @@ const HomePage = () => {
     },[])
     return (
         <div>
-            <HeardUser />
+            <HeardUser showCategory={true} showBanner={true} />
             <ProductsYouViewed />
             <ProductCarousel products={productslaptop} brands={brandsLapTop} name={"Laptop"} />
             <ProductCarousel products={productsPhone} brands={brandsPhone} name={"Phone"}/>

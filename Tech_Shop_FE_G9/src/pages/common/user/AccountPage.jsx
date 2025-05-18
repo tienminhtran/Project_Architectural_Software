@@ -4,9 +4,9 @@ import { FaUser, FaMapMarkerAlt, FaBoxOpen, FaEye, FaSignOutAlt } from 'react-ic
 import AddressBook from "./AddressBook"; // Ensure path is correct
 import OrderManagement from "./OrderManagement"; // Ensure path is correct
 import StoreLocator from './StoreLocator'; // Ensure path is correct
-import HeaderUserBasic from '../../../components/layout/HeaderUserBasic';
 import Footer from '../../../components/layout/Footer';
 import useUser from "../../../hooks/useUser";
+import HeaderUser from '../../../components/layout/HeaderUser';
 
 
 const AccountPage = () => {
@@ -94,7 +94,7 @@ const AccountPage = () => {
   return (
     <div>
       <div>
-        <HeaderUserBasic />
+        <HeaderUser showCategory={false} showBanner={false} />
       </div>    
       
       
@@ -103,7 +103,7 @@ const AccountPage = () => {
         <div className="account-page__sidebar">
           <div className="account-page__avatar">
           <img src={user?.image || "/avatar.png"} alt="avatar" />
-          <h3>tien tot</h3>
+          <h3>{`${user?.firstname || ""} ${user?.lastname || ""}`.trim()}</h3>
           </div>
           <ul>
             <li onClick={() => setActiveTab("info")} className={activeTab === "info" ? "account-page__active" : ""}>

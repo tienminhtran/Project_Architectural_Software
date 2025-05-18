@@ -5,10 +5,10 @@ import "../../assets/css/OrderPayment.css";
 import { useLocation, useNavigate } from "react-router-dom";
 import { toast } from "react-toastify";
 import PayPalButton from "./PayPalButton";
-import HeardUserBasic from "../../components/layout/HeaderUserBasic"; // Adjust the path as necessary
 import FooterUser from "../../components/layout/Footer";
 import useOrder from "../../hooks/useOrder";
 import { v4 as uuidv4 } from "uuid";
+import HeaderUser from "../../components/layout/HeaderUser";
 // Helper function to format currency
 const formatCurrency = (amount) => {
   return amount.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
@@ -185,7 +185,7 @@ const OrderPayment = () => {
 
   return (
     <div>
-      <HeardUserBasic />
+      <HeaderUser showCategory={false} showBanner={false} />
       <div style={{ display: "flex" }}>
         <div>
           <img

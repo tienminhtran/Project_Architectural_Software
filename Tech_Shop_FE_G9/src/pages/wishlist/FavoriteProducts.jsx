@@ -5,9 +5,9 @@ import { confirmAlert } from "react-confirm-alert";
 import "react-confirm-alert/src/react-confirm-alert.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
-import HeaderUserBasic from "../../components/layout/HeaderUserBasic";
 import FooterUser from "../../components/layout/Footer";
 import useWishlist from "../../hooks/useWishlist";
+import HeaderUser from "../../components/layout/HeaderUser";
 
 // const wishlistItems = [
 //   {
@@ -135,7 +135,7 @@ export default function FavoriteProducts() {
 
   return (
     <div>
-      <HeaderUserBasic />
+      <HeaderUser />
 
       <div style={{ display: "flex" }}>
         <div>

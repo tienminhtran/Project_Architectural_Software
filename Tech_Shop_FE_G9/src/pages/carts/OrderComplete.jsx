@@ -4,8 +4,8 @@ import CheckoutStepper from "./CheckoutStepper";
 import { useLocation } from "react-router-dom";
 import "../../assets/css/OrderComplete.css";
 // import DeliveryWithGeolocation from './DeliveryWithGeolocation';
-import HeardUserBasic from "../../components/layout/HeaderUserBasic"; // Adjust the path as necessary
 import FooterUser from "../../components/layout/Footer";
+import HeaderUser from "../../components/layout/HeaderUser";
 const OrderComplete = () => {
   const [isModalOpen, setIsModalOpen] = useState(false);
   const location = useLocation();
@@ -28,7 +28,7 @@ const OrderComplete = () => {
 
   return (
     <div>
-      <HeardUserBasic />
+      <HeaderUser showCategory={false} showBanner={false} />
       <div style={{ display: "flex" }}>
         <div>
           <img

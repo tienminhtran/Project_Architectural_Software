@@ -1,6 +1,6 @@
 import React, { useState } from 'react';
-import HeaderUserBasic from './HeaderUserBasic';
 import FooterUser from './Footer';
+import HeaderUser from './HeaderUser';
 
 
 function ContactForm() {
@@ -57,7 +57,8 @@ function ContactForm() {
 
   return (
     <div >
-        <HeaderUserBasic />
+        <HeaderUser showCategory={false} showBanner={false} />
+
         <div style={{display: 'flex'}}> 
             <div>
                     <img
