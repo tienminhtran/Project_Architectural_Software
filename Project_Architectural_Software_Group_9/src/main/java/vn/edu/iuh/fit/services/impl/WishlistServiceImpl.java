@@ -13,14 +13,20 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import vn.edu.iuh.fit.dtos.request.WishlistRequest;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
+import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.dtos.response.WishlistItemResponse;
+import vn.edu.iuh.fit.dtos.response.WishlistResponse;
 import vn.edu.iuh.fit.entities.Product;
+import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.entities.Wishlist;
 import vn.edu.iuh.fit.entities.WishlistItem;
+import vn.edu.iuh.fit.repositories.UserRepository;
 import vn.edu.iuh.fit.repositories.WishlistItemRepository;
 import vn.edu.iuh.fit.repositories.WishlistRepository;
+import vn.edu.iuh.fit.services.UserService;
 import vn.edu.iuh.fit.services.WishlistService;
 
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -39,6 +45,10 @@ public class WishlistServiceImpl implements WishlistService {
     private WishlistRepository wishlistRepository;
     @Autowired
     private WishlistItemRepository wishlistItemRepository;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private UserRepository userRepository;
 
     @Autowired
     private ModelMapper modelMapper;
@@ -80,22 +90,43 @@ public class WishlistServiceImpl implements WishlistService {
     }
 
     @Override
-    public List<WishlistItemResponse> getWishlistByUserId(Long userId) {
-        Wishlist wishlist = wishlistRepository.findByUserId(userId);
-        if (wishlist == null || wishlist.getItems() == null) {
-            return List.of();
+    public WishlistResponse getWishlistByUserId(String token) {
+        if (token == null || token.isEmpty()) {
+            return null;
         }
-        return wishlist.getItems().stream().map(item -> {
-            Product product = item.getProduct();
-            return WishlistItemResponse.builder()
-                    .thumbnail(product.getThumbnail())
-                    .title(product.getProductName())
-                    .unitPrice(product.getPrice() != null ? product.getPrice().toString() : null)
-                    .status(Boolean.TRUE.equals(item.getStatus()))
-                    .productId(product.getId())
-                    .isUrlImg(product.getThumbnail() != null && (product.getThumbnail().startsWith("http://") || product.getThumbnail().startsWith("https://")))
-                    .build();
-        }).collect(Collectors.toList());
+        UserResponse userResponse = userService.getCurrentUser(token);
+        Wishlist wishlist = wishlistRepository.findByUserId(userResponse.getId());
+        List<WishlistItemResponse> wishlistItemResponses;
+        if (wishlist == null || wishlist.getItems().isEmpty() || wishlist.getItems().size() == 0) {
+            wishlistItemResponses = new ArrayList<>();
+        } else {
+            wishlistItemResponses = wishlist.getItems().stream()
+                    .map(item -> modelMapper.map(item, WishlistItemResponse.class))
+                    .collect(Collectors.toList());
+        }
+        return WishlistResponse.builder()
+                .id(wishlist.getId())
+                .user(userResponse)
+                .items(wishlistItemResponses)
+                .build();
     }
+
+    @Override
+    public WishlistResponse createWishlist(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+        Wishlist wishlist = wishlistRepository.findByUserId(user.getId());
+        if (wishlist == null) {
+            wishlist = new Wishlist();
+            wishlist.setUser(user);
+            wishlist = wishlistRepository.save(wishlist);
+        }
+        return WishlistResponse.builder()
+                .id(wishlist.getId())
+                .user(modelMapper.map(user, UserResponse.class))
+                .items(new ArrayList<>())
+                .build();
+    }
+
+
 }
 

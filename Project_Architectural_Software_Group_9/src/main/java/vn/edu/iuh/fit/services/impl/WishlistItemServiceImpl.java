@@ -11,16 +11,21 @@ import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.fit.dtos.request.WishlistItemRequest;
 import vn.edu.iuh.fit.dtos.request.WishlistRequest;
+import vn.edu.iuh.fit.dtos.response.UserResponse;
 import vn.edu.iuh.fit.dtos.response.WishlistItemResponse;
 import vn.edu.iuh.fit.entities.Product;
 import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.entities.Wishlist;
 import vn.edu.iuh.fit.entities.WishlistItem;
+import vn.edu.iuh.fit.exception.CustomJwtException;
 import vn.edu.iuh.fit.repositories.ProductRepository;
+import vn.edu.iuh.fit.repositories.UserRepository;
 import vn.edu.iuh.fit.repositories.WishlistItemRepository;
 import vn.edu.iuh.fit.repositories.WishlistRepository;
 import vn.edu.iuh.fit.services.ProductService;
+import vn.edu.iuh.fit.services.UserService;
 import vn.edu.iuh.fit.services.WishlistItemService;
 import vn.edu.iuh.fit.utils.Constant;
 
@@ -42,9 +47,13 @@ public class WishlistItemServiceImpl implements WishlistItemService {
     private WishlistItemRepository wishlistItemRepository;
     @Autowired
     private ProductRepository productRepository;
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private ModelMapper modelMapper;
+    @Autowired
+    private UserRepository userRepository;
 
     private WishlistItemResponse convertToDto(Wishlist wishlist) {
         return modelMapper.map(wishlist, WishlistItemResponse.class);
@@ -66,16 +75,40 @@ public class WishlistItemServiceImpl implements WishlistItemService {
     }
 
     @Override
-    public WishlistItemResponse save(WishlistRequest request) {
-        Long userId = request.getUserId();
-        Wishlist wishlist = wishlistRepository.findByUserId(userId);
-        // Nếu không tìm thấy wishlist thì tạo mới
+    public List<WishlistItemResponse> getWishlistItemsByWishlistId(String token) {
+        if (token == null || token.isEmpty()) {
+            return null;
+        }
+        UserResponse userResponse = userService.getCurrentUser(token);
+        Wishlist wishlist = wishlistRepository.findByUserId(userResponse.getId());
+        if (wishlist == null) {
+            return null;
+        }
+        List<WishlistItem> wishlistItems = wishlistItemRepository.findByWishlistIdAndStatus(wishlist.getId(), true);
+        if (wishlistItems.isEmpty()) {
+            return null;
+        }
+        List<WishlistItemResponse> wishlistItemResponses = wishlistItems.stream()
+                .map(item -> modelMapper.map(item, WishlistItemResponse.class))
+                .toList();
+        return wishlistItemResponses;
+    }
+
+    @Override
+    public WishlistItemResponse save(String token, WishlistItemRequest request) throws CustomJwtException {
+        if (token == null || token.isEmpty()) {
+            throw new CustomJwtException("Token is null or empty");
+        }
+        UserResponse userResponse = userService.getCurrentUser(token);
+        Wishlist wishlist = wishlistRepository.findByUserId(userResponse.getId());
+        // Kiểm tra wishlist đã tồn tại hay chưa. Nếu chưa thì tạo mới
         if (wishlist == null) {
             wishlist = new Wishlist();
-            wishlist.setUser(new User(userId));
+            User user = userRepository.findById(userResponse.getId()).orElseThrow(() -> new CustomJwtException("User not found"));
+            wishlist.setUser(user);
             wishlist = wishlistRepository.save(wishlist);
         }
-        Product product = productRepository.findById(request.getProductId()).orElseThrow();
+        Product product = productRepository.findById(request.getIdProduct()).orElseThrow(() -> new CustomJwtException("Product not found"));
         WishlistItem wishlistItem = new WishlistItem();
         wishlistItem.setProduct(product);
         wishlistItem.setWishlist(wishlist);
@@ -85,10 +118,27 @@ public class WishlistItemServiceImpl implements WishlistItemService {
     }
 
     @Override
-    public void deleteById(Long wishlistItemId) {
-        WishlistItem item = wishlistItemRepository.findById(wishlistItemId).orElseThrow();
-        item.setStatus(false);
-        wishlistItemRepository.save(item);
+    public boolean deleteWishlistItem(Long productId, String token) {
+        if (productId == null) {
+            throw new IllegalArgumentException("Product ID must not be null");
+        }
+        if (token == null || token.isEmpty()) {
+            throw new IllegalArgumentException("Token must not be null or empty");
+        }
+        UserResponse userResponse = userService.getCurrentUser(token);
+        Wishlist wishlist = wishlistRepository.findByUserId(userResponse.getId());
+        if (wishlist == null) {
+            throw new IllegalArgumentException("Wishlist not found for the user");
+        }
+        // Tìm WishlistItem theo wishlistId và productId
+        List<WishlistItem> items = wishlistItemRepository.findByWishlistIdAndStatus(wishlist.getId(), true);
+        WishlistItem wishlistItem = items.stream()
+                .filter(item -> item.getProduct().getId().equals(productId))
+                .findFirst()
+                .orElseThrow(() -> new IllegalArgumentException("Product not found in wishlist"));
+        wishlistItem.setStatus(false);
+        wishlistItemRepository.save(wishlistItem);
+        return true;
     }
 }
 

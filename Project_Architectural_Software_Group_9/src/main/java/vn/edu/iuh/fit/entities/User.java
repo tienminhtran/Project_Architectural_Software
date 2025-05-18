@@ -84,8 +84,4 @@ public class User extends TrackingDate {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Rating> ratings;
-
-    public User(Long id) {
-        this.id = id;
-    }
 }
