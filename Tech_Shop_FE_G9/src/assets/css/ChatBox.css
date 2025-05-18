@@ -49,6 +49,7 @@
   font-size: 15px;
   width: 80%;
   transition: background 0.2s ease;
+  color: #000;
 }
 
 .chat-button:hover {

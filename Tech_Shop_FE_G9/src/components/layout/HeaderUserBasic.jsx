@@ -11,29 +11,38 @@ import AnnouncementBar from "./AnnouncementBar.jsx";
 import useUser from "../../hooks/useUser.js";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
-import { getAccessToken, removeAccessToken } from "../../services/authService.js";
+import {
+  getAccessToken,
+  removeAccessToken,
+} from "../../services/authService.js";
 import { logout } from "../../store/slices/AuthSlice.js";
-import { confirmAlert } from 'react-confirm-alert';
+import { confirmAlert } from "react-confirm-alert";
 import { toast } from "react-toastify";
 import useCart from "../../hooks/useCart.js";
+import useWishlist from "../../hooks/useWishlist.js";
 
 const HeaderUserBasic = () => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const { userInfor } = useUser(0, 1);
-    const user = useMemo(() => {
-      return userInfor|| null;
-    }, [userInfor]);
+  const user = useMemo(() => {
+    return userInfor || null;
+  }, [userInfor]);
 
-    const {carts} = useCart();
-    const cartItems = useMemo(() => {
-      if(!carts) return [];
-      return carts.response;
-    }, [carts]);
+  const { carts } = useCart();
+  const cartItems = useMemo(() => {
+    if (!carts) return [];
+    return carts.response;
+  }, [carts]);
 
-    const token = getAccessToken();
-    
+  const { wishlists } = useWishlist();
+  const wishlistItems = useMemo(() => {
+    if (!wishlists) return [];
+    return wishlists.response;
+  }, [wishlists]);
+
+  const token = getAccessToken();
 
   const userMenuRef = useRef();
   const categoryMenuRef = useRef();
@@ -47,10 +56,7 @@ const HeaderUserBasic = () => {
   // Close menus on outside click
   useEffect(() => {
     const handleClickOutside = (event) => {
-      if (
-        userMenuRef.current &&
-        !userMenuRef.current.contains(event.target)
-      ) {
+      if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
         setShowMenu(false);
       }
       if (
@@ -66,10 +72,10 @@ const HeaderUserBasic = () => {
 
   const handleLogout = () => {
     confirmAlert({
-      message: 'Bạn có chắc chắn muốn đăng xuất không?',
+      message: "Bạn có chắc chắn muốn đăng xuất không?",
       buttons: [
         {
-          label: 'Tiếp tục',
+          label: "Tiếp tục",
           onClick: () => {
             dispatch(logout());
             removeAccessToken();
@@ -77,18 +83,18 @@ const HeaderUserBasic = () => {
             navigate("/");
             window.location.reload();
             toast.success("Đăng xuất thành công", {
-              position: 'top-right',
-              autoClose: 2000,              
-            })
-          }
-        }, 
+              position: "top-right",
+              autoClose: 2000,
+            });
+          },
+        },
         {
-          label: 'Hủy bỏ',
-          onClick: () => {}
-        }
-      ]
-    })
-  }
+          label: "Hủy bỏ",
+          onClick: () => {},
+        },
+      ],
+    });
+  };
 
   return (
     <div className="header-user">
@@ -98,7 +104,10 @@ const HeaderUserBasic = () => {
       <div className="container-fluid py-3">
         {/* Top Header */}
         <div className="row align-items-center">
-          <button className="col-3 text-center text-md-start bg-white" onClick={() => navigate('/')}>
+          <button
+            className="col-3 text-center text-md-start bg-white"
+            onClick={() => navigate("/")}
+          >
             <img
               src="/images/logo/logo-large.png"
               alt="TechMart Logo"
@@ -135,7 +144,10 @@ const HeaderUserBasic = () => {
         {/* Navigation Menu */}
         <div className="row align-items-center mt-3 bg-light">
           {/* Categories */}
-          <div className="col-3 text-center text-md-start" ref={categoryMenuRef}>
+          <div
+            className="col-3 text-center text-md-start"
+            ref={categoryMenuRef}
+          >
             <div
               className="header-user-basic__category-header"
               onClick={toggleCategoryMenu}
@@ -150,13 +162,15 @@ const HeaderUserBasic = () => {
                   className="header-user-basic__category-item"
                   onClick={() => navigate("/categories-all-laptop")}
                 >
-                  Laptop <FaChevronDown className="header-user-basic__chevron-icon" />
+                  Laptop{" "}
+                  <FaChevronDown className="header-user-basic__chevron-icon" />
                 </li>
                 <li
                   className="header-user-basic__category-item"
                   onClick={() => navigate("/categories-all-phone")}
                 >
-                  Phone <FaChevronDown className="header-user-basic__chevron-icon" />
+                  Phone{" "}
+                  <FaChevronDown className="header-user-basic__chevron-icon" />
                 </li>
                 <li
                   className="header-user-basic__category-item"
@@ -172,12 +186,24 @@ const HeaderUserBasic = () => {
           {/* Menu Items */}
           <div className="col-7">
             <ul className="header-user-basic__menu">
-              <li><a  onClick={() => navigate('/')}> Home</a></li>
-              <li><a  onClick={() => navigate('/shop')}>Shop</a></li>
-              <li><a onClick={() => navigate('/pages')}>Pages</a></li>
-              <li><a onClick={() => navigate('/abouts')}>About</a></li>
-              <li><a  onClick={()=> navigate('/blogs/all')}>Blog</a></li>
-              <li><a onClick={() => navigate('/contacts')}>Contact</a></li>
+              <li>
+                <a onClick={() => navigate("/")}> Home</a>
+              </li>
+              <li>
+                <a onClick={() => navigate("/shop")}>Shop</a>
+              </li>
+              <li>
+                <a onClick={() => navigate("/pages")}>Pages</a>
+              </li>
+              <li>
+                <a onClick={() => navigate("/recruitment")}>Recruitment</a>
+              </li>
+              <li>
+                <a onClick={() => navigate("/blogs/all")}>Blog</a>
+              </li>
+              <li>
+                <a onClick={() => navigate("/contact")}>Contact</a>
+              </li>
             </ul>
           </div>
 
@@ -185,12 +211,22 @@ const HeaderUserBasic = () => {
           <div className="col-2 text-end">
             <div className="header-user-basic__menu-icons">
               <div className="header-user-basic__icon-item">
-                <FaShoppingCart style={{ color: "#838383" }} onClick={()=>navigate('/cart')}/>
-                <span className="header-user-basic__icon-badge-cart">{cartItems.length}</span>
+                <FaShoppingCart
+                  style={{ color: "#838383" }}
+                  onClick={() => navigate("/cart")}
+                />
+                <span className="header-user-basic__icon-badge-cart">
+                  {cartItems.length}
+                </span>
               </div>
               <div className="header-user-basic__icon-item">
-                <FaHeart style={{ color: "#838383" }} onClick={()=>navigate('/favorite-products')}/>
-                <span className="header-user-basic__icon-badge-heart">12</span>
+                <FaHeart
+                  style={{ color: "#838383" }}
+                  onClick={() => navigate("/favorite-products")}
+                />
+                <span className="header-user-basic__icon-badge-heart">
+                  {wishlistItems.length}
+                </span>
               </div>
               <div
                 className="header-user-basic__icon-item"
@@ -204,31 +240,66 @@ const HeaderUserBasic = () => {
                 {showMenu && (
                   <div className="header-user__dropdown">
                     {!token ? (
-
-                      <div className="p-3" >
+                      <div className="p-3">
                         <p className="">Xin chào, vui lòng đăng nhập</p>
-                        <button className="btn btn-primary rounder-3"  onClick={() => navigate('/login')}> 
+                        <button
+                          className="btn btn-primary rounder-3"
+                          onClick={() => navigate("/login")}
+                        >
                           Login
                         </button>
-                        <div className="d-flex justify-content-center align-items-center mt-2 gap-2" style={{ width: '100%' }}>
-                          <span className="text-muted"style={{fontSize: '12px'}}>No account yet?</span>
-                          <button className="btn btn-danger w-50" onClick={() => navigate('/register')}>Register</button>
+                        <div
+                          className="d-flex justify-content-center align-items-center mt-2 gap-2"
+                          style={{ width: "100%" }}
+                        >
+                          <span
+                            className="text-muted"
+                            style={{ fontSize: "12px" }}
+                          >
+                            No account yet?
+                          </span>
+                          <button
+                            className="btn btn-danger w-50"
+                            onClick={() => navigate("/register")}
+                          >
+                            Register
+                          </button>
                         </div>
                       </div>
-
                     ) : (
                       <div>
-                        <div className="header-user__dropdown-item" onClick={() => navigate('/my-account')} >My Account</div>
-                        
+                        <div
+                          className="header-user__dropdown-item"
+                          onClick={() => navigate("/my-account")}
+                        >
+                          My Account
+                        </div>
+
                         {userInfor.role.code === "ADMIN" && (
-                            <div className="header-user__dropdown-item" onClick={() => navigate('/admin/dashboard')} >Admin</div>
+                          <div
+                            className="header-user__dropdown-item"
+                            onClick={() => navigate("/admin/dashboard")}
+                          >
+                            Admin
+                          </div>
                         )}
 
-                        {(userInfor.role.code === "ADMIN" || userInfor.role.code === "MANAGER") && (
-                          <div className="header-user__dropdown-item" onClick={() => navigate('/manager/dashboard')} >Manager</div>
+                        {(userInfor.role.code === "ADMIN" ||
+                          userInfor.role.code === "MANAGER") && (
+                          <div
+                            className="header-user__dropdown-item"
+                            onClick={() => navigate("/manager/dashboard")}
+                          >
+                            Manager
+                          </div>
                         )}
 
-                        <div className="header-user__dropdown-item" onClick={handleLogout} >Logout</div>
+                        <div
+                          className="header-user__dropdown-item"
+                          onClick={handleLogout}
+                        >
+                          Logout
+                        </div>
                       </div>
                     )}
                   </div>

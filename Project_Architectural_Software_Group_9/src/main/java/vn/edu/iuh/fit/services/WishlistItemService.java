@@ -6,10 +6,12 @@
 
 package vn.edu.iuh.fit.services;
 
+import vn.edu.iuh.fit.dtos.request.WishlistItemRequest;
 import vn.edu.iuh.fit.dtos.request.WishlistRequest;
 import vn.edu.iuh.fit.dtos.response.WishlistItemResponse;
 import vn.edu.iuh.fit.entities.Wishlist;
 import vn.edu.iuh.fit.entities.WishlistItem;
+import vn.edu.iuh.fit.exception.CustomJwtException;
 
 import java.util.List;
 import java.util.Optional;
@@ -22,7 +24,12 @@ import java.util.Optional;
  */
 public interface WishlistItemService {
     Optional<WishlistItemResponse> findById(Long id);
-    Optional<WishlistItemResponse> findByName(String name);
-    WishlistItemResponse save(WishlistRequest request);
 
+    Optional<WishlistItemResponse> findByName(String name);
+
+    List<WishlistItemResponse> getWishlistItemsByWishlistId(String token);
+
+    WishlistItemResponse save(String token, WishlistItemRequest request) throws CustomJwtException;
+
+    boolean deleteWishlistItem(Long wishlistItemId, String token);
 }

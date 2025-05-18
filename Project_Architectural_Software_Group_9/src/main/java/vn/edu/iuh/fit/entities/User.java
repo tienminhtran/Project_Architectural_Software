@@ -21,7 +21,7 @@ import java.util.Set;
 @FieldDefaults(level = AccessLevel.PRIVATE)
 @Entity
 @Table(name = "users")
-public class User extends TrackingDate{
+public class User extends TrackingDate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;

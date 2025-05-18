@@ -9,6 +9,7 @@ package vn.edu.iuh.fit.services;
 import vn.edu.iuh.fit.dtos.request.WishlistRequest;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.WishlistItemResponse;
+import vn.edu.iuh.fit.dtos.response.WishlistResponse;
 import vn.edu.iuh.fit.entities.Wishlist;
 
 import java.util.List;
@@ -27,5 +28,7 @@ public interface WishlistService {
 
     boolean existsWishlist(Long userId);
 
-    List<WishlistItemResponse> getWishlistByUserId(Long userId);
+    WishlistResponse getWishlistByUserId(String token);
+
+    WishlistResponse createWishlist(Long userId);
 }
