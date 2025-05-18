@@ -50,7 +50,7 @@ import BlogPosts from "./pages/common/blog/blogPosts"; // Import BlogPosts compo
 import "../src/assets/css/ChatIcon.css";
 import "../src/components/layout/ContactFrom";
 import ContactForm from "../src/components/layout/ContactFrom";
-
+import RecruitmentPage from "../src/components/layout/RecruitmentPage"; // Import RecruitmentPage component
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
   <div className="axil-signin-area">
@@ -296,6 +296,7 @@ function App() {
           <Route path="/contact" element={<ContactForm />} />
 
           <Route path="/favorite-products" element={<FavoriteProducts />} />
+          <Route path="/recruitment" element={<RecruitmentPage />} />
         </Route>
       </Routes>
     </Router>

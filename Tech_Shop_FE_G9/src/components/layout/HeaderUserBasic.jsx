@@ -196,7 +196,7 @@ const HeaderUserBasic = () => {
                 <a onClick={() => navigate("/pages")}>Pages</a>
               </li>
               <li>
-                <a onClick={() => navigate("/abouts")}>About</a>
+                <a onClick={() => navigate("/recruitment")}>Recruitment</a>
               </li>
               <li>
                 <a onClick={() => navigate("/blogs/all")}>Blog</a>
