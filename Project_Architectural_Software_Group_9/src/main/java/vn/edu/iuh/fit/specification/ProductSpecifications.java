@@ -31,6 +31,7 @@ public class ProductSpecifications {
         };
     }
     public static Specification<Product> hashBrandIn(List<String> brands) {
+        
         return (root, query, criteriaBuilder) -> {
             if (brands == null || brands.isEmpty()) {
                 return null;
@@ -60,7 +61,7 @@ public class ProductSpecifications {
 
     public static Specification<Product> hashBetweenPrice(double min, double max) {
         return (root, query, criteriaBuilder) -> {
-           if(min > max) {
+           if(min > max || (min == 0 && max == 0)) {
                return null;
            }
             return criteriaBuilder.between(root.get("price"), min, max);
@@ -78,10 +79,19 @@ public class ProductSpecifications {
 
     public static Specification<Product> hashInStock(boolean inStock) {
         return (root, query, criteriaBuilder) -> {
-            if(!inStock) {
+            if(inStock == false) {
                 return criteriaBuilder.equal(root.get("stockQuantity"), 0);
             }
             return criteriaBuilder.greaterThan(root.get("stockQuantity"), 0);
         };
+    }
+
+    public static Specification<Product> hashInGraphicCards(List<String> graphicCards) {
+        return ((root, query, criteriaBuilder) -> {
+            if (graphicCards == null || graphicCards.isEmpty()) {
+                return null;
+            }
+            return root.get("graphicCard").in(graphicCards);
+        });
     }
 }

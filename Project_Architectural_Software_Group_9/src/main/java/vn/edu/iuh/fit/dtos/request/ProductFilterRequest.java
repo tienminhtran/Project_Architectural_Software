@@ -26,7 +26,7 @@ public class ProductFilterRequest {
     private List<String> cpus;
     private List<String> rams;
 //    private List<String> ssds;
-//    private List<String> vgas;
+    private List<String> graphicCards;
     private List<String> monitors;
     private Double minPrice;
     private Double maxPrice;
