@@ -1,10 +1,14 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllProduct_Paging, deleteProduct, createProduct, searchProduct, updateProduct} from "../services/productService";
+import { getAllProduct_Paging, deleteProduct, createProduct, searchProduct, updateProduct, filterProduct} from "../services/productService";
 import usePaginationQuery from "./usePaginationQuery";
+import { data } from "react-router-dom";
+import { useState } from "react";
 
 
 const useProduct = (pageNo, pageSize, productSearch) => {
     const queryClient = useQueryClient();
+
+    const [products, setProducts] = useState([]);
     
     // create product
     const createPro = useMutation({
@@ -45,6 +49,17 @@ const useProduct = (pageNo, pageSize, productSearch) => {
         },
     })
 
+    const filter = useMutation({
+        mutationFn: ({filterRequest}) => filterProduct(filterRequest),
+        onSuccess: (data) => {
+          setProducts(data?.response);
+        },
+        onError: (error) => { 
+          console.error("Filter products failed:", error);
+          alert("Filter products fail. Please try again!");
+        },
+    })
+
 
     return {
         products_paging: usePaginationQuery("getAllProduct_Paging", getAllProduct_Paging, pageNo, pageSize),
@@ -53,6 +68,8 @@ const useProduct = (pageNo, pageSize, productSearch) => {
         createProduct: createPro.mutateAsync,
         updateProduct: update.mutateAsync,
         search_paging: usePaginationQuery("searchProduct", searchProduct, pageNo, pageSize, productSearch, true),
+        filterProduct: filter.mutateAsync,
+        filterProductData: products,
     }
 }
 export default useProduct;
