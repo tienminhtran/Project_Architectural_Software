@@ -26,7 +26,7 @@ import java.util.Optional;
  * @date: 3/4/2025
  */
 @Repository
-public interface ProductRepository extends JpaRepository<Product, Long> {
+public interface ProductRepository extends JpaRepository<Product, Long>, JpaSpecificationExecutor<Product> {
     //    List<Product> findByNameContaining(String name);
     Product findByProductName(String name);
 

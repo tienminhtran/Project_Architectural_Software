@@ -13,6 +13,7 @@ package vn.edu.iuh.fit.services;
  */
 
 import jakarta.validation.Valid;
+import vn.edu.iuh.fit.dtos.request.ProductFilterRequest;
 import vn.edu.iuh.fit.dtos.request.ProductRequest;
 import vn.edu.iuh.fit.dtos.response.BestSellingProductResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
@@ -61,6 +62,7 @@ public interface ProductService {
 
     public List<ProductResponse> filterProductByCategory(Long id);
 
+    public List<ProductResponse> getFilteredProducts(ProductFilterRequest filterRequest);
 
 
 }

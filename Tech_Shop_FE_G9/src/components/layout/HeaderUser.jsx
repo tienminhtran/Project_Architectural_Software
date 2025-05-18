@@ -6,12 +6,11 @@ import {
   FaShoppingCart,
   FaUser,
   FaHeart,
-  FaEye,
 } from "react-icons/fa";
 import "../../../src/assets/css/HeaderUser.css";
 import AnnouncementBar from "./AnnouncementBar.jsx";
-import useDashboardData from "../../hooks/useDashboardData "; // Hook lấy dữ liệu dashboard
-import useUser from "../../hooks/useUser.js"; // Hook lấy thông tin người dùng
+import useDashboardData from "../../hooks/useDashboardData ";
+import useUser from "../../hooks/useUser.js";
 import SaleTopPrice from "./Saletopprice.jsx";
 import { useNavigate } from "react-router-dom";
 import { useDispatch } from "react-redux";
@@ -51,9 +50,9 @@ const HeaderUser = () => {
 
   const { recentlyProduct } = useDashboardData();
 
-  const userMenuRef = useRef(); //  Gán useRef cho menu
+  const userMenuRef = useRef();
 
-  //  Xử lý dữ liệu banner từ sản phẩm gần đây
+  // Banner xử lý từ sản phẩm gần đây
   const banners =
     Array.isArray(recentlyProduct) && recentlyProduct.length > 0
       ? recentlyProduct.slice(0, 3).map((product, index) => ({
@@ -73,22 +72,17 @@ const HeaderUser = () => {
 
   const [activeIndex, setActiveIndex] = useState(0);
 
-  // Tự động chuyển banner mỗi 4 giây
   useEffect(() => {
     if (banners.length === 0) return;
-
     const interval = setInterval(() => {
       setActiveIndex((prevIndex) => (prevIndex + 1) % banners.length);
     }, 4000);
-
     return () => clearInterval(interval);
   }, [banners.length]);
 
-  // Biến trạng thái để điều khiển hiển thị menu
   const [showMenu, setShowMenu] = useState(false);
   const toggleMenu = () => setShowMenu((prev) => !prev);
 
-  // Tự động đóng menu khi click ra ngoài
   useEffect(() => {
     const handleClickOutside = (event) => {
       if (userMenuRef.current && !userMenuRef.current.contains(event.target)) {
@@ -130,7 +124,6 @@ const HeaderUser = () => {
       <div className="header-user">
         {/* Thanh thông báo đầu trang */}
         <AnnouncementBar />
-
         <div className="container-fluid py-3">
           {/* Header trên cùng */}
           <div className="row align-items-center">
@@ -146,7 +139,6 @@ const HeaderUser = () => {
                 style={{ maxHeight: "50px" }}
               />
             </button>
-
             {/* Ô tìm kiếm */}
             <div className="col-7">
               <form className="d-flex">
@@ -157,7 +149,6 @@ const HeaderUser = () => {
                 />
               </form>
             </div>
-
             {/* Ngôn ngữ & tiền tệ */}
             <div className="col-2 text-end">
               <div className="d-flex justify-content-end gap-2">
@@ -182,7 +173,6 @@ const HeaderUser = () => {
                 Categories
               </div>
             </div>
-
             <div className="col-7">
               <ul className="header-user__menu">
                 <li>
@@ -203,11 +193,10 @@ const HeaderUser = () => {
                   <a onClick={() => navigate("blogs/all")}>Blog</a>
                 </li>
                 <li>
-                  <a href="#">Contact</a>
+                  <a onClick={() => navigate("/contact")}>Contact</a>
                 </li>
               </ul>
             </div>
-
             <div className="col-2 text-end">
               <div className="header-user__menu-icons">
                 <div className="header-user__icon-item">
@@ -274,7 +263,6 @@ const HeaderUser = () => {
                           >
                             My Account
                           </div>
-
                           {userInfor.role.code === "ADMIN" && (
                             <div
                               className="header-user__dropdown-item"
@@ -283,7 +271,6 @@ const HeaderUser = () => {
                               Admin
                             </div>
                           )}
-
                           {(userInfor.role.code === "ADMIN" ||
                             userInfor.role.code === "MANAGER") && (
                             <div
@@ -293,7 +280,6 @@ const HeaderUser = () => {
                               Manager
                             </div>
                           )}
-
                           <div
                             className="header-user__dropdown-item"
                             onClick={handleLogout}
@@ -331,7 +317,6 @@ const HeaderUser = () => {
                   ))}
               </ul>
             </div>
-
             {/* Banner chính ở giữa */}
             <div className="col-7">
               {banners.length > 0 && (
@@ -354,7 +339,6 @@ const HeaderUser = () => {
                     <button className="header-user__shop-button">
                       Shop Now →
                     </button>
-
                     <div className="header-user__dots">
                       {banners.map((_, index) => (
                         <span
@@ -366,7 +350,6 @@ const HeaderUser = () => {
                       ))}
                     </div>
                   </div>
-
                   <img
                     src={banners[activeIndex].img}
                     alt={banners[activeIndex].title}
@@ -376,7 +359,6 @@ const HeaderUser = () => {
               )}
               <SaleTopPrice />
             </div>
-
             {/* Sản phẩm nổi bật */}
             <div className="col-2 text-end">
               <div className="header-user__bag-card">
@@ -391,34 +373,35 @@ const HeaderUser = () => {
             </div>
           </div>
         </div>
-      </div>
-      <div className="contact-container">
-        <div className="contact-box">
-          <img src="/images/icon/phone-icon.png" alt="Phone" />
-          <div>
-            <p>Nhân viên kinh doanh 1</p>
-            <b>090 6979 036</b>
+        {/* Liên hệ nhân viên */}
+        <div className="contact-container">
+          <div className="contact-box">
+            <img src="/images/icon/phone-icon.png" alt="Phone" />
+            <div>
+              <p>Nhân viên kinh doanh 1</p>
+              <b>090 6979 036</b>
+            </div>
           </div>
-        </div>
-        <div className="contact-box">
-          <img src="/images/icon/phone-icon.png" alt="Phone" />
-          <div>
-            <p>Nhân viên kinh doanh 2</p>
-            <b>0937 117 336</b>
+          <div className="contact-box">
+            <img src="/images/icon/phone-icon.png" alt="Phone" />
+            <div>
+              <p>Nhân viên kinh doanh 2</p>
+              <b>0937 117 336</b>
+            </div>
           </div>
-        </div>
-        <div className="contact-box">
-          <img src="/images/icon/phone-icon.png" alt="Phone" />
-          <div>
-            <p>Nhân viên kinh doanh 3</p>
-            <b>0909 68 2336</b>
+          <div className="contact-box">
+            <img src="/images/icon/phone-icon.png" alt="Phone" />
+            <div>
+              <p>Nhân viên kinh doanh 3</p>
+              <b>0909 68 2336</b>
+            </div>
           </div>
-        </div>
-        <div className="contact-box">
-          <img src="/images/icon/phone-icon.png" alt="Phone" />
-          <div>
-            <p>Nhân viên kinh doanh 4</p>
-            <b>0909 12 2336</b>
+          <div className="contact-box">
+            <img src="/images/icon/phone-icon.png" alt="Phone" />
+            <div>
+              <p>Nhân viên kinh doanh 4</p>
+              <b>0909 12 2336</b>
+            </div>
           </div>
         </div>
       </div>

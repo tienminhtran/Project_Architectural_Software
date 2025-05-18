@@ -48,6 +48,9 @@ import CallButton from "./components/layout/CallButton";
 import ChatBox from "./components/layout/ChatBox";
 import BlogPosts from "./pages/common/blog/blogPosts"; // Import BlogPosts component
 import "../src/assets/css/ChatIcon.css";
+import "../src/components/layout/ContactFrom";
+import ContactForm from "../src/components/layout/ContactFrom";
+
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
   <div className="axil-signin-area">
@@ -290,6 +293,7 @@ function App() {
           />
 
           <Route path="/my-account" element={<AccountPage />} />
+          <Route path="/contact" element={<ContactForm />} />
 
           <Route path="/favorite-products" element={<FavoriteProducts />} />
         </Route>
