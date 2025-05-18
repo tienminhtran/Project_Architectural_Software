@@ -14,9 +14,13 @@ import Loading from "../../common/Loading";
 import { useLocation } from "react-router-dom";
 //phone
 import ProductCategories from "./Phone/ProductCategories";
+import useProduct from "../../../hooks/useProduct";
 const ProductCategory = () => {
     const location = useLocation();
     const { categoryId } = location.state || { categoryId: null };
+    console.log("categoryId", categoryId);
+
+    const { filterProduct, filterProductData } = useProduct(0 ,10);
 
     const [products, setProducts] = useState([]);
 
@@ -27,8 +31,10 @@ const ProductCategory = () => {
             const fetchProducts = async() => {
                 setIsLoading(true);
                 try {
-                    const response = await filterProductByCategory(categoryId);
-                    setProducts(response.response); // Giả sử response chứa danh sách sản phẩm
+                    const filterRequest = {
+                        categoryId: categoryId,
+                    };
+                    await filterProduct({filterRequest});
                 } catch (error) {
                     console.error("Error fetching products:", error);
                 } finally {
@@ -38,6 +44,13 @@ const ProductCategory = () => {
             fetchProducts();
         }
     }, [categoryId]);
+
+    useEffect(() => {
+        if (filterProductData) {
+            setProducts(filterProductData);
+        }
+    }, [filterProductData]);
+
     return (
         <div>
             <HeardUser />

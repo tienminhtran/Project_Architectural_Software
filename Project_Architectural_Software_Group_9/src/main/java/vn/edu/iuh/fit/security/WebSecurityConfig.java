@@ -58,8 +58,8 @@ public class WebSecurityConfig {
 
     private final String[] PUBLIC_ENDPOINTS = {"/register", "/user/home", "/forgot-password", "/api/v1/auth/verify",
             "/login","/user/assets/**", "/user/customize/**", "/admin/assets/**", "/user/reset-password", "/user/check-phone",
-            "/api/v1/products", "/api/v1/products/{id}/**", "/api/v1/products/all", "/api/v1/products/search", "/api/v1/products/search/**",
-            "/api/v1/brands/all",
+            "/api/v1/products", "/api/v1/products/{id}/**", "/api/v1/products/all", "/api/v1/products/search", "/api/v1/products/search/**", "/api/v1/products/filter",
+            "/api/v1/brands/all", "/api/v1/category/all"
 
     };
 

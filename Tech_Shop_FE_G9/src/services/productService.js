@@ -127,3 +127,16 @@ export const filterProductTablet = async () => {
     }
 }
 
+export const filterProduct = async (filterRequest) => {
+    
+    try {
+        const response = await axiosInstance.post('/products/filter', filterRequest);
+        console.log("Filtered products:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error filtering products:", error);
+        throw error; 
+    }       
+}
+
+        

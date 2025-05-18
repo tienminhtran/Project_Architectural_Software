@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import vn.edu.iuh.fit.dtos.request.ProductFilterRequest;
 import vn.edu.iuh.fit.dtos.request.ProductRequest;
 import vn.edu.iuh.fit.dtos.response.BestSellingProductResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
@@ -28,6 +30,7 @@ import vn.edu.iuh.fit.repositories.OrderDetailRepository;
 import vn.edu.iuh.fit.repositories.ProductRepository;
 import vn.edu.iuh.fit.services.CloudinaryService;
 import vn.edu.iuh.fit.services.ProductService;
+import vn.edu.iuh.fit.specification.ProductSpecifications;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -174,6 +177,44 @@ public class ProductServiceImpl implements ProductService {
         Category category = categoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Category not found"));
         List<Product> products = productRepository.findByCategory_Id(category.getId());
         return products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
+    }
+
+    @Override
+    public List<ProductResponse> getFilteredProducts(ProductFilterRequest filterRequest) {
+        Specification<Product> spec = Specification.where(null);
+
+        if(filterRequest.getCategoryId() != null) {
+            spec = spec.and(ProductSpecifications.hashCategory(filterRequest.getCategoryId()));
+        }
+        if(filterRequest.getBrands() != null && !filterRequest.getBrands().isEmpty()) {
+            spec = spec.and(ProductSpecifications.hashBrandIn(filterRequest.getBrands()));
+        }
+
+        if(filterRequest.getMonitors() != null && !filterRequest.getMonitors().isEmpty()) {
+            spec = spec.and(ProductSpecifications.hashMonitorInn(filterRequest.getMonitors()));
+        }
+
+        if(filterRequest.getRams() != null && !filterRequest.getRams().isEmpty()) {
+            spec = spec.and(ProductSpecifications.hashRamIn(filterRequest.getRams()));
+        }
+
+        if(filterRequest.getMinPrice() != null && filterRequest.getMaxPrice() != null) {
+            spec = spec.and(ProductSpecifications.hashBetweenPrice(filterRequest.getMinPrice(), filterRequest.getMaxPrice()));
+        }
+
+        if(filterRequest.getCpus() != null && !filterRequest.getCpus().isEmpty()) {
+            spec = spec.and(ProductSpecifications.hashCPUIn(filterRequest.getCpus()));
+        }
+
+        if(filterRequest.getInStock() != null) {
+            spec = spec.and(ProductSpecifications.hashInStock(filterRequest.getInStock()));
+        }
+
+
+        List<Product> products = productRepository.findAll(spec);
+        return products.stream()
+                .map(product -> this.convertToDto(product, ProductResponse.class))
+                .collect(Collectors.toList());
     }
 
     /**
