@@ -4,12 +4,12 @@ import CheckoutStepper from "./CheckoutStepper";
 import { useNavigate } from "react-router-dom";
 import "../../assets/css/OrderInfoForm.css";
 import DeliveryWithGeolocation from "./DeliveryWithGeolocation";
-import HeaderUserBasic from "../../components/layout/HeaderUserBasic";
 import FooterUser from "../../components/layout/Footer";
 import ModalAddress from "./ModalAddress";
 import AddressBookModal from "../../../src/pages/common/user/AddressBookModal";
 import useUser from "../../hooks/useUser";
 import { formatPrice } from "../../utils/FormatPrice";
+import HeaderUser from "../../components/layout/HeaderUser";
 
 const OrderInfoForm = ({ userid }) => {
   const navigate = useNavigate();
@@ -92,7 +92,7 @@ const OrderInfoForm = ({ userid }) => {
 
   return (
     <div>
-      <HeaderUserBasic />
+      <HeaderUser showCategory={false} showBanner={false} />
       <div style={{ display: "flex" }}>
         <div>
           <img

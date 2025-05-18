@@ -1,6 +1,6 @@
 import React from "react";
 import "../../../assets/css/Blog.css";
-import HeaderUserBasic from "../../../components/layout/HeaderUserBasic";
+import HeaderUser from "../../../components/layout/HeaderUser";
 
 const Blog = () => {
 
@@ -58,7 +58,8 @@ const Blog = () => {
 
   return (
     <div>
-            <HeaderUserBasic  />
+        <HeaderUser showCategory={false} showBanner={false} />
+
 
       <div className="blog__container">
         {/* Row 1 */}

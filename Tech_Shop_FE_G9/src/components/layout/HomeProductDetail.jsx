@@ -1,5 +1,4 @@
 import React, {useEffect, useState} from 'react';
-import HeaderUserBasic  from './HeaderUserBasic';
 import ProductDetail from './ProductDetail';
 import ProductsYouViewed from './ProductsYouViewed';
 import ProductCarousel from './Product-Carousel';
@@ -8,6 +7,7 @@ import Footer from './Footer';
 import { useParams } from 'react-router-dom';
 import { getProductId, filterProductByCategory } from '../../services/productService';
 import Loading from '../common/Loading';
+import HeaderUser from './HeaderUser';
 const HomeProductDetail = () => {
   const { id } = useParams(); // lấy id từ URL
 
@@ -53,8 +53,8 @@ const HomeProductDetail = () => {
 
   return (
     <div>
-        <HeaderUserBasic />
-        
+        <HeaderUser showCategory={false} showBanner={false} />
+
         {isLoading ? (
           <Loading isLoading={isLoading} />
         ) : (

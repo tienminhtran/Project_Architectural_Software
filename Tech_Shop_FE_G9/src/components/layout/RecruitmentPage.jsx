@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import '../../assets/css/RecruitmentPage.css'; // Assuming you have a CSS file for styling
-import HeaderUserBasic  from './HeaderUserBasic';
 import Footer from './Footer';
+import HeaderUser from './HeaderUser';
 
 
 
@@ -74,7 +74,8 @@ const RecruitmentPage = () => {
 
   return (
     <div>
-        <HeaderUserBasic />
+        <HeaderUser showCategory={false} showBanner={false} />
+
         <div className="recruitment-page">
       <div className="sidebar">
         <div className="filter-section">

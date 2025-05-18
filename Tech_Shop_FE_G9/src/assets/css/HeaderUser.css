@@ -5,7 +5,10 @@
   color: #fff;
   padding: 10px;
   font-weight: bold;
+  cursor: pointer;
+
 }
+
 
 .header-user__menu-icon {
   margin-right: 10px;

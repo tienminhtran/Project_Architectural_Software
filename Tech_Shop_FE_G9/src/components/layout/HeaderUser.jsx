@@ -25,7 +25,7 @@ import useCart from "../../hooks/useCart.js";
 import useWishlist from "../../hooks/useWishlist.js";
 import useCategorie from "../../hooks/useCategorie.js";
 
-const HeaderUser = () => {
+const HeaderUser = ({showCategory, showBanner}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { carts } = useCart();
@@ -49,6 +49,9 @@ const HeaderUser = () => {
   const { getCategories_NoPaging } = useCategorie();
 
   const { recentlyProduct } = useDashboardData();
+
+  const [showCategories, setShowCategories] = useState(showCategory);
+  
 
   const userMenuRef = useRef();
 
@@ -167,10 +170,10 @@ const HeaderUser = () => {
 
           {/* Menu điều hướng & danh mục */}
           <div className="row align-items-center mt-3 bg-light">
-            <div className="col-3 text-center text-md-start">
-              <div className="header-user__category-header">
+            <div className="col-3 text-center text-md-start" style={{padding: "0"}}>
+              <div className="header-user__category-header" onClick={() => setShowCategories(!showCategories)}>
                 <FaBars className="header-user__menu-icon" />
-                Categories
+                Category
               </div>
             </div>
             <div className="col-7">
@@ -181,16 +184,16 @@ const HeaderUser = () => {
                   </a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("/user")}>Shop</a>
+                <a onClick={() => navigate("/shop")}>Shop</a>
                 </li>
                 <li>
-                  <a href="#">Pages</a>
+                  <a onClick={() => navigate("/pages")}>Pages</a>
                 </li>
                 <li>
                   <a onClick={() => navigate("/recruitment")}>Recruitment</a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("blogs/all")}>Blog</a>
+                  <a onClick={() => navigate("/blogs/all")}>Blog</a>
                 </li>
                 <li>
                   <a onClick={() => navigate("/contact")}>Contact</a>
@@ -295,115 +298,124 @@ const HeaderUser = () => {
             </div>
           </div>
 
+        </div>
           {/* Banner chính */}
-          <div className="row mt-3">
+          <div className="row">
             {/* Danh sách danh mục */}
-            <div className="col-3 text-center text-md-start">
-              <ul className="header-user__category-list">
-                {getCategories_NoPaging &&
-                  getCategories_NoPaging.map((category) => (
-                    <li
-                      key={category.id}
-                      className="header-user__category-item"
-                      onClick={() =>
-                        navigate(`/categories/${category.name.toLowerCase()}`, {
-                          state: { categoryId: category.id },
-                        })
-                      }
-                    >
-                      {category.name}
-                      <FaChevronDown className="header-user__chevron-icon" />
-                    </li>
-                  ))}
-              </ul>
-            </div>
+              <div className="col-3 text-md-start" style={{ position: !showBanner ? "fixed" : "relative",backgroundColor: "white", zIndex: 1, width: !showBanner ? "16%" : "", boxShadow: !showBanner ? "0 0 5px rgba(0, 0, 0, 0.1)" : "" }}>
+                {showCategories && (
+                  <ul className="header-user__category-list">
+                    {getCategories_NoPaging &&
+                      getCategories_NoPaging.map((category) => (
+                        <li
+                          key={category.id}
+                          className="header-user__category-item"
+                          onClick={() =>
+                            navigate(`/categories/${category.name.toLowerCase()}`, {
+                              state: { categoryId: category.id },
+                            })
+                          }
+                        >
+                          {category.name}
+                          <FaChevronDown className="header-user__chevron-icon" />
+                        </li>
+                      ))}
+                  </ul>
+                )}
+              </div>
+
             {/* Banner chính ở giữa */}
-            <div className="col-7">
-              {banners.length > 0 && (
-                <div className="header-user__macbook-card">
-                  <div className="header-user__macbook-content">
-                    <div className="header-user__category">
-                      <span className="header-user__icon">
-                        {banners[activeIndex].icon}
-                      </span>{" "}
-                      {banners[activeIndex].category}
+            {showBanner && (
+              <>
+                <div className="col-7">
+                  {banners.length > 0 && (
+                    <div className="header-user__macbook-card">
+                      <div className="header-user__macbook-content">
+                        <div className="header-user__category">
+                          <span className="header-user__icon">
+                            {banners[activeIndex].icon}
+                          </span>{" "}
+                          {banners[activeIndex].category}
+                        </div>
+                        <h2 className="header-user__title">
+                          {banners[activeIndex].title.split("\n").map((line, i) => (
+                            <React.Fragment key={i}>
+                              {line}
+                              <br />
+                            </React.Fragment>
+                          ))}
+                        </h2>
+                        <button className="header-user__shop-button">
+                          Shop Now →
+                        </button>
+                        <div className="header-user__dots">
+                          {banners.map((_, index) => (
+                            <span
+                              key={index}
+                              className={`header-user__dot ${
+                                index === activeIndex ? "active" : ""
+                              }`}
+                            ></span>
+                          ))}
+                        </div>
+                      </div>
+                      <img
+                        src={banners[activeIndex].img}
+                        alt={banners[activeIndex].title}
+                        className="header-user__macbook-img"
+                      />
                     </div>
-                    <h2 className="header-user__title">
-                      {banners[activeIndex].title.split("\n").map((line, i) => (
-                        <React.Fragment key={i}>
-                          {line}
-                          <br />
-                        </React.Fragment>
-                      ))}
-                    </h2>
-                    <button className="header-user__shop-button">
-                      Shop Now →
-                    </button>
-                    <div className="header-user__dots">
-                      {banners.map((_, index) => (
-                        <span
-                          key={index}
-                          className={`header-user__dot ${
-                            index === activeIndex ? "active" : ""
-                          }`}
-                        ></span>
-                      ))}
-                    </div>
-                  </div>
-                  <img
-                    src={banners[activeIndex].img}
-                    alt={banners[activeIndex].title}
-                    className="header-user__macbook-img"
-                  />
+                  )}
+                  <SaleTopPrice />
                 </div>
-              )}
-              <SaleTopPrice />
+                {/* Sản phẩm nổi bật */}
+                <div className="col-2 text-end">
+                  <div className="header-user__bag-card">
+                    <img
+                      src="/images/product/samsung-galaxy-z-flip6-2.jpg"
+                      alt="Yantiti Leather Bag"
+                      className="header-user__bag-img"
+                    />
+                    <p className="header-user__bag-name">Yantiti Leather Bags</p>
+                    <p className="header-user__bag-price">500.000 VNĐ</p>
+                  </div>
+                </div>
+              </>
+            )}
+          </div>
+        {/* Liên hệ nhân viên */}
+        {showBanner && (
+          <div className="contact-container">
+            <div className="contact-box">
+              <img src="/images/icon/phone-icon.png" alt="Phone" />
+              <div>
+                <p>Nhân viên kinh doanh 1</p>
+                <b>090 6979 036</b>
+              </div>
             </div>
-            {/* Sản phẩm nổi bật */}
-            <div className="col-2 text-end">
-              <div className="header-user__bag-card">
-                <img
-                  src="/images/product/samsung-galaxy-z-flip6-2.jpg"
-                  alt="Yantiti Leather Bag"
-                  className="header-user__bag-img"
-                />
-                <p className="header-user__bag-name">Yantiti Leather Bags</p>
-                <p className="header-user__bag-price">500.000 VNĐ</p>
+            <div className="contact-box">
+              <img src="/images/icon/phone-icon.png" alt="Phone" />
+              <div>
+                <p>Nhân viên kinh doanh 2</p>
+                <b>0937 117 336</b>
+              </div>
+            </div>
+            <div className="contact-box">
+              <img src="/images/icon/phone-icon.png" alt="Phone" />
+              <div>
+                <p>Nhân viên kinh doanh 3</p>
+                <b>0909 68 2336</b>
+              </div>
+            </div>
+            <div className="contact-box">
+              <img src="/images/icon/phone-icon.png" alt="Phone" />
+              <div>
+                <p>Nhân viên kinh doanh 4</p>
+                <b>0909 12 2336</b>
               </div>
             </div>
           </div>
-        </div>
-        {/* Liên hệ nhân viên */}
-        <div className="contact-container">
-          <div className="contact-box">
-            <img src="/images/icon/phone-icon.png" alt="Phone" />
-            <div>
-              <p>Nhân viên kinh doanh 1</p>
-              <b>090 6979 036</b>
-            </div>
-          </div>
-          <div className="contact-box">
-            <img src="/images/icon/phone-icon.png" alt="Phone" />
-            <div>
-              <p>Nhân viên kinh doanh 2</p>
-              <b>0937 117 336</b>
-            </div>
-          </div>
-          <div className="contact-box">
-            <img src="/images/icon/phone-icon.png" alt="Phone" />
-            <div>
-              <p>Nhân viên kinh doanh 3</p>
-              <b>0909 68 2336</b>
-            </div>
-          </div>
-          <div className="contact-box">
-            <img src="/images/icon/phone-icon.png" alt="Phone" />
-            <div>
-              <p>Nhân viên kinh doanh 4</p>
-              <b>0909 12 2336</b>
-            </div>
-          </div>
-        </div>
+        )}
       </div>
     </div>
   );
