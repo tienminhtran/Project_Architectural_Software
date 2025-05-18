@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState } from "react";
 import "./App.css";
 import { BrowserRouter as Router, Routes, Route } from "react-router-dom";
 import Menu from "/src/components/layout/Admin/Menu"; // Sidebar component
@@ -32,22 +32,22 @@ import "bootstrap/dist/js/bootstrap.bundle.min";
 import "bootstrap-icons/font/bootstrap-icons.css";
 import UpdateUserPage from "./pages/common/user/UpdateUserPage";
 import AdminCodeControllerPage from "./pages/admin/AdminCodeControllerPage";
-import CheckCodeModal from "./components/layout/CheckCodeModal"; 
-import ProductCategory from "./components/layout/Categories/ProductCategory"; 
-import HomeProductDetail from "./components/layout/HomeProductDetail";  
-import Step1Cart from "./pages/carts/CartBuyOrderBox"; 
-import Step2Cart from "./pages/carts/OrderInfoForm"; 
-import Step3Cart from "./pages/carts/OrderPayment"; 
-import Step4Cart from "./pages/carts/OrderComplete"; 
-import HomeCart from "./pages/carts/HomeCart"; 
+import CheckCodeModal from "./components/layout/CheckCodeModal";
+import ProductCategory from "./components/layout/Categories/ProductCategory";
+import HomeProductDetail from "./components/layout/HomeProductDetail";
+import Step1Cart from "./pages/carts/CartBuyOrderBox";
+import Step2Cart from "./pages/carts/OrderInfoForm";
+import Step3Cart from "./pages/carts/OrderPayment";
+import Step4Cart from "./pages/carts/OrderComplete";
+import HomeCart from "./pages/carts/HomeCart";
 import ForgotPasswordPage from "./pages/ForgotPasswordPage";
-import FavoriteProducts from "./components/layout/FavoriteProducts"; 
-import AccountPage  from "./pages/common/user/AccountPage";
-import '@fortawesome/fontawesome-free/css/all.min.css';
-import CallButton from './components/layout/CallButton';
+import FavoriteProducts from "./pages/wishlist/FavoriteProducts";
+import AccountPage from "./pages/common/user/AccountPage";
+import "@fortawesome/fontawesome-free/css/all.min.css";
+import CallButton from "./components/layout/CallButton";
 import ChatBox from "./components/layout/ChatBox";
 import BlogPosts from "./pages/common/blog/blogPosts"; // Import BlogPosts component
-import '../src/assets/css/ChatIcon.css'
+import "../src/assets/css/ChatIcon.css";
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
   <div className="axil-signin-area">
@@ -65,36 +65,31 @@ function App() {
   const [showChat, setShowChat] = useState(false);
   const [currentStep, setCurrentStep] = useState(1); // Bắt đầu từ bước 1
   const handleStepClick = (stepIndex) => {
-      setCurrentStep(stepIndex);
+    setCurrentStep(stepIndex);
   };
   return (
     <Router>
-
       <CallButton />
       <div>
-      {showChat ? (
-        <ChatBox onClose={() => setShowChat(false)} />
-      ) : (
-        <div className="chat-icon" onClick={() => setShowChat(true)}>
-          <i className="fas fa-comment-dots"></i>
-        </div>
-      )}
-    </div>
+        {showChat ? (
+          <ChatBox onClose={() => setShowChat(false)} />
+        ) : (
+          <div className="chat-icon" onClick={() => setShowChat(true)}>
+            <i className="fas fa-comment-dots"></i>
+          </div>
+        )}
+      </div>
 
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
-
         <Route path="/" element={<HomePage />} />
         <Route path="/categories/:category" element={<ProductCategory />} />
-
-        <Route path="blogs/all" element={<BlogPosts />} /> {/* Blog Posts Route */}
-      
+        <Route path="blogs/all" element={<BlogPosts />} />{" "}
+        {/* Blog Posts Route */}
         <Route path="/product/:id" element={<HomeProductDetail />} />
-
         {/* Admin Page */}
-
         <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN"]} />}>
           <Route
             path="/admin/dashboard"
@@ -138,7 +133,6 @@ function App() {
             }
           />
         </Route>
-
         {/* Common Page (admin and manager)*/}
         <Route
           element={
@@ -253,8 +247,6 @@ function App() {
             }
           />
         </Route>
-
-
         {/* Manager Page */}
         <Route element={<ProtectedRoute allowedRoles={["ROLE_MANAGER"]} />}>
           <Route
@@ -274,24 +266,35 @@ function App() {
             }
           />
         </Route>
-
         {/* User Routes (Nếu cần) */}
-        <Route element={<ProtectedRoute allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"]} />}>
-        <Route path="/cart" element={<HomeCart />} />
+        <Route
+          element={
+            <ProtectedRoute
+              allowedRoles={["ROLE_ADMIN", "ROLE_MANAGER", "ROLE_USER"]}
+            />
+          }
+        >
+          <Route path="/cart" element={<HomeCart />} />
           <Route path="/cart" element={<Step1Cart currentStep={0} />} />
-          <Route path="/order-info-form" element={<Step2Cart currentStep={1} />} />
-          <Route path="/order-payment" element={<Step3Cart currentStep={2} />} />
-          <Route path="/order-complete" element={<Step4Cart currentStep={3} />} />
+          <Route
+            path="/order-info-form"
+            element={<Step2Cart currentStep={1} />}
+          />
+          <Route
+            path="/order-payment"
+            element={<Step3Cart currentStep={2} />}
+          />
+          <Route
+            path="/order-complete"
+            element={<Step4Cart currentStep={3} />}
+          />
 
           <Route path="/my-account" element={<AccountPage />} />
 
-
-
+          <Route path="/favorite-products" element={<FavoriteProducts />} />
         </Route>
-
       </Routes>
     </Router>
-
   );
 }
 
