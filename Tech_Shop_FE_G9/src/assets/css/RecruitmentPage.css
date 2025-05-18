@@ -177,3 +177,54 @@
 .filter-options::-webkit-scrollbar-track {
   background-color: transparent;
 }
+
+
+
+/* ==========================
+   bai viet
+
+=========================== */
+.etra-content {
+  /* max-width: 900px; */
+  margin: 40px auto;
+  padding: 30px;
+  background-color: #ffffff;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+  border-radius: 12px;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  line-height: 1.75;
+  color: #333333;
+}
+
+.etra-content h1 {
+  font-size: 2em;
+  font-weight: bold;
+  margin-bottom: 25px;
+  color: #0a58ca;
+  text-align: center;
+}
+
+.etra-content p {
+  margin-bottom: 20px;
+  font-size: 1.05em;
+  text-align: justify;
+}
+
+.etra-content strong {
+  color: #0d6efd;
+  font-weight: 600;
+}
+
+.etra-content em {
+  color: #dc3545;
+}
+
+.etra-highlight {
+  background: #f3f8ff;
+  border-left: 5px solid #0d6efd;
+  padding: 12px 18px;
+  margin: 25px 0;
+  font-style: italic;
+  color: #0a4275;
+  border-radius: 6px;
+}

@@ -136,6 +136,26 @@ const RecruitmentPage = () => {
         )}
       </div>
         </div>
+<div class="etra-content">
+  <h1>Hành Trình Bứt Phá Giới Hạn, Kiến Tạo Giá Trị Khác Biệt Tại ETraDe</h1>
+
+  <p>Câu chuyện của <strong>ETraDe</strong> không chỉ đơn thuần là hành trình của một doanh nghiệp, mà còn là minh chứng cho khát vọng vươn lên, phá bỏ mọi rào cản để kiến tạo những giá trị độc đáo.  Xuất phát từ một khởi đầu đầy khiêm tốn, nảy mầm từ ước mơ giản dị của một game thủ – người mong muốn những người cùng đam mê có thể dễ dàng tiếp cận với những cỗ máy và bộ gear mơ ước, ETraDe đã trải qua một hành trình bứt phá ngoạn mục, vươn mình trở thành một trong những nhà bán lẻ IT hàng đầu tại Việt Nam.</p>
+
+  <p>Thành công rực rỡ mà ETraDe đạt được không chỉ đến từ những chiến lược kinh doanh sắc bén hay sự nhạy bén với thị trường, mà sâu xa hơn, nó được xây dựng trên nền tảng của một niềm tin mạnh mẽ: <strong>tiềm năng của con người là vô hạn</strong>Tại ETraDe, chúng tôi hiểu rằng, mỗi cá nhân đều ẩn chứa những khả năng phi thường, chỉ cần được khơi gợi và nuôi dưỡng trong một môi trường phù hợp, họ có thể vượt qua mọi giới hạn, đạt được những thành tựu tưởng chừng như không thể.</p>
+
+  <div class="etra-highlight">
+    “Chúng tôi tin rằng, sự khác biệt tạo nên sức mạnh tập thể.”
+  </div>
+
+  <p>Chính vì lẽ đó, ETraDe không ngừng nỗ lực để xây dựng một môi trường làm việc đa dạng, nơi mọi ý tưởng đều được trân trọng</p>
+
+  <p>Không chỉ chú trọng vào môi trường làm việc, ETraDe còn cam kết mang đến mức thu nhập xứng đáng</p>
+
+  <p>Tại ETraDe, cơ hội phát triển không chỉ dừng lại ở những vị trí cố định, mà là một hành trình không ngừng nghỉ</p>
+
+  <p><strong>ETraDe</strong> không chỉ là một nơi làm việc, mà còn là một <em>cộng đồng, một gia đình</em>, nơi mỗi thành viên được khuyến khích để bứt phá mọi giới hạn, , cùng nhau tạo ra những giá trị khác biệt, góp phần vào sự phát triển của ngành IT Việt Nam và xây dựng một tương lai đầy hứa hẹn. Nếu bạn mang trong mình khát vọng chinh phục những đỉnh cao mới, nếu bạn tin vào sức mạnh của sự sáng tạo và tinh thần đồng đội, hãy đến với ETraDe, nơi hành trình phát triển của bạn sẽ được chắp cánh, và những giá trị khác biệt sẽ được lan tỏa.</p>
+</div>
+
         <Footer />
     </div>
 
