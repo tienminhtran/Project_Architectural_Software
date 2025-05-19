@@ -6,19 +6,23 @@ import { FiPhoneCall } from "react-icons/fi";
 import '../../assets/css/FooterUser.css';
 import InfoHorizontal from "./InfoHorizontal";
 // import Brand from './Brand.jsx';
+import HomeOffers  from "./HomeOffers";
 const Footer = () => {
   return (
 
     <div>
+      <HomeOffers />
       <InfoHorizontal />
 
-      <footer className="footer">
+
+      <footer className="footer" >
         <div className="footer-top">
           {/* <Brand /> */}
         </div>
         
         {/* Top features */}
-        <div className="footer-top">
+      
+        <div className="footer-top" >
           <div className="feature-box">
             <FaShippingFast className="icon" />
             <div>
