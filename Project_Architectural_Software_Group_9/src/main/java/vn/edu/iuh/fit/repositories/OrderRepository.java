@@ -103,4 +103,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "JOIN o.user u " +
             "WHERE u.phoneNumber = :phoneNumber")
     List<Order> findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
+
+    @Query("SELECT o FROM Order o " +
+            "JOIN o.user u " +
+            "WHERE u.id = :userId AND o.status = :status")
+    List<Order> findByUserIdAndStatus(Long userId, OrderStatus status);
+
+    @Query("SELECT SUM(od.quantity) FROM OrderDetail od " +
+            "JOIN od.order o " +
+            "WHERE o.id = :orderId")
+    int getTotalProductByOrderId(@Param("orderId") Long orderId);
 }
