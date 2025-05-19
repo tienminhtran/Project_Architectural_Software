@@ -88,3 +88,18 @@ export const createOrder = async (orderData) => {
   const response = await axiosInstance.post("/orders/create", orderData);
   return response.data;
 };
+
+export const getUserOrdersByStatus = async (userId, status) => {
+  try {
+    const url =
+      status === "TẤT CẢ"
+        ? `/orders/user/${userId}`
+        : `/orders/user/${userId}?status=${status}`;
+
+    const response = await axiosInstance.get(url);
+    return response.data.response;
+  } catch (error) {
+    console.error("Error fetching user orders:", error);
+    throw error;
+  }
+};

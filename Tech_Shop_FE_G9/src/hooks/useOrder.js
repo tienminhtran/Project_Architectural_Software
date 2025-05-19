@@ -8,6 +8,7 @@ import {
   getDailyOrders,
   getDailyCategory,
   createOrder as createOrderService,
+  getUserOrdersByStatus,
   fetchOrderByPhoneNumber,
 } from "../services/orderService";
 
@@ -17,7 +18,9 @@ const useOrder = (
   status = "",
   payment = "",
   firstname = "",
-  phoneNumber = ""
+  phoneNumber = "",
+  userId = null,
+  orderStatus = null
 ) => {
   const queryClient = useQueryClient();
 
@@ -59,6 +62,13 @@ const useOrder = (
     },
   });
 
+  // Lấy danh sách đơn hàng theo trạng thái
+  const getOrderByUserAndOrderStatus = useQuery({
+    queryKey: ["userOrders", userId, orderStatus],
+    queryFn: () => getUserOrdersByStatus(userId, orderStatus),
+    enabled: !!userId,
+  });
+
   // lấy thông tin đơn hàng theo số điện thoại
   const getOrderByPhoneQuery = useQuery({
     queryKey: ["getOrderByPhoneNumber", phoneNumber],
@@ -88,6 +98,7 @@ const useOrder = (
     dailyOrders: dailyOrders.data?.response || 0,
     dailyCategory: dailyCategory.data?.response || 0,
     createOrder: createOrder.mutateAsync,
+    getOrderByUserAndOrderStatus: getOrderByUserAndOrderStatus.data || [],
     // Trả về thông tin đơn hàng theo số điện thoại
     getOrderByPhoneNumber: getOrderByPhoneQuery.data || [],
   };

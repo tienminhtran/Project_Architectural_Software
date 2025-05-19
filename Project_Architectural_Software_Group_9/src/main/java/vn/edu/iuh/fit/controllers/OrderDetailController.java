@@ -29,7 +29,7 @@ public class OrderDetailController {
     @Autowired
     private OrderDetailService orderDetailService;
 
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @GetMapping("/{orderId}")
     public ResponseEntity<BaseResponse<OrderDetailResponse>> getOrderDetail(@PathVariable Long orderId) {
         OrderDetailResponse orderDetailResponse = orderDetailService.getOrderDetailsByOrderId(orderId);

@@ -64,4 +64,6 @@ public interface OrderService {
     List<OrderResponse> findByIDUser(Long idUser);
 
     List<OrderResponse> findByPhoneNumber(String phoneNumber);
+
+    List<OrderResponse> findByUserIdAndStatus(Long userId, OrderStatus status);
 }
