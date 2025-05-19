@@ -115,24 +115,80 @@ export default function FavoriteProducts() {
         <div className="favorite-products">
           <h2 className="favorite-product__title">Sản phẩm yêu thích</h2>
 
-          {selectedItems.length > 0 && (
-            <div className="favorite-product__top-actions">
-              <button
-                className="favorite-product__btn favorite-product__btn--add"
-                onClick={() => {
-                  selectedItems.forEach((id) => {
-                    const product = wishlistItems.find((p) => p.id === id);
-                    if (product) {
-                      handleAddtoCart(product);
-                    }
-                  });
-                  setSelectedItems([]);
-                }}
-              >
-                <FaCartPlus /> Thêm vào giỏ hàng
-              </button>
-            </div>
-          )}
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            {selectedItems.length > 0 && (
+              <div className="favorite-product__top-actions">
+                <button
+                  className="favorite-product__btn favorite-product__btn--remove"
+                  onClick={() => {
+                    confirmAlert({
+                      title: "Xác nhận xóa",
+                      message:
+                        "Bạn có chắc chắn muốn xóa các sản phẩm đã chọn khỏi danh sách yêu thích?",
+                      buttons: [
+                        {
+                          label: "Có",
+                          onClick: () => {
+                            selectedItems.forEach((id) => {
+                              const product = wishlistItems.find(
+                                (p) => p.id === id
+                              );
+                              if (product) {
+                                deleteItem(product.id, {
+                                  onSuccess: () => {
+                                    toast.success(
+                                      "Đã xóa sản phẩm khỏi danh sách yêu thích",
+                                      {
+                                        position: "top-right",
+                                        autoClose: 2000,
+                                      }
+                                    );
+                                  },
+                                  onError: () => {
+                                    toast.error(
+                                      "Lỗi khi xóa sản phẩm khỏi danh sách yêu thích",
+                                      {
+                                        position: "top-right",
+                                        autoClose: 2000,
+                                      }
+                                    );
+                                  },
+                                });
+                              }
+                            });
+                            setSelectedItems([]);
+                          },
+                        },
+                        {
+                          label: "Không",
+                        },
+                      ],
+                    });
+                  }}
+                >
+                  <FaRegTrashAlt /> Xóa tất cả sản phẩm
+                </button>
+              </div>
+            )}
+            {selectedItems.length > 0 && (
+              <div className="favorite-product__top-actions">
+                <button
+                  className="favorite-product__btn favorite-product__btn--add"
+                  onClick={() => {
+                    selectedItems.forEach((id) => {
+                      const product = wishlistItems.find((p) => p.id === id);
+                      if (product) {
+                        handleAddtoCart(product);
+                      }
+                    });
+                    setSelectedItems([]);
+                  }}
+                >
+                  <FaCartPlus /> Thêm vào giỏ hàng
+                </button>
+              </div>
+            )}
+          </div>
 
           <table className="favorite-product__table">
             <thead>
@@ -222,22 +278,6 @@ export default function FavoriteProducts() {
               {showAll ? "Thu gọn" : "Xem thêm"}
             </button>
           </div>
-
-          {selectedItems.length > 0 && (
-            <div className="favorite-product__mini-cart">
-              <h3>Giỏ hàng nhanh</h3>
-              <ul>
-                {selectedItems.map((id) => {
-                  const product = wishlistItems.find((p) => p.id === id);
-                  return (
-                    <li key={id}>
-                      {product.name} – {product.price.toLocaleString()}₫
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )}
         </div>
 
         <div>
