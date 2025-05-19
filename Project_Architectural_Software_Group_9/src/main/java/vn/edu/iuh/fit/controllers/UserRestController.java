@@ -353,4 +353,18 @@ public class UserRestController {
         response.put("exists", exists);
         return ResponseEntity.ok(response);
     }
+
+    @GetMapping("/allUserHasOrder")
+    public ResponseEntity<BaseResponse<Map<UserResponse, Integer>>> getAllUserHasOrder() {
+        Map<UserResponse, Integer> map = userService.getUserOrderCountMap();
+        if (map.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(BaseResponse.<Map<UserResponse, Integer>>builder()
+                .status("SUCCESS")
+                .message("Get all users with orders success")
+                .response(map)
+                .build());
+    }
+
 }

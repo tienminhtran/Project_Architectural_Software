@@ -26,6 +26,7 @@ import useWishlist from "../../hooks/useWishlist.js";
 import useCategorie from "../../hooks/useCategorie.js";
 
 import SearchBox from "../../pages/common/user/search/SearchBox.jsx";
+
 const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();

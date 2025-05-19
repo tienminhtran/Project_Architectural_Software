@@ -442,4 +442,20 @@ public class UserServiceImpl implements UserService {
         user.setPassword(passwordEncoder.encode(password));
         userRepository.save(user);
     }
+
+    @Override
+    public Map<UserResponse, Integer> getUserOrderCountMap() {
+        List<Object[]> results = userRepository.countOrdersByUserWithRole1();
+
+        Map<UserResponse, Integer> userOrderCountMap = new HashMap<>();
+        for (Object[] row : results) {
+            User user = (User) row[0];
+            Long count = (Long) row[1];
+            UserResponse userResponse = this.convertToDto(user, UserResponse.class);
+            userOrderCountMap.put(userResponse, count.intValue());
+        }
+        return userOrderCountMap;
+    }
+
+
 }
