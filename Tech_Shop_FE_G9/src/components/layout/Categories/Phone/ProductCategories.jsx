@@ -6,6 +6,7 @@ import { filterProductPhone } from "../../../../services/productService";
 import useCart from "../../../../hooks/useCart";
 import useWishlist from "../../../../hooks/useWishlist";
 import { toast } from "react-toastify";
+import { getAccessToken } from "../../../../services/authService";
 
 const ProductCategories = ({ products }) => {
   const navigate = useNavigate();
@@ -13,6 +14,7 @@ const ProductCategories = ({ products }) => {
   const { addItem: addWishlistItem } = useWishlist();
   const [currentPage, setCurrentPage] = useState(0); // Trang hiện tại (0-indexed)
   const [pageSize] = useState(8); // Số sản phẩm mỗi trang
+  const token = getAccessToken();
 
   // Hàm xử lý thêm sản phẩm vào giỏ hàng
   const handleAddtoCart = (product) => {
@@ -21,6 +23,10 @@ const ProductCategories = ({ products }) => {
         id_product: product?.id,
         quantity: 1,
       };
+      if (!token) {
+        navigate("/login");
+        return;
+      }
       addItem(request);
       toast.success("Đã thêm vào giỏ hàng ", {
         position: "top-right",
@@ -37,7 +43,11 @@ const ProductCategories = ({ products }) => {
 
   // Hàm xử lý thêm sản phẩm vào danh sách yêu thích
   const handleAddToWishlist = (e, product) => {
-    e.stopPropagation(); // Ngăn sự kiện click lan ra ngoài
+    e.stopPropagation();
+    if (!token) {
+      navigate("/login");
+      return;
+    }
     addWishlistItem.mutate(
       { id_product: product?.id },
       {
@@ -48,7 +58,7 @@ const ProductCategories = ({ products }) => {
           });
         },
         onError: () => {
-          toast.error("Sản phẩm đã có trong danh sách yêu thích!", {
+          toast.warn("Sản phẩm đã có trong danh sách yêu thích!", {
             position: "top-right",
             autoClose: 1500,
           });

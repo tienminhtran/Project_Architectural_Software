@@ -1,5 +1,5 @@
 import React, { useRef, useEffect } from "react";
-import "../../../src/assets/css/ProductsYouViewed.css";
+import "../../assets/css/ProductsYouViewed.css";
 import { FaAngleDoubleLeft, FaAngleDoubleRight, FaGetPocket } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 
