@@ -61,6 +61,10 @@ const ProductUser = ({ products, brands, name }) => {
   // Hàm xử lý thêm sản phẩm vào danh sách yêu thích
   const handleAddToWishlist = (e, product) => {
     e.stopPropagation(); // Ngăn sự kiện click lan ra ngoài
+    if (!token) {
+      navigate("/login");
+      return;
+    }
     addWishlistItem.mutate(
       { id_product: product?.id },
       {
@@ -71,7 +75,7 @@ const ProductUser = ({ products, brands, name }) => {
           });
         },
         onError: () => {
-          toast.error("Sản phẩm đã có trong danh sách yêu thích!", {
+          toast.warn("Sản phẩm đã có trong danh sách yêu thích!", {
             position: "top-right",
             autoClose: 1500,
           });
