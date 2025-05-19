@@ -1,4 +1,4 @@
-import React, { useState, useMemo} from 'react';
+import React, { useState, useMemo, useRef} from 'react';
 import "../../../assets/css/AccountPage.css";
 import { FaUser, FaMapMarkerAlt, FaBoxOpen, FaEye, FaSignOutAlt } from 'react-icons/fa';
 import AddressBook from "./AddressBook"; // Ensure path is correct
@@ -7,6 +7,8 @@ import StoreLocator from './StoreLocator'; // Ensure path is correct
 import Footer from '../../../components/layout/Footer';
 import useUser from "../../../hooks/useUser";
 import HeaderUser from '../../../components/layout/HeaderUser';
+import { CiCamera } from "react-icons/ci";
+import Loading from "../../../components/common/Loading";
 
 
 const AccountPage = () => {
@@ -16,6 +18,11 @@ const AccountPage = () => {
 
   const handleEdit = () => setIsEditing(true);
   const handleCancel = () => setIsEditing(false);
+
+  //select file
+  const fileInputRef = useRef(null)
+  // const [selectedFiles, setSelectedFiles] = useState(null);
+
 
   // lấy thông tin người dùng từ hook useUser
   const { userInfor, updateUser } = useUser(0, 1);
@@ -31,12 +38,16 @@ const AccountPage = () => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
   };
 
+  const handleImageClick = () => {
+    fileInputRef.current.click(); 
+  };
+
   const handleFileChange = (e) => {
-    setSelectedFiles(e.target.files);
+    handleSubmit(e, e.target.files);
   };  
 
   // Xu ly submit form
-  const handleSubmit = async (e) => {
+  const handleSubmit = async (e, selectedFiles = null) => {
     e.preventDefault();
     setIsLoading(true);
     const formDataUpdate = new FormData();
@@ -55,6 +66,12 @@ const AccountPage = () => {
       "user",
       new Blob([JSON.stringify(formData)], { type: "application/json" })
     );
+
+    // kiem tra xem co chon file hay khong
+    if (selectedFiles) {
+      // append file vao formdata
+      formDataUpdate.append("fileImage", selectedFiles[0]);
+    }
 
 
     try {
@@ -197,42 +214,58 @@ const AccountPage = () => {
   };
 
   return (
-    <div>
-      <div>
-        <HeaderUser showCategory={false} showBanner={false} />
-      </div>    
-      
-      
-        <div className="account-page__container">
-        
-        <div className="account-page__sidebar">
-          <div className="account-page__avatar">
-          <img src={user?.image || "/avatar.png"} alt="avatar" />
-          <h3>{`${user?.firstname || ""} ${user?.lastname || ""}`.trim()}</h3>
-          </div>
-          <ul>
-            <li onClick={() => setActiveTab("info")} className={activeTab === "info" ? "account-page__active" : ""}>
-              <FaUser className="account-page__icon" /> Thông tin tài khoản
-            </li>
-            <li onClick={() => setActiveTab("address")} className={activeTab === "address" ? "account-page__active" : ""}>
-              <FaMapMarkerAlt className="account-page__icon" /> Sổ địa chỉ
-            </li>
-            <li onClick={() => setActiveTab("orders")} className={activeTab === "orders" ? "account-page__active" : ""}>
-              <FaBoxOpen className="account-page__icon" /> Quản lý đơn hàng
-            </li>
-            <li onClick={() => setActiveTab("store")} className={activeTab === "store" ? "account-page__active" : ""}>
-              <FaEye className="account-page__icon" /> Tìm cửa hàng
-            </li>
-            {/* <li onClick={() => setActiveTab("logout")} className={activeTab === "logout" ? "account-page__active" : ""}>
-              <FaSignOutAlt className="account-page__icon" /> Đăng xuất
-            </li> */}
-          </ul>
-        </div>
+    <>
 
-        <div className="account-page__main-content">{renderContent()}</div>
+      <div>
+        <div>
+          <HeaderUser showCategory={false} showBanner={false} />
+        </div>    
+        
+        
+          <div className="account-page__container">
+          
+          <div className="account-page__sidebar">
+            <div className="account-page__avatar">
+              <div>
+                <img src={user?.image || "/images/avatar/avtdefault.jpg"} alt="avatar" onClick={handleImageClick} />
+                <h3 className="text-center">{`${user?.firstname || ""} ${user?.lastname || ""}`.trim()}</h3>
+              </div>
+              {/* <CiCamera size={24} className="ms-3"/> */}
+                <input
+                    type="file"
+                    accept="image/*"
+                    ref={fileInputRef}
+                    onChange={handleFileChange}
+                    style={{ display: "none" }}
+                  />
+            </div>
+            <ul>
+              <li onClick={() => setActiveTab("info")} className={activeTab === "info" ? "account-page__active" : ""}>
+                <FaUser className="account-page__icon" /> Thông tin tài khoản
+              </li>
+              <li onClick={() => setActiveTab("address")} className={activeTab === "address" ? "account-page__active" : ""}>
+                <FaMapMarkerAlt className="account-page__icon" /> Sổ địa chỉ
+              </li>
+              <li onClick={() => setActiveTab("orders")} className={activeTab === "orders" ? "account-page__active" : ""}>
+                <FaBoxOpen className="account-page__icon" /> Quản lý đơn hàng
+              </li>
+              <li onClick={() => setActiveTab("store")} className={activeTab === "store" ? "account-page__active" : ""}>
+                <FaEye className="account-page__icon" /> Tìm cửa hàng
+              </li>
+              {/* <li onClick={() => setActiveTab("logout")} className={activeTab === "logout" ? "account-page__active" : ""}>
+                <FaSignOutAlt className="account-page__icon" /> Đăng xuất
+              </li> */}
+            </ul>
+          </div>
+
+          <div className="account-page__main-content">{renderContent()}</div>
+        </div>
+        <Footer />
       </div>
-      <Footer />
-    </div>
+      {isLoading && (
+        <Loading isLoading={isLoading} />
+      )}
+    </>
 
   );
 };
