@@ -14,9 +14,7 @@ const HomeSearch = () => {
     const location = useLocation();
     const query = useQuery(location.search).get("query");
 
-    const { isLoading, products} = location.state || { isLoading: true, products: [] }; 
-
-    console.log("products search", products);
+    const { isLoading } = location.state || { isLoading: true, products: [] }; 
 
     return (
         <div>
@@ -25,7 +23,7 @@ const HomeSearch = () => {
                 <Loading isLoading={isLoading} />
             ) : (
                 <>
-                    <SearchPage products={products} query={query} />
+                    <SearchPage query={query} />
                     <Brand />
                 </>
             )}
