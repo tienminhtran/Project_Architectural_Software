@@ -9,6 +9,7 @@ import {
   getDailyCategory,
   createOrder as createOrderService,
   getUserOrdersByStatus,
+  fetchOrderByPhoneNumber,
 } from "../services/orderService";
 
 const useOrder = (
@@ -68,6 +69,13 @@ const useOrder = (
     enabled: !!userId,
   });
 
+  // lấy thông tin đơn hàng theo số điện thoại
+  const getOrderByPhoneQuery = useQuery({
+    queryKey: ["getOrderByPhoneNumber", phoneNumber],
+    queryFn: () => fetchOrderByPhoneNumber(phoneNumber),
+    enabled: !!phoneNumber,
+  });
+
   return {
     orders_paging: usePaginationQuery(
       "getAllOrder_Paging",
@@ -91,6 +99,8 @@ const useOrder = (
     dailyCategory: dailyCategory.data?.response || 0,
     createOrder: createOrder.mutateAsync,
     getOrderByUserAndOrderStatus: getOrderByUserAndOrderStatus.data || [],
+    // Trả về thông tin đơn hàng theo số điện thoại
+    getOrderByPhoneNumber: getOrderByPhoneQuery.data || [],
   };
 };
 

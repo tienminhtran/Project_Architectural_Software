@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllProduct_Paging, deleteProduct, createProduct, searchProduct, updateProduct, filterProduct} from "../services/productService";
+import { getAllProduct_Paging, deleteProduct, createProduct, searchProduct, updateProduct, filterProduct, findProductByKeyword} from "../services/productService";
 import usePaginationQuery from "./usePaginationQuery";
 import { data } from "react-router-dom";
 import { useState } from "react";
@@ -66,7 +66,6 @@ const useProduct = (pageNo, pageSize, productSearch) => {
           alert("Filter products fail. Please try again!");
         },
     })
-
 
     return {
         products_paging: usePaginationQuery("getAllProduct_Paging", getAllProduct_Paging, pageNo, pageSize),

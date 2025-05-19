@@ -240,7 +240,9 @@ const Menu = () => {
                     {localStorage.getItem("lastDashboard") === "admin" && (
                        <MenuItem to="/admin/code" label="Task" icon={<FaRegPaperPlane />} />
                     )}
-
+                    {localStorage.getItem("lastDashboard") === "admin" && (
+                       <MenuItem to="/admin/user-access" label="Uses permissions" icon={<FaRegPaperPlane />} />
+                    )}
                     {localStorage.getItem("lastDashboard") === "manager" &&
                         roles[1] === "ROLE_MANAGER" && (
                             <li className="menu-item">

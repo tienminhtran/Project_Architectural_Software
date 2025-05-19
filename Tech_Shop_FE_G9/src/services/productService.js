@@ -139,4 +139,15 @@ export const filterProduct = async (filterRequest) => {
     }       
 }
 
-        
+
+// http://localhost:8080/api/v1/products/search/{keyword}}
+
+export const findProductByKeyword = async (keyword) => {
+    try {
+        const response = await axiosInstance.get(`/products/search/${keyword}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error finding product by keyword:", error);
+        throw error; 
+    }
+}

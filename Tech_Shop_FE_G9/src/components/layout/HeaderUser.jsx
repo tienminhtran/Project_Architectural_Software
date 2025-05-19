@@ -25,15 +25,24 @@ import useCart from "../../hooks/useCart.js";
 import useWishlist from "../../hooks/useWishlist.js";
 import useCategorie from "../../hooks/useCategorie.js";
 
+import SearchBox from "../../pages/common/user/search/SearchBox.jsx";
+
 const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [showCategories, setShowCategories] = useState(showCategory);
+  
+  const { getCategories_NoPaging } = useCategorie();
+  const { recentlyProduct } = useDashboardData();
   const { carts } = useCart();
   const { wishlists } = useWishlist();
+
   const wishlistItems = useMemo(() => {
     if (!wishlists) return [];
     return wishlists.response;
   }, [wishlists]);
+
   const cartItems = useMemo(() => {
     if (!carts) return [];
     return carts.response;
@@ -45,13 +54,6 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
   }, [userInfor]);
 
   const token = getAccessToken();
-
-  const { getCategories_NoPaging } = useCategorie();
-
-  const { recentlyProduct } = useDashboardData();
-
-  const [showCategories, setShowCategories] = useState(showCategory);
-  
 
   const userMenuRef = useRef();
 
@@ -96,6 +98,13 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
 
+  // Cập nhật danh sách sản phẩm khi dữ liệu từ API thay đổi
+  // useEffect(() => {
+  //   if (Array.isArray(products_response)) {
+  //     setProductsSearch(products_response);
+  //   }
+  // }, [products_response]);  
+
   const handleLogout = () => {
     confirmAlert({
       message: "Bạn có chắc chắn muốn đăng xuất không?",
@@ -122,6 +131,7 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
     });
   };
 
+
   return (
     <div>
       <div className="header-user">
@@ -144,13 +154,7 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
             </button>
             {/* Ô tìm kiếm */}
             <div className="col-7">
-              <form className="d-flex">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Tìm kiếm sản phẩm..."
-                />
-              </form>
+              <SearchBox />
             </div>
             {/* Ngôn ngữ & tiền tệ */}
             <div className="col-2 text-end">

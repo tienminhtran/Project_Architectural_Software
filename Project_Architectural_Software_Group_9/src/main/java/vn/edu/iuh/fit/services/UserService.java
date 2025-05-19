@@ -72,4 +72,7 @@ public interface UserService {
     UserResponse getUserByEmail(String email);
 
     void updatePassword(String phoneNumber, String password);
+
+    // lấy danh sách người dùng và so oder
+    public Map<UserResponse, Integer> getUserOrderCountMap() ;
 }

@@ -11,6 +11,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.entities.User;
 
+import java.util.List;
 import java.util.Optional;
 
 /*
@@ -33,4 +34,14 @@ public interface UserRepository extends JpaRepository<User, Long> {
     int countByRoleUser(String code);
 
     Optional<User> findByPhoneNumber(String phoneNumber);
+
+    @Query("SELECT u, COUNT(o.id) " +
+            "FROM User u " +
+            "JOIN u.role r " +
+            "JOIN Order o ON o.user = u " +
+            "WHERE r.id = 1 " +
+            "GROUP BY u.id")
+    List<Object[]> countOrdersByUserWithRole1();
+
+
 }
