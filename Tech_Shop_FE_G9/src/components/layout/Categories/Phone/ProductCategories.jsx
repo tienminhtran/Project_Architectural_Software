@@ -136,7 +136,8 @@ const ProductCategories = ({ products }) => {
                   </ul>
                   <button
                     className="product-user-phone__add-to-cart"
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       handleAddtoCart(product);
                     }}
                   >
