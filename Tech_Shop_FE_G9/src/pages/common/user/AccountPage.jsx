@@ -11,71 +11,176 @@ import HeaderUser from '../../../components/layout/HeaderUser';
 
 const AccountPage = () => {
   const [activeTab, setActiveTab] = useState("info");
+  const [isLoading, setIsLoading] = useState(false);
+  const [isEditing, setIsEditing] = useState(false);
+
+  const handleEdit = () => setIsEditing(true);
+  const handleCancel = () => setIsEditing(false);
 
   // lấy thông tin người dùng từ hook useUser
-  const { userInfor } = useUser(0, 1);
+  const { userInfor, updateUser } = useUser(0, 1);
   const user = useMemo(() => {
     return userInfor|| null;
   }, [userInfor]);
   console.log("user", user);
 
+  const [formData, setFormData] = useState({ ...userInfor });
+  console.log("Dữ liệu gửi lên:", formData);
+
+  const handleChange = (e) => {
+    setFormData({ ...formData, [e.target.name]: e.target.value });
+  };
+
+  const handleFileChange = (e) => {
+    setSelectedFiles(e.target.files);
+  };  
+
+  // Xu ly submit form
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    setIsLoading(true);
+    const formDataUpdate = new FormData();
+    //Doi role thanh id
+    formData.role = userInfor.role.id;
+
+    //Xoa cac truong khong can thiet
+    delete formData.createdAt;
+    delete formData.updatedAt;
+    delete formData.image;
+
+    console.log("Dữ liệu được chỉnh sửa:", formData);
+
+    // chuyen object thanh json string va append vao formdata
+    formDataUpdate.append(
+      "user",
+      new Blob([JSON.stringify(formData)], { type: "application/json" })
+    );
+
+
+    try {
+      await updateUser({ userid: userInfor.id, formData: formDataUpdate }); // Chờ update xong
+      setIsEditing(false);
+    } catch (err) {
+      console.error("Lỗi cập nhật:", err);
+    } finally {
+      setIsLoading(false); // Chỉ tắt loading sau khi xong
+    }
+  };  
 
   const renderContent = () => {
     switch (activeTab) {
       case "info":
         return (
           <>
-            <h2>Thông tin tài khoản</h2>
+            <h2>User information</h2>
+
             <div className="account-page__form-group">
-              <label>Họ Tên</label>
-              <input type="text" defaultValue={`${user?.firstname || ""} ${user?.lastname || ""}`.trim()} />
+              <label>FirstName</label>
+              <input
+                type="text"
+                disabled={!isEditing}
+                name="firstname"
+                value={formData.firstname}
+                onChange={handleChange}
+              />
             </div>
 
-            <div className="account-page__form-group"> 
-              
-              <label>Giới tính</label>
+            <div className="account-page__form-group">
+              <label>LastName</label>
+              <input
+                type="text"
+                disabled={!isEditing}
+                name="lastname"
+                value={formData.lastname}
+                onChange={handleChange}
+              />
+            </div>
+
+            <div className="account-page__form-group">
+              <label>Gender</label>
               <div className="account-page__gender-group">
                 <label>
                   <input
                     type="radio"
                     name="gender"
-                    value="male"
+                    value="Male"
+                    onChange={handleChange}
+                    disabled={!isEditing}
                     checked={
-                      ["male", "nam", "Male", "Nam"].includes((user?.gender || "").toLowerCase())
+                      ["male", "nam", "Male", "Nam"].includes((formData?.gender || "").toLowerCase())
                     }
-                    
-                  /> Nam
+                    // readOnly={!isEditing}
+                  />
+                  Male
                 </label>
                 <label>
                   <input
                     type="radio"
                     name="gender"
-                    value="female"
+                    value="Female"
+                    onChange={handleChange}
+                    disabled={!isEditing}
                     checked={
-                      ["female", "nữ", "nu", "Female", "Nữ"].includes((user?.gender || "").toLowerCase())
+                      ["female", "nữ", "nu", "Female", "Nữ"].includes((formData?.gender || "").toLowerCase())
                     }
-                  /> Nữ
+                    // readOnly={!isEditing}
+                  />{" "}
+                  Female
                 </label>
               </div>
             </div>
 
-
             <div className="account-page__form-group">
-              <label>Số điện thoại</label>
-              <input type="text" placeholder="Nhập số điện thoại"  value={user?.phone_number}/>
+              <label>Phone Number</label>
+              <input
+                type="text"
+                placeholder="Enter phone number...."
+                disabled={!isEditing}
+                name="phone_number"
+                value={formData.phone_number}
+                onChange={handleChange}
+                readOnly={!isEditing}
+              />
             </div>
 
             <div className="account-page__form-group">
               <label>Email</label>
-              <input type="email" defaultValue="Nhập mail " readOnly  value={user?.email}/>
+              <input
+                type="email"
+                disabled
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+              />
             </div>
 
             <div className="account-page__form-group">
-              <label>Ngày sinh</label>
-              <input type="date" placeholder="Chọn ngày sinh" value={user?.dob}/>
+              <label>Date of Birth</label>
+              <input
+                type="date"
+                placeholder="Chọn ngày sinh"
+                disabled={!isEditing}
+                name="dob"
+                value={formData.dob}
+                onChange={handleChange}
+                readOnly={!isEditing}
+              />
             </div>
 
-            <button className="account-page__btn-save">Lưu thay đổi</button>
+            {!isEditing ? (
+              <button className="" onClick={handleEdit}>
+                Update
+              </button>
+            ) : (
+              <>
+                <button className="account-page__btn-save me-2" onClick={handleSubmit}>
+                  Save
+                </button>
+                <button className="" onClick={handleCancel}>
+                  Cancel
+                </button>
+              </>
+            )}
           </>
         );
       case "address":
