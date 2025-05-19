@@ -6,77 +6,13 @@ import "react-confirm-alert/src/react-confirm-alert.css";
 import { ToastContainer, toast } from "react-toastify";
 import "react-toastify/dist/ReactToastify.css";
 import FooterUser from "../../components/layout/Footer";
+import useCart from "../../hooks/useCart";
 import useWishlist from "../../hooks/useWishlist";
 import HeaderUser from "../../components/layout/HeaderUser";
 
-// const wishlistItems = [
-//   {
-//     id: 1,
-//     name: "Tấm lót chuột Steelseries Qck Mini Mousepad",
-//     image: "/images/product/mouse3.jpg",
-//     price: 219000,
-//     originalPrice: 250000,
-//   },
-//   {
-//     id: 2,
-//     name: "Chuột gaming Logitech G102",
-//     image: "/images/product/mouse1.jpg",
-//     price: 299000,
-//     originalPrice: 390000,
-//   },
-//   {
-//     id: 3,
-//     name: "Bàn phím cơ DareU EK87",
-//     image: "/images/product/mouse1.jpg",
-//     price: 590000,
-//     originalPrice: 690000,
-//   },
-//   {
-//     id: 4,
-//     name: "Tấm lót chuột Steelseries Qck Mini Mousepad",
-//     image: "/images/product/mouse3.jpg",
-//     price: 219000,
-//     originalPrice: 250000,
-//   },
-//   {
-//     id: 5,
-//     name: "Chuột gaming Logitech G102",
-//     image: "/images/product/mouse1.jpg",
-//     price: 299000,
-//     originalPrice: 390000,
-//   },
-//   {
-//     id: 6,
-//     name: "Bàn phím cơ DareU EK87",
-//     image: "/images/product/mouse1.jpg",
-//     price: 590000,
-//     originalPrice: 690000,
-//   },
-//   {
-//     id: 7,
-//     name: "Tấm lót chuột Steelseries Qck Mini Mousepad",
-//     image: "/images/product/mouse1.jpg",
-//     price: 219000,
-//     originalPrice: 250000,
-//   },
-//   {
-//     id: 8,
-//     name: "Chuột gaming Logitech G102",
-//     image: "/images/product/mouse1.jpg",
-//     price: 299000,
-//     originalPrice: 390000,
-//   },
-//   {
-//     id: 9,
-//     name: "Bàn phím cơ DareU EK87",
-//     image: "/images/product/mouse1.jpg",
-//     price: 590000,
-//     originalPrice: 690000,
-//   },
-// ];
-
 export default function FavoriteProducts() {
-  const { wishlists, isLoading, isError } = useWishlist();
+  const { addItem } = useCart();
+  const { wishlists, isLoading, isError, deleteItem } = useWishlist();
   const wishlistItems = (wishlists?.response || []).map((item) => ({
     id: item.productId,
     name: item.title || "Không có tên",
@@ -103,22 +39,51 @@ export default function FavoriteProducts() {
     }
     setIsAllSelected(!isAllSelected);
   };
-  // xử lý thông báo
-  const handleAddToCart = () => {
-    toast.success("Đã thêm vào giỏ hàng thành công!", { autoClose: 2000 });
+
+  // Hàm xử lý thêm sản phẩm vào giỏ hàng
+  const handleAddtoCart = (product) => {
+    try {
+      const request = {
+        id_product: product?.id,
+        quantity: 1,
+      };
+      addItem(request);
+      toast.success("Đã thêm vào giỏ hàng ", {
+        position: "top-right",
+        autoClose: 2000,
+      });
+    } catch (error) {
+      console.error("Error adding to cart:", error);
+      toast.error("Thêm vào giỏ hàng thất bại", {
+        position: "top-right",
+        autoClose: 3000,
+      });
+    }
   };
 
   const handleRemoveFavorite = (id) => {
-    const product = wishlistItems.find((p) => p.id === id);
     confirmAlert({
-      title: "Xác nhận",
-      message: `Bạn có chắc muốn xóa "${product.name}" khỏi danh sách yêu thích?`,
+      title: "Xác nhận xóa",
+      message:
+        "Bạn có chắc chắn muốn xóa sản phẩm này khỏi danh sách yêu thích?",
       buttons: [
         {
           label: "Có",
           onClick: () => {
-            setSelectedItems((prev) => prev.filter((item) => item !== id));
-            toast.success("Đã xóa khỏi yêu thích!", { autoClose: 2000 });
+            deleteItem(id, {
+              onSuccess: () => {
+                toast.success("Đã xóa sản phẩm khỏi danh sách yêu thích", {
+                  position: "top-right",
+                  autoClose: 2000,
+                });
+              },
+              onError: () => {
+                toast.error("Lỗi khi xóa sản phẩm khỏi danh sách yêu thích", {
+                  position: "top-right",
+                  autoClose: 2000,
+                });
+              },
+            });
           },
         },
         {
@@ -127,7 +92,6 @@ export default function FavoriteProducts() {
       ],
     });
   };
-  // xóa tất cả sản phẩm
 
   const productsToShow = showAll ? wishlistItems : wishlistItems.slice(0, 5);
   if (isLoading) return <div>Đang tải...</div>;
@@ -154,7 +118,15 @@ export default function FavoriteProducts() {
             <div className="favorite-product__top-actions">
               <button
                 className="favorite-product__btn favorite-product__btn--add"
-                onClick={handleAddToCart}
+                onClick={() => {
+                  selectedItems.forEach((id) => {
+                    const product = wishlistItems.find((p) => p.id === id);
+                    if (product) {
+                      handleAddtoCart(product);
+                    }
+                  });
+                  setSelectedItems([]);
+                }}
               >
                 <FaCartPlus /> Thêm vào giỏ hàng
               </button>
@@ -225,7 +197,9 @@ export default function FavoriteProducts() {
                     >
                       <button
                         className="favorite-product__btn favorite-product__btn--add"
-                        onClick={handleAddToCart}
+                        onClick={() => {
+                          handleAddtoCart(product);
+                        }}
                       >
                         <FaCartPlus />{" "}
                       </button>

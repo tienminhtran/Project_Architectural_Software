@@ -50,7 +50,7 @@ const useWishlist = () => {
     isLoading,
     isError,
     addItem,
-    deleteItem,
+    deleteItem: deleteItem.mutate,
     error, // Trả về lỗi nếu có
   };
 };
