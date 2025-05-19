@@ -1,6 +1,5 @@
 import React, { useState, useEffect, useMemo } from "react";
 import { BsTrash, BsEye, BsSearch } from "react-icons/bs";
-import { useDebounce } from "../../../hooks/useDebounce";
 import ReactPaginate from "react-paginate";
 import { useMutation, useQueryClient } from "@tanstack/react-query";
 import {
@@ -9,40 +8,45 @@ import {
 } from "../../../services/orderService";
 import useOrder from "../../../hooks/useOrder";
 import "../../../assets/css/OrderPage.css";
+import OrderDetailModal from "./OrderDetailModal";
 
 const OrderPage = () => {
     const [pageNo, setPageNo] = useState(0);
     const pageSize = 10;
     const [selectedRows, setSelectedRows] = useState([]);
-    const [orderSearch, setOrderSearch] = useState("");
     const [selectedStatus, setSelectedStatus] = useState("");
     const [selectedPayment, setSelectedPayment] = useState("");
-    const debouncedSearchTerm = useDebounce(orderSearch, 500);
+    const [firstname, setFirstname] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
     const [totalAmounts, setTotalAmounts] = useState({});
 
-    const isSearchMode = debouncedSearchTerm.trim().length > 0;
-    const isFilterByStatus = selectedStatus !== "";
-    const isFilterByPayment = selectedPayment !== "";
+    const [showModal, setShowModal] = useState(false);
+    const [selectedOrder, setSelectedOrder] = useState(null);
 
-    const {
-        orders_paging,
-        search_paging,
-        filterOrderByStatus,
-        filterOrderByPayment,
-    } = useOrder(
+    const handleViewOrder = (order) => {
+        setSelectedOrder(order);
+        setShowModal(true);
+    };
+
+    const handleCloseModal = () => {
+        setShowModal(false);
+        setSelectedOrder(null);
+    };
+
+    const isFilterAll =
+        firstname || phoneNumber || selectedStatus || selectedPayment;
+
+    const { orders_paging, filterOrderAllPaging } = useOrder(
         pageNo,
         pageSize,
-        debouncedSearchTerm,
         selectedStatus,
-        selectedPayment
+        selectedPayment,
+        firstname,
+        phoneNumber
     );
 
-    const { data, isError, error, isFetching } = isSearchMode
-        ? search_paging
-        : isFilterByStatus
-        ? filterOrderByStatus
-        : isFilterByPayment
-        ? filterOrderByPayment
+    const { data, isError, error, isFetching } = isFilterAll
+        ? filterOrderAllPaging
         : orders_paging;
 
     const orders = useMemo(() => data?.values || [], [data]);
@@ -72,17 +76,20 @@ const OrderPage = () => {
 
     useEffect(() => {
         const fetchTotalAmounts = async () => {
+            const amountPromises = orders.map((order) =>
+                getTotalAmountByOrderId(order.id)
+                    .then((res) => ({ id: order.id, amount: res.response }))
+                    .catch(() => ({ id: order.id, amount: 0 }))
+            );
+
+            const results = await Promise.all(amountPromises);
             const amounts = {};
-            for (const order of orders) {
-                try {
-                    const amount = await getTotalAmountByOrderId(order.id);
-                    amounts[order.id] = amount.response;
-                } catch {
-                    amounts[order.id] = 0;
-                }
-            }
+            results.forEach(({ id, amount }) => {
+                amounts[id] = amount;
+            });
             setTotalAmounts(amounts);
         };
+
         if (orders.length > 0) {
             fetchTotalAmounts();
         }
@@ -108,7 +115,6 @@ const OrderPage = () => {
 
     return (
         <div className="page-wrapper">
-            {/* Header */}
             <div className="page-header d-flex justify-content-between align-items-center">
                 <div className="page-title">
                     <h3>Order List</h3>
@@ -117,9 +123,7 @@ const OrderPage = () => {
             </div>
 
             <div className="page-content">
-                {/* Search + Filter */}
-                <div className="d-flex gap-3 align-items-center mb-3">
-                    {/* Search box */}
+                <div className="d-flex gap-3 align-items-center mb-3 flex-wrap">
                     <div className="input-group w-25">
                         <span className="input-group-text">
                             <BsSearch />
@@ -127,17 +131,31 @@ const OrderPage = () => {
                         <input
                             type="text"
                             className="form-control"
-                            name="search"
-                            placeholder="Search..."
-                            value={orderSearch}
+                            placeholder="Customer Name"
+                            value={firstname}
                             onChange={(e) => {
-                                setOrderSearch(e.target.value);
+                                setFirstname(e.target.value);
                                 setPageNo(0);
                             }}
                         />
                     </div>
 
-                    {/* Filter: Status */}
+                    <div className="input-group w-25">
+                        <span className="input-group-text">
+                            <BsSearch />
+                        </span>
+                        <input
+                            type="text"
+                            className="form-control"
+                            placeholder="Phone Number"
+                            value={phoneNumber}
+                            onChange={(e) => {
+                                setPhoneNumber(e.target.value);
+                                setPageNo(0);
+                            }}
+                        />
+                    </div>
+
                     <select
                         className="form-select w-auto"
                         value={selectedStatus}
@@ -154,7 +172,6 @@ const OrderPage = () => {
                         <option value="COMPLETED">Completed</option>
                     </select>
 
-                    {/* Filter: Payment */}
                     <select
                         className="form-select w-auto"
                         value={selectedPayment}
@@ -165,20 +182,33 @@ const OrderPage = () => {
                     >
                         <option value="">All Payments</option>
                         <option value="COD">COD</option>
-                        <option value="BANKING">VNPay</option>
+                        <option value="VNPAY">VNPay</option>
                         <option value="PAYPAL">PayPal</option>
                     </select>
+
+                    <button
+                        className="btn-clear btn-secondary btn-sm"
+                        onClick={() => {
+                            setFirstname("");
+                            setPhoneNumber("");
+                            setSelectedStatus("");
+                            setSelectedPayment("");
+                            setPageNo(0);
+                        }}
+                    >
+                        Clear Filter
+                    </button>
                 </div>
 
-                {/* Table */}
-                <table>
+                <table className="table table-hover table-responsive">
                     <thead>
                         <tr>
                             <th>
                                 <input
                                     type="checkbox"
                                     checked={
-                                        selectedRows.length === orders.length
+                                        selectedRows.length === orders.length &&
+                                        orders.length > 0
                                     }
                                     onChange={handleSelectAll}
                                     className="form-check-input"
@@ -186,6 +216,7 @@ const OrderPage = () => {
                             </th>
                             <th>Customer</th>
                             <th>Total Price</th>
+                            <th>Phone Number</th>
                             <th>Status</th>
                             <th>Payment</th>
                             <th>Created At</th>
@@ -195,7 +226,7 @@ const OrderPage = () => {
                     <tbody>
                         {isFetching ? (
                             <tr>
-                                <td colSpan="7" className="text-center">
+                                <td colSpan="8" className="text-center">
                                     Loading...
                                 </td>
                             </tr>
@@ -215,13 +246,14 @@ const OrderPage = () => {
                                         />
                                     </td>
                                     <td>{order.user.firstname}</td>
-                                    <td className="text-end text-success fw-semibold">
+                                    <td className="text-start text-success fw-semibold">
                                         {totalAmounts[order.id] != null
                                             ? `${totalAmounts[
                                                   order.id
                                               ].toLocaleString("vi-VN")} VND`
                                             : "Loading..."}
                                     </td>
+                                    <td>{order.user.phone_number}</td>
                                     <td className="text-center">
                                         <span
                                             className={`p-1 rounded rounded-3 text-light status-${order.status.toLowerCase()}`}
@@ -240,6 +272,9 @@ const OrderPage = () => {
                                             <BsEye
                                                 className="text-secondary fs-5"
                                                 role="button"
+                                                onClick={() =>
+                                                    handleViewOrder(order)
+                                                }
                                             />
                                             <BsTrash
                                                 onClick={() =>
@@ -254,15 +289,12 @@ const OrderPage = () => {
                             ))
                         ) : (
                             <tr>
-                                <td colSpan="7" className="text-center">
-                                    No orders found.
-                                </td>
+                                <td colSpan="8" className="text-center"></td>
                             </tr>
                         )}
                     </tbody>
                 </table>
 
-                {/* Pagination */}
                 {data?.totalPages > 1 && (
                     <ReactPaginate
                         previousLabel={"←"}
@@ -285,6 +317,12 @@ const OrderPage = () => {
                     />
                 )}
             </div>
+
+            <OrderDetailModal
+                show={showModal}
+                onHide={handleCloseModal}
+                order={selectedOrder}
+            />
         </div>
     );
 };

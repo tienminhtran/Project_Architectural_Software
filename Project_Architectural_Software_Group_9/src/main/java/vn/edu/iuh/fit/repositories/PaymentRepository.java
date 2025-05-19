@@ -17,4 +17,5 @@ import vn.edu.iuh.fit.entities.Payment;
  */
 @Repository
 public interface PaymentRepository extends JpaRepository<Payment, Long> {
+    Payment findByPaymentName(String name);
 }

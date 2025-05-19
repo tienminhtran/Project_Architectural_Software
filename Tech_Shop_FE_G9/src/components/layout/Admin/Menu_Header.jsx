@@ -73,7 +73,7 @@ const Menu_Header = () => {
                 
         
                 <div className="avatar" onClick={toggleMenu}>
-                    <img src={`/images/avatar/${imageName}`} alt="User Avatar" className="avatar-img" />
+                    <img src={imageName} alt="User Avatar" className="avatar-img" />
                     <span className="status-indicator"></span>
                 </div>
 
@@ -94,6 +94,7 @@ const Menu_Header = () => {
                     <li className="menu-item logout">
                         <Link to="/login" role="button" onClick={handleLogout}>
                             <FaSignOutAlt /> Logout
+                            {/* hiển thị thông báo logout thành công */}
                         </Link>
                     </li>
 

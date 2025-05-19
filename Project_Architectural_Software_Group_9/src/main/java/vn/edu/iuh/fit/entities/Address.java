@@ -45,4 +45,9 @@ public class Address {
     @OneToMany(mappedBy = "address", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     private List<Order> orders = new ArrayList<>();
 
+    //trang thai
+    @Column(name = "status")
+    private Boolean status = true;
+
+
 }

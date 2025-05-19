@@ -35,8 +35,21 @@ export const getUsers_Auth = async () => {
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) return;
 
-  const response = await axiosInstance.get("/user/me");
+  const response = await axiosInstance.get("/user/roles-user");
   return response.data;
+};
+
+export const getCurrentUser= async () => {
+  const accessToken = localStorage.getItem("accessToken");
+  if (!accessToken) return;
+
+  try {
+    const response = await axiosInstance.get("/user/me");
+    return response.data;
+  } catch (error) {
+    console.error("Error fetching current user:", error);
+    throw error; // Rethrow the error to handle it in the calling function
+  }
 };
 
 export const getLoyalCustomers = async () => {
@@ -59,6 +72,32 @@ export const updateProfile = async (id, userFormData) => {
     headers: {
       "Content-Type": "multipart/form-data",
     },
+  });
+  return response.data;
+};
+
+export const checkPhoneExistsService = async (phone) => {
+  try {
+    console.log("Checking phone:", phone);
+    const response = await axiosInstance.post("/user/check-phone", { phone });
+    console.log("Check phone response:", response);
+    console.log("Check phone exists response:", response.data);
+    return response.data.exists; // Trả về boolean
+  } catch (error) {
+    console.error(
+      "Error checking phone:",
+      error.response?.data || error.message
+    );
+    throw new Error(
+      error.response?.data?.message || "Lỗi khi kiểm tra số điện thoại"
+    );
+  }
+};
+
+export const resetPasswordService = async ({ idToken, newPassword }) => {
+  const response = await axiosInstance.post("/user/reset-password", {
+    idToken,
+    newPassword,
   });
   return response.data;
 };

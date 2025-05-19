@@ -2,16 +2,6 @@ import React,{ useState, useEffect, useMemo } from "react";
 import { BarChart, Bar, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from "recharts";
 import useOrder from "../../hooks/useOrder";
 
-// const dailyOrders = [
-//     { createdAt: '2025-02-17 00:00:0', orders: 42 },
-//     { createdAt: '2025-02-18 00:00:0', orders: 56 },
-//     { createdAt: '2025-02-19 00:00:0', orders: 89 },
-//     { createdAt: '2025-02-20 00:00:0', orders: 63 },
-//     { createdAt: '2025-02-21 00:00:0', orders: 78 },
-//     { createdAt: '2025-02-22 00:00:0', orders: 45 },
-//     { createdAt: '2025-02-24 00:00:0', orders: 35 }
-//   ];
-
 const OrderChart = () => {
 
   const {dailyOrders} = useOrder(0,1);
@@ -35,12 +25,12 @@ const OrderChart = () => {
         if(timeFilter === 'today') {
            filtered =dailys.filter((order) => {
             const orderDate = new Date(order.createdAt);
-            return orderDate.getDate() === date.getDate();
+            return orderDate.getDate() === date.getDate() && orderDate.getFullYear() === date.getFullYear() && orderDate.getMonth() === date.getMonth();
            })
         } else if(timeFilter === 'week') {
             filtered =dailys.filter((order) => {
-                const week = new Date(order.createdAt);      
-                return week.getDate() >= firstDayOfWeek.getDate() && week.getDate() <= lastDayOfWeek.getDate();
+                const week = new Date(order.createdAt);
+                return week.getDate() >= firstDayOfWeek.getDate() && week.getDate() <= lastDayOfWeek.getDate() && week.getFullYear() === date.getFullYear() && week.getMonth() === date.getMonth();
             })
             console.log("week", filtered);
         }

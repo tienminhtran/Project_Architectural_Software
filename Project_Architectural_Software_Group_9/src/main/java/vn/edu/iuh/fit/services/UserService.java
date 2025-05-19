@@ -28,7 +28,8 @@ import java.util.Map;
 public interface UserService {
     UserResponse getUserByUsername(String username);
 
-    Map<String, Object> getCurrentUser(String token);
+    Map<String, Object> getRolesUserByToken(String token);
+    UserResponse getCurrentUser(String token);
 
     UserResponse createUser(UserRequest userRequest, BindingResult result) throws UserAlreadyExistsException, EmailAlreadyExistsException, MethodArgumentNotValidException;
 
@@ -69,4 +70,6 @@ public interface UserService {
     User createGoogleUser(String email, String name, String imageUrl);
 
     UserResponse getUserByEmail(String email);
+
+    void updatePassword(String phoneNumber, String password);
 }

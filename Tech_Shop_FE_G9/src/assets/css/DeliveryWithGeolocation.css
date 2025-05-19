@@ -1,0 +1,162 @@
+/* Wrapper */
+.Delivery-With-Geolocation__ {
+  background: #fff;
+  border-radius: 12px;
+  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+  max-width: 600px;
+  width: 600px;
+  margin: 20px auto;
+  /* padding: 20px; */
+  font-family: 'Segoe UI', sans-serif;
+  border-radius: 12px;
+}
+.Delivery-With-Geolocation__ .header {
+  display: flex;
+
+  /* margin-bottom: 20px; */
+    background: linear-gradient(90deg, #007bff, #00d4ff);
+
+}
+/* Header */
+.Delivery-With-Geolocation__ .header h3 {
+  margin: 0 0 10px;
+  font-size: 1.4rem;
+  color: #ffffff;
+  /* text-align: center; */
+}
+
+/* Scrollable Content */
+.scrollable-content {
+  max-height: 400px;
+  overflow-y: auto;
+  /* padding-right: 10px; */
+  padding: 20px;
+}
+
+/* Map Container */
+.map-container {
+  height: 300px;
+  width: 100%;
+  border-radius: 10px;
+  margin-bottom: 15px;
+  border: 1px solid #ccc;
+}
+
+/* Label to show input */
+.clickable-label {
+  display: block;
+  color: #007bff;
+  font-weight: 500;
+  cursor: pointer;
+  margin-bottom: 10px;
+  transition: color 0.3s;
+}
+
+.clickable-label:hover {
+  color: #0056b3;
+}
+
+/* Manual Address Input */
+.manual-address-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  margin-bottom: 15px;
+}
+
+.manual-address-input input {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 6px;
+  font-size: 1rem;
+}
+
+.manual-address-input button {
+  background: #007bff;
+  color: #fff;
+  padding: 10px;
+  border: none;
+  border-radius: 6px;
+  font-weight: bold;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.manual-address-input button:hover {
+  background: #0056b3;
+}
+
+/* Delivery Info */
+.delivery-info {
+  margin-top: 15px;
+  padding: 10px;
+  background: #f8f9fa;
+  border: 1px solid #e0e0e0;
+  border-radius: 6px;
+  font-size: 0.95rem;
+  color: #333;
+}
+
+.delivery-info p {
+  margin: 0 0 8px;
+}
+
+/* Actions */
+.actions {
+  display: flex;
+  justify-content: space-between;
+  margin-top: 20px;
+  gap: 10px;
+    padding: 20px;
+    background-color: #F8F9FA;
+}
+
+.actions .btn {
+  flex: 1;
+  padding: 12px 10px;
+  font-size: 1rem;
+  font-weight: bold;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+  transition: background 0.3s;
+}
+
+.actions .btn.confirm {
+  background: #28a745;
+  color: #ffffff;
+}
+
+.actions .btn.confirm:hover {
+   background: #218838;
+  transform: translateY(-2px);
+   
+}
+ .actions .btn.btn.confirm:disabled{
+      background: #6c757d;
+  cursor: not-allowed;
+ }
+
+.actions .btn.cancel {
+  background-color: #dc3545;
+  color: #fff;
+}
+
+.actions .btn.cancel:hover {
+  background-color: #c82333;
+}
+
+/* Custom Scrollbar */
+.scrollable-content::-webkit-scrollbar {
+  width: 8px;
+}
+.scrollable-content::-webkit-scrollbar-track {
+  background: #f1f1f1;
+}
+.scrollable-content::-webkit-scrollbar-thumb {
+  background: #007bff;
+  border-radius: 4px;
+}
+.scrollable-content::-webkit-scrollbar-thumb:hover {
+  background: #0056b3;
+}

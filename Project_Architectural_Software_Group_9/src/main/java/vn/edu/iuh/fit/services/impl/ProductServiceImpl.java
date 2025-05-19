@@ -12,9 +12,11 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
+import vn.edu.iuh.fit.dtos.request.ProductFilterRequest;
 import vn.edu.iuh.fit.dtos.request.ProductRequest;
 import vn.edu.iuh.fit.dtos.response.BestSellingProductResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
@@ -26,7 +28,9 @@ import vn.edu.iuh.fit.repositories.BrandRepository;
 import vn.edu.iuh.fit.repositories.CategoryRepository;
 import vn.edu.iuh.fit.repositories.OrderDetailRepository;
 import vn.edu.iuh.fit.repositories.ProductRepository;
+import vn.edu.iuh.fit.services.CloudinaryService;
 import vn.edu.iuh.fit.services.ProductService;
+import vn.edu.iuh.fit.specification.ProductSpecifications;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -62,6 +66,9 @@ public class ProductServiceImpl implements ProductService {
 
     @Autowired
     private OrderDetailRepository orderDetailRepository;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
 
     //entity to dto
@@ -122,8 +129,8 @@ public class ProductServiceImpl implements ProductService {
         if(products != null) {
             response.setPage(pageNo);
             response.setSize(pageSize);
-            response.setPage(products.getNumberOfElements());
-            response.setTotal(products.getTotalPages());
+            response.setTotal(products.getNumberOfElements()); // Tổng số sản phẩm
+            response.setTotalPages(products.getTotalPages());
             response.setValues(products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).collect(Collectors.toList()));
         }
         return response;
@@ -140,6 +147,79 @@ public class ProductServiceImpl implements ProductService {
         return false;
 
     }
+
+    @Override
+    public List<ProductResponse> filterProductLaptop() {
+        List<Product> products = productRepository.findByCategory_Name("Computer");
+        return products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
+    }
+
+    @Override
+    public List<ProductResponse> filterProductPhone() {
+        List<Product> products = productRepository.findByCategory_Name("Phone");
+        return products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
+    }
+
+    @Override
+    public List<ProductResponse> filterProductTablet() {
+        Pageable pageable = PageRequest.of(0, 100); // Trang 0, lấy tối đa 100 sản phẩm
+        Page<Product> productsPage = productRepository.findProduct(null, null, null, pageable);
+
+        List<Product> products = productsPage.getContent(); // Lấy danh sách sản phẩm từ Page
+
+        return products.stream()
+                .map(product -> this.convertToDto(product, ProductResponse.class))
+                .toList();
+    }
+
+    @Override
+    public List<ProductResponse> filterProductByCategory(Long id) {
+        Category category = categoryRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Category not found"));
+        List<Product> products = productRepository.findByCategory_Id(category.getId());
+        return products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).toList();
+    }
+
+    @Override
+    public List<ProductResponse> getFilteredProducts(ProductFilterRequest filterRequest) {
+        Specification<Product> spec = Specification.where(null);
+
+        if(filterRequest.getCategoryId() != null) {
+            spec = spec.and(ProductSpecifications.hashCategory(filterRequest.getCategoryId()));
+        }
+        if(filterRequest.getBrands() != null && !filterRequest.getBrands().isEmpty()) {
+            spec = spec.and(ProductSpecifications.hashBrandIn(filterRequest.getBrands()));
+        }
+
+        if(filterRequest.getMonitors() != null && !filterRequest.getMonitors().isEmpty()) {
+            spec = spec.and(ProductSpecifications.hashMonitorInn(filterRequest.getMonitors()));
+        }
+
+        if(filterRequest.getRams() != null && !filterRequest.getRams().isEmpty()) {
+            spec = spec.and(ProductSpecifications.hashRamIn(filterRequest.getRams()));
+        }
+
+        if(filterRequest.getMinPrice() != null && filterRequest.getMaxPrice() != null) {
+            spec = spec.and(ProductSpecifications.hashBetweenPrice(filterRequest.getMinPrice(), filterRequest.getMaxPrice()));
+        }
+
+        if(filterRequest.getCpus() != null && !filterRequest.getCpus().isEmpty()) {
+            spec = spec.and(ProductSpecifications.hashCPUIn(filterRequest.getCpus()));
+        }
+
+        if(filterRequest.getInStock() != null) {
+            spec = spec.and(ProductSpecifications.hashInStock(filterRequest.getInStock()));
+        }
+
+        if(filterRequest.getGraphicCards() != null) {
+            spec = spec.and(ProductSpecifications.hashInGraphicCards(filterRequest.getGraphicCards()));
+        }
+
+        List<Product> products = productRepository.findAll(spec);
+        return products.stream()
+                .map(product -> this.convertToDto(product, ProductResponse.class))
+                .collect(Collectors.toList());
+    }
+
     /**
      * total stock quantity
      *
@@ -194,7 +274,7 @@ public class ProductServiceImpl implements ProductService {
                     throw new BadRequestException("Image is not valid");
                 }
                 // Handel thumbnail product
-                thumbnail = saveFile(firstImage);
+                thumbnail = cloudinaryService.uploadImage(firstImage);
 
                 //Handel images product
                 for (MultipartFile file : fileImage) {
@@ -202,7 +282,8 @@ public class ProductServiceImpl implements ProductService {
                         throw new BadRequestException("Invalid image format");
                     }
                     // function saveFile convert to type String -> add hashset images
-                    images.add(saveFile(file));
+                    String imageUrl = cloudinaryService.uploadImage(file);
+                    images.add(imageUrl);
                 }
 
             }
@@ -279,7 +360,7 @@ public class ProductServiceImpl implements ProductService {
                     throw new BadRequestException("Image is not valid");
                 }
                 // Handel thumbnail product
-                thumbnail = saveFile(firstImage);
+                thumbnail = cloudinaryService.uploadImage(firstImage);
 
 
                 //Handel images product
@@ -288,7 +369,8 @@ public class ProductServiceImpl implements ProductService {
                         throw new BadRequestException("Invalid image format");
                     }
                     // function saveFile convert to type String -> add hashset images
-                    images.add(saveFile(file));
+                    String imageUrl = cloudinaryService.uploadImage(file);
+                    images.add(imageUrl);
                 }
 
 

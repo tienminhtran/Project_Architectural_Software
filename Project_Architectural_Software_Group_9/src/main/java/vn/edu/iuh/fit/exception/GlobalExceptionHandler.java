@@ -27,7 +27,7 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
     public ResponseEntity<Map<String, Object>> userNotFoundException(ItemNotFoundException ex) {
         Map<String, Object> errors = new LinkedHashMap<String, Object>();
         errors.put("status", HttpStatus.NOT_FOUND.value());
-        errors.put("message", " ----- " + ex.getMessage());
+        errors.put("message", ex.getMessage());
         return new ResponseEntity<Map<String, Object>>(errors, HttpStatus.NOT_FOUND);
     }
 
@@ -90,5 +90,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                 .build()
                 );
     }
-
+    @ExceptionHandler(MissingTokenException.class)
+    public ResponseEntity<BaseResponse<?>> missingTokenExceptionHandler(MissingTokenException ex) {
+        return ResponseEntity
+                .status(HttpStatus.UNAUTHORIZED)
+                .body(
+                        BaseResponse.builder()
+                                .status("FAILED")
+                                .message(ex.getMessage())
+                                .build()
+                );
+    }
 }

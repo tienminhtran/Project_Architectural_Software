@@ -6,15 +6,19 @@
 
 package vn.edu.iuh.fit.controllers;
 
+import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
+import vn.edu.iuh.fit.dtos.request.OrderRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.OrderResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.RecentOrderResponse;
 import vn.edu.iuh.fit.enums.OrderStatus;
+import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.services.OrderService;
 
 import java.util.List;
@@ -212,5 +216,59 @@ public class OrderRestController {
                 .build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
+    @GetMapping("/filter/all")
+    public ResponseEntity<BaseResponse<?>> filterByAll(
+            @RequestParam(required = false) String firstname,
+            @RequestParam(required = false) String phoneNumber,
+            @RequestParam(required = false) String payment,
+            @RequestParam(required = false) OrderStatus status,
+            @RequestParam(defaultValue = "0") Integer pageNo,
+            @RequestParam(defaultValue = "10") Integer pageSize) {
+        if (pageNo == null) {
+            pageNo = 0;
+        }
+        if (pageSize == null) {
+            pageSize = 10;
+        }
+        PageResponse<?> pageResponse = orderService.filterByAll(firstname, phoneNumber, payment, status, pageNo, pageSize);
+        if (pageResponse.getValues().isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Filter by all")
+                .response(pageResponse)
+                .build());
+    }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
+    @PostMapping("/create")
+    public ResponseEntity<BaseResponse<?>> createOrder(@RequestBody @Valid OrderRequest orderRequest) throws UserAlreadyExistsException {
+        OrderResponse orderResponse = orderService.createOrder(orderRequest);
+        if (orderResponse == null) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(BaseResponse.builder().status("FAIL").message("Create order failed").build());
+        }
+        return ResponseEntity.status(HttpStatus.CREATED).body(BaseResponse.builder().status("SUCCESS").message("Create order successfully").response(orderResponse).build());
+    }
+
+    @GetMapping("/me/user/{idUser}")
+    public ResponseEntity<BaseResponse<?>> getOrdersByIDUser(@PathVariable Long idUser) {
+        List<OrderResponse> orderResponses = orderService.findByIDUser(idUser);
+        if (orderResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by id user").response(orderResponses).build());
+    }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
+    @GetMapping("/me/phone/{phoneNumber}")
+    public ResponseEntity<BaseResponse<?>> getOrdersByPhoneNumber(@PathVariable String phoneNumber) {
+        List<OrderResponse> orderResponses = orderService.findByPhoneNumber(phoneNumber);
+        if (orderResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by phone number").response(orderResponses).build());
+    }
+    // link API: http://localhost:8080/api/v1/orders/me/phone/0987654321
 }

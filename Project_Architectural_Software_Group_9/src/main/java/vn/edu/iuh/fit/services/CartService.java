@@ -17,9 +17,8 @@ import java.util.List;
  * @date: 3/20/2025
  */
 public interface CartService {
-    CartResponse getCartByUserId(Long userId);
+    CartResponse getCartByUserId(String token);
 
-    List<CartItemResponse> getCartItemsByCartId(Long userId);
-
+    CartResponse createCart(Long idUser);
 
 }

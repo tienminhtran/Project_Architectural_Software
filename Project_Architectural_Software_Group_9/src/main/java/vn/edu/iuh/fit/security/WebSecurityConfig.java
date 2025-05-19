@@ -57,7 +57,10 @@ public class WebSecurityConfig {
     CorsConfig corsConfig;
 
     private final String[] PUBLIC_ENDPOINTS = {"/register", "/user/home", "/forgot-password", "/api/v1/auth/verify",
-            "/login","/user/assets/**", "/user/customize/**", "/admin/assets/**"
+            "/login","/user/assets/**", "/user/customize/**", "/admin/assets/**", "/user/reset-password", "/user/check-phone",
+            "/api/v1/products", "/api/v1/products/{id}/**", "/api/v1/products/all", "/api/v1/products/search", "/api/v1/products/search/**", "/api/v1/products/filter",
+            "/api/v1/brands/all", "/api/v1/category/all"
+
     };
 
     @Bean
@@ -91,19 +94,23 @@ public class WebSecurityConfig {
                         configure -> configure
                                 .requestMatchers(PUBLIC_ENDPOINTS).permitAll()
                                 .requestMatchers(HttpMethod.POST, "/api/v1/auth/login", "/api/v1/auth/refresh", "/api/v1/auth/login/google").permitAll()
-                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/register").permitAll()
+                                .requestMatchers(HttpMethod.POST, "/api/v1/auth/register","/api/v1/user/check-phone", "api/v1/user/reset-password").permitAll()
                                 .requestMatchers(HttpMethod.POST, "/auth/register").permitAll()
                                 .requestMatchers(HttpMethod.GET, "/api/v1/auth/verify", "/api/v1/auth/verify/**").permitAll()
 
-                                .requestMatchers(HttpMethod.GET, "/api/v1/user","/api/v1/user/**", "/api/v1/cart/**").hasAnyRole("ADMIN", "USER", "MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/user","/api/v1/user/**").hasAnyRole("ADMIN", "USER", "MANAGER")
+                                .requestMatchers("/api/v1/cart/**", "/api/v1/cart/me/**").authenticated()
+
                                 .requestMatchers(HttpMethod.GET, "/api/v1/voucher","/api/v1/voucher/**").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.POST, "/api/v1/voucher").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/v1/voucher/**").hasAnyRole("ADMIN", "MANAGER")
-                                .requestMatchers(HttpMethod.GET, "/api/v1/products","/api/v1/products/**").hasAnyRole("ADMIN", "MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/products/**").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.POST, "/api/v1/products").hasAnyRole("ADMIN", "MANAGER")
-                                .requestMatchers("/api/v1/orders","/api/v1/orders/**").hasAnyRole("ADMIN", "MANAGER")
-                                .requestMatchers("/api/v1/orders/me", "/api/v1/orders/me/**").hasAnyRole("ADMIN", "USER", "MANAGER")
+                                .requestMatchers(HttpMethod.POST,"/api/v1/orders/create").hasAnyRole("ADMIN", "USER", "MANAGER")
+                                .requestMatchers("/api/v1/orders","/api/v1/orders/**").hasAnyRole("ADMIN", "MANAGER", "USER")
+                                .requestMatchers("/api/v1/orders/me", "/api/v1/orders/me/**","/api/v1/orders/me/phone/**").hasAnyRole("ADMIN", "USER", "MANAGER")
                                 .requestMatchers("/api/v1/order-details","/api/v1/order-details/**").hasAnyRole("ADMIN", "MANAGER", "USER")
+
                                 .anyRequest().authenticated()
                 )
                 // Dung stateless de su dung JWT

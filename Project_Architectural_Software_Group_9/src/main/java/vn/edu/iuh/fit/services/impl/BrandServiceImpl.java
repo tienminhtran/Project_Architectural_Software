@@ -19,6 +19,7 @@ import vn.edu.iuh.fit.entities.Brand;
 import vn.edu.iuh.fit.repositories.BrandRepository;
 import vn.edu.iuh.fit.repositories.ProductRepository;
 import vn.edu.iuh.fit.services.BrandService;
+import vn.edu.iuh.fit.services.CloudinaryService;
 
 import java.io.IOException;
 import java.nio.file.*;
@@ -35,6 +36,9 @@ public class BrandServiceImpl implements BrandService {
 
     @Autowired
     private ModelMapper modelMapper;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
 
     private BrandResponse convertToDto(Brand brand) {
@@ -111,7 +115,7 @@ public class BrandServiceImpl implements BrandService {
                 if (!isValidSuffixImage(Objects.requireNonNull(multipartFile.getOriginalFilename()))) {
                     throw new BadRequestException("Invalid image suffix");
                 }
-                brandImg = saveFile(multipartFile);
+                brandImg = cloudinaryService.uploadImage(multipartFile);
             }
             Brand brand = Brand.builder()
                     .name(brandRequest.getName())
@@ -136,7 +140,7 @@ public class BrandServiceImpl implements BrandService {
                 if (!isValidSuffixImage(Objects.requireNonNull(multipartFile.getOriginalFilename()))) {
                     throw new BadRequestException("Invalid image suffix");
                 }
-                brandImg = saveFile(multipartFile);
+                brandImg = cloudinaryService.uploadImage(multipartFile);
             }
             brand.setName(brandRequest.getName());
             brand.setBrandImg(brandImg);

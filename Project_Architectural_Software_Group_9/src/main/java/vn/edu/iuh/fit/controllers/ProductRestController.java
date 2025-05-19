@@ -320,6 +320,7 @@ import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
+import vn.edu.iuh.fit.dtos.request.ProductFilterRequest;
 import vn.edu.iuh.fit.dtos.request.ProductRequest;
 import vn.edu.iuh.fit.dtos.response.BaseResponse;
 import vn.edu.iuh.fit.dtos.response.BestSellingProductResponse;
@@ -327,6 +328,7 @@ import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.ProductResponse;
 import vn.edu.iuh.fit.services.ProductService;
 
+import javax.annotation.security.PermitAll;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
@@ -392,7 +394,6 @@ public class ProductRestController {
     }
 
     @GetMapping("/recent")
-    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getRecentProducts() {
         List<ProductResponse> productResponses = productService.getRecentProducts();
         if (productResponses.isEmpty()) {
@@ -422,6 +423,7 @@ public class ProductRestController {
      * @param fileImages
      * @return
      */
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PostMapping(value = "", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)
     public ResponseEntity<BaseResponse<?>> createProduct(
             @RequestPart("product")  @NotNull(message = "Product data is required") String productJson,
@@ -538,12 +540,14 @@ public class ProductRestController {
 
 
     @GetMapping("/count")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> countProducts() {
         int count = productService.countProducts();
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Count products").response(count).build());
     }
 
     @GetMapping("/countStock")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> getTotalStockQuantity() {
         int count = productService.getTotalStockQuantity();
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Total stock quantity").response(count).build());
@@ -595,6 +599,7 @@ public class ProductRestController {
     }
 
     @DeleteMapping("/{id}")
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     public ResponseEntity<BaseResponse<?>> deleteProduct(@PathVariable Long id) {
         boolean isDeleted = productService.deleteProduct(id);
         if (!isDeleted) {
@@ -603,6 +608,55 @@ public class ProductRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Delete product success").build());
     }
 
+    @GetMapping("/filter-laptop")
+    public ResponseEntity<BaseResponse<?>> filterProductLaptop() {
+        List<ProductResponse> productResponses = productService.filterProductLaptop();
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Filter product laptop").response(productResponses).build());
+    }
 
+    @GetMapping("/filter-phone")
+    public ResponseEntity<BaseResponse<?>> filterProductPhone() {
+        List<ProductResponse> productResponses = productService.filterProductPhone();
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Filter product phone").response(productResponses).build());
+    }
+
+    @GetMapping("/{id}/category")
+    public ResponseEntity<BaseResponse<?>> filterProductByCategory(@PathVariable Long id) {
+        List<ProductResponse> productResponses = productService.filterProductByCategory(id);
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Filter product by category").response(productResponses).build());
+    }
+
+
+    //localhost:8080/api/v1/products/filter-tablet
+    @GetMapping("/filter-tablet")
+    public ResponseEntity<BaseResponse<?>> filterProductTablet() {
+
+        List<ProductResponse> productResponses = productService.filterProductTablet();
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Filter product tablet").response(productResponses).build());
+
+    }
+
+    @PostMapping("/filter")
+    public ResponseEntity<BaseResponse<?>> filterProducts(@RequestBody ProductFilterRequest filterRequest) {
+
+        List<ProductResponse> productResponses = productService.getFilteredProducts(filterRequest);
+        if (productResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Filter product tablet").response(productResponses).build());
+
+    }
 }
 

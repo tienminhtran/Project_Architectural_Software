@@ -8,6 +8,8 @@ package vn.edu.iuh.fit.controllers;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
+import com.google.firebase.auth.FirebaseAuth;
+import com.google.firebase.auth.FirebaseToken;
 import jakarta.validation.ConstraintViolation;
 import jakarta.validation.Valid;
 import jakarta.validation.Validator;
@@ -26,10 +28,13 @@ import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.*;
 import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.exception.EmailAlreadyExistsException;
+import vn.edu.iuh.fit.exception.MissingTokenException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.security.CustomUserDetails;
 import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
+import vn.edu.iuh.fit.services.CartService;
 import vn.edu.iuh.fit.services.UserService;
+import vn.edu.iuh.fit.utils.FormatPhoneNumber;
 
 import java.time.LocalDate;
 import java.util.HashMap;
@@ -56,6 +61,9 @@ public class UserRestController {
     @Autowired
     private Validator validator;
 
+    @Autowired
+    private CartService cartService;
+
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<UserResponse>> getUserById(@PathVariable Long id) {
         UserResponse userResponse = userService.findById(id);
@@ -64,6 +72,21 @@ public class UserRestController {
         }
         return ResponseEntity.ok(BaseResponse.<UserResponse>builder().status("success").message("Get user by id success").response(userResponse).build());
     }
+
+    @GetMapping("/me")
+    public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String token) {
+        try {
+            UserResponse response = userService.getCurrentUser(token);
+            return ResponseEntity.ok(BaseResponse.builder()
+                    .status("SUCCESS")
+                    .message("Get current user success")
+                    .response(response)
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
+        }
+    }
+
 
     @GetMapping("/information/{username}")
     public ResponseEntity<BaseResponse<UserResponse>> getUserByUsername(@PathVariable String username) {
@@ -74,10 +97,10 @@ public class UserRestController {
         return ResponseEntity.ok(BaseResponse.<UserResponse>builder().status("success").message("Get user by username success").response(userResponse).build());
     }
 
-    @GetMapping("/me")
-    public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String token) {
+    @GetMapping("/roles-user")
+    public ResponseEntity<?> getRolesUserByToken(@RequestHeader("Authorization") String token) {
         try {
-            Map<String, Object> response = userService.getCurrentUser(token);
+            Map<String, Object> response = userService.getRolesUserByToken(token);
             return ResponseEntity.ok(response);
         } catch (Exception e) {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid token");
@@ -121,6 +144,10 @@ public class UserRestController {
 
         // Gọi service để tạo user
         UserResponse userResponse = userService.createUserRoleManager(userRequest, bindingResult);
+
+        // Create a cart for the user
+        cartService.createCart(userResponse.getId());
+
         if (userResponse == null) {
             return ResponseEntity.badRequest().body(BaseResponse.builder()
                     .status("ERROR")
@@ -226,6 +253,9 @@ public class UserRestController {
             @RequestPart("user") String userJson,
             @RequestPart(value = "fileImage", required = false) MultipartFile fileImages) {
 
+        System.out.println("id: " + id);
+        System.out.println("fileImage: " + fileImages);
+        System.out.println("userJson: " + userJson);
         // Chuyen string sang json
         ObjectMapper objectMapper = new ObjectMapper();
         objectMapper.registerModule(new JavaTimeModule());
@@ -264,7 +294,63 @@ public class UserRestController {
                 .build());
     }
 
+    @PostMapping("/reset-password")
+    public ResponseEntity<BaseResponse<?>> resetPassword(@RequestBody Map<String, String> request) throws MissingTokenException {
+        String idToken = request.get("idToken");
+        String newPassword = request.get("newPassword");
+
+        if (idToken == null || idToken.isEmpty()) {
+            throw new MissingTokenException("Thiếu ID Token trong request!");
+        }
+
+        if (newPassword == null || newPassword.length() < 8) {
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("ERROR")
+                    .message("Mật khẩu mới phải có ít nhất 8 ký tự!")
+                    .build());
+        }
+
+        try {
+            FirebaseToken decodedToken = FirebaseAuth.getInstance().verifyIdToken(idToken);
+            System.out.println("Decoded Token: " + decodedToken.getClaims());
+            String phoneNumber = decodedToken.getClaims().get("phone_number").toString();
+            phoneNumber= FormatPhoneNumber.formatPhoneNumberTo0(phoneNumber);
 
 
+            // Kiểm tra xem số điện thoại đã tồn tại chưa
+            if (!userService.existsPhone(phoneNumber)) {
+                return ResponseEntity.badRequest().body(BaseResponse.builder()
+                        .status("ERROR")
+                        .message("Số điện thoại không tồn tại!")
+                        .build());
+            }
 
+            // Cập nhật mật khẩu
+            userService.updatePassword(phoneNumber, newPassword);
+
+            return ResponseEntity.ok(BaseResponse.builder()
+                    .status("SUCCESS")
+                    .message("Đặt lại mật khẩu thành công cho số điện thoại: " + phoneNumber)
+                    .build());
+
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("ERROR")
+                    .message("Đặt lại mật khẩu thất bại: " + e.getMessage())
+                    .build());
+        }
+    }
+
+    @PostMapping("/check-phone")
+    public ResponseEntity<Map<String, Boolean>> checkPhone(@RequestBody Map<String, String> request) {
+        String phone = request.get("phone");
+        if (phone == null || phone.isEmpty()) {
+            return ResponseEntity.badRequest().build();
+        }
+
+        boolean exists = userService.existsPhone(phone);
+        Map<String, Boolean> response = new HashMap<>();
+        response.put("exists", exists);
+        return ResponseEntity.ok(response);
+    }
 }

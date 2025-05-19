@@ -66,7 +66,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o " +
             "JOIN o.user u " +
             "JOIN o.payment p " +
-            "WHERE (:keyword IS NOT NULL AND u.firstname LIKE %:keyword%) OR " +"p.paymentName LIKE %:keyword%")
+            "WHERE (:keyword IS NOT NULL AND u.firstname LIKE %:keyword%) OR " + "p.paymentName LIKE %:keyword%")
     Page<Order> searchOrder(String keyword, Pageable pageable);
 
     @Query("SELECT o FROM Order o " +
@@ -76,4 +76,31 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
     @Query("SELECT o FROM Order o " +
             "WHERE o.payment.paymentName LIKE %:payment%")
     Page<Order> filterByPayment(@Param("payment") String payment, Pageable pageable);
+
+    // lọc theo nhiều trường: firstname, phoneNumber, payment, status
+    @Query("SELECT o FROM Order o " +
+            "JOIN o.user u " +
+            "JOIN o.payment p " +
+            "WHERE (:firstname IS NULL OR u.firstname LIKE %:firstname%) AND " +
+            "(:phoneNumber IS NULL OR u.phoneNumber LIKE %:phoneNumber%) AND " +
+            "(:payment IS NULL OR p.paymentName LIKE %:payment%) AND " +
+            "(:status IS NULL OR o.status = :status)")
+    Page<Order> filterByAll(@Param("firstname") String firstname,
+                            @Param("phoneNumber") String phoneNumber,
+                            @Param("payment") String payment,
+                            @Param("status") OrderStatus status,
+                            Pageable pageable);
+
+
+
+    @Query("SELECT o FROM Order o " +
+            "JOIN o.user u " +
+            "WHERE u.id = :idUser")
+    List<Order> findByIDUser(@Param("idUser") Long idUser);
+
+
+    @Query("SELECT o FROM Order o " +
+            "JOIN o.user u " +
+            "WHERE u.phoneNumber = :phoneNumber")
+    List<Order> findByPhoneNumber(@Param("phoneNumber") String phoneNumber);
 }

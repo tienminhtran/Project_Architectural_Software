@@ -1,16 +1,19 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllProduct_Paging, deleteProduct, createProduct, searchProduct, updateProduct} from "../services/productService";
+import { getAllProduct_Paging, deleteProduct, createProduct, searchProduct, updateProduct, filterProduct, findProductByKeyword} from "../services/productService";
 import usePaginationQuery from "./usePaginationQuery";
+import { data } from "react-router-dom";
+import { useState } from "react";
 
 
 const useProduct = (pageNo, pageSize, productSearch) => {
     const queryClient = useQueryClient();
+
+    const [products, setProducts] = useState([]);
     
     // create product
     const createPro = useMutation({
         mutationFn: ({formData}) => createProduct(formData),
         onSuccess: () => {
-            alert("Create product successfully!!");
         },
         onError: (error) => {
             console.error("Create product failed:", error);
@@ -25,7 +28,6 @@ const useProduct = (pageNo, pageSize, productSearch) => {
           // Mà không cần reload
           queryClient.invalidateQueries("getAllProduct_Paging");
     
-          alert("Update voucher successfully!!");
         },
         onError: (error) => {
           console.error("Update product failed:", error);
@@ -47,14 +49,33 @@ const useProduct = (pageNo, pageSize, productSearch) => {
         },
     })
 
+    const filter = useMutation({
+        mutationFn: ({filterRequest}) => filterProduct(filterRequest),
+        onSuccess: (data) => {
+          
+          console.log("Filter products mutation:", data?.response);
+          if(Array.isArray(data?.response)) {
+            setProducts(data?.response);
+          } else {
+            setProducts([]);
+          }
+          console.log("Filter products:", products.length);
+        },
+        onError: (error) => {
+          console.error("Filter products failed:", error);
+          alert("Filter products fail. Please try again!");
+        },
+    })
 
     return {
         products_paging: usePaginationQuery("getAllProduct_Paging", getAllProduct_Paging, pageNo, pageSize),
         // updateProduct: update.mutate,
         deleteProduct: deletePro.mutate,
-        createProduct: createPro.mutate,
-        updateProduct: update.mutate,
+        createProduct: createPro.mutateAsync,
+        updateProduct: update.mutateAsync,
         search_paging: usePaginationQuery("searchProduct", searchProduct, pageNo, pageSize, productSearch, true),
+        filterProduct: filter.mutateAsync,
+        filterProductData: products,
     }
 }
 export default useProduct;

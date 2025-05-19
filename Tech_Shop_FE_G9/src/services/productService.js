@@ -63,6 +63,91 @@ export const searchProduct = async (pageNo, pageSize,keyword) => {
             'Content-Type': 'multipart/form-data'
         }
     });
-    console.log("Product updated:", response.data);
+    console.log("Product updated:", response.data);     
     return response.data;
+}
+
+ export const filterProductLaptop = async () => {
+    
+    try {
+        const response = await axiosInstance.get('/products/filter-laptop');
+        console.log("Filtered laptop products:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error filtering laptop products:", error);
+        throw error; 
+    }
+}
+ export const filterProductPhone = async () => {
+    
+    try {
+        const response = await axiosInstance.get('/products/filter-phone');
+        console.log("Filtered phone products:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error filtering phone products:", error);
+        throw error; 
+    }
+}
+
+ export const filterProductByCategory = async (categoryId) => {
+    
+    try {
+        const response = await axiosInstance.get(`/products/${categoryId}/category`);
+        return response.data;
+    } catch (error) {
+        console.error("Error filtering products by category:", error);
+        throw error; 
+    }
+}
+
+ export const getProductId = async (id) => {
+    
+    console.log("getProductId", id);
+    try {
+        const response = await axiosInstance.get(`/products/${id}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error getting product by ID:", error);
+        throw error; 
+    }
+}
+
+
+//    //localhost:8080/api/v1/products/filter-tablet
+export const filterProductTablet = async () => {
+    
+    try {
+        const response = await axiosInstance.get('/products/filter-tablet');
+        console.log("Filtered tablet products:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error filtering tablet products:", error);
+        throw error; 
+    }
+}
+
+export const filterProduct = async (filterRequest) => {
+    
+    try {
+        const response = await axiosInstance.post('/products/filter', filterRequest);
+        console.log("Filtered products:", response.data);
+        return response.data;
+    } catch (error) {
+        console.error("Error filtering products:", error);
+        throw error; 
+    }       
+}
+
+
+// http://localhost:8080/api/v1/products/search/{keyword}}
+
+export const findProductByKeyword = async (keyword) => {
+    try {
+        const response = await axiosInstance.get(`/products/search/${keyword}`);
+        return response.data;
+    } catch (error) {
+        console.error("Error finding product by keyword:", error);
+        throw error; 
+    }
 }

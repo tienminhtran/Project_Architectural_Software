@@ -13,6 +13,7 @@ package vn.edu.iuh.fit.services;
  */
 
 import jakarta.validation.Valid;
+import vn.edu.iuh.fit.dtos.request.ProductFilterRequest;
 import vn.edu.iuh.fit.dtos.request.ProductRequest;
 import vn.edu.iuh.fit.dtos.response.BestSellingProductResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
@@ -53,4 +54,15 @@ public interface ProductService {
     PageResponse<ProductResponse> searchProduct(String keyword, int pageNo, int pageSize);
 
     boolean deleteProduct(Long id);
+
+    List<ProductResponse> filterProductLaptop();
+    public List<ProductResponse> filterProductPhone();
+
+    public List<ProductResponse> filterProductTablet();
+
+    public List<ProductResponse> filterProductByCategory(Long id);
+
+    public List<ProductResponse> getFilteredProducts(ProductFilterRequest filterRequest);
+
+
 }

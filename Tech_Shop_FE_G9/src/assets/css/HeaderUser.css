@@ -5,7 +5,10 @@
   color: #fff;
   padding: 10px;
   font-weight: bold;
+  cursor: pointer;
+
 }
+
 
 .header-user__menu-icon {
   margin-right: 10px;
@@ -45,6 +48,14 @@
 }
 
 .header-user__category-item:hover::after {
+  width: calc(100% - 32px);
+}
+
+.header-user__category-list .active {
+  background-color: #e3f2fd;
+}
+
+.header-user__category-list .active::after {
   width: calc(100% - 32px);
 }
 
@@ -113,7 +124,7 @@
   background-color: #fff;
   border: 1px solid #ddd;
   border-radius: 8px;
-  min-width: 160px;
+  min-width: 250px;
   box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
   z-index: 999; /* Đảm bảo nằm trên phần khác */
   animation: fadeIn 0.2s ease-in-out;
@@ -144,10 +155,10 @@
 }
 
 .header-user__icon-badge-cart {
-  background-color: #9b9b9b;
+  background-color: #0577d4;
   color: rgb(255, 254, 254);
   font-size: 12px;
-  padding: 2px 6px;
+  padding: 1px 6px;
   border-radius: 50%;
   position: absolute;
   top: -10px;
@@ -419,4 +430,13 @@
   color: gray;
   margin-left: 5px;
   font-size: 16px;
+}
+
+
+.contact-container{
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px;
 }

@@ -4,21 +4,19 @@ import {
   updateProfile,
   getAllUsersPaging,
   createUserRoleManager,
+  checkPhoneExistsService,
   // getAllUsersNoPage,
 } from "../services/userService";
-import { useSelector } from "react-redux";
 import usePaginationQuery from "./usePaginationQuery";
+import { resetPasswordService, getCurrentUser } from "../services/userService";
 
 const useUser = (pageNo, pageSize) => {
-  
-  const { user } = useSelector((state) => state.auth);
-  console.log("user name ", user);
   const queryClient = useQueryClient();
 
   const getUser = useQuery({
-    queryKey: ["getUser", user], // Dùng user là username làm key của query
-    queryFn: () => getUserInfo(user),
-    enabled: !!user, // Chỉ gọi API nếu user có giá trị
+    queryKey: ["getUser"], // Dùng user là username làm key của query
+    queryFn: () => getCurrentUser(),
+    refetchOnWindowFocus: false,
   });
 
   const userPaging = usePaginationQuery(
@@ -39,10 +37,7 @@ const useUser = (pageNo, pageSize) => {
     },
   });
 
-  // const userNoPaging = useQuery({
-  //   queryKey: ["getAllUsersNoPage"],
-  //   queryFn: getAllUsersNoPage,
-  // });
+
   //sử dụng useMuntation để update thông tin user
   const updateProfileUser = useMutation({
     mutationFn: ({ userid, formData }) => {
@@ -50,18 +45,42 @@ const useUser = (pageNo, pageSize) => {
     }, // Gọi API update user, munationFn nhận vào 1 object có 2 key là userid và formData
     onSuccess: (data) => {
       // Cập nhật lại cache của user sau khi update thành công
-      queryClient.setQueryData(["getUser", user], (oldData) => ({
+      queryClient.setQueryData(["getUser"], (oldData) => ({
         ...oldData,
         response: { ...oldData?.response, ...data },
       }));
-      queryClient.invalidateQueries(["getUser", user]); // Invalidate the query to refetch the user data
+      queryClient.invalidateQueries(["getUser"]); // Invalidate the query to refetch the user data
       queryClient.invalidateQueries(["getAllUsersPaging"]); // Invalidate the query to refetch the user data
-
-      alert("Update user successfully!!");
     },
     onError: (error) => {
       console.error("Update user failed:", error);
-      alert("Update fail successfully. Please try again!");
+      alert("Update failed. Please try again!");
+    },
+  });
+  const resetPassword = useMutation({
+    mutationFn: ({ idToken, newPassword }) => {
+      return resetPasswordService({ idToken, newPassword });
+    },
+    onSuccess: () => {
+      alert("Reset password successfully!");
+    },
+    onError: (error) => {
+      console.error("Reset password failed:", error);
+      alert("Reset password failed. Please try again!");
+    },
+  });
+
+  // Mutation để kiểm tra số điện thoại đã tồn tại hay chưa
+  const {
+    mutate: checkPhoneExists,
+    mutateAsync: checkPhoneExistsAsync,
+    isLoading: isCheckingPhone,
+    isError: isCheckPhoneError,
+    error: checkPhoneError,
+  } = useMutation({
+    mutationFn: checkPhoneExistsService,
+    onError: (error) => {
+      console.log(error.message || "Lỗi khi kiểm tra số điện thoại");
     },
   });
 
@@ -70,7 +89,14 @@ const useUser = (pageNo, pageSize) => {
     // user_nopaging: userNoPaging,
     createManager: createRoleManager,
     userInfor: getUser.data?.response || {},
-    updateUser: updateProfileUser.mutate,
+    updateUser: updateProfileUser.mutateAsync,
+    resetPassword: resetPassword.mutate,
+    checkPhoneExists,
+    checkPhoneExistsAsync,
+    isCheckingPhone,
+    isCheckPhoneError,
+    checkPhoneError,
+    loadingUpdateUser: updateProfileUser.isLoading,
   };
 };
 export default useUser;

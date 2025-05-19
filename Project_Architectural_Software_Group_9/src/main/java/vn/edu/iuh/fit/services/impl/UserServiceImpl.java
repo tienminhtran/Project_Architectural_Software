@@ -39,6 +39,7 @@ import vn.edu.iuh.fit.repositories.UserRepository;
 import vn.edu.iuh.fit.repositories.RefreshTokenRepository;
 import vn.edu.iuh.fit.security.CustomUserDetails;
 import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
+import vn.edu.iuh.fit.services.CloudinaryService;
 import vn.edu.iuh.fit.services.EmailService;
 import vn.edu.iuh.fit.services.UserService;
 
@@ -84,6 +85,9 @@ public class UserServiceImpl implements UserService {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private CloudinaryService cloudinaryService;
 
     private final Map<String, EmailVerifyEntry> emailVerifyMap = new ConcurrentHashMap<>();
 
@@ -147,7 +151,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public Map<String, Object> getCurrentUser(String token) {
+    public Map<String, Object> getRolesUserByToken(String token) {
         String jwt = token.replace("Bearer ", "");
         String username = jwtUtils.getUserNameFromJWT(jwt);
 
@@ -165,6 +169,16 @@ public class UserServiceImpl implements UserService {
                 "username", user.getUsername(),
                 "roles", roles
         );
+    }
+
+    @Override
+    public UserResponse getCurrentUser(String token) {
+        String jwt = token.replace("Bearer ", "");
+        String username = jwtUtils.getUserNameFromJWT(jwt);
+
+        User user = userRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Can not find User with username: " + username));
+        return this.convertToDto(user, UserResponse.class);
     }
 
     @Override
@@ -222,7 +236,7 @@ public class UserServiceImpl implements UserService {
                 if (!isValidSuffixImage(Objects.requireNonNull(file.getOriginalFilename()))) {
                     throw new BadRequestException("Invalid image format");
                 }
-                String image = saveFile(file);
+                String image = cloudinaryService.uploadImage(file);
                 user.setImage(image); // chỉ set nếu có file mới
             }
             System.out.println(user);
@@ -306,6 +320,7 @@ public class UserServiceImpl implements UserService {
 
             // Lưu user vào database
             user = userRepository.save(user);
+
 
             return this.convertToDto(user, UserResponse.class);
         } catch (Exception e) {
@@ -418,5 +433,13 @@ public class UserServiceImpl implements UserService {
     public UserResponse getUserByEmail(String email) {
         User user = userRepository.findByEmail(email).orElseThrow(() -> new ItemNotFoundException("Can not find User with email: " + email));
         return this.convertToDto(user, UserResponse.class);
+    }
+
+    @Override
+    public void updatePassword(String phoneNumber, String password) {
+        User user = userRepository.findByPhoneNumber(phoneNumber)
+                .orElseThrow(() -> new ItemNotFoundException("Can not find User with phone: " + phoneNumber));
+        user.setPassword(passwordEncoder.encode(password));
+        userRepository.save(user);
     }
 }
