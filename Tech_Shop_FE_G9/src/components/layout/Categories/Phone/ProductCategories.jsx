@@ -84,7 +84,7 @@ const ProductCategories = ({ products }) => {
                 <div className="product-user-phone__product-img-wrapper">
                   <img
                     src={product.thumbnail}
-                    alt={product.name}
+                    alt={product.productName}
                     className="product-user-phone__product-img"
                   />
                   <span className="product-user-phone__product-discount">
@@ -109,7 +109,7 @@ const ProductCategories = ({ products }) => {
                   </div>
                 </div>
                 <div className="product-user-phone__product-info">
-                  <h5>{product.name}</h5>
+                  <h5>{product.productName}</h5>
                   <p>
                     <span className="product-user-phone__price-new">
                       {product.price} ₫

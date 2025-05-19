@@ -24,17 +24,43 @@ import { toast } from "react-toastify";
 import useCart from "../../hooks/useCart.js";
 import useWishlist from "../../hooks/useWishlist.js";
 import useCategorie from "../../hooks/useCategorie.js";
+import useProduct from "../../hooks/useProduct.js";
+import { useDebounce } from "../../hooks/useDebounce.js";
+import { formatPrice } from "../../utils/FormatPrice.js";
 
 import SearchBox from "./SearchBox.jsx";
 const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
+
+  const [showCategories, setShowCategories] = useState(showCategory);
+  
+  const [textSearch, setTextSearch] = useState("");
+  const debouncedSearchTerm = useDebounce(textSearch, 500); // Giảm tải số lần tìm kiếm bằng cách debounce
+
+  const [productsSearch, setProductsSearch] = useState([]);
+
+  const { getCategories_NoPaging } = useCategorie();
+  const { recentlyProduct } = useDashboardData();
   const { carts } = useCart();
   const { wishlists } = useWishlist();
+
+  const { search_paging } = useProduct(0, 10, debouncedSearchTerm);
+
+  const { data, isLoading, isError, error } = search_paging;
+
+  const products_response = useMemo(() => {
+    if (data && data.values) {
+      return data.values;
+    }
+    return [];
+  }, [data]);
+
   const wishlistItems = useMemo(() => {
     if (!wishlists) return [];
     return wishlists.response;
   }, [wishlists]);
+
   const cartItems = useMemo(() => {
     if (!carts) return [];
     return carts.response;
@@ -46,13 +72,6 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
   }, [userInfor]);
 
   const token = getAccessToken();
-
-  const { getCategories_NoPaging } = useCategorie();
-
-  const { recentlyProduct } = useDashboardData();
-
-  const [showCategories, setShowCategories] = useState(showCategory);
-  
 
   const userMenuRef = useRef();
 
@@ -96,6 +115,13 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
     document.addEventListener("mousedown", handleClickOutside);
     return () => document.removeEventListener("mousedown", handleClickOutside);
   }, []);
+
+  // Cập nhật danh sách sản phẩm khi dữ liệu từ API thay đổi
+  // useEffect(() => {
+  //   if (Array.isArray(products_response)) {
+  //     setProductsSearch(products_response);
+  //   }
+  // }, [products_response]);  
 
   const handleLogout = () => {
     confirmAlert({
@@ -146,8 +172,57 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
             </button>
             {/* Ô tìm kiếm */}
             <div className="col-7">
-               <SearchBox />
+              <div className="d-flex flex-column position-relative">
 
+                <form 
+                  onSubmit={(e) => {
+                    e.preventDefault(); // Ngăn form reload trang
+                    if (textSearch.trim()) {
+                      navigate(`/search?query=${encodeURIComponent(debouncedSearchTerm.trim())}`, { state: { products: products_response, isLoading } });
+                    }
+                  }}
+                >
+                  <input
+                    type="text"
+                    className="form-control"
+                    placeholder="Tìm kiếm sản phẩm..."
+                    value={textSearch}
+                    onChange={(e) => setTextSearch(e.target.value)}
+                  />
+                </form>
+                {debouncedSearchTerm.trim().length > 0 && (
+
+                  <div className="position-absolute top-100 start-0 mt-2 bg-white w-100 shadow-sm rounded-3 z-3 overflow-auto " style={{ maxHeight: "400px", cursor: "pointer" }}>
+                    {products_response.length > 0 ? (
+                      products_response.map((item) => (
+                        <div key={item.id} className="border-bottom ps-4 pt-2 pe-4 pb-2 d-flex align-items-center"
+                          onClick={() => navigate(`/product/${btoa(item.id)}`, { state: { product : item } })}
+                        >
+                          <div className="flex-grow-1">
+                            <div className="fw-semibold text-truncate" style={{ maxWidth: "250px" }}>
+                              {item.productName}
+                            </div>
+                            <div className="d-flex align-items-center gap-3">
+
+                              <div className="text-danger fw-bold">{formatPrice(item.price)}</div>
+                              <div className="text-muted text-decoration-line-through" style={{ fontSize: "0.875rem" }}>100000</div>
+                            </div>
+                          </div>
+                          <img
+                            src={item.thumbnail}
+                            alt={item.productName}
+                            className="ms-2"
+                            style={{ width: "60px", height: "60px", objectFit: "cover", backgroundColor: "#f0f0f0", borderRadius: "5px" }}
+                          />
+                        </div>
+                      ))
+                    ) : (
+                        <h6 className="text-center p-2">Không có sản phẩm nào...</h6>
+                    )}
+                  </div>
+                )}
+              </div>
+              
             </div>
             {/* Ngôn ngữ & tiền tệ */}
             <div className="col-2 text-end">

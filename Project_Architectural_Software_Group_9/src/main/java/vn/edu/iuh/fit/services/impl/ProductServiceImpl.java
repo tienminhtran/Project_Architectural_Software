@@ -129,8 +129,8 @@ public class ProductServiceImpl implements ProductService {
         if(products != null) {
             response.setPage(pageNo);
             response.setSize(pageSize);
-            response.setPage(products.getNumberOfElements());
-            response.setTotal(products.getTotalPages());
+            response.setTotal(products.getNumberOfElements()); // Tổng số sản phẩm
+            response.setTotalPages(products.getTotalPages());
             response.setValues(products.stream().map(product -> this.convertToDto(product, ProductResponse.class)).collect(Collectors.toList()));
         }
         return response;
