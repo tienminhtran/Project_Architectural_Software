@@ -491,12 +491,9 @@ public class OrderServiceImpl implements OrderService {
         return orders.stream().map(order -> {
             OrderResponse response = convertToDto(order);
 
-            // Calculate totalProduct and totalPrice for each order
             int totalProduct = orderRepository.getTotalProductByOrderId(order.getId());
             Double totalPrice = orderRepository.calculateTotalAmountByOrderId(order.getId());
-            System.out.println("Total Price: " + totalPrice);
-            System.out.println("Total Product: " + totalProduct);
-            // Set the calculated fields in the response
+
             response.setTotalProduct(totalProduct);
             response.setTotalPrice(totalPrice);
 
@@ -518,7 +515,17 @@ public class OrderServiceImpl implements OrderService {
         }
 
         List<Order> orders = orderRepository.findByUserIdAndStatus(user.getId(), status);
-        return orders.stream().map(this::convertToDto).collect(Collectors.toList());
+        return orders.stream().map(order -> {
+            OrderResponse response = convertToDto(order);
+
+            int totalProduct = orderRepository.getTotalProductByOrderId(order.getId());
+            Double totalPrice = orderRepository.calculateTotalAmountByOrderId(order.getId());
+
+            response.setTotalProduct(totalProduct);
+            response.setTotalPrice(totalPrice);
+
+            return response;
+        }).collect(Collectors.toList());
     }
 
 //    @Override
