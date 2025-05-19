@@ -1,0 +1,129 @@
+.products-viewed {
+  position: relative;
+
+    padding: 10px;
+    background: hsl(12, 0%, 99%);
+    border-radius: 8px;
+    margin: 16px 0;
+  }
+  
+  .products-viewed__products{
+    color: #ff4d9d;
+    font-size: 18px;
+    font-weight: 600;
+    margin-bottom: 8px;
+  }
+  
+  .products-viewed__products-icon {
+    background-color: #58ec78;
+    color: #ffffff;
+    width: 30px;
+    height: auto;
+    padding: 5px;
+    border-radius: 50%;
+  }
+  
+
+  .products-viewed__products-viewed h3 {
+    margin-bottom: 12px;
+  }
+  
+  .products-viewed__products-container-wrapper {
+    position: relative;
+  }
+  
+  .products-viewed__products-container {
+    display: flex;
+    overflow-x: auto;
+    scroll-behavior: smooth;
+    gap: 12px;
+    padding: 10px 32px;
+  }
+  
+  .products-viewed__product-card {
+    min-width: 200px;
+    background: white;
+    border-radius: 6px;
+    padding: 12px;
+    border: 1px solid #e2e2e2;
+    flex-shrink: 0;
+    position: relative;
+  }
+  
+  .products-viewed__product-card img {
+    width: 100%;
+    height: 120px;
+    object-fit: contain;
+    margin-bottom: 8px;
+  }
+  
+  .products-viewed__product-card h4 {
+    font-size: 14px;
+    font-weight: bold;
+    margin: 0 0 6px;
+  }
+  
+  .products-viewed__prices {
+    display: flex;
+    flex-direction: column;
+    margin-bottom: 4px;
+  }
+  
+  .products-viewed__old {
+    text-decoration: line-through;
+    color: #888;
+    font-size: 13px;
+  }
+  
+  .products-viewed__new {
+    color: red;
+    font-weight: bold;
+    font-size: 15px;
+  }
+  
+  .products-viewed__discount {
+    position: absolute;
+    bottom: 10px;
+    right: 10px;
+    background: red;
+    color: white;
+    padding: 2px 6px;
+    border-radius: 4px;
+    font-size: 12px;
+    font-weight: bold;
+  }
+  
+  .products-viewed__scroll-btn {
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    background: white;
+    border: 1px solid #ccc;
+    padding: 10px;
+    border-radius: 50%;
+    cursor: pointer;
+    z-index: 10;
+    
+  }
+  
+  .products-viewed__scroll-btn.left {
+    left: -20px;
+    color: black;
+  }
+  
+  .products-viewed__scroll-btn.right {
+    right: -20px;
+    color: black;
+
+  }
+  
+  .products-viewed__scroll-btn.left:hover {
+    color: #ff0000;
+
+  }
+  
+  .products-viewed__scroll-btn.right:hover {
+    color: #ff0000;
+
+  }
+  
