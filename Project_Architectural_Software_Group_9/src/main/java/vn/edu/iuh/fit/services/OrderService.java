@@ -62,4 +62,6 @@ public interface OrderService {
     OrderResponse createOrder(OrderRequest orderRequest) throws UserAlreadyExistsException;
 
     List<OrderResponse> findByIDUser(Long idUser);
+
+    List<OrderResponse> findByPhoneNumber(String phoneNumber);
 }
