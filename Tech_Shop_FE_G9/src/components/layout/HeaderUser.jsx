@@ -28,6 +28,7 @@ import useProduct from "../../hooks/useProduct.js";
 import { useDebounce } from "../../hooks/useDebounce.js";
 import { formatPrice } from "../../utils/FormatPrice.js";
 
+import SearchBox from "./SearchBox.jsx";
 const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -147,6 +148,7 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
       ],
     });
   };
+
 
   return (
     <div>
