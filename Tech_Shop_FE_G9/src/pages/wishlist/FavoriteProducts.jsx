@@ -61,6 +61,7 @@ export default function FavoriteProducts() {
     }
   };
 
+  // Hàm xử lý xóa sản phẩm khỏi danh sách yêu thích
   const handleRemoveFavorite = (id) => {
     confirmAlert({
       title: "Xác nhận xóa",
