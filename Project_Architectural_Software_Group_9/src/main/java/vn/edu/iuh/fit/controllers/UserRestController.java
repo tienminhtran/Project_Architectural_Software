@@ -251,7 +251,8 @@ public class UserRestController {
     public ResponseEntity<BaseResponse<?>> updateUser(
             @PathVariable Long id,
             @RequestPart("user") String userJson,
-            @RequestPart(value = "fileImage", required = false) MultipartFile fileImages) {
+            @RequestPart(value = "fileImage", required = false) MultipartFile fileImages,
+            BindingResult bindingResult) throws EmailAlreadyExistsException, UserAlreadyExistsException, MethodArgumentNotValidException {
 
         System.out.println("id: " + id);
         System.out.println("fileImage: " + fileImages);
@@ -266,6 +267,23 @@ public class UserRestController {
             return ResponseEntity.badRequest().build();
         }
 
+        UserResponse userResponse = userService.findById(id);
+
+        // bỏ qua check username
+        if(userResponse.getUsername().equals(userRequest.getUsername())) {
+            userRequest.setUsername(UUID.randomUUID().toString());
+            userRequest.setConfirmPassword(userRequest.getPassword());
+        }
+
+        if(userResponse.getEmail().equals(userRequest.getEmail())) {
+            userRequest.setEmail("example@gmail.com");
+        }
+
+        if(userResponse.getPhoneNumber().equals(userRequest.getPhoneNumber())) {
+            userRequest.setPhoneNumber("0123456789");
+        }
+
+        userService.validation(userRequest, bindingResult);
         //validation userRequest
         Set<ConstraintViolation<UserRequest>> violations = validator.validate(userRequest);
         if(!violations.isEmpty()) {
@@ -273,6 +291,21 @@ public class UserRestController {
             violations.forEach(violation -> {
                 errors.put(violation.getPropertyPath().toString(), violation.getMessage());
             });
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("FAILED")
+                    .message("Validation error")
+                    .response(errors)
+                    .build());
+        }
+
+        if (bindingResult.hasErrors()) {
+            Map<String, Object> errors = new HashMap<String, Object>();
+
+            bindingResult.getFieldErrors().stream().forEach(result -> {
+                errors.put(result.getField(), result.getDefaultMessage());
+            });
+
+            System.out.println(bindingResult);
             return ResponseEntity.badRequest().body(BaseResponse.builder()
                     .status("FAILED")
                     .message("Validation error")

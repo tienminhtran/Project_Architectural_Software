@@ -219,8 +219,35 @@ public class UserServiceImpl implements UserService {
         User user = userRepository.findById(id).orElseThrow(() -> new IllegalArgumentException("Can not find User with id: " + id));
         System.out.println(user);
         Role role = roleRepository.findById(userRequest.getRoleId()).orElseThrow(() -> new IllegalArgumentException("Can not find Role with id: 1"));
-
+        if(userRequest.getPhoneNumber().equals("0123456789")) {
+            userRequest.setPhoneNumber("");
+        }
+        if(userRequest.getEmail().equals("example@gmail.com")) {
+            userRequest.setEmail("");
+        }
         try {
+            if(userRequest.getFirstName() != null || !userRequest.getFirstName().isEmpty()) {
+                user.setFirstname(userRequest.getFirstName());
+            }
+            if(userRequest.getLastName() != null || !userRequest.getLastName().isEmpty()) {
+                user.setLastname(userRequest.getLastName());
+            }
+
+            if(userRequest.getPassword() != null || !userRequest.getPassword().isEmpty()) {
+                user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
+            }
+            if(userRequest.getPhoneNumber() != null || !userRequest.getPhoneNumber().isEmpty()) {
+                user.setPhoneNumber(userRequest.getPhoneNumber());
+            }
+            if(userRequest.getEmail() != null || !userRequest.getEmail().isEmpty()) {
+                user.setEmail(userRequest.getEmail());
+            }
+            if(userRequest.getDob() != null) {
+                user.setDayOfBirth(userRequest.getDob());
+            }
+            if(userRequest.getGender() != null || !userRequest.getGender().isEmpty()) {
+                user.setGender(userRequest.getGender());
+            }
             user.setFirstname(userRequest.getFirstName());
             user.setLastname(userRequest.getLastName());
             user.setEmail(userRequest.getEmail());
