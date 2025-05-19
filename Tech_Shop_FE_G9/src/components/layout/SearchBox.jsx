@@ -1,5 +1,7 @@
 import React, { useState, useEffect, useRef } from "react";
+import { useNavigate } from "react-router-dom";
 import useProduct from "../../hooks/useProduct";
+import { toast } from "react-toastify";
 
 const styles = {
   searchContainer: {
@@ -88,6 +90,7 @@ const ProductSearchDropdown = () => {
   const dropdownRef = useRef(null);
   const [inputFocused, setInputFocused] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
+  const navigate = useNavigate();
 
   useEffect(() => {
     const timeout = setTimeout(() => {
@@ -107,8 +110,15 @@ const ProductSearchDropdown = () => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
-    return () => document.removeEventListener("mousedown", handleClickOutside);
+    return () =>
+      document.removeEventListener("mousedown", handleClickOutside);
   }, [setFoundProduct]);
+
+  const handleProductClick = (product) => {
+    navigate(`/product/${btoa(product.id)}`, { state: { product } });
+    setSearchTerm(""); // Clear search input
+    setFoundProduct([]); // Hide dropdown
+  };
 
   return (
     <div style={styles.searchContainer} ref={dropdownRef}>
@@ -117,13 +127,13 @@ const ProductSearchDropdown = () => {
         placeholder="Tìm sản phẩm..."
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
+        onFocus={() => setInputFocused(true)}
         style={{
           ...styles.searchInput,
           ...(inputFocused ? styles.searchInputFocus : {}),
         }}
-        onFocus={() => setInputFocused(true)}
-        onBlur={() => setInputFocused(false)}
       />
+
       {foundProduct.length > 0 && (
         <ul style={styles.productList}>
           {foundProduct.map((product, index) => (
@@ -132,11 +142,10 @@ const ProductSearchDropdown = () => {
               style={{
                 ...styles.productItem,
                 ...(hoveredIndex === index ? styles.productItemHover : {}),
-                borderBottom:
-                  index === foundProduct.length - 1 ? "none" : styles.productItem.borderBottom,
               }}
               onMouseEnter={() => setHoveredIndex(index)}
               onMouseLeave={() => setHoveredIndex(-1)}
+              onClick={() => handleProductClick(product)}
             >
               <img
                 src={product.thumbnail}
@@ -144,20 +153,10 @@ const ProductSearchDropdown = () => {
                 style={styles.productThumb}
               />
               <div style={styles.productInfo}>
-                <div style={styles.productName}>{product.productName}</div>
-                {/* description */}
-                <div style={{ fontSize: "14px", color: "#666" }}>
-                  {product.description.length > 50
-                    ? `${product.description.slice(0, 50)}...`
-                    : product.description}
-                </div>
-                <div style={styles.productPrice}>
-                  {product.price ? (
-                    <strong>{product.price.toLocaleString()} đ</strong>
-                  ) : (
-                    <em style={styles.productPriceContact}>Liên hệ</em>
-                  )}
-                </div>
+                <span style={styles.productName}>{product.productName}</span>
+                <span style={styles.productPrice}>
+                  {product.price ? `${product.price} ₫` : <span style={styles.productPriceContact}>Liên hệ</span>}
+                </span>
               </div>
             </li>
           ))}
