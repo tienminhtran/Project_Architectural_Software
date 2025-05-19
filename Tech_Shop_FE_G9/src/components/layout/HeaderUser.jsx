@@ -25,7 +25,7 @@ import useCart from "../../hooks/useCart.js";
 import useWishlist from "../../hooks/useWishlist.js";
 import useCategorie from "../../hooks/useCategorie.js";
 
-const HeaderUser = ({showCategory, showBanner}) => {
+const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
   const { carts } = useCart();
@@ -179,24 +179,24 @@ const HeaderUser = ({showCategory, showBanner}) => {
             <div className="col-7">
               <ul className="header-user__menu">
                 <li>
-                  <a onClick={() => navigate("/")} className="active">
+                  <a onClick={() => navigate("/")} className={currentTab === "Home" ? "active" : ""}>
                     Home
                   </a>
                 </li>
                 <li>
-                <a onClick={() => navigate("/shop")}>Shop</a>
+                <a onClick={() => navigate("/shop")} className={currentTab === "Shop" ? "active" : ""}>Shop</a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("/pages")}>Pages</a>
+                  <a onClick={() => navigate("/pages")} className={currentTab === "Pages" ? "active" : ""}>Pages</a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("/recruitment")}>Recruitment</a>
+                  <a onClick={() => navigate("/recruitment")} className={currentTab === "Recruitment" ? "active" : ""}>Recruitment</a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("/blogs/all")}>Blog</a>
+                  <a onClick={() => navigate("/blogs/all")} className={currentTab === "Blog" ? "active" : ""}>Blog</a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("/contact")}>Contact</a>
+                  <a onClick={() => navigate("/contact")} className={currentTab === "Contact" ? "active" : ""}>Contact</a>
                 </li>
               </ul>
             </div>
@@ -309,7 +309,7 @@ const HeaderUser = ({showCategory, showBanner}) => {
                       getCategories_NoPaging.map((category) => (
                         <li
                           key={category.id}
-                          className="header-user__category-item"
+                          className={`header-user__category-item ${currentCategory === category.id ? "active" : ""}`}
                           onClick={() =>
                             navigate(`/categories/${category.name.toLowerCase()}`, {
                               state: { categoryId: category.id },

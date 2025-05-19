@@ -58,7 +58,7 @@ const Blog = () => {
 
   return (
     <div>
-        <HeaderUser showCategory={false} showBanner={false} />
+        <HeaderUser showCategory={false} showBanner={false} currentTab={"Blog"} />
 
 
       <div className="blog__container">

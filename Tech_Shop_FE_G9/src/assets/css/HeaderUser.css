@@ -51,6 +51,14 @@
   width: calc(100% - 32px);
 }
 
+.header-user__category-list .active {
+  background-color: #e3f2fd;
+}
+
+.header-user__category-list .active::after {
+  width: calc(100% - 32px);
+}
+
 .header-user__chevron-icon {
   font-size: 12px;
   color: #666;

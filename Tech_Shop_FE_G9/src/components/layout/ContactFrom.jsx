@@ -57,7 +57,7 @@ function ContactForm() {
 
   return (
     <div >
-        <HeaderUser showCategory={false} showBanner={false} />
+        <HeaderUser showCategory={false} showBanner={false} currentTab={"Contact"} />
 
         <div style={{display: 'flex'}}> 
             <div>

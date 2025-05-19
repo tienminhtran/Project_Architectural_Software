@@ -72,7 +72,7 @@ const ProductCategory = () => {
 
     return (
         <div>
-            <HeardUser />
+            <HeardUser showCategory={true} showBanner={true} currentTab={"Home"} currentCategory={categoryId}/>
             {isLoading ? (
                 <Loading isLoading={isLoading} />
             ) : (
