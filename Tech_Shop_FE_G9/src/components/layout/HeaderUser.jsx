@@ -172,7 +172,14 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
             <div className="col-7">
               <div className="d-flex flex-column position-relative">
 
-                <form >
+                <form 
+                  onSubmit={(e) => {
+                    e.preventDefault(); // Ngăn form reload trang
+                    if (textSearch.trim()) {
+                      navigate(`/search?query=${encodeURIComponent(debouncedSearchTerm.trim())}`, { state: { products: products_response, isLoading } });
+                    }
+                  }}
+                >
                   <input
                     type="text"
                     className="form-control"
