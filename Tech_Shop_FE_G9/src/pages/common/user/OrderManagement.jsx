@@ -2,6 +2,9 @@ import React, { useState } from "react";
 import "../../../assets/css/OrderManagement.css";
 import useUser from "../../../hooks/useUser";
 import useOrder from "../../../hooks/useOrder";
+import useOrderDetail from "../../../hooks/useOrderDetail";
+import Modal from "react-bootstrap/Modal";
+import Button from "react-bootstrap/Button";
 
 const tabs = [
   "TẤT CẢ",
@@ -21,6 +24,10 @@ const OrderManagement = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [itemsPerPage, setItemsPerPage] = useState(10);
 
+  const [showModal, setShowModal] = useState(false);
+  const [selectedOrderId, setSelectedOrderId] = useState(null);
+  const [selectedOrder, setSelectedOrder] = useState(null);
+
   const { getOrderByUserAndOrderStatus } = useOrder(
     0,
     10,
@@ -31,14 +38,16 @@ const OrderManagement = () => {
     userInfor?.id,
     activeTab
   );
-  console.log("getOrderByUserAndOrderStatus", getOrderByUserAndOrderStatus);
+
+  const { getOrderDetailByOrderId, isLoading, isError } =
+    useOrderDetail(selectedOrderId);
+
+  const dataOrderDetail = getOrderDetailByOrderId?.response;
 
   // Get orders from the hook
   const orders = Array.isArray(getOrderByUserAndOrderStatus)
     ? getOrderByUserAndOrderStatus
     : [];
-
-  console.log("orders", orders);
 
   // Filter orders based on search input
   const filteredOrders = orders.filter((order) =>
@@ -83,15 +92,15 @@ const OrderManagement = () => {
   const getStatusClass = (status) => {
     switch (status) {
       case "PENDING":
-        return "status-pending";
+        return "status-pending1";
       case "DELIVERED":
-        return "status-shipping";
+        return "status-shipping1";
       case "REFUND":
-        return "status-returned";
+        return "status-returned1";
       case "COMPLETED":
-        return "status-completed";
+        return "status-completed1";
       case "CANCELLED":
-        return "status-cancelled";
+        return "status-cancelled1";
       default:
         return "";
     }
@@ -113,6 +122,33 @@ const OrderManagement = () => {
       default:
         return status;
     }
+  };
+
+  // Add this helper function alongside your other translation functions
+  const translatePaymentMethod = (method) => {
+    switch (method.toLowerCase()) {
+      case "cod":
+        return "Thanh toán khi nhận hàng (COD)";
+      case "bank":
+        return "Chuyển khoản ngân hàng";
+      case "paypal":
+        return "Ví điện tử PayPal";
+      default:
+        return method;
+    }
+  };
+
+  // Add handler for viewing order details
+  const handleViewDetails = (orderId) => {
+    setSelectedOrderId(orderId);
+    const order = orders.find((order) => order.id === orderId);
+    setSelectedOrder(order);
+    setShowModal(true);
+  };
+
+  // Add handler for closing the modal
+  const handleCloseModal = () => {
+    setShowModal(false);
   };
 
   return (
@@ -170,7 +206,19 @@ const OrderManagement = () => {
                     <strong>Ngày đặt:</strong> {formatDate(order.createdAt)}
                   </div>
                   <div className="order-items">
-                    <strong>Sản phẩm:</strong> {order.totalProduct} sản phẩm
+                    <strong>Số sản phẩm:</strong> {order.totalProduct} sản phẩm
+                  </div>
+                  <div className="order-address">
+                    <strong>Địa chỉ giao hàng:</strong>{" "}
+                    {order.address
+                      ? `${order.address.detailLocation}, ${order.address.street}, ${order.address.district}, ${order.address.city}`
+                      : "Không có thông tin"}
+                  </div>
+                  <div className="order-payment">
+                    <strong>Phương thức thanh toán:</strong>{" "}
+                    {order.payment
+                      ? translatePaymentMethod(order.payment.paymentName)
+                      : "Không có thông tin"}
                   </div>
                   <div className="order-total">
                     <strong>Tổng tiền:</strong>{" "}
@@ -179,12 +227,12 @@ const OrderManagement = () => {
                 </div>
 
                 <div className="order-actions">
-                  {/* <Link
-                  to={`/order-detail/${order.id}`}
-                  className="view-detail-btn"
-                >
-                  Xem chi tiết
-                </Link> */}
+                  <button
+                    className="view-detail-btn"
+                    onClick={() => handleViewDetails(order.id)}
+                  >
+                    Xem chi tiết
+                  </button>
 
                   {order.status === "PENDING" && (
                     <button className="cancel-order-btn">Hủy đơn hàng</button>
@@ -195,7 +243,7 @@ const OrderManagement = () => {
           </div>
 
           {/* Add pagination controls */}
-          <div className="pagination">
+          <div className="pagination1">
             <div className="pagination-controls">
               <button
                 onClick={() => handlePageChange(currentPage - 1)}
@@ -231,6 +279,109 @@ const OrderManagement = () => {
           </div>
         </>
       )}
+
+      {/* Add Order Detail Modal */}
+      <Modal show={showModal} onHide={handleCloseModal} size="lg">
+        <Modal.Header closeButton>
+          <Modal.Title>Chi tiết đơn hàng #{selectedOrderId}</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {isLoading ? (
+            <div className="text-center">
+              <p>Đang tải dữ liệu...</p>
+            </div>
+          ) : !dataOrderDetail ? (
+            <div className="text-center">
+              <p>Không tìm thấy dữ liệu đơn hàng.</p>
+            </div>
+          ) : (
+            <div className="order-detail-content">
+              <div className="order-info">
+                <p>
+                  <strong>Mã đơn hàng:</strong> #{dataOrderDetail.orderId}
+                </p>
+                <p>
+                  <strong>Khách hàng:</strong> {dataOrderDetail.customerName}
+                </p>
+                <p>
+                  <strong>Ngày đặt:</strong>{" "}
+                  {formatDate(dataOrderDetail.createdAt)}
+                </p>
+
+                {selectedOrder?.voucher && (
+                  <div className="voucher-info">
+                    <p>
+                      <strong>Mã giảm giá:</strong> {selectedOrder.voucher.name}
+                    </p>
+                    <p>
+                      <strong>Số tiền giảm:</strong>{" "}
+                      {formatCurrency(
+                        (dataOrderDetail.totalPrice *
+                          selectedOrder.voucher.value) /
+                          100
+                      )}
+                    </p>
+                  </div>
+                )}
+                <p>
+                  <strong>Tổng tiền hàng:</strong>{" "}
+                  {formatCurrency(dataOrderDetail.totalPrice)}
+                </p>
+                <p
+                  className={`final-price ${
+                    selectedOrder?.voucher ? "with-discount" : ""
+                  }`}
+                >
+                  <strong>Thành tiền:</strong>{" "}
+                  {selectedOrder?.voucher
+                    ? formatCurrency(
+                        dataOrderDetail.totalPrice -
+                          (dataOrderDetail.totalPrice *
+                            selectedOrder.voucher.value) /
+                            100
+                      )
+                    : formatCurrency(dataOrderDetail.totalPrice)}
+                  {selectedOrder?.voucher && (
+                    <span className="discount-badge">Đã giảm giá</span>
+                  )}
+                </p>
+              </div>
+
+              <div className="order-products">
+                <h5>Danh sách sản phẩm</h5>
+                <div className="table-container">
+                  <table className="table table-striped">
+                    <thead>
+                      <tr>
+                        <th>Sản phẩm</th>
+                        <th>Số lượng</th>
+                        <th>Đơn giá</th>
+                        <th>Thành tiền</th>
+                      </tr>
+                    </thead>
+                    <tbody>
+                      {dataOrderDetail.items &&
+                        dataOrderDetail.items.map((item, index) => (
+                          <tr key={index}>
+                            <td>{item.productName}</td>
+                            <td>{item.quantity}</td>
+                            <td>{formatCurrency(item.unitPrice)}</td>
+                            <td>{formatCurrency(item.totalPrice)}</td>
+                          </tr>
+                        ))}
+                    </tbody>
+                  </table>
+                </div>
+              </div>
+            </div>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseModal}>
+            Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
     </div>
   );
 };
