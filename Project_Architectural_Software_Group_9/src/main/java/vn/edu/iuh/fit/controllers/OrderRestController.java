@@ -260,4 +260,15 @@ public class OrderRestController {
         }
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by id user").response(orderResponses).build());
     }
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
+    @GetMapping("/me/phone/{phoneNumber}")
+    public ResponseEntity<BaseResponse<?>> getOrdersByPhoneNumber(@PathVariable String phoneNumber) {
+        List<OrderResponse> orderResponses = orderService.findByPhoneNumber(phoneNumber);
+        if (orderResponses.isEmpty()) {
+            return ResponseEntity.noContent().build();
+        }
+        return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by phone number").response(orderResponses).build());
+    }
+    // link API: http://localhost:8080/api/v1/orders/me/phone/0987654321
 }
