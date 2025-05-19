@@ -1,7 +1,9 @@
-import React, { useState, useEffect, useRef } from "react";
+import React, { useState, useEffect, useRef, useMemo } from "react";
 import { useNavigate } from "react-router-dom";
-import useProduct from "../../hooks/useProduct";
+import useProduct from "../../../../hooks/useProduct";
 import { toast } from "react-toastify";
+import { useDebounce } from "../../../../hooks/useDebounce";
+import { formatPrice } from "../../../../utils/FormatPrice";
 
 const styles = {
   searchContainer: {
@@ -86,22 +88,27 @@ const styles = {
 
 const ProductSearchDropdown = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const { findProduct, foundProduct, setFoundProduct } = useProduct();
+  const [foundProduct, setFoundProduct] = useState([]);
+
   const dropdownRef = useRef(null);
+
   const [inputFocused, setInputFocused] = useState(false);
   const [hoveredIndex, setHoveredIndex] = useState(-1);
   const navigate = useNavigate();
 
+  const debouncedSearchTerm = useDebounce(searchTerm, 500); // Giảm tải số lần tìm kiếm bằng cách debounce
+  const { search_paging } = useProduct(0, 8, debouncedSearchTerm);
+
+  const { data, isLoading, isError, error } = search_paging;
+
+  const products = useMemo(() => {
+    return data?.values || [];
+  }, [data?.values]);
+
+  // Cập nhật foundProduct khi products thay đổi
   useEffect(() => {
-    const timeout = setTimeout(() => {
-      if (searchTerm.trim()) {
-        findProduct(searchTerm.trim());
-      } else {
-        setFoundProduct([]);
-      }
-    }, 400);
-    return () => clearTimeout(timeout);
-  }, [searchTerm, findProduct, setFoundProduct]);
+    setFoundProduct(products);
+  }, [products]);
 
   useEffect(() => {
     const handleClickOutside = (e) => {
@@ -110,6 +117,7 @@ const ProductSearchDropdown = () => {
       }
     };
     document.addEventListener("mousedown", handleClickOutside);
+
     return () =>
       document.removeEventListener("mousedown", handleClickOutside);
   }, [setFoundProduct]);
@@ -120,6 +128,16 @@ const ProductSearchDropdown = () => {
     setFoundProduct([]); // Hide dropdown
   };
 
+  // Xử lý khi nhấn Enter để chuyển đến trang tìm kiếm
+  const handleKeyDown = (e) => {
+    if (e.key === "Enter" && searchTerm.trim()) {
+      e.preventDefault();
+      navigate(`/search?query=${encodeURIComponent(searchTerm.trim())}`, {state: { isLoading } });
+      setSearchTerm("");
+      setFoundProduct([]);
+    }
+  };
+
   return (
     <div style={styles.searchContainer} ref={dropdownRef}>
       <input
@@ -128,38 +146,48 @@ const ProductSearchDropdown = () => {
         value={searchTerm}
         onChange={(e) => setSearchTerm(e.target.value)}
         onFocus={() => setInputFocused(true)}
+
+        onKeyDown={handleKeyDown}
+        
         style={{
           ...styles.searchInput,
           ...(inputFocused ? styles.searchInputFocus : {}),
         }}
       />
 
-      {foundProduct.length > 0 && (
+      {inputFocused && searchTerm.trim() && (
         <ul style={styles.productList}>
-          {foundProduct.map((product, index) => (
-            <li
-              key={product.id}
-              style={{
-                ...styles.productItem,
-                ...(hoveredIndex === index ? styles.productItemHover : {}),
-              }}
-              onMouseEnter={() => setHoveredIndex(index)}
-              onMouseLeave={() => setHoveredIndex(-1)}
-              onClick={() => handleProductClick(product)}
-            >
-              <img
-                src={product.thumbnail}
-                alt={product.productName}
-                style={styles.productThumb}
-              />
-              <div style={styles.productInfo}>
-                <span style={styles.productName}>{product.productName}</span>
-                <span style={styles.productPrice}>
-                  {product.price ? `${product.price} ₫` : <span style={styles.productPriceContact}>Liên hệ</span>}
-                </span>
-              </div>
-            </li>
-          ))}
+          {isLoading ? (
+            <li>Loading...</li>
+          ) : foundProduct.length > 0 ? (
+
+            foundProduct.map((product, index) => (
+              <li
+                key={product.id}
+                style={{
+                  ...styles.productItem,
+                  ...(hoveredIndex === index ? styles.productItemHover : {}),
+                }}
+                onMouseEnter={() => setHoveredIndex(index)}
+                onMouseLeave={() => setHoveredIndex(-1)}
+                onClick={() => handleProductClick(product)}
+              >
+                <img
+                  src={product.thumbnail}
+                  alt={product.productName}
+                  style={styles.productThumb}
+                />
+                <div style={styles.productInfo}>
+                  <span style={styles.productName}>{product.productName}</span>
+                  <span style={styles.productPrice}>
+                    {product.price ? formatPrice(product.price) : <span style={styles.productPriceContact}>Liên hệ</span>}
+                  </span>
+                </div>
+              </li>
+            ))
+          ) : (
+            <li className="p-2 text-center">Không tìm thấy sản phẩm nào.</li>
+          )}
         </ul>
       )}
     </div>

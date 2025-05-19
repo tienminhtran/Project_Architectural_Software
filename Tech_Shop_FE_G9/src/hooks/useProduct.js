@@ -67,22 +67,6 @@ const useProduct = (pageNo, pageSize, productSearch) => {
         },
     })
 
-const [foundProduct, setFoundProduct] = useState([]);
-
-const findProduct = useMutation({
-        mutationFn: (keyword) => findProductByKeyword(keyword),
-        onSuccess: (data) => {
-            const values = data?.response?.values || [];
-            setFoundProduct(values); // Sửa: lưu toàn bộ mảng
-        },
-        onError: (error) => {
-            console.error("Find products failed:", error);
-            alert("Find products fail. Please try again!");
-            setFoundProduct([]);
-        },
-    });
-
-
     return {
         products_paging: usePaginationQuery("getAllProduct_Paging", getAllProduct_Paging, pageNo, pageSize),
         // updateProduct: update.mutate,
@@ -92,9 +76,6 @@ const findProduct = useMutation({
         search_paging: usePaginationQuery("searchProduct", searchProduct, pageNo, pageSize, productSearch, true),
         filterProduct: filter.mutateAsync,
         filterProductData: products,
-        findProduct: findProduct.mutateAsync,
-        foundProduct,
-        setFoundProduct,
     }
 }
 export default useProduct;
