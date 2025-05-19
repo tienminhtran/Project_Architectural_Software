@@ -245,9 +245,9 @@ const OrderPage = () => {
                       : "Loading..."}
                   </td>
                   <td>{order.user.phone_number}</td>
-                  <td className="text-center">
+                  <td>
                     <span
-                      className={`p-1 rounded rounded-3 text-light status-${order.status.toLowerCase()}`}
+                      className={`p-1 rounded rounded-3 text-light status-${order.status.toLowerCase()} text-center`}
                     >
                       {order.status}
                     </span>
