@@ -74,7 +74,7 @@ const RecruitmentPage = () => {
 
   return (
     <div>
-        <HeaderUser showCategory={false} showBanner={false} />
+        <HeaderUser showCategory={false} showBanner={false} currentTab={"Recruitment"} />
 
         <div className="recruitment-page">
       <div className="recruitment-page__sidebar">
