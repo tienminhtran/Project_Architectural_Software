@@ -20,37 +20,70 @@ const center = {
 const storeLocations = [
   {
     id: 1,
-    name: 'CellphoneS 218-220 Trần Quang Khải, Phường Tân Định, Quận 1',
-    address: 'Trung tâm Laptop - Gia dụng',
-    time: '8h00 - 22h00 (tất cả các ngày trong tuần)',
+    name: 'Iuh Store - 218-220 Trần Quang Khải, Q.1',
+    address: 'Chuyên Laptop, Điện thoại chính hãng',
+    time: '8h00 - 22h00 (Tất cả các ngày)',
     phone: '02871000218',
-    position: { lat: 10.790859, lng: 106.695602 },
+    position: { lat: 10.790859, lng: 106.695602 }, // Quận 1
   },
   {
     id: 2,
-    name: 'CellphoneS 55B Trần Quang Khải, P. Tân Định, Q. 1',
-    address: '',
-    time: '8h00 - 22h00 (tất cả các ngày trong tuần)',
+    name: 'Iuh Store - 55B Trần Quang Khải, Q.1',
+    address: 'Điện thoại, Tablet, Phụ kiện',
+    time: '8h00 - 22h00 (Tất cả các ngày)',
     phone: '02871083355',
-    position: { lat: 10.791253, lng: 106.696222 },
+    position: { lat: 10.791253, lng: 106.696222 }, // Gần điểm 1, vẫn Q.1
   },
   {
     id: 3,
-    name: 'CellphoneS 114 Phan Đăng Lưu, P. 3, Q. Phú Nhuận',
-    address: '',
-    time: '8h00 - 22h00 (tất cả các ngày trong tuần)',
+    name: 'Iuh Store - 114 Phan Đăng Lưu, Q. Phú Nhuận',
+    address: 'Laptop Gaming, Văn phòng',
+    time: '8h00 - 22h00 (Tất cả các ngày)',
     phone: '02871000219',
-    position: { lat: 10.803444, lng: 106.684155 },
+    position: { lat: 10.803444, lng: 106.684155 }, // Phú Nhuận
   },
   {
     id: 4,
-    name: 'CellphoneS 157-159 Nguyễn Thị Minh Khai, P. Phạm Ngũ Lão, Q.1',
-    address: '',
-    time: '8h00 - 22h00 (tất cả các ngày trong tuần)',
+    name: 'Iuh Store - 159 Nguyễn Thị Minh Khai, Q.1',
+    address: 'Điện thoại cao cấp, iPhone, Samsung',
+    time: '8h00 - 22h00 (Tất cả các ngày)',
     phone: '02871066159',
-    position: { lat: 10.7658, lng: 106.6925 },
+    position: { lat: 10.7658, lng: 106.6925 }, // Gần trung tâm Q.1
+  },
+  {
+    id: 5,
+    name: 'Iuh Store - 12 Nguyễn Văn Bảo, Gò Vấp',
+    address: 'Chi nhánh Gò Vấp - Laptop & Mobile',
+    time: '8h00 - 21h00 (Thứ 2 - Chủ nhật)',
+    phone: '02838940390',
+    position: { lat: 10.8225, lng: 106.6840 }, // Gò Vấp
+  },
+  {
+    id: 6,
+    name: 'Iuh Store - 01 Võ Văn Ngân, Thủ Đức',
+    address: 'Điện thoại, Laptop học sinh sinh viên',
+    time: '8h30 - 21h30 (Tất cả các ngày)',
+    phone: '02838940391',
+    position: { lat: 10.8521, lng: 106.7589 }, // Thủ Đức
+  },
+  {
+    id: 7,
+    name: 'Iuh Store - 50 Lê Văn Việt, Q.9',
+    address: 'Laptop, Tablet & Dịch vụ kỹ thuật',
+    time: '9h00 - 21h00 (Tất cả các ngày)',
+    phone: '02871088999',
+    position: { lat: 10.8423, lng: 106.7875 }, // Q.9
+  },
+  {
+    id: 8,
+    name: 'Iuh Store - 234 Nguyễn Văn Cừ, Q.5',
+    address: 'Chuyên iPhone, iPad, MacBook',
+    time: '8h00 - 22h00 (Tất cả các ngày)',
+    phone: '02871088234',
+    position: { lat: 10.7556, lng: 106.6797 }, // Quận 5
   },
 ];
+
 
 // Component to handle map panning
 const MapController = ({ selectedStore }) => {
