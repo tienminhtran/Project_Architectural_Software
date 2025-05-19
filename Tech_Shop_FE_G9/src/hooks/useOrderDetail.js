@@ -1,12 +1,19 @@
 import { useQuery } from "@tanstack/react-query";
-import { getOrderDetailById } from "../services/orderDetailService";
+import { getOrderDetailByOrderId as fetchOrderDetailByOrderId } from "../services/orderDetailService";
 
 const useOrderDetail = (orderId) => {
-    return useQuery({
-        queryKey: ["orderDetail", orderId], // Key để quản lý cache
-        queryFn: () => getOrderDetailById(orderId), // Hàm fetch dữ liệu
-        enabled: !!orderId, // Chỉ fetch khi orderId có giá trị
-    });
+  const { data, isLoading, isError } = useQuery({
+    queryKey: ["orderDetail", orderId],
+    queryFn: () => fetchOrderDetailByOrderId(orderId),
+    enabled: !!orderId,
+  });
+
+  // Return an object with named properties similar to useOrder pattern
+  return {
+    getOrderDetailByOrderId: data,
+    isLoading,
+    isError,
+  };
 };
 
 export default useOrderDetail;
