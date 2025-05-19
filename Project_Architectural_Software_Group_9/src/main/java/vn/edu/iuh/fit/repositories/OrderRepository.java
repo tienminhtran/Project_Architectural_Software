@@ -57,11 +57,14 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "GROUP BY CAST(o.createdAt AS java.sql.Date)")
     List<DailyOrderResponse> totalOrderByDay();
 
-    @Query("SELECT SUM(od.quantity * od.product.price) " +
+    @Query("SELECT COALESCE(SUM(od.quantity * od.product.price), 0) * " +
+            "(1 - COALESCE(o.voucher.value, 0) / 100.0) " +
             "FROM OrderDetail od " +
             "JOIN od.order o " +
+            "LEFT JOIN o.voucher v " +
             "WHERE o.id = :orderId")
     Double calculateTotalAmountByOrderId(@Param("orderId") Long orderId);
+
 
     @Query("SELECT o FROM Order o " +
             "JOIN o.user u " +
@@ -109,7 +112,7 @@ public interface OrderRepository extends JpaRepository<Order, Long> {
             "WHERE u.id = :userId AND o.status = :status")
     List<Order> findByUserIdAndStatus(Long userId, OrderStatus status);
 
-    @Query("SELECT SUM(od.quantity) FROM OrderDetail od " +
+    @Query("SELECT COUNT(DISTINCT od.product.id) FROM OrderDetail od " +
             "JOIN od.order o " +
             "WHERE o.id = :orderId")
     int getTotalProductByOrderId(@Param("orderId") Long orderId);

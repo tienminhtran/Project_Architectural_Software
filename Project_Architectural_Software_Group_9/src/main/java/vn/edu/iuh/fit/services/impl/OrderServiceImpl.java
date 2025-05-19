@@ -494,7 +494,8 @@ public class OrderServiceImpl implements OrderService {
             // Calculate totalProduct and totalPrice for each order
             int totalProduct = orderRepository.getTotalProductByOrderId(order.getId());
             Double totalPrice = orderRepository.calculateTotalAmountByOrderId(order.getId());
-
+            System.out.println("Total Price: " + totalPrice);
+            System.out.println("Total Product: " + totalProduct);
             // Set the calculated fields in the response
             response.setTotalProduct(totalProduct);
             response.setTotalPrice(totalPrice);
