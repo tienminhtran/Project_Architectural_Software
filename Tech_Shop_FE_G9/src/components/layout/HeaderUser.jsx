@@ -25,6 +25,7 @@ import useCart from "../../hooks/useCart.js";
 import useWishlist from "../../hooks/useWishlist.js";
 import useCategorie from "../../hooks/useCategorie.js";
 
+import SearchBox from "./SearchBox.jsx";
 const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
@@ -122,6 +123,7 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
     });
   };
 
+
   return (
     <div>
       <div className="header-user">
@@ -144,13 +146,8 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
             </button>
             {/* Ô tìm kiếm */}
             <div className="col-7">
-              <form className="d-flex">
-                <input
-                  type="text"
-                  className="form-control"
-                  placeholder="Tìm kiếm sản phẩm..."
-                />
-              </form>
+               <SearchBox />
+
             </div>
             {/* Ngôn ngữ & tiền tệ */}
             <div className="col-2 text-end">

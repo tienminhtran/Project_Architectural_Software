@@ -1,5 +1,5 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { getAllProduct_Paging, deleteProduct, createProduct, searchProduct, updateProduct, filterProduct} from "../services/productService";
+import { getAllProduct_Paging, deleteProduct, createProduct, searchProduct, updateProduct, filterProduct, findProductByKeyword} from "../services/productService";
 import usePaginationQuery from "./usePaginationQuery";
 import { data } from "react-router-dom";
 import { useState } from "react";
@@ -67,6 +67,21 @@ const useProduct = (pageNo, pageSize, productSearch) => {
         },
     })
 
+const [foundProduct, setFoundProduct] = useState([]);
+
+const findProduct = useMutation({
+        mutationFn: (keyword) => findProductByKeyword(keyword),
+        onSuccess: (data) => {
+            const values = data?.response?.values || [];
+            setFoundProduct(values); // Sửa: lưu toàn bộ mảng
+        },
+        onError: (error) => {
+            console.error("Find products failed:", error);
+            alert("Find products fail. Please try again!");
+            setFoundProduct([]);
+        },
+    });
+
 
     return {
         products_paging: usePaginationQuery("getAllProduct_Paging", getAllProduct_Paging, pageNo, pageSize),
@@ -77,6 +92,9 @@ const useProduct = (pageNo, pageSize, productSearch) => {
         search_paging: usePaginationQuery("searchProduct", searchProduct, pageNo, pageSize, productSearch, true),
         filterProduct: filter.mutateAsync,
         filterProductData: products,
+        findProduct: findProduct.mutateAsync,
+        foundProduct,
+        setFoundProduct,
     }
 }
 export default useProduct;
