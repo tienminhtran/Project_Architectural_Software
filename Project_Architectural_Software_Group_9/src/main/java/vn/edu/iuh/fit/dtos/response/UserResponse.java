@@ -52,5 +52,7 @@ public class UserResponse implements Serializable {
 
     RoleResponse role;
 
+    int orderCount;
+
 
 }

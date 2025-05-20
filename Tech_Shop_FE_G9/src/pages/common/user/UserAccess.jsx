@@ -1,66 +1,18 @@
-import React, { useState } from 'react';
-
-const usersData = [
-  {
-    id: 1,
-    profile: 'https://via.placeholder.com/40',
-    firstName: 'Nguyen',
-    lastName: 'An',
-    username: 'ngan01',
-    phone: '0123456789',
-    email: 'an.nguyen@example.com',
-    status: 'Hoạt động',
-  },
-  {
-    id: 2,
-    profile: 'https://via.placeholder.com/40',
-    firstName: 'Tran',
-    lastName: 'Binh',
-    username: 'binhtran',
-    phone: '0987654321',
-    email: 'binh.tran@example.com',
-    status: 'Quá hạn',
-  },
-  // thêm người dùng khác nếu cần
-];
+import React from 'react';
+import useUser from '../../../hooks/useUser'; // adjust the path if needed
 
 export default function UserAccess() {
-  const [search, setSearch] = useState('');
-  const [filterOverdue, setFilterOverdue] = useState(false);
+  const { getAllUserHasOrderPaging, getAllUserRole1Paging } = useUser();
 
-  const filteredUsers = usersData.filter(user => {
-    const matchSearch =
-      user.firstName.toLowerCase().includes(search.toLowerCase()) ||
-      user.lastName.toLowerCase().includes(search.toLowerCase()) ||
-      user.email.toLowerCase().includes(search.toLowerCase());
+  const userHasOrders = getAllUserHasOrderPaging.data?.response ?? [];
+  const userRole1 = getAllUserRole1Paging.data?.response ?? [];
 
-    const matchStatus = filterOverdue ? user.status === 'Quá hạn' : true;
-    return matchSearch && matchStatus;
-  });
-
+  console.log('userHasOrders', userHasOrders);
+  console.log('userRole1', userRole1);
   const styles = {
     container: { padding: 24, fontFamily: 'Arial, sans-serif' },
     title: { fontSize: 24, fontWeight: 'bold', marginBottom: 16 },
-    controls: {
-      display: 'flex',
-      flexDirection: 'column',
-      gap: 12,
-      marginBottom: 20,
-    },
-    search: {
-      padding: '8px 12px',
-      border: '1px solid #ccc',
-      borderRadius: 4,
-    },
-    filterBtn: isActive => ({
-      padding: '8px 16px',
-      backgroundColor: isActive ? '#dc3545' : '#007bff',
-      color: '#fff',
-      border: 'none',
-      borderRadius: 4,
-      cursor: 'pointer',
-    }),
-    tableWrapper: { overflowX: 'auto' },
+    tableWrapper: { overflowX: 'auto', marginBottom: 40 },
     table: {
       width: '100%',
       borderCollapse: 'collapse',
@@ -97,55 +49,44 @@ export default function UserAccess() {
     },
   };
 
+const renderTable = (data, title, includeOrder = false) => {
+  const hasScroll = data.length > 5;
   return (
-    <div style={styles.container}>
-      <div style={styles.title}>Quản lý người dùng</div>
-
-      <div style={styles.controls}>
-        <input
-          type="text"
-          placeholder="Tìm kiếm tên, họ, email..."
-          value={search}
-          onChange={e => setSearch(e.target.value)}
-          style={styles.search}
-        />
-        <button
-          onClick={() => setFilterOverdue(prev => !prev)}
-          style={styles.filterBtn(filterOverdue)}
-        >
-          {filterOverdue ? 'Bỏ lọc Quá hạn' : 'Lọc User Quá hạn'}
-        </button>
-      </div>
-
-      <div style={styles.tableWrapper}>
+    <div style={styles.tableWrapper}>
+      <h2>{title}</h2>
+      <div style={{ maxHeight: hasScroll ? 300 : 'auto', overflowY: hasScroll ? 'scroll' : 'visible' }}>
         <table style={styles.table}>
           <thead>
             <tr>
               <th style={styles.th}>Profile</th>
               <th style={styles.th}>First Name</th>
               <th style={styles.th}>Last Name</th>
-              <th style={styles.th}>User Name</th>
+              <th style={styles.th}>Username</th>
               <th style={styles.th}>Phone</th>
               <th style={styles.th}>Email</th>
+              <th style={styles.th}>Created At</th>
               <th style={styles.th}>Status</th>
+              {includeOrder && <th style={styles.th}>No. Order</th>}
               <th style={styles.th}>Action</th>
             </tr>
           </thead>
           <tbody>
-            {filteredUsers.length > 0 ? (
-              filteredUsers.map(user => (
+            {data.length > 0 ? (
+              data.map(user => (
                 <tr key={user.id}>
                   <td style={styles.td}>
-                    <img src={user.profile} alt="avatar" style={styles.img} />
+                    <img src={user.image || user.profile || 'https://via.placeholder.com/40'} alt="avatar" style={styles.img} />
                   </td>
-                  <td style={styles.td}>{user.firstName}</td>
-                  <td style={styles.td}>{user.lastName}</td>
+                  <td style={styles.td}>{user.firstname}</td>
+                  <td style={styles.td}>{user.lastname}</td>
                   <td style={styles.td}>{user.username}</td>
-                  <td style={styles.td}>{user.phone}</td>
+                  <td style={styles.td}>{user.phone_number}</td>
                   <td style={styles.td}>{user.email}</td>
-                  <td style={{ ...styles.td, ...(user.status === 'Quá hạn' ? styles.overdue : {}) }}>
-                    {user.status}
+                  <td style={styles.td}>{new Date(user.createdAt).toLocaleDateString()}</td>
+                  <td style={{ ...styles.td, ...(user.active === 'Quá hạn' ? styles.overdue : {}) }}>
+                    {user.active}
                   </td>
+                  {includeOrder && <td style={styles.td}>{user.orderCount ?? 0}</td>}
                   <td style={styles.td}>
                     <button style={{ color: '#007bff', cursor: 'pointer' }}>Xem</button>
                   </td>
@@ -153,12 +94,24 @@ export default function UserAccess() {
               ))
             ) : (
               <tr>
-                <td colSpan="8" style={styles.noData}>Không tìm thấy người dùng phù hợp.</td>
+                <td colSpan={includeOrder ? 10 : 9} style={styles.noData}>
+                  Không tìm thấy người dùng phù hợp.
+                </td>
               </tr>
             )}
           </tbody>
         </table>
       </div>
+    </div>
+  );
+};
+
+  return (
+    <div style={styles.container}>
+      <div style={styles.title}>Quản lý người dùng</div>
+
+      {renderTable(userHasOrders, 'Bảng người dùng đã mua', true)}
+      {renderTable(userRole1, 'Bảng người dùng USER')}
     </div>
   );
 }

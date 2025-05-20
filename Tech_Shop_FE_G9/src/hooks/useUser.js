@@ -5,10 +5,14 @@ import {
   getAllUsersPaging,
   createUserRoleManager,
   checkPhoneExistsService,
+  getAllUserHasOrder,
+  getAllUserRole1,
+
   // getAllUsersNoPage,
 } from "../services/userService";
 import usePaginationQuery from "./usePaginationQuery";
 import { resetPasswordService, getCurrentUser } from "../services/userService";
+
 
 const useUser = (pageNo, pageSize) => {
   const queryClient = useQueryClient();
@@ -84,6 +88,22 @@ const useUser = (pageNo, pageSize) => {
     },
   });
 
+  // getAllUserHasOrder 
+  const getAllUserHasOrderPaging = useQuery({
+    queryKey: ["getAllUserHasOrder"],
+    queryFn: () => getAllUserHasOrder(),
+    refetchOnWindowFocus: false,
+  });
+
+  // getAllUserRole1
+  const getAllUserRole1Paging = useQuery({
+    queryKey: ["getAllUserRole1"],
+    queryFn: () => getAllUserRole1(),
+    refetchOnWindowFocus: false,
+  });
+
+
+
   return {
     user_paging: userPaging,
     // user_nopaging: userNoPaging,
@@ -93,10 +113,19 @@ const useUser = (pageNo, pageSize) => {
     resetPassword: resetPassword.mutate,
     checkPhoneExists,
     checkPhoneExistsAsync,
+
+    getAllUserHasOrderPaging,
+    getAllUserRole1Paging,
+    isLoadingUser: getUser.isLoading,
+    isLoadingUserPaging: userPaging.isLoading,
+    isLoadingUserHasOrder: getAllUserHasOrderPaging.isLoading,
+    isLoadingUserRole1: getAllUserRole1Paging.isLoading,
+    
     isCheckingPhone,
     isCheckPhoneError,
     checkPhoneError,
     loadingUpdateUser: updateProfileUser.isLoading,
+    
   };
 };
 export default useUser;
