@@ -22,6 +22,7 @@ import java.util.Optional;
 @Repository
 public interface UserRepository extends JpaRepository<User, Long> {
     Optional<User> findByUsername(String username);
+
     Optional<User> findByEmail(String email);
 
     boolean existsByUsername(String username);
@@ -42,6 +43,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
             "WHERE r.id = 1 " +
             "GROUP BY u.id")
     List<Object[]> countOrdersByUserWithRole1();
+
+    // user có role = 1
+
+    @Query("SELECT u FROM User u JOIN u.role r WHERE r.id = 1")
+    List<User> findAllUserWithRole1();
 
 
 }

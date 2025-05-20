@@ -387,17 +387,46 @@ public class UserRestController {
         return ResponseEntity.ok(response);
     }
 
+//    @GetMapping("/allUserHasOrder")
+//    public ResponseEntity<BaseResponse<Map<UserResponse, Integer>>> getAllUserHasOrder() {
+//        Map<UserResponse, Integer> map = userService.getUserOrderCountMap();
+//        if (map.isEmpty()) {
+//            return ResponseEntity.notFound().build();
+//        }
+//        return ResponseEntity.ok(BaseResponse.<Map<UserResponse, Integer>>builder()
+//                .status("SUCCESS")
+//                .message("Get all users with orders success")
+//                .response(map)
+//                .build());
+//    }
+
     @GetMapping("/allUserHasOrder")
-    public ResponseEntity<BaseResponse<Map<UserResponse, Integer>>> getAllUserHasOrder() {
-        Map<UserResponse, Integer> map = userService.getUserOrderCountMap();
-        if (map.isEmpty()) {
+    public ResponseEntity<BaseResponse<List<UserResponse>>> getAllUserHasOrder() {
+        List<UserResponse> list = userService.getUserOrderCountList();
+
+        if (list.isEmpty()) {
             return ResponseEntity.notFound().build();
         }
-        return ResponseEntity.ok(BaseResponse.<Map<UserResponse, Integer>>builder()
+
+        return ResponseEntity.ok(BaseResponse.<List<UserResponse>>builder()
                 .status("SUCCESS")
                 .message("Get all users with orders success")
-                .response(map)
+                .response(list)
                 .build());
+    }
+
+
+    // lay danh sach user có role = 1
+    @GetMapping("/allUserRole1")
+    public ResponseEntity<BaseResponse<List<UserResponse>>> getAllUserRole1() {
+        List<UserResponse> userResponses = userService.getAllUserRole1();
+        if (userResponses == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(BaseResponse.<List<UserResponse>>builder()
+                .status("SUCCESS")
+                .message("Get all users with role 1 success")
+                .response(userResponses).build());
     }
 
 }
