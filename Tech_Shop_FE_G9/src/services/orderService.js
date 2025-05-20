@@ -54,8 +54,8 @@ export const fetchOrderByPhoneNumber = async (phoneNumber) => {
 
   try {
     const response = await axiosInstance.get(`/orders/me/phone/${phoneNumber}`);
-    
-    // Backend trả về 204 No Content khi không có đơn hàng, axios sẽ throw error, 
+
+    // Backend trả về 204 No Content khi không có đơn hàng, axios sẽ throw error,
     // nên ta cần xử lý ở catch hoặc kiểm tra response.status trước (nhưng axios không expose status 204 như fetch)
     // Nên backend có thể sửa trả 200 kèm mảng rỗng hoặc ta xử lý lỗi 204 như sau:
 
@@ -68,7 +68,6 @@ export const fetchOrderByPhoneNumber = async (phoneNumber) => {
     throw error;
   }
 };
-
 
 export const filterOrderAll = async (
   pageNo,
@@ -102,4 +101,9 @@ export const getUserOrdersByStatus = async (userId, status) => {
     console.error("Error fetching user orders:", error);
     throw error;
   }
+};
+
+export const cancelOrder = async (orderId) => {
+  const response = await axiosInstance.put(`/orders/${orderId}/cancel`);
+  return response.data;
 };
