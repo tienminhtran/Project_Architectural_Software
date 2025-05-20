@@ -233,9 +233,6 @@ public class UserServiceImpl implements UserService {
                 user.setLastname(userRequest.getLastName());
             }
 
-            if(userRequest.getPassword() != null || !userRequest.getPassword().isEmpty()) {
-                user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-            }
             if(userRequest.getPhoneNumber() != null || !userRequest.getPhoneNumber().isEmpty()) {
                 user.setPhoneNumber(userRequest.getPhoneNumber());
             }
@@ -248,12 +245,7 @@ public class UserServiceImpl implements UserService {
             if(userRequest.getGender() != null || !userRequest.getGender().isEmpty()) {
                 user.setGender(userRequest.getGender());
             }
-            user.setFirstname(userRequest.getFirstName());
-            user.setLastname(userRequest.getLastName());
-            user.setEmail(userRequest.getEmail());
-            user.setPhoneNumber(userRequest.getPhoneNumber());
-            user.setGender(userRequest.getGender());
-            user.setDayOfBirth(userRequest.getDob());
+
             user.setRole(role);
             user.setActive(userRequest.isActive());
             user.setUpdatedAt(LocalDateTime.now());

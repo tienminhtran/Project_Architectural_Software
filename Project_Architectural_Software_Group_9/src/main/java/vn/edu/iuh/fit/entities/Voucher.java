@@ -23,7 +23,6 @@ public class Voucher extends TrackingDate {
     private Long id;
 
     @NotNull(message = "Expired date cannot be null")
-    @Future(message = "Expired date must be in the future")
     @Column(name = "expired_date", nullable = false)
     private LocalDate expiredDate;
 
@@ -31,7 +30,7 @@ public class Voucher extends TrackingDate {
     @Column(nullable = false)
     private String name;
 
-    @NotNull
+//    @NotNull
     @Column(name = "quantity", nullable = false)
     private int quantity;
 

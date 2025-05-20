@@ -89,7 +89,16 @@ public class VoucherRestController {
 
     @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER')")
     @PutMapping("/{id}")
-    public ResponseEntity<BaseResponse<?>> updateVoucher(@PathVariable Long id,@RequestBody VoucherRequest voucherRequest) {
+    public ResponseEntity<BaseResponse<?>> updateVoucher( @PathVariable Long id, @Valid @RequestBody VoucherRequest voucherRequest, BindingResult bindingResult) {
+
+        if(bindingResult.hasErrors()) {
+            Map<String, Object> errors = new HashMap<String, Object>();
+            bindingResult.getFieldErrors().forEach(result -> {
+                errors.put(result.getField(), result.getDefaultMessage());
+            });
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
+                    .body(BaseResponse.builder().status("FAILED").message("Validation error").response(errors).build());
+        }
 
         VoucherResponse update = voucherService.update(id, voucherRequest);
         if (update == null) {
@@ -100,7 +109,9 @@ public class VoucherRestController {
 
     @DeleteMapping("/{id}")
     public ResponseEntity<BaseResponse<?>> deleteVoucher(@PathVariable Long id) {
+
         boolean isDeleted = voucherService.deleteById(id);
+
         if (!isDeleted) {
             return ResponseEntity.badRequest().build();
         }
