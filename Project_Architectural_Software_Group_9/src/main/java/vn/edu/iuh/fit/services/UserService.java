@@ -81,4 +81,7 @@ public interface UserService {
     List<UserResponse> getUserOrderCountList();
     // lay danh sach user có role = 1 và chưa có order
     public List<UserResponse> getAllUserRole1AndNoOrder();
+
+    // update status = false list user theo iduser
+    public void updateStatusByIds(List<Long> ids);
 }

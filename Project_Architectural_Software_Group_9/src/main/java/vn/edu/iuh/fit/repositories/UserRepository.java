@@ -49,7 +49,11 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u JOIN u.role r WHERE r.id = 1")
     List<User> findAllUserWithRole1();
 
-    @Query("SELECT u FROM User u JOIN u.role r WHERE r.id = 1 AND u.id NOT IN (SELECT o.user.id FROM Order o)")
+    @Query("SELECT u FROM User u JOIN u.role r WHERE r.id = 1 AND u.active = true AND u.id NOT IN (SELECT o.user.id FROM Order o)")
     List<User> findUsersWithRole1AndNoOrders();
+
+    //update  status = false list user theo iduser
+    @Query("UPDATE User u SET u.active = false WHERE u.id IN :ids")
+    void updateStatusByIds(List<Long> ids);
 
 }

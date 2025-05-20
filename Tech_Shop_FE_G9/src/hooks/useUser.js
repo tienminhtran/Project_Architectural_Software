@@ -7,7 +7,8 @@ import {
   checkPhoneExistsService,
   getAllUserHasOrder,
   getAllUserRole1,
-  getAllUserRole1AndNoOrder
+  getAllUserRole1AndNoOrder,
+
 
   // getAllUsersNoPage,
 } from "../services/userService";
@@ -134,6 +135,7 @@ const useUser = (pageNo, pageSize) => {
     isCheckPhoneError,
     checkPhoneError,
     loadingUpdateUser: updateProfileUser.isLoading,
+    
   };
 };
 export default useUser;

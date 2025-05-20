@@ -504,6 +504,18 @@ public class UserServiceImpl implements UserService {
         return null;
     }
 
+    @Override
+    public void updateStatusByIds(List<Long> ids) {
+        List<User> users = userRepository.findAllById(ids);
+        if (users != null) {
+            userRepository.updateStatusByIds(ids);
+        }
+        for (User user : users) {
+            user.setActive(false);
+            userRepository.save(user);
+        }
+    }
+
 
     @Override
     public List<UserResponse> getAllUserRole1() {
