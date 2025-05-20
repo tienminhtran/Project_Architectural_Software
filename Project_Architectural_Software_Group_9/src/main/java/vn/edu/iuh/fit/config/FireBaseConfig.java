@@ -14,6 +14,7 @@ import org.springframework.context.annotation.Configuration;
 
 import java.io.FileInputStream;
 import java.io.IOException;
+import java.io.InputStream;
 import java.util.List;
 
 /*
@@ -36,7 +37,12 @@ public class FireBaseConfig {
         }
 
         // Nếu chưa tồn tại, thì khởi tạo mới
-        FileInputStream serviceAccount = new FileInputStream("src/main/resources/tech-shop-f5a1c-firebase-adminsdk-fbsvc-921e7de853.json");
+        InputStream serviceAccount = getClass().getClassLoader()
+                .getResourceAsStream("tech-shop-f5a1c-firebase-adminsdk-fbsvc-921e7de853.json");
+
+        if (serviceAccount == null) {
+            throw new IOException("Firebase service account file not found in classpath");
+        }
         FirebaseOptions options = FirebaseOptions.builder()
                 .setCredentials(GoogleCredentials.fromStream(serviceAccount))
                 .build();

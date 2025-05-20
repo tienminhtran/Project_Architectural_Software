@@ -24,8 +24,8 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**") // Áp dụng cho tất cả API
-                        .allowedOrigins("http://localhost:5173") // Cho phép frontend React gọi API
-                        .allowedMethods("GET", "POST", "PUT", "DELETE", "OPTIONS")
+                        .allowedOrigins("http://localhost:5173", "https://tranminhtien.io.vn") // Cho phép frontend React gọi API
+                        .allowedMethods("*")
                         .allowedHeaders("*")
                         .allowCredentials(true);
             }
