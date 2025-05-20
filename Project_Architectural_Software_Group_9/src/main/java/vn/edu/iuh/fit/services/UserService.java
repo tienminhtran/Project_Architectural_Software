@@ -79,4 +79,6 @@ public interface UserService {
     // lay danh sach user có role = 1
     public List<UserResponse> getAllUserRole1();
     List<UserResponse> getUserOrderCountList();
+    // lay danh sach user có role = 1 và chưa có order
+    public List<UserResponse> getAllUserRole1AndNoOrder();
 }

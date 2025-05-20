@@ -85,13 +85,13 @@ const ProductInquiry = ({ addMessage }) => {
   };
 
   const fetchAllProducts = async () => {
-    const res = await axios.get(`http://localhost:8080/api/v1/products`);
+    const res = await axios.get(`http://13.213.62.201:8082/api/v1/products`);
     return res.data?.response?.values || [];
   };
 
   const searchProductsByQuery = async (q) => {
     const res = await axios.get(
-      `http://localhost:8080/api/v1/products/search/${encodeURIComponent(q)}`
+      `http://13.213.62.201:8082/api/v1/products/search/${encodeURIComponent(q)}`
     );
     return res.data?.response?.values || [];
   };
