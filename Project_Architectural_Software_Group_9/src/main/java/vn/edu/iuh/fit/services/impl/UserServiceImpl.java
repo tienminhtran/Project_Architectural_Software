@@ -470,18 +470,47 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+//    @Override
+//    public Map<UserResponse, Integer> getUserOrderCountMap() {
+//        List<Object[]> results = userRepository.countOrdersByUserWithRole1();
+//
+//        Map<UserResponse, Integer> userOrderCountMap = new HashMap<>();
+//        for (Object[] row : results) {
+//            User user = (User) row[0];
+//            Long count = (Long) row[1];
+//            UserResponse userResponse = this.convertToDto(user, UserResponse.class);
+//            userOrderCountMap.put(userResponse, count.intValue());
+//
+//        }
+//        return userOrderCountMap;
+//    }
+
     @Override
-    public Map<UserResponse, Integer> getUserOrderCountMap() {
+    public List<UserResponse> getUserOrderCountList() {
         List<Object[]> results = userRepository.countOrdersByUserWithRole1();
 
-        Map<UserResponse, Integer> userOrderCountMap = new HashMap<>();
+        List<UserResponse> list = new ArrayList<>();
         for (Object[] row : results) {
             User user = (User) row[0];
             Long count = (Long) row[1];
             UserResponse userResponse = this.convertToDto(user, UserResponse.class);
-            userOrderCountMap.put(userResponse, count.intValue());
+            userResponse.setOrderCount(count.intValue());
+            list.add(userResponse);
         }
-        return userOrderCountMap;
+
+        return list;
+    }
+
+
+    @Override
+    public List<UserResponse> getAllUserRole1() {
+        List<User> users = userRepository.findAllUserWithRole1();
+        if (users != null) {
+            return users.stream()
+                    .map(user -> this.convertToDto(user, UserResponse.class))
+                    .toList();
+        }
+        return null;
     }
 
 

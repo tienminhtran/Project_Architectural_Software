@@ -74,5 +74,9 @@ public interface UserService {
     void updatePassword(String phoneNumber, String password);
 
     // lấy danh sách người dùng và so oder
-    public Map<UserResponse, Integer> getUserOrderCountMap() ;
+//    public Map<UserResponse, Integer> getUserOrderCountMap() ;
+
+    // lay danh sach user có role = 1
+    public List<UserResponse> getAllUserRole1();
+    List<UserResponse> getUserOrderCountList();
 }
