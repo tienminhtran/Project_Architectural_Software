@@ -18,6 +18,7 @@ import vn.edu.iuh.fit.dtos.response.OrderResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.RecentOrderResponse;
 import vn.edu.iuh.fit.enums.OrderStatus;
+import vn.edu.iuh.fit.exception.CancelOrderException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.services.OrderService;
 
@@ -95,7 +96,7 @@ public class OrderRestController {
     }
 
     @PutMapping("/{orderId}/cancel")
-    public ResponseEntity<BaseResponse<?>> cancelOrder(@PathVariable Long orderId) {
+    public ResponseEntity<BaseResponse<?>> cancelOrder(@PathVariable Long orderId) throws CancelOrderException {
 
         String message = orderService.cancelOrder(orderId);
         if (message == null) {
