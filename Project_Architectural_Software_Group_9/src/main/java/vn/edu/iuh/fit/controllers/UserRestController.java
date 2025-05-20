@@ -429,4 +429,35 @@ public class UserRestController {
                 .response(userResponses).build());
     }
 
+    // lay danh sach user có role = 1 và chưa có order
+    @GetMapping("/allUserRole1AndNoOrder")
+    public ResponseEntity<BaseResponse<List<UserResponse>>> getAllUserRole1AndNoOrder() {
+        List<UserResponse> userResponses = userService.getAllUserRole1AndNoOrder();
+        if (userResponses == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(BaseResponse.<List<UserResponse>>builder()
+                .status("SUCCESS")
+                .message("Get all users with role 1 and no order success")
+                .response(userResponses).build());
+    }
+
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping("/updateStatus")
+//    public ResponseEntity<BaseResponse<?>> updateStatus(@RequestBody List<Long> ids) {
+//        if (ids == null || ids.isEmpty()) {
+//            return ResponseEntity.badRequest().body(BaseResponse.builder()
+//                    .status("ERROR")
+//                    .message("List of user IDs cannot be null or empty")
+//                    .build());
+//        }
+//
+//        userService.updateStatusByIds(ids);
+//
+//        return ResponseEntity.ok(BaseResponse.builder()
+//                .status("SUCCESS")
+//                .message("Update status success")
+//                .build());
+//    }
+
 }
