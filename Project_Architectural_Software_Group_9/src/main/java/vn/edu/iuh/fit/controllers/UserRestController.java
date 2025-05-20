@@ -442,4 +442,22 @@ public class UserRestController {
                 .response(userResponses).build());
     }
 
+//    @PreAuthorize("hasRole('ADMIN')")
+//    @PostMapping("/updateStatus")
+//    public ResponseEntity<BaseResponse<?>> updateStatus(@RequestBody List<Long> ids) {
+//        if (ids == null || ids.isEmpty()) {
+//            return ResponseEntity.badRequest().body(BaseResponse.builder()
+//                    .status("ERROR")
+//                    .message("List of user IDs cannot be null or empty")
+//                    .build());
+//        }
+//
+//        userService.updateStatusByIds(ids);
+//
+//        return ResponseEntity.ok(BaseResponse.builder()
+//                .status("SUCCESS")
+//                .message("Update status success")
+//                .build());
+//    }
+
 }
