@@ -65,20 +65,21 @@ public class VoucherRestController {
 
     @PostMapping("")
     public ResponseEntity<BaseResponse<?>> createVoucher(@Valid @RequestBody VoucherRequest voucher, BindingResult bindingResult) {
+        Map<String, Object> errors = new HashMap<String, Object>();
+        if(voucherService.existsVoucher(voucher.getName())){
+            errors.put("nameVoucher", "The voucher code already exists!");
+        }
 
         if(bindingResult.hasErrors()) {
-            Map<String, Object> errors = new HashMap<String, Object>();
             bindingResult.getFieldErrors().forEach(result -> {
                 errors.put(result.getField(), result.getDefaultMessage());
             });
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
                     .body(BaseResponse.builder().status("FAILED").message("Validation error").response(errors).build());
         }
 
-        if(voucherService.existsVoucher(voucher.getName())){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
-                    .body(BaseResponse.builder().status("FAILED").message("The voucher code already exists! ").build());
-        }
+
 
         VoucherResponse newVoucher = voucherService.save(voucher);
         if (newVoucher == null ) {
@@ -91,11 +92,16 @@ public class VoucherRestController {
     @PutMapping("/{id}")
     public ResponseEntity<BaseResponse<?>> updateVoucher( @PathVariable Long id, @Valid @RequestBody VoucherRequest voucherRequest, BindingResult bindingResult) {
 
+        Map<String, Object> errors = new HashMap<String, Object>();
+        if(voucherService.existsVoucher(voucherRequest.getName())){
+            errors.put("nameVoucher", "The voucher code already exists!");
+        }
+
         if(bindingResult.hasErrors()) {
-            Map<String, Object> errors = new HashMap<String, Object>();
             bindingResult.getFieldErrors().forEach(result -> {
                 errors.put(result.getField(), result.getDefaultMessage());
             });
+
             return ResponseEntity.status(HttpStatus.BAD_REQUEST.value())
                     .body(BaseResponse.builder().status("FAILED").message("Validation error").response(errors).build());
         }
