@@ -10,6 +10,7 @@ import {
   createOrder as createOrderService,
   getUserOrdersByStatus,
   fetchOrderByPhoneNumber,
+  cancelOrder as cancelOrderService,
 } from "../services/orderService";
 
 const useOrder = (
@@ -76,6 +77,17 @@ const useOrder = (
     enabled: !!phoneNumber,
   });
 
+  const cancelOrder = useMutation({
+    mutationFn: (orderId) => cancelOrderService(orderId),
+    onSuccess: () => {
+      queryClient.invalidateQueries(["getAllOrder_Paging"]);
+    },
+    onError: (error) => {
+      console.error("Cancel order failed:", error);
+      alert("Cancel order failed. Please try again!");
+    },
+  });
+
   return {
     orders_paging: usePaginationQuery(
       "getAllOrder_Paging",
@@ -101,6 +113,7 @@ const useOrder = (
     getOrderByUserAndOrderStatus: getOrderByUserAndOrderStatus.data || [],
     // Trả về thông tin đơn hàng theo số điện thoại
     getOrderByPhoneNumber: getOrderByPhoneQuery.data || [],
+    cancelOrder: cancelOrder,
   };
 };
 

@@ -20,6 +20,7 @@ import vn.edu.iuh.fit.dtos.response.*;
 import vn.edu.iuh.fit.entities.*;
 import vn.edu.iuh.fit.entities.ids.OrderDetailId;
 import vn.edu.iuh.fit.enums.OrderStatus;
+import vn.edu.iuh.fit.exception.CancelOrderException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.repositories.*;
 import vn.edu.iuh.fit.services.OrderService;
@@ -185,10 +186,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String cancelOrder(Long orderId) {
+    public String cancelOrder(Long orderId) throws CancelOrderException {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
         if(order.getStatus() == OrderStatus.PENDING) {
             if(order.getPayment().getPaymentName().equals("cod")) {
+                LocalDateTime now = LocalDateTime.now();
+                if (order.getCreatedAt() != null && order.getCreatedAt().plusHours(24).isBefore(now)) {
+                    throw new CancelOrderException("Order cannot be cancelled after 24 hours");
+                }
                 order.setStatus(OrderStatus.CANCELLED);
                 orderRepository.save(order);
                 return "Order cancelled successfully";

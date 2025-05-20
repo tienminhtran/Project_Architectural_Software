@@ -5,6 +5,7 @@ import useOrder from "../../../hooks/useOrder";
 import useOrderDetail from "../../../hooks/useOrderDetail";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
+import { toast } from "react-toastify";
 
 const tabs = [
   "TẤT CẢ",
@@ -27,8 +28,10 @@ const OrderManagement = () => {
   const [showModal, setShowModal] = useState(false);
   const [selectedOrderId, setSelectedOrderId] = useState(null);
   const [selectedOrder, setSelectedOrder] = useState(null);
+  const [showCancelModal, setShowCancelModal] = useState(false);
+  const [orderToCancel, setOrderToCancel] = useState(null);
 
-  const { getOrderByUserAndOrderStatus } = useOrder(
+  const { getOrderByUserAndOrderStatus, cancelOrder } = useOrder(
     0,
     10,
     "",
@@ -151,6 +154,51 @@ const OrderManagement = () => {
     setShowModal(false);
   };
 
+  const handleCancelClick = (order) => {
+    setOrderToCancel(order);
+    setShowCancelModal(true);
+  };
+
+  // Close the cancel modal
+  const handleCloseCancelModal = () => {
+    setShowCancelModal(false);
+    setOrderToCancel(null);
+  };
+
+  // Handle confirm cancellation
+  const handleConfirmCancel = () => {
+    cancelOrder.mutate(orderToCancel.id, {
+      onSuccess: () => {
+        if (toast) {
+          toast.success("Đơn hàng đã hủy thành công!", {
+            position: "top-right",
+            autoClose: 1000,
+          });
+        }
+        handleCloseCancelModal();
+      },
+      onError: (error) => {
+        console.error("Error canceling order:", error);
+        if (toast) {
+          toast.error("Không thể hủy đơn hàng. Vui lòng thử lại sau.", {
+            position: "top-right",
+            autoClose: 1000,
+          });
+        }
+      },
+    });
+  };
+
+  const isWithin24Hours = (createdAt) => {
+    if (!createdAt) return false;
+
+    const orderDate = new Date(createdAt);
+    const currentDate = new Date();
+    const hoursDifference = (currentDate - orderDate) / (1000 * 60 * 60);
+
+    return hoursDifference <= 24;
+  };
+
   return (
     <div className="order-management__container">
       <h2>Quản lý đơn hàng</h2>
@@ -235,7 +283,26 @@ const OrderManagement = () => {
                   </button>
 
                   {order.status === "PENDING" && (
-                    <button className="cancel-order-btn">Hủy đơn hàng</button>
+                    <button
+                      className={`cancel-order-btn ${
+                        !isWithin24Hours(order.createdAt)
+                          ? "cancel-order-btn-disabled"
+                          : ""
+                      }`}
+                      onClick={() =>
+                        isWithin24Hours(order.createdAt)
+                          ? handleCancelClick(order)
+                          : null
+                      }
+                      disabled={!isWithin24Hours(order.createdAt)}
+                      title={
+                        !isWithin24Hours(order.createdAt)
+                          ? "Chỉ hủy trong 24 giờ sau khi đặt"
+                          : "Hủy đơn hàng"
+                      }
+                    >
+                      Hủy đơn hàng
+                    </button>
                   )}
                 </div>
               </div>
@@ -379,6 +446,45 @@ const OrderManagement = () => {
         <Modal.Footer>
           <Button variant="secondary" onClick={handleCloseModal}>
             Đóng
+          </Button>
+        </Modal.Footer>
+      </Modal>
+
+      {/* Add the cancellation confirmation modal */}
+      <Modal show={showCancelModal} onHide={handleCloseCancelModal}>
+        <Modal.Header closeButton>
+          <Modal.Title>Xác nhận hủy đơn hàng</Modal.Title>
+        </Modal.Header>
+        <Modal.Body>
+          {orderToCancel && (
+            <>
+              <p>Bạn có chắc chắn muốn hủy đơn hàng #{orderToCancel.id}?</p>
+              <p>
+                <strong>Lưu ý:</strong> Đơn hàng đã hủy không thể khôi phục lại.
+              </p>
+
+              {orderToCancel.payment &&
+                orderToCancel.payment.paymentName !== "cod" && (
+                  <div className="alert alert-info">
+                    <p>
+                      Đơn hàng đã thanh toán trước sẽ được hoàn tiền trong vòng
+                      1-2 ngày làm việc.
+                    </p>
+                  </div>
+                )}
+            </>
+          )}
+        </Modal.Body>
+        <Modal.Footer>
+          <Button variant="secondary" onClick={handleCloseCancelModal}>
+            Đóng
+          </Button>
+          <Button
+            variant="danger"
+            onClick={handleConfirmCancel}
+            disabled={cancelOrder.isPending}
+          >
+            {cancelOrder.isPending ? "Đang xử lý..." : "Xác nhận hủy"}
           </Button>
         </Modal.Footer>
       </Modal>
