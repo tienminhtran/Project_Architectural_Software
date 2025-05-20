@@ -129,3 +129,9 @@ export const getAllUserRole1 = async () => {
   const response = await axiosInstance.get("/user/allUserRole1");
   return response.data;
 };
+
+//getAllUserRole1AndNoOrder
+export const getAllUserRole1AndNoOrder = async () => {
+  const response = await axiosInstance.get("/user/allUserRole1AndNoOrder");
+  return response.data;
+};

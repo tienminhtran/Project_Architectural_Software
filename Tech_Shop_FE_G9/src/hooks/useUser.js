@@ -7,6 +7,7 @@ import {
   checkPhoneExistsService,
   getAllUserHasOrder,
   getAllUserRole1,
+  getAllUserRole1AndNoOrder
 
   // getAllUsersNoPage,
 } from "../services/userService";
@@ -102,6 +103,13 @@ const useUser = (pageNo, pageSize) => {
     refetchOnWindowFocus: false,
   });
 
+  // getAllUserRole1AndNoOrder
+  const getAllUserRole1AndNoOrderPaging = useQuery({
+    queryKey: ["getAllUserRole1AndNoOrder"],
+    queryFn: () => getAllUserRole1AndNoOrder(),
+    refetchOnWindowFocus: false,
+  });
+
 
 
   return {
@@ -120,12 +128,12 @@ const useUser = (pageNo, pageSize) => {
     isLoadingUserPaging: userPaging.isLoading,
     isLoadingUserHasOrder: getAllUserHasOrderPaging.isLoading,
     isLoadingUserRole1: getAllUserRole1Paging.isLoading,
-    
+    getAllUserRole1AndNoOrderPaging,
+    isLoadingUserRole1AndNoOrder: getAllUserRole1AndNoOrderPaging.isLoading,
     isCheckingPhone,
     isCheckPhoneError,
     checkPhoneError,
     loadingUpdateUser: updateProfileUser.isLoading,
-    
   };
 };
 export default useUser;

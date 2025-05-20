@@ -493,6 +493,17 @@ public class UserServiceImpl implements UserService {
         return list;
     }
 
+    @Override
+    public List<UserResponse> getAllUserRole1AndNoOrder() {
+        List<User> users = userRepository.findUsersWithRole1AndNoOrders();
+        if (users != null) {
+            return users.stream()
+                    .map(user -> this.convertToDto(user, UserResponse.class))
+                    .toList();
+        }
+        return null;
+    }
+
 
     @Override
     public List<UserResponse> getAllUserRole1() {

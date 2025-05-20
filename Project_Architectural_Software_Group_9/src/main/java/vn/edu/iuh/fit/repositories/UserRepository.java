@@ -49,5 +49,7 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u JOIN u.role r WHERE r.id = 1")
     List<User> findAllUserWithRole1();
 
+    @Query("SELECT u FROM User u JOIN u.role r WHERE r.id = 1 AND u.id NOT IN (SELECT o.user.id FROM Order o)")
+    List<User> findUsersWithRole1AndNoOrders();
 
 }
