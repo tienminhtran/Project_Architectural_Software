@@ -1,6 +1,8 @@
 {
   "name": "tech-shop-fe",
   "private": true,
+  "homepage": "https://tranminhtien.io.vn/",
+  
   "version": "0.0.0",
   "type": "module",
   "scripts": {
