@@ -1,6 +1,43 @@
 import React, { useState } from "react";
-import useProductRecommendations from "../../hooks/useProductRecomment";
-import { useQuery } from "@tanstack/react-query";
+// import "./ProductRecommendation.css"; // Minimal CSS for hover effects
+
+const sampleProducts = [
+  {
+    id: 1,
+    name: "Ốp lưng Xiaomi 14T Pro",
+    price: 350000,
+    salePrice: 283000,
+    image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/a/p/apple-airpods-4-chong-on-chu-dong-thumb.png",
+  },
+  {
+    id: 2,
+    name: "Tai nghe Bluetooth",
+    price: 490000,
+    salePrice: 415000,
+    image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/f/r/frame_1_-_2024-11-02t162005.850.png",
+  },
+  {
+    id: 3,
+    name: "Office 365 Bản quyền",
+    price: 1200000,
+    salePrice: 999000,
+    image: 'https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/k/i/kinh-cuong-luc-xiaomi-redmi-note-14.png',
+  },
+  {
+    id: 4,
+    name: "Chuột không dây Logitech",
+    price: 300000,
+    salePrice: 249000,
+    image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/t/h/thi_t_k_ch_a_c_t_n_27_.png",
+  },
+  {
+    id: 5,
+    name: "Bàn phím cơ Keychron",
+    price: 950000,
+    salePrice: 850000,
+    image: "https://cdn2.cellphones.com.vn/insecure/rs:fill:358:358/q:90/plain/https://cellphones.com.vn/media/catalog/product/k/i/kinh-cuong-luc-xiaomi-redmi-note-14.png",
+  },
+];
 
 const styles = {
   container: {
@@ -95,12 +132,6 @@ const styles = {
 
 export default function ProductRecommendation() {
   const [selectedItems, setSelectedItems] = useState([]);
-  const { productsRcm, isLoading, isError } = useProductRecommendations();
-
-  const products = React.useMemo(() => {
-    if (!Array.isArray(productsRcm)) return [];
-    return productsRcm;
-  }, [productsRcm]);
 
   const toggleSelect = (id) => {
     setSelectedItems((prev) =>
@@ -109,19 +140,15 @@ export default function ProductRecommendation() {
   };
 
   const totalPrice = selectedItems.reduce((sum, id) => {
-    const product = products?.find((p) => p.id === id);
-    const price = parseInt(product?.price) || 0;
-    return sum + price;
+    const product = sampleProducts.find((p) => p.id === id);
+    return sum + (product?.salePrice || 0);
   }, 0);
-
-  if (isLoading) return <div>Đang tải dữ liệu...</div>;
-  if (isError) return <div>Không thể tải dữ liệu. Vui lòng thử lại.</div>;
 
   return (
     <div style={styles.container}>
       <h2 style={styles.title}>Gợi ý mua kèm</h2>
       <div style={styles.productList}>
-        {Array.isArray(products) ? products.map((product) => (
+        {sampleProducts.map((product) => (
           <div key={product.id} style={styles.productCard}>
             <img
               src={product.image}
@@ -129,7 +156,8 @@ export default function ProductRecommendation() {
               style={styles.productImage}
             />
             <h3 style={styles.productName}>{product.name}</h3>
-            <p style={styles.salePrice}>{parseInt(product.price).toLocaleString()} đ</p>
+            <p style={styles.originalPrice}>{product.price.toLocaleString()} đ</p>
+            <p style={styles.salePrice}>{product.salePrice.toLocaleString()} đ</p>
             <button
               onClick={() => toggleSelect(product.id)}
               style={{
@@ -138,17 +166,20 @@ export default function ProductRecommendation() {
                   ? styles.selectButtonSelected
                   : {}),
               }}
+              className="select-button" // For hover effects
             >
               {selectedItems.includes(product.id) ? "Bỏ chọn" : "Chọn sản phẩm"}
             </button>
           </div>
-        )):null}
+        ))}
       </div>
       <div style={styles.summary}>
         <p style={styles.totalPrice}>
           Tạm tính: <span style={styles.totalPriceAmount}>{totalPrice.toLocaleString()} đ</span>
         </p>
-        <button style={styles.buyButton}>MUA NGAY</button>
+        <button style={styles.buyButton} className="buy-button">
+          MUA NGAY
+        </button>
       </div>
     </div>
   );
