@@ -11,7 +11,6 @@ import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
 import com.google.firebase.auth.FirebaseAuth;
 import com.google.firebase.auth.FirebaseToken;
 import jakarta.validation.ConstraintViolation;
-import jakarta.validation.Valid;
 import jakarta.validation.Validator;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
@@ -23,14 +22,11 @@ import org.springframework.validation.FieldError;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
-import vn.edu.iuh.fit.dtos.request.ProductRequest;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.*;
-import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.exception.EmailAlreadyExistsException;
 import vn.edu.iuh.fit.exception.MissingTokenException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
-import vn.edu.iuh.fit.security.CustomUserDetails;
 import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
 import vn.edu.iuh.fit.services.CartService;
 import vn.edu.iuh.fit.services.UserService;
@@ -38,7 +34,6 @@ import vn.edu.iuh.fit.utils.FormatPhoneNumber;
 
 import java.time.LocalDate;
 import java.util.HashMap;
-import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
@@ -459,5 +454,24 @@ public class UserRestController {
 //                .message("Update status success")
 //                .build());
 //    }
+
+    @PutMapping("/updateStatus/{ids}")
+    public ResponseEntity<BaseResponse<?>> updateStatus(@PathVariable List<Long> ids) {
+        if (ids == null || ids.isEmpty()) {
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("ERROR")
+                    .message("List of user IDs cannot be null or empty")
+                    .build());
+        }
+
+        userService.updateStatusByIds(ids);
+
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Update status success")
+                .build());
+    }
+
+    // TEST POST MAIN: localhost:8080/api/v1/user/updateStatus
 
 }

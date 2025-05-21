@@ -2,7 +2,7 @@
 import useUser from '../../../hooks/useUser'; // adjust the path if needed
 
 export default function UserAccess() {
-  const { getAllUserRole1AndNoOrderPaging } = useUser();
+  const { getAllUserRole1AndNoOrderPaging, updateStatusUser} = useUser();
   const userNoOrders = getAllUserRole1AndNoOrderPaging.data?.response ?? [];
 
   const [days, setDays] = useState('');
@@ -21,6 +21,17 @@ export default function UserAccess() {
     });
 
     setFilteredUsers(filtered);
+  };
+  //updaye status user
+  const handleCancelAccounts = async () => {
+    const cancelUsers = filteredUsers.length > 0 ? filteredUsers : userNoOrders;
+    try {
+      await Promise.all(cancelUsers.map(user => updateStatusUser(user.id)));
+      alert('Hủy các tài khoản thành công!');
+    } catch (error) {
+      console.error('Lỗi khi hủy tài khoản:', error);
+      alert('Hủy các tài khoản thất bại!');
+    }
   };
 
   const renderTable = (data, title, includeOrder = false) => {
@@ -82,13 +93,7 @@ export default function UserAccess() {
   return (
     <div>
       <div
-        style={{
-          padding: 20,
-          backgroundColor: '#f9fafb',
-          borderRadius: 8,
-          boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
-          fontFamily: 'Segoe UI, Tahoma, sans-serif',
-        }}
+        style={{ padding: 20, backgroundColor: '#f9fafb', borderRadius: 8, boxShadow: '0 2px 6px rgba(0,0,0,0.05)', fontFamily: 'Segoe UI, Tahoma, sans-serif', }}
       >
         {/* Nhập số ngày muốn lọc quá hạn so với ngày tạo và ngày hiện tại */}
         <input
@@ -96,58 +101,26 @@ export default function UserAccess() {
           placeholder="Nhập số ngày quá hạn"
           value={days}
           onChange={e => setDays(e.target.value)}
-          style={{
-            padding: '8px 12px',
-            borderRadius: 6,
-            border: '1px solid #d1d5db',
-            width: '100%',
-            maxWidth: 250,
-            marginBottom: 12,
-            fontSize: 14,
-          }}
+          style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #d1d5db', width: '100%', maxWidth: 250, marginBottom: 12, fontSize: 14 }}
         />
         <button
           onClick={handleFilter}
-          style={{
-            backgroundColor: '#2563eb',
-            color: '#fff',
-            padding: '10px 16px',
-            borderRadius: 6,
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: 14,
-            marginBottom: 12,
-          }}
+          style={{ backgroundColor: '#2563eb', color: '#fff', padding: '10px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 14, marginBottom: 12, }}
         >
           Lọc
         </button>
 
         <div style={{ display: 'flex', gap: 12 }}>
           <button
-            style={{
-              backgroundColor: '#2563eb',
-              color: '#fff',
-              padding: '10px 16px',
-              borderRadius: 6,
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: 14,
-            }}
+            style={{ backgroundColor: '#2563eb', color: '#fff', padding: '10px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 14, }}
             onMouseOver={e => (e.currentTarget.style.backgroundColor = '#1e40af')}
             onMouseOut={e => (e.currentTarget.style.backgroundColor = '#2563eb')}
           >
             Thông báo user, 10 ngày sau hủy tài khoản
           </button>
           <button
-            style={{
-              backgroundColor: '#ef4444',
-              color: '#fff',
-              padding: '10px 16px',
-              borderRadius: 6,
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: 14,
-            }}
+            onClick={handleCancelAccounts}
+            style={{ backgroundColor: '#ef4444', color: '#fff', padding: '10px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 14, }}
             onMouseOver={e => (e.currentTarget.style.backgroundColor = '#b91c1c')}
             onMouseOut={e => (e.currentTarget.style.backgroundColor = '#ef4444')}
           >
