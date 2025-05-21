@@ -5,10 +5,18 @@ import {
   getAllUsersPaging,
   createUserRoleManager,
   checkPhoneExistsService,
+  getAllUserHasOrder,
+  getAllUserRole1,
+  getAllUserRole1AndNoOrder,
+  updateStatusUser,
+  sendEmailNotify
+
+
   // getAllUsersNoPage,
 } from "../services/userService";
 import usePaginationQuery from "./usePaginationQuery";
 import { resetPasswordService, getCurrentUser } from "../services/userService";
+
 
 const useUser = (pageNo, pageSize) => {
   const queryClient = useQueryClient();
@@ -84,6 +92,59 @@ const useUser = (pageNo, pageSize) => {
     },
   });
 
+  // getAllUserHasOrder 
+  const getAllUserHasOrderPaging = useQuery({
+    queryKey: ["getAllUserHasOrder"],
+    queryFn: () => getAllUserHasOrder(),
+    refetchOnWindowFocus: false,
+  });
+
+  // getAllUserRole1
+  const getAllUserRole1Paging = useQuery({
+    queryKey: ["getAllUserRole1"],
+    queryFn: () => getAllUserRole1(),
+    refetchOnWindowFocus: false,
+  });
+
+  // getAllUserRole1AndNoOrder
+  const getAllUserRole1AndNoOrderPaging = useQuery({
+    queryKey: ["getAllUserRole1AndNoOrder"],
+    queryFn: () => getAllUserRole1AndNoOrder(),
+    refetchOnWindowFocus: false,
+  });
+
+const updateStatusUserMutation = useMutation({
+    mutationFn: ({ userId, status }) => {
+      return updateStatusUser(userId, status); // Use the correct service function
+    },
+    onSuccess: () => {
+      // alert('Update status user successfully!');
+      console.log('HOOKS:        Update status user successfully!');
+    },
+    onError: (error) => {
+      console.error('Update status user failed:', error);
+      // alert('Update status user failed. Please try again!');
+      console.log('HOOKS:        Update status user failed. Please try again!');
+    },
+  });
+
+  //send
+  const sendEmailNotifyMutation = useMutation({
+    mutationFn: ({ email, nameuser }) => {
+      return sendEmailNotify({ email, nameuser});
+    },
+    onSuccess: () => {
+      // alert("Send email successfully!");
+      console.log("HOOKS:        Send email successfully!");
+    },
+    onError: (error) => {
+      console.error("Send email failed:", error);
+      // alert("Send email failed. Please try again!");
+      console.log("HOOKS:        Send email failed. Please try again!");
+    },
+  });
+
+
   return {
     user_paging: userPaging,
     // user_nopaging: userNoPaging,
@@ -93,10 +154,27 @@ const useUser = (pageNo, pageSize) => {
     resetPassword: resetPassword.mutate,
     checkPhoneExists,
     checkPhoneExistsAsync,
+
+    getAllUserHasOrderPaging,
+    getAllUserRole1Paging,
+    isLoadingUser: getUser.isLoading,
+    isLoadingUserPaging: userPaging.isLoading,
+    isLoadingUserHasOrder: getAllUserHasOrderPaging.isLoading,
+    isLoadingUserRole1: getAllUserRole1Paging.isLoading,
+    getAllUserRole1AndNoOrderPaging,
+    isLoadingUserRole1AndNoOrder: getAllUserRole1AndNoOrderPaging.isLoading,
     isCheckingPhone,
     isCheckPhoneError,
     checkPhoneError,
     loadingUpdateUser: updateProfileUser.isLoading,
+
+    // update
+    updateStatusUser: updateStatusUserMutation.mutate,  
+    
+    //send
+    sendEmailNotify: sendEmailNotifyMutation.mutate,
+    sendEmailNotifyLoading: sendEmailNotifyMutation.isLoading,
+    
   };
 };
 export default useUser;

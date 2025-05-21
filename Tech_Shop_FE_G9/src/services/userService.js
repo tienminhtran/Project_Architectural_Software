@@ -101,3 +101,36 @@ export const resetPasswordService = async ({ idToken, newPassword }) => {
   });
   return response.data;
 };
+
+export const getAllUserHasOrder = async () => {
+  const response = await axiosInstance.get("/user/allUserHasOrder");
+  return response.data;
+};
+
+
+export const getAllUserRole1 = async () => {
+  const response = await axiosInstance.get("/user/allUserRole1");
+  return response.data;
+};
+
+//getAllUserRole1AndNoOrder
+export const getAllUserRole1AndNoOrder = async () => {
+  const response = await axiosInstance.get("/user/allUserRole1AndNoOrder");
+  return response.data;
+};
+
+// http://localhost:8080/api/v1/user/updateStatus/10
+export const updateStatusUser = async (id, status) => {
+  const response = await axiosInstance.put(`/user/updateStatus/${id}`, {
+    status,
+  });
+  return response.data;
+};
+
+//http://localhost:8080/api/v1/user/notify?email=tientot36@gmail.com&nameuser=12334
+export const sendEmailNotify = async ({ email, nameuser }) => {
+  const response = await axiosInstance.get(
+    `/user/notify?email=${email}&nameuser=${encodeURIComponent(nameuser)}`
+  );
+  return response.data;
+};

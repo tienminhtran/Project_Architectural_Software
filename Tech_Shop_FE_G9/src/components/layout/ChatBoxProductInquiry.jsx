@@ -85,13 +85,13 @@ const ProductInquiry = ({ addMessage }) => {
   };
 
   const fetchAllProducts = async () => {
-    const res = await axios.get(`http://localhost:8080/api/v1/products`);
+    const res = await axios.get(`https://api.tranminhtien.io.vn/api/v1/products`);
     return res.data?.response?.values || [];
   };
 
   const searchProductsByQuery = async (q) => {
     const res = await axios.get(
-      `http://localhost:8080/api/v1/products/search/${encodeURIComponent(q)}`
+      `https://api.tranminhtien.io.vn/api/v1/products/search/${encodeURIComponent(q)}`
     );
     return res.data?.response?.values || [];
   };

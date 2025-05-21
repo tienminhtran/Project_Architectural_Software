@@ -18,6 +18,9 @@ const FormVoucher = () => {
   const [formData, setFormData] = useState(vouchers);
   const { createVoucher, updateVoucher } = useVoucher(0, 1);
 
+  const [error, setError] = useState({});
+
+
   // Xu ly thay doi gia tri cua input
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.name]: e.target.value });
@@ -33,16 +36,23 @@ const FormVoucher = () => {
   };
 
   // Xu ly submit form
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    if (vouchers.id) {
-      updateVoucher(formData);
-      navigate("/common/vouchers");
-    } else {
-      createVoucher(formData);
+    try {
+      
+      if (vouchers.id) {
+        await updateVoucher(formData);
+        // navigate("/common/vouchers");
+      } else {
+        await createVoucher(formData);
+      }
+      handleReset();
+    } catch (error) {
+      console.error("Error submitting form:", error);
+      setError(error.response?.data?.response || "An error occurred");
     }
-    handleReset();
   };
+  console.log(error);
 
   return (
     <div className="page-wrapper">
@@ -68,6 +78,9 @@ const FormVoucher = () => {
               onChange={handleChange}
               required
             />
+
+          {error  && <p className="text-danger">{error?.nameVoucher}</p>}
+
           </Form.Group>
           <Form.Group className="mb-3" controlId="value">
             <Form.Label>Value</Form.Label>
@@ -100,6 +113,10 @@ const FormVoucher = () => {
               onChange={handleChange}
               required
             />
+
+          {error  && <p className="text-danger">{error?.expiredDate}</p>}
+
+
           </Form.Group>
           <div className="d-flex w-25 justify-content-end">
             <button type="submit" className="btn btn-warning">

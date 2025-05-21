@@ -89,7 +89,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
+
     private final Map<String, EmailVerifyEntry> emailVerifyMap = new ConcurrentHashMap<>();
+
 
     // Phương thức chuyển đổi User sang DTO với kiểu generic T
     private <T> T convertToDto(User user, Class<T> targetClass) {
@@ -233,9 +235,6 @@ public class UserServiceImpl implements UserService {
                 user.setLastname(userRequest.getLastName());
             }
 
-            if(userRequest.getPassword() != null || !userRequest.getPassword().isEmpty()) {
-                user.setPassword(passwordEncoder.encode(userRequest.getPassword()));
-            }
             if(userRequest.getPhoneNumber() != null || !userRequest.getPhoneNumber().isEmpty()) {
                 user.setPhoneNumber(userRequest.getPhoneNumber());
             }
@@ -248,12 +247,7 @@ public class UserServiceImpl implements UserService {
             if(userRequest.getGender() != null || !userRequest.getGender().isEmpty()) {
                 user.setGender(userRequest.getGender());
             }
-            user.setFirstname(userRequest.getFirstName());
-            user.setLastname(userRequest.getLastName());
-            user.setEmail(userRequest.getEmail());
-            user.setPhoneNumber(userRequest.getPhoneNumber());
-            user.setGender(userRequest.getGender());
-            user.setDayOfBirth(userRequest.getDob());
+
             user.setRole(role);
             user.setActive(userRequest.isActive());
             user.setUpdatedAt(LocalDateTime.now());
@@ -470,19 +464,69 @@ public class UserServiceImpl implements UserService {
         userRepository.save(user);
     }
 
+//    @Override
+//    public Map<UserResponse, Integer> getUserOrderCountMap() {
+//        List<Object[]> results = userRepository.countOrdersByUserWithRole1();
+//
+//        Map<UserResponse, Integer> userOrderCountMap = new HashMap<>();
+//        for (Object[] row : results) {
+//            User user = (User) row[0];
+//            Long count = (Long) row[1];
+//            UserResponse userResponse = this.convertToDto(user, UserResponse.class);
+//            userOrderCountMap.put(userResponse, count.intValue());
+//
+//        }
+//        return userOrderCountMap;
+//    }
+
     @Override
-    public Map<UserResponse, Integer> getUserOrderCountMap() {
+    public List<UserResponse> getUserOrderCountList() {
         List<Object[]> results = userRepository.countOrdersByUserWithRole1();
 
-        Map<UserResponse, Integer> userOrderCountMap = new HashMap<>();
+        List<UserResponse> list = new ArrayList<>();
         for (Object[] row : results) {
             User user = (User) row[0];
             Long count = (Long) row[1];
             UserResponse userResponse = this.convertToDto(user, UserResponse.class);
-            userOrderCountMap.put(userResponse, count.intValue());
+            userResponse.setOrderCount(count.intValue());
+            list.add(userResponse);
         }
-        return userOrderCountMap;
+
+        return list;
     }
+
+    @Override
+    public List<UserResponse> getAllUserRole1AndNoOrder() {
+        List<User> users = userRepository.findUsersWithRole1AndNoOrders();
+        if (users != null) {
+            return users.stream()
+                    .map(user -> this.convertToDto(user, UserResponse.class))
+                    .toList();
+        }
+        return null;
+    }
+
+    @Override
+    public boolean updateStatusByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) return false;
+        userRepository.updateStatusByIds(ids);
+        return true;
+    }
+
+
+
+
+    @Override
+    public List<UserResponse> getAllUserRole1() {
+        List<User> users = userRepository.findAllUserWithRole1();
+        if (users != null) {
+            return users.stream()
+                    .map(user -> this.convertToDto(user, UserResponse.class))
+                    .toList();
+        }
+        return null;
+    }
+
 
 
 }
