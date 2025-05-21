@@ -1,13 +1,21 @@
- import React, { useState } from 'react';
-import useUser from '../../../hooks/useUser'; // adjust the path if needed
+import React, { useState } from 'react';
+import Swal from 'sweetalert2';
+import useUser from '../../../hooks/useUser'; // đường dẫn có thể thay đổi tùy bạn
 
 export default function UserAccess() {
-  const { getAllUserRole1AndNoOrderPaging, updateStatusUser} = useUser();
+  const {
+    getAllUserRole1AndNoOrderPaging, // React Query hook lấy danh sách user
+    updateStatusUser, // function update status user
+  } = useUser();
+
+  // Dữ liệu user từ API (React Query)
   const userNoOrders = getAllUserRole1AndNoOrderPaging.data?.response ?? [];
+  const refetchUsers = getAllUserRole1AndNoOrderPaging.refetch;
 
   const [days, setDays] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
 
+  // Hàm lọc theo ngày tạo
   const handleFilter = () => {
     if (!days || isNaN(days)) return;
 
@@ -22,27 +30,67 @@ export default function UserAccess() {
 
     setFilteredUsers(filtered);
   };
-  //updaye status user
+
+  // Hàm xử lý hủy tài khoản (update status)
   const handleCancelAccounts = async () => {
     const cancelUsers = filteredUsers.length > 0 ? filteredUsers : userNoOrders;
-    try {
-      await Promise.all(cancelUsers.map(user => updateStatusUser(user.id)));
-      alert('Hủy các tài khoản thành công!');
-    } catch (error) {
-      console.error('Lỗi khi hủy tài khoản:', error);
-      alert('Hủy các tài khoản thất bại!');
+
+    if (cancelUsers.length === 0) {
+      Swal.fire('Thông báo', 'Không có thành viên nào để hủy!', 'info');
+      return;
+    }
+
+    // Xác nhận với người dùng
+    const result = await Swal.fire({
+      title: `Bạn có chắc muốn hủy ${cancelUsers.length} thành viên không?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Có, hủy ngay!',
+      cancelButtonText: 'Hủy',
+    });
+
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: 'Đang xử lý...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+
+      const errors = [];
+
+      // Lặp gọi API update status user
+      await Promise.all(
+        cancelUsers.map(async (user) => {
+          try {
+            // Lưu ý hàm updateStatusUser nhận (id, status)
+            await updateStatusUser(user.id, 'canceled');
+          } catch (error) {
+            errors.push(`Thất bại user ID ${user.id}: ${error.message}`);
+          }
+        })
+      );
+
+      Swal.close();
+
+      if (errors.length > 0) {
+        Swal.fire('Lỗi', `Hủy tài khoản thất bại với ${errors.length} user. Vui lòng thử lại!`, 'error');
+        console.error(errors);
+      } else {
+        Swal.fire('Thành công', 'Hủy các tài khoản thành công!', 'success');
+        setFilteredUsers([]); // reset filter nếu cần
+        refetchUsers(); // load lại danh sách user mới
+      }
     }
   };
 
+  // Hàm render bảng
   const renderTable = (data, title, includeOrder = false) => {
     const hasScroll = data.length > 7;
     return (
       <div style={styles.tableWrapper}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ fontSize: 18, fontWeight: 'bold' }}>{title}</div>
-          <div style={{ fontSize: 14, color: '#888' }}>
-            Tổng số người dùng: {data.length}
-          </div>
+          <div style={{ fontSize: 14, color: '#888' }}>Tổng số người dùng: {data.length}</div>
         </div>
         <div style={{ maxHeight: hasScroll ? 300 : 'auto', overflowY: hasScroll ? 'scroll' : 'visible' }}>
           <table style={styles.table}>
@@ -65,7 +113,11 @@ export default function UserAccess() {
                   <tr key={user.id}>
                     <td style={styles.td}>{user.id}</td>
                     <td style={styles.td}>
-                      <img src={user.image || user.profile || 'https://via.placeholder.com/40'} alt="avatar" style={styles.img} />
+                      <img
+                        src={user.image || user.profile || 'https://via.placeholder.com/40'}
+                        alt="avatar"
+                        style={styles.img}
+                      />
                     </td>
                     <td style={styles.td}>{user.firstname}</td>
                     <td style={styles.td}>{user.lastname}</td>
@@ -91,50 +143,27 @@ export default function UserAccess() {
   };
 
   return (
-    <div>
-      <div
-        style={{ padding: 20, backgroundColor: '#f9fafb', borderRadius: 8, boxShadow: '0 2px 6px rgba(0,0,0,0.05)', fontFamily: 'Segoe UI, Tahoma, sans-serif', }}
-      >
-        {/* Nhập số ngày muốn lọc quá hạn so với ngày tạo và ngày hiện tại */}
+    <div style={{ padding: 20 }}>
+      <div style={{ marginBottom: 10 }}>
         <input
-          type="number"
-          placeholder="Nhập số ngày quá hạn"
+          type="text"
+          placeholder="Nhập số ngày để lọc"
           value={days}
           onChange={e => setDays(e.target.value)}
-          style={{ padding: '8px 12px', borderRadius: 6, border: '1px solid #d1d5db', width: '100%', maxWidth: 250, marginBottom: 12, fontSize: 14 }}
+          style={{ marginRight: 10, padding: 5 }}
         />
-        <button
-          onClick={handleFilter}
-          style={{ backgroundColor: '#2563eb', color: '#fff', padding: '10px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 14, marginBottom: 12, }}
-        >
-          Lọc
-        </button>
-
-        <div style={{ display: 'flex', gap: 12 }}>
-          <button
-            style={{ backgroundColor: '#2563eb', color: '#fff', padding: '10px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 14, }}
-            onMouseOver={e => (e.currentTarget.style.backgroundColor = '#1e40af')}
-            onMouseOut={e => (e.currentTarget.style.backgroundColor = '#2563eb')}
-          >
-            Thông báo user, 10 ngày sau hủy tài khoản
-          </button>
-          <button
-            onClick={handleCancelAccounts}
-            style={{ backgroundColor: '#ef4444', color: '#fff', padding: '10px 16px', borderRadius: 6, border: 'none', cursor: 'pointer', fontSize: 14, }}
-            onMouseOver={e => (e.currentTarget.style.backgroundColor = '#b91c1c')}
-            onMouseOut={e => (e.currentTarget.style.backgroundColor = '#ef4444')}
-          >
-            Hủy các tài khoản ngay
-          </button>
-        </div>
+        <button onClick={handleFilter}>Lọc</button>
       </div>
 
-      <div style={styles.container}>
-        {renderTable(filteredUsers.length > 0 ? filteredUsers : userNoOrders, 'Bảng người dùng USER chưa có đơn hàng')}
-      </div>
+      <button onClick={handleCancelAccounts} style={{ marginBottom: 10, backgroundColor: '#d33', color: 'white', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer' }}>
+        Hủy các tài khoản
+      </button>
+
+      {renderTable(filteredUsers.length > 0 ? filteredUsers : userNoOrders, 'Danh sách người dùng')}
     </div>
   );
 }
+ 
 const styles = {
   container: {
     padding: 24,

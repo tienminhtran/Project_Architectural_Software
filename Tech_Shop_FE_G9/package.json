@@ -2,7 +2,6 @@
   "name": "tech-shop-fe",
   "private": true,
   "homepage": "https://tranminhtien.io.vn/",
-  
   "version": "0.0.0",
   "type": "module",
   "scripts": {
@@ -47,6 +46,7 @@
     "react-toastify": "^11.0.5",
     "recharts": "^2.15.1",
     "slick-carousel": "^1.8.1",
+    "sweetalert2": "^11.21.2",
     "swiper": "^11.2.6",
     "tech-shop-fe": "file:",
     "uuid": "^11.1.0",
