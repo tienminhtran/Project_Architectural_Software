@@ -174,7 +174,9 @@ const ProductUser = ({ products, brands, name }) => {
             </div>
 
             <div className="product-user__product-info">
-              <h5>{product.productName}</h5>
+              <h5 className="product-user__product-name">
+                {product.productName}
+              </h5>
               <p>
                 <span className="product-user__price-new">
                   {formatPrice(Number(product.price))}

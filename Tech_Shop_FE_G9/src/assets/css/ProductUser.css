@@ -94,6 +94,13 @@
   font-size: 12px;
   border-radius: 4px;
 }
+.product-user__product-name{
+  width: 120px; /* hoặc bất kỳ độ rộng cố định nào */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 
 .product-user__product-actions {
   position: absolute;
