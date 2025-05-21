@@ -24,6 +24,7 @@ import java.util.List;
 @Builder
 public class OrderItemResponse {
     private String productName;
+    private Long productId;
     private int quantity;
     private BigDecimal unitPrice;
     private BigDecimal totalPrice;
