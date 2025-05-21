@@ -102,23 +102,6 @@ export const resetPasswordService = async ({ idToken, newPassword }) => {
   return response.data;
 };
 
-// GET USER  HAS ORDER
-/*
-
-
-    @GetMapping("/allUserHasOrder")
-    public ResponseEntity<BaseResponse<Map<UserResponse, Integer>>> getAllUserHasOrder() {
-        Map<UserResponse, Integer> map = userService.getUserOrderCountMap();
-        if (map.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        }
-        return ResponseEntity.ok(BaseResponse.<Map<UserResponse, Integer>>builder()
-                .status("SUCCESS")
-                .message("Get all users with orders success")
-                .response(map)
-                .build());
-    }
-*/
 export const getAllUserHasOrder = async () => {
   const response = await axiosInstance.get("/user/allUserHasOrder");
   return response.data;
@@ -136,3 +119,10 @@ export const getAllUserRole1AndNoOrder = async () => {
   return response.data;
 };
 
+// http://localhost:8080/api/v1/user/updateStatus/10
+export const updateStatusUser = async (id, status) => {
+  const response = await axiosInstance.put(`/user/updateStatus/${id}`, {
+    status,
+  });
+  return response.data;
+};

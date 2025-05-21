@@ -83,5 +83,5 @@ public interface UserService {
     public List<UserResponse> getAllUserRole1AndNoOrder();
 
     // update status = false list user theo iduser
-    public void updateStatusByIds(List<Long> ids);
+    boolean updateStatusByIds(List<Long> ids);
 }

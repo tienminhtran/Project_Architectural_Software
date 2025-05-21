@@ -111,6 +111,20 @@ const useUser = (pageNo, pageSize) => {
     refetchOnWindowFocus: false,
   });
 
+const useUpdateStatusUser = () => {
+  return useMutation({
+    mutationFn: ({ id, status }) => {
+      return updateStatusUser(id, status);
+    },
+    onSuccess: () => {
+      alert("Update status user successfully!");
+    },
+    onError: (error) => {
+      console.error("Update status user failed:", error);
+      alert("Update status user failed. Please try again!");
+    },
+  });
+};
 
 
   return {
@@ -135,6 +149,10 @@ const useUser = (pageNo, pageSize) => {
     isCheckPhoneError,
     checkPhoneError,
     loadingUpdateUser: updateProfileUser.isLoading,
+
+    // update
+    updateStatusUser: useUpdateStatusUser,
+    
     
   };
 };

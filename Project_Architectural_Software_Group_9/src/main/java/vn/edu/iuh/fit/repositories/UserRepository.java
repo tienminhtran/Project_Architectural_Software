@@ -6,8 +6,11 @@
 
 package vn.edu.iuh.fit.repositories;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.entities.User;
 
@@ -52,8 +55,10 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u JOIN u.role r WHERE r.id = 1 AND u.active = true AND u.id NOT IN (SELECT o.user.id FROM Order o)")
     List<User> findUsersWithRole1AndNoOrders();
 
-    //update  status = false list user theo iduser
+    @Modifying
+    @Transactional
     @Query("UPDATE User u SET u.active = false WHERE u.id IN :ids")
-    void updateStatusByIds(List<Long> ids);
+    void updateStatusByIds(@Param("ids") List<Long> ids);
+
 
 }

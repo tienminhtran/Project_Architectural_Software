@@ -505,15 +505,10 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateStatusByIds(List<Long> ids) {
-        List<User> users = userRepository.findAllById(ids);
-        if (users != null) {
-            userRepository.updateStatusByIds(ids);
-        }
-        for (User user : users) {
-            user.setActive(false);
-            userRepository.save(user);
-        }
+    public boolean updateStatusByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) return false;
+        userRepository.updateStatusByIds(ids);
+        return true;
     }
 
 
