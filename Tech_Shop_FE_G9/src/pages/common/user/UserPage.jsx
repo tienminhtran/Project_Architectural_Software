@@ -71,17 +71,17 @@ const UserPage = () => {
   const filteredUsers = users.filter((user) => {
     const searchLower = search.toLowerCase();
     return (
-      (searchLower === "" ||
-        user.firstname.toLowerCase().includes(searchLower) ||
-        user.lastname.toLowerCase().includes(searchLower) ||
-        user.username.toLowerCase().includes(searchLower) ||
-        user.phone_number.includes(searchLower) ||
-        user.email.toLowerCase().includes(searchLower)) &&
-      user.username.toLowerCase().includes(filterUsername.toLowerCase()) &&
-      user.phone_number.includes(filterPhone) &&
-      user.email.toLowerCase().includes(filterEmail.toLowerCase()) &&
-      (filterStatus === "" || user.active === JSON.parse(filterStatus))
-    );
+    (searchLower === "" ||
+      (user.firstname?.toLowerCase() || "").includes(searchLower) ||
+      (user.lastname?.toLowerCase() || "").includes(searchLower) ||
+      (user.username?.toLowerCase() || "").includes(searchLower) ||
+      (user.phone_number || "").includes(searchLower) ||
+      (user.email?.toLowerCase() || "").includes(searchLower)) &&
+    (user.username?.toLowerCase() || "").includes(filterUsername.toLowerCase()) &&
+    (user.phone_number || "").includes(filterPhone) &&
+    (user.email?.toLowerCase() || "").includes(filterEmail.toLowerCase()) &&
+    (filterStatus === "" || user.active === JSON.parse(filterStatus))
+  );
   });
 
   const handleNavigate = (user) => {

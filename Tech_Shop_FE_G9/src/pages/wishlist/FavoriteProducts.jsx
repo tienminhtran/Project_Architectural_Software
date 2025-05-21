@@ -106,7 +106,7 @@ export default function FavoriteProducts() {
       <div style={{ display: "flex" }}>
         <div>
           <img
-            src="../../../public/images/bg/thu-cu-doi-moi.png"
+            src="https://file.hstatic.net/200000722513/file/thang_04_pc_tang_man_banner_side_web.jpg"
             alt="Logo"
             className="CartBuy-OrderBox__logo"
             style={{ width: "160px" }}
@@ -283,7 +283,7 @@ export default function FavoriteProducts() {
 
         <div>
           <img
-            src="../../../public/images/bg/mua-he-ruc-ro.png"
+            src="https://file.hstatic.net/200000722513/file/gearvn-laptop-t4-banner-side.jpg"
             alt="Logo"
             className="CartBuy-OrderBox__logo"
             style={{ width: "160px" }}

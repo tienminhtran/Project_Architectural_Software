@@ -10,40 +10,40 @@ const Blog = () => {
       title: "Tổng hợp các phần mềm cắt ghép video trên điện thoại và máy tính tốt nhất",
       date: "Thứ Hai 28/04/2025",
       author: "Hoàng Minh Tuyết",
-      image: "https://picsum.photos/200/120?random=1",
+      image: "https://file.hstatic.net/200000722513/article/tai-tlauncher-minecraft-thumb_e0e3c43418c04ecd879b88317184686f_grande.jpg",
     },
     {
       title: "Bật mí cách thêm dòng trong Excel cực nhanh và hiệu quả",
       date: "Thứ Hai 28/04/2025",
       author: "Lâm Trương Thảo Uyên",
-      image: "https://picsum.photos/200/120?random=2",
+      image: "https://file.hstatic.net/200000722513/article/adobe-express-thumb__2__ca8a8b8448ba4aecb0b18cdddcc814a5_grande.jpg",
+    },
+    {
+      title: "Bỏ túi 17+ phần mềm làm video trên máy tính chuyên nghiệp và tốt nhất",
+      date: "Thứ Hai 28/04/2025",
+      author: "Lê Minh Tâm",
+      image: "https://file.hstatic.net/200000722513/article/phan-mem-doc-file-xml-thumb__1__518d3774087642a0b0eef9906b8471e0_grande.jpg",
     },
     {
       title: "Cách tải Valorant Mobile phiên bản mới nhất 2025",
       date: "Thứ Hai 28/04/2025",
       author: "Lê Minh Tâm",
-      image: "https://picsum.photos/200/120?random=3",
-    },
-    {
-      title: "Cách tải Valorant Mobile phiên bản mới nhất 2025",
-      date: "Thứ Hai 28/04/2025",
-      author: "Lê Minh Tâm",
-      image: "https://picsum.photos/200/120?random=3",
+      image: "https://file.hstatic.net/200000722513/article/phan-mem-lam-video-thumb_b832c53a430a4b849324c56fbc461d01_grande.jpg",
     },    {
-      title: "Cách tải Valorant Mobile phiên bản mới nhất 2025",
+      title: "[MSI] Nhận code game DOOM: The Dark Ages Premium Edition khi mua RTX 50 Series",
       date: "Thứ Hai 28/04/2025",
       author: "Lê Minh Tâm",
-      image: "https://picsum.photos/200/120?random=3",
+      image: "https://file.hstatic.net/200000722513/article/code_game_275ed0e2a0334a18a41d1fdbd538ca16_grande.jpg",
     },    {
-      title: "Cách tải Valorant Mobile phiên bản mới nhất 2025",
+      title: "Mua ASUS NVIDIA GEFORCE RTX™ 50 SERIES nhận code game DOOM: The Dark Ages Premium Edition",
       date: "Thứ Hai 28/04/2025",
       author: "Lê Minh Tâm",
-      image: "https://picsum.photos/200/120?random=3",
+      image: "https://file.hstatic.net/200000722513/article/nhan_code_game_doom_3aab286886d549f1b3f7af65535d942a_grande.jpg",
     },    {
-      title: "Cách tải Valorant Mobile phiên bản mới nhất 2025",
-      date: "Thứ Hai 28/04/2025",
+      title: "Cách sử dụng Hailuo AI video chuyển đổi văn bản thành video nhanh chóng",
+      date: "Thứ Hai 21/03/2025",
       author: "Lê Minh Tâm",
-      image: "https://picsum.photos/200/120?random=3",
+      image: "https://file.hstatic.net/200000722513/article/asusasus_f8ec7472e93a4ac0b5aabbe360aabc7d_grande.jpg",
     },
   ];
 
@@ -68,7 +68,7 @@ const Blog = () => {
             <div className="blog__row blog__row--2-1">
               <div className="blog__col blog__col--2">
                 <img
-                  src="https://picsum.photos/400/200?random=1"
+                  src="https://file.hstatic.net/200000722513/article/gearvn-asus-ra-mat-chiec-ban-phim-rog-ket-hop-cung-zywoo-banner_cce3f458e3194eb5a183e40cb514e7a9_large.jpg"
                   alt="Star Wars"
                   className="blog__image"
                 />
@@ -76,7 +76,7 @@ const Blog = () => {
               </div>
               <div className="blog__col blog__col--1">
                 <img
-                  src="https://picsum.photos/400/200?random=2"
+                  src="https://file.hstatic.net/200000722513/article/code-skibidi-tower-defense-thumbnail__1__a10ae935b6624d3990d37aa180037a33_grande.jpg"
                   alt="Anime Rangers"
                   className="blog__image"
                 />
@@ -116,7 +116,7 @@ const Blog = () => {
             <div className="blog__row blog__row--1-1-1">
               <div className="blog__col">
                 <img
-                  src="https://picsum.photos/400/200?random=3"
+                  src="https://file.hstatic.net/200000722513/article/phan-mem-cat-ghep-video-thumb__1__0b2bceefa3bc42dba4fb305e614d2b1b_grande.jpg"
                   alt="Định vị iPhone"
                   className="blog__image"
                 />
@@ -124,7 +124,7 @@ const Blog = () => {
               </div>
               <div className="blog__col">
                 <img
-                  src="https://picsum.photos/400/200?random=4"
+                  src="https://file.hstatic.net/200000722513/article/cach-them-dong-trong-excel-thumbnail_802e26e39c594751999bd3ba672a0d79_grande.jpg"
                   alt="AI Video"
                   className="blog__image"
                 />
@@ -132,7 +132,7 @@ const Blog = () => {
               </div>
               <div className="blog__col">
                 <img
-                  src="https://picsum.photos/400/200?random=5"
+                  src="https://file.hstatic.net/200000722513/article/tai-valorant-mobile-thumb__1__1610d68601da4f50b11bd522619ba1b4_grande.jpg"
                   alt="Word"
                   className="blog__image"
                 />
@@ -189,7 +189,7 @@ const Blog = () => {
                 <h3 className="blog__section-title-list">XEM NHANH</h3>
                 <span className="blog__icon-set">
                   <img
-                    src="https://file.hstatic.net/200000636033/file/icon-blog-2_b45434d35b2c41b38931556be9e6dd2f.png"
+                    src="https://file.hstatic.net/200000636033/file/icon-blog-1_8b6add82876c457ba582b628c32266e5.png"
                     alt="icon fire"
                     style={{ width: "40px", height: "44px" }}
                   />
