@@ -382,6 +382,7 @@ public class OrderServiceImpl implements OrderService {
             order.setAddress(address);
             order.setVoucher(voucherEntity);
             order.setPayment(payment);
+            order.setContentPayment(orderRequest.getContentPayment());
             order.setOrderDetails(new ArrayList<>());
             order.setRatings(null);
 
@@ -462,6 +463,7 @@ public class OrderServiceImpl implements OrderService {
         response.setCreatedAt(order.getCreatedAt());
         response.setUpdatedAt(order.getUpdatedAt());
         response.setStatus(order.getStatus());
+        response.setContentPayment(order.getContentPayment());
 
         // Chuyển đổi User sang UserResponse
         if (order.getUser() != null) {

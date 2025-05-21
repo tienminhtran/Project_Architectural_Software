@@ -30,4 +30,5 @@ public class OrderRequest {
     private Long addressId;
     private List<OrderDetailRequest> orderDetails;
     private String status;
+    private String contentPayment;
 }
