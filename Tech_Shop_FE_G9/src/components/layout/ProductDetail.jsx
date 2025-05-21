@@ -4,7 +4,7 @@ import { FaCheckCircle } from "react-icons/fa";
 import { useNavigate } from "react-router-dom";
 import { formatPrice } from "../../utils/FormatPrice";
 import useCart from "../../hooks/useCart";
-
+import ProductRecommendation from "./ProductRecommendation";
 
 // Hàm kiểm tra ảnh có tồn tại không
 const tryImageExtensions = async (basePath, extensions = [".jpeg", ".jpg", ".png", ".webp", "jfif"]) => {
@@ -95,63 +95,68 @@ const ProductDetail = ({product}) => {
   };
 
   return (
-    <div className="productdetail__container">
-      {/* Hình ảnh sản phẩm */}
-      <div className="productdetail__image-group">
-        <img src={product?.thumbnail || "/images/product/avtdefault.jpg"} alt="MSI Thin 15" className="productdetail__main-image" />
-        <div className="productdetail__thumbnail-group">
-          {product?.images.map((thumbUrl, index) => (
-            <img key={index} src={thumbUrl} alt={`Thumbnail ${index + 1}`} className="productdetail__thumbnail" />
-          ))}
-        </div>
-      </div>
-
-      
-      {/* Thông tin sản phẩm */}
-      <div>
-        <h1 className="productdetail__title">{product?.productName}</h1>
-        <p className="productdetail__rating">⭐ {handleRatingStar(product?.ratings)} • Xem đánh giá</p>
-
-        {/* Flash Sale */}
-        <div className="flash-sale-box">
-          <div className="flash-sale-header">
-            <span className="flash-sale-title">⚡ FLASH SALE</span>
-            <span className="flash-sale-countdown-label">Kết thúc trong</span>
-            <FlashSaleTimer endTime={endTimeRef.current} />
-          </div>
-          <div className="flash-sale-body">
-            <span className="price-new">{formatPrice(product?.price)}</span>
-            <span className="price-old">19.490.000₫</span>
-            <span className="discount-box">-1%</span>
+    <div>
+            <div className="productdetail__container">
+        {/* Hình ảnh sản phẩm */}
+        <div className="productdetail__image-group">
+          <img src={product?.thumbnail || "/images/product/avtdefault.jpg"} alt="MSI Thin 15" className="productdetail__main-image" />
+          <div className="productdetail__thumbnail-group">
+            {product?.images.map((thumbUrl, index) => (
+              <img key={index} src={thumbUrl} alt={`Thumbnail ${index + 1}`} className="productdetail__thumbnail" />
+            ))}
           </div>
         </div>
-        <button className="productdetail__buy-button"  onClick={() => handleAddToCart(product)}>
-                MUA NGAY 
-                <br></br>
-        Giao tận nơi hoặc nhận tại cửa hàng
-        </button>
 
-        <div className="space-y-2 mt-4">
-          <p className="productdetail__gift-title">Quà tặng:</p>
-          <ul className="productdetail__gift-list">
-            <li>🎁 Balo MSI Essential Backpack (Kèm máy)</li>
-            <li>✔️ Bảo hành chính hãng 24 tháng</li>
-            <li>✔️ Hỗ trợ đổi mới trong 7 ngày</li>
-            <li>✔️ Miễn phí giao hàng toàn quốc</li>
-          </ul>
-        </div>
+        
+        {/* Thông tin sản phẩm */}
+        <div>
+          <h1 className="productdetail__title">{product?.productName}</h1>
+          <p className="productdetail__rating">⭐ {handleRatingStar(product?.ratings)} • Xem đánh giá</p>
 
-        <div className="productdetail__installment-info">
-          Hỗ trợ trả tiền MPOS (Thẻ tín dụng), HDSAISON <span>Xem chi tiết</span>.
-        </div>
+          {/* Flash Sale */}
+          <div className="flash-sale-box">
+            <div className="flash-sale-header">
+              <span className="flash-sale-title">⚡ FLASH SALE</span>
+              <span className="flash-sale-countdown-label">Kết thúc trong</span>
+              <FlashSaleTimer endTime={endTimeRef.current} />
+            </div>
+            <div className="flash-sale-body">
+              <span className="price-new">{formatPrice(product?.price)}</span>
+              <span className="price-old">19.490.000₫</span>
+              <span className="discount-box">-1%</span>
+            </div>
+          </div>
+          <button className="productdetail__buy-button"  onClick={() => handleAddToCart(product)}>
+                  MUA NGAY 
+                  <br></br>
+          Giao tận nơi hoặc nhận tại cửa hàng
+          </button>
 
-        <div className="productdetail__extra-deals">
-          <h6>Khuyến mãi</h6>
-          <p><FaCheckCircle style={{color: '#1D9811' }}/> Giảm ngay 100.000đ khi mua Microsoft Office kèm Laptop. <span>Xem thêm</span></p>
-          <p><FaCheckCircle style={{color: '#1D9811' }}/> Ưu đãi 500.000đ khi nâng cấp RAM với Laptop Gaming. <span>Xem thêm</span></p>
+          <div className="space-y-2 mt-4">
+            <p className="productdetail__gift-title">Quà tặng:</p>
+            <ul className="productdetail__gift-list">
+              <li>🎁 Balo MSI Essential Backpack (Kèm máy)</li>
+              <li>✔️ Bảo hành chính hãng 24 tháng</li>
+              <li>✔️ Hỗ trợ đổi mới trong 7 ngày</li>
+              <li>✔️ Miễn phí giao hàng toàn quốc</li>
+            </ul>
+          </div>
+
+          <div className="productdetail__installment-info">
+            Hỗ trợ trả tiền MPOS (Thẻ tín dụng), HDSAISON <span>Xem chi tiết</span>.
+          </div>
+
+          <div className="productdetail__extra-deals">
+            <h6>Khuyến mãi</h6>
+            <p><FaCheckCircle style={{color: '#1D9811' }}/> Giảm ngay 100.000đ khi mua Microsoft Office kèm Laptop. <span>Xem thêm</span></p>
+            <p><FaCheckCircle style={{color: '#1D9811' }}/> Ưu đãi 500.000đ khi nâng cấp RAM với Laptop Gaming. <span>Xem thêm</span></p>
+          </div>
         </div>
       </div>
+            <ProductRecommendation />
+
     </div>
+
   );
 };
 
