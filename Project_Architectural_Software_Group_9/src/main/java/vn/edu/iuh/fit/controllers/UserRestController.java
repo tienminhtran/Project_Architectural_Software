@@ -24,6 +24,7 @@ import org.springframework.web.bind.annotation.*;
 import org.springframework.web.multipart.MultipartFile;
 import vn.edu.iuh.fit.dtos.request.UserRequest;
 import vn.edu.iuh.fit.dtos.response.*;
+import vn.edu.iuh.fit.entities.User;
 import vn.edu.iuh.fit.exception.EmailAlreadyExistsException;
 import vn.edu.iuh.fit.exception.MissingTokenException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
@@ -480,10 +481,10 @@ public class UserRestController {
 
     @PreAuthorize("hasRole('ADMIN')")
     @GetMapping("/notify")
-    public ResponseEntity<?> notifyUser(@RequestParam(name = "email") String email, @RequestParam(name="nameuser" ) String nameuser)
+    public ResponseEntity<?> notifyUser(@RequestParam(name = "email") String email, @RequestParam(name="id" ) Long id)
                                        {
         try {
-            emailService.sendEmailNotification(nameuser, email);
+            emailService.sendEmailNotification(id, email);
             return ResponseEntity.ok(BaseResponse.builder()
                     .status("SUCCESS")
                     .message("Send email notification success")
@@ -506,7 +507,7 @@ public class UserRestController {
             return ResponseEntity.notFound().build();
         }
         // Cập nhật ngày gửi email thông báo
-        userResponse.setEmailNotificationDate(LocalDateTime.now());
+        userService.updateEmailNotificationDateById(id);
         return ResponseEntity.ok(BaseResponse.builder()
                 .status("SUCCESS")
                 .message("Update email notification date success")
@@ -514,5 +515,19 @@ public class UserRestController {
     }
 
     // test postmain: localhost:8080/api/v1/user/emailNotificationDate/1
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/findUsersWithEmailNotificationDate10DaysAgo")
+    public ResponseEntity<BaseResponse<List<UserResponse>>> findUsersWithEmailNotificationDate10DaysAgo() {
+        List<UserResponse> userResponses = userService.findUsersWithEmailNotificationDate10DaysAgo();
+        if (userResponses.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(BaseResponse.<List<UserResponse>>builder()
+                .status("SUCCESS")
+                .message("Get users with email notification date 10 days ago success")
+                .response(userResponses)
+                .build());
+    }
 
 }

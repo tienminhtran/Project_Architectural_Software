@@ -120,17 +120,23 @@ export const getAllUserRole1AndNoOrder = async () => {
 };
 
 // http://localhost:8080/api/v1/user/updateStatus/10
-export const updateStatusUser = async (id, status) => {
-  const response = await axiosInstance.put(`/user/updateStatus/${id}`, {
-    status,
-  });
+export const updateStatusUser = async (id) => {
+  const response = await axiosInstance.put(`/user/updateStatus/${id}`);
   return response.data;
 };
 
 //http://localhost:8080/api/v1/user/notify?email=tientot36@gmail.com&nameuser=12334
-export const sendEmailNotify = async ({ email, nameuser }) => {
+export const sendEmailNotify = async ({ email, id }) => {
   const response = await axiosInstance.get(
-    `/user/notify?email=${email}&nameuser=${encodeURIComponent(nameuser)}`
+    `/user/notify?email=${email}&id=${encodeURIComponent(id)}`
+  );
+  return response.data;
+};
+
+//http://localhost:8080/api/v1/user/findUsersWithEmailNotificationDate10DaysAgo
+export const findUsersWithEmailNotificationDate10DaysAgo = async () => {
+  const response = await axiosInstance.get(
+    `/user/findUsersWithEmailNotificationDate10DaysAgo`
   );
   return response.data;
 };

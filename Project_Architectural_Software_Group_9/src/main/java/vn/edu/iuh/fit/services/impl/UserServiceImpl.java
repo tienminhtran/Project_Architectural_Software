@@ -513,7 +513,26 @@ public class UserServiceImpl implements UserService {
         return true;
     }
 
+    @Override
+    public void updateEmailNotificationDateById(Long ids) {
+        User user = userRepository.findById(ids).orElseThrow(() -> new ItemNotFoundException("Can not find User with id: " + ids));
+        user.setEmailNotificationDate(LocalDateTime.now());
+        userRepository.save(user);
 
+
+    }
+
+    @Override
+    public List<UserResponse> findUsersWithEmailNotificationDate10DaysAgo() {
+        List<User> users = userRepository.findUsersWithEmailNotificationDate10DaysAgo();
+        if (users != null) {
+            return users.stream()
+                    .map(user -> this.convertToDto(user, UserResponse.class))
+                    .toList();
+        }
+        return null;
+
+    }
 
 
     @Override

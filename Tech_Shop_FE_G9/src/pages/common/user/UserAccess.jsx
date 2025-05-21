@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import Swal from 'sweetalert2';
 import useUser from '../../../hooks/useUser'; // đường dẫn có thể thay đổi tùy bạn
 import { Button } from 'react-bootstrap';
@@ -9,14 +9,39 @@ export default function UserAccess() {
     getAllUserRole1AndNoOrderPaging, // React Query hook lấy danh sách user
     updateStatusUser, // function update status user
     sendEmailNotify, // function gửi email thông báo
+    findUsersWithEmailNotificationDate10DaysAgoData, // function tìm user đã gửi email
   } = useUser();
 
   // Dữ liệu user từ API (React Query)
   const userNoOrders = getAllUserRole1AndNoOrderPaging.data?.response ?? [];
   const refetchUsers = getAllUserRole1AndNoOrderPaging.refetch;
+  
+
+  console.log('userNoOrders', userNoOrders);
 
   const [days, setDays] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
+
+
+
+  useEffect(() => {
+  if (!days || isNaN(days)) {
+    setFilteredUsers([]);
+    return;
+  }
+
+  const now = new Date();
+  const thresholdDate = new Date();
+  thresholdDate.setDate(now.getDate() - Number(days));
+
+  const filtered = userNoOrders.filter(user => {
+    const createdDate = new Date(user.createdAt);
+    return createdDate <= thresholdDate;
+  });
+
+  setFilteredUsers(filtered);
+}, [days, userNoOrders]);
+
 
   // Hàm lọc theo ngày tạo
   const handleFilter = () => {
@@ -25,6 +50,8 @@ export default function UserAccess() {
     const now = new Date();
     const thresholdDate = new Date();
     thresholdDate.setDate(now.getDate() - Number(days));
+    console.log('Threshold date:', thresholdDate);
+    console.log('User no orders:', userNoOrders);
 
     const filtered = userNoOrders.filter(user => {
       const createdDate = new Date(user.createdAt);
@@ -32,6 +59,7 @@ export default function UserAccess() {
     });
 
     setFilteredUsers(filtered);
+    console.log('Filtered users:');
   };
 
   // Hàm xử lý hủy tài khoản (update status)
@@ -66,7 +94,7 @@ export default function UserAccess() {
         cancelUsers.map(async (user) => {
           try {
             // Lưu ý hàm updateStatusUser nhận (id, status)
-            await updateStatusUser(user.id, 'canceled');
+            await updateStatusUser({userId: user.id});
           } catch (error) {
             errors.push(`Thất bại user ID ${user.id}: ${error.message}`);
           }
@@ -86,17 +114,6 @@ export default function UserAccess() {
     }
   };
 
-  // Mutation gửi email
-  const sendEmailNotifyMutation = useMutation({
-    mutationFn: ({ email, nameuser }) => sendEmailNotify({ email, nameuser }),
-    onSuccess: () => {
-      Swal.fire('Thành công', 'Gửi email thành công!', 'success');
-    },
-    onError: (error) => {
-      console.error('Send email failed:', error);
-      Swal.fire('Lỗi', 'Gửi email thất bại. Vui lòng thử lại!', 'error');
-    },
-  });
 
 
   // Gửi email thông báo hàng loạt cho user bị lọc (hoặc all)
@@ -134,7 +151,8 @@ export default function UserAccess() {
 
 
       try {
-        await sendEmailNotifyMutation.mutateAsync({ email, nameuser });
+        await sendEmailNotify({ email, id: user?.id });
+        handleFilter(); // Cập nhật lại danh sách người dùng sau khi gửi email
       } catch (error) {
         errors.push(`Lỗi gửi mail user ID ${user.id}: ${error.message}`);
       }
@@ -149,6 +167,31 @@ export default function UserAccess() {
       Swal.fire('Thành công', 'Đã gửi email thông báo đến tất cả người dùng!', 'success');
     }
   };
+  // http://localhost:8080/api/v1/user/findUsersWithEmailNotificationDate10DaysAgo
+  const handleFindUsersWithEmailNotificationDate10DaysAgo = async () => {
+    // const result = await Swal.fire({
+    //   title: 'Đang tìm kiếm người dùng...',
+    //   allowOutsideClick: false,
+    //   didOpen: () => Swal.showLoading(),
+    // });
+
+    try {
+      const response = findUsersWithEmailNotificationDate10DaysAgoData;
+      console.log('Response:', response);
+      if (response) {
+        // Swal.fire('Thành công', 'Tìm kiếm thành công!', 'success');
+        console.log('Filtered users:', response);
+        setFilteredUsers(response);
+      } else {
+        // Swal.fire('Không tìm thấy người dùng nào đã gửi email thông báo!', '', 'info');
+        console.log('Không tìm thấy người dùng nào đã gửi email thông báo!');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Swal.fire('Lỗi', 'Có lỗi xảy ra trong quá trình tìm kiếm!', 'error');
+    }
+  }
+
 
   // Hàm render bảng
   const renderTable = (data, title, includeOrder = false) => {
@@ -223,18 +266,35 @@ export default function UserAccess() {
           onChange={e => setDays(e.target.value)}
           style={{ marginRight: 10, padding: 5 }}
         />
-        <button onClick={handleFilter}>Lọc</button>
+        {/* <button onClick={handleFilter}>Lọc</button> */}
       </div>
       <button
         onClick={handleSendBatchEmail}
         variant="primary"
-        style={{ marginBottom: 10, backgroundColor: '#007bff', color: 'white', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer' }}
+        style={{ marginBottom: 10, backgroundColor: '#007bff', color: 'white', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer', marginRight: 10 }}
       >
         Thông báo Mail hủy tài khoản - 10 ngày
       </button>
-      <button onClick={handleCancelAccounts} style={{ marginBottom: 10, backgroundColor: '#d33', color: 'white', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer' }}>
+      <button onClick={handleCancelAccounts} style={{ marginRight:10, marginBottom: 10, backgroundColor: '#d33', color: 'white', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer' }}>
         Hủy các tài khoản
       </button>
+      <button 
+        onClick={handleFindUsersWithEmailNotificationDate10DaysAgo}
+       style={{ marginRight:10, marginBottom: 10, backgroundColor: '#3ae2fc', color: 'black', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer' }}>
+        Các tài khoản cần xóa
+      </button>
+      {/* tra ve danh sach chua loc */}
+      <button
+        onClick={() => {
+            setDays('');        // xóa input ngày
+            setFilteredUsers([]); // reset bộ lọc
+            refetchUsers();     // gọi lại API lấy dữ liệu mới
+          }}        
+        style={{ marginBottom: 10, backgroundColor: '#28a745', color: 'white', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer' }}
+      >
+        Làm mới danh sách
+      </button>
+      
 
       {renderTable(filteredUsers.length > 0 ? filteredUsers : userNoOrders, 'Danh sách người dùng')}
     </div>
