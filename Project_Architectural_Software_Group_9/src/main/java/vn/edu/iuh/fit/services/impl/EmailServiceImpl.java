@@ -5,7 +5,8 @@
  */
 
 package vn.edu.iuh.fit.services.impl;
-
+import jakarta.mail.internet.MimeMessage;
+import org.springframework.mail.javamail.MimeMessageHelper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.mail.SimpleMailMessage;
@@ -55,4 +56,38 @@ public class EmailServiceImpl implements EmailService {
         }
 
     }
+
+    @Override
+    public void sendEmailNotification(String name, String to) throws SendEmailException {
+        try {
+            MimeMessage mimeMessage = mailSender.createMimeMessage();
+            // true = multipart message
+            MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
+
+            helper.setSubject("Thông báo kích hoạt tài khoản eTraDe");
+            helper.setFrom(fromEmail);
+            helper.setTo(to);
+
+            // Nội dung email HTML, bạn có thể chỉnh sửa theo ý muốn
+            String htmlMsg = "<html><body>" +
+                    "<p>Hello <b>" + name + "</b>,</p>" +
+                    "<p>Thank you for registering an account on <a href='https://tranminhtien.io.vn'>eTraDe</a>!</p>" +
+                    "<p><b>Your account on eTraDe will be <span style='color:red;'>locked after 10 days</span></b>, from the date of sending this email if you do not complete the verification or account activation process.</p>" +
+                    "<p>If you did not make a <b>PURCHASE</b>, please ignore this email.</p>" +
+                    "<br>" +
+                    "<p>Sincerely,<br>eTraDe Support Team</p>" +
+
+                    // Add image logo (link from web or send inline)
+                    "<img src='https://tranminhtien.io.vn/images/logo/logo-large.png' alt='Logo eTraDe' style='width:150px;'/>" +
+
+                    "</body></html>";
+
+            helper.setText(htmlMsg, true); // true = gửi dưới dạng HTML
+
+            mailSender.send(mimeMessage);
+        } catch (Exception e) {
+            throw new SendEmailException("Đã xảy ra lỗi khi gửi email thông báo:\n\n" + e.getMessage());
+        }
+    }
+
 }

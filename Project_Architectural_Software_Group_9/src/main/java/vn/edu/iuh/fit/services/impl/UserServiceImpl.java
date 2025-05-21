@@ -89,7 +89,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
+
     private final Map<String, EmailVerifyEntry> emailVerifyMap = new ConcurrentHashMap<>();
+
 
     // Phương thức chuyển đổi User sang DTO với kiểu generic T
     private <T> T convertToDto(User user, Class<T> targetClass) {
@@ -512,6 +514,8 @@ public class UserServiceImpl implements UserService {
     }
 
 
+
+
     @Override
     public List<UserResponse> getAllUserRole1() {
         List<User> users = userRepository.findAllUserWithRole1();
@@ -522,6 +526,7 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
 
 
 }
