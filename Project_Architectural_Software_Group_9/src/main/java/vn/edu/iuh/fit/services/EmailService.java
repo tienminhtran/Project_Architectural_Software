@@ -15,6 +15,6 @@ import vn.edu.iuh.fit.exception.SendEmailException;
  */
 public interface EmailService {
     void sendEmailToVerifyAccount(String name, String to, String token) throws SendEmailException;
-    void sendEmailNotification(String name, String to) throws SendEmailException;
+    void sendEmailNotification(Long id, String to) throws SendEmailException;
 
 }

@@ -9,7 +9,8 @@ import {
   getAllUserRole1,
   getAllUserRole1AndNoOrder,
   updateStatusUser,
-  sendEmailNotify
+  sendEmailNotify,
+  findUsersWithEmailNotificationDate10DaysAgo
 
 
   // getAllUsersNoPage,
@@ -24,6 +25,8 @@ const useUser = (pageNo, pageSize) => {
   const getUser = useQuery({
     queryKey: ["getUser"], // Dùng user là username làm key của query
     queryFn: () => getCurrentUser(),
+    
+  
     refetchOnWindowFocus: false,
   });
 
@@ -114,8 +117,8 @@ const useUser = (pageNo, pageSize) => {
   });
 
 const updateStatusUserMutation = useMutation({
-    mutationFn: ({ userId, status }) => {
-      return updateStatusUser(userId, status); // Use the correct service function
+    mutationFn: ({ userId }) => {
+      return updateStatusUser(userId); // Use the correct service function
     },
     onSuccess: () => {
       // alert('Update status user successfully!');
@@ -130,12 +133,13 @@ const updateStatusUserMutation = useMutation({
 
   //send
   const sendEmailNotifyMutation = useMutation({
-    mutationFn: ({ email, nameuser }) => {
-      return sendEmailNotify({ email, nameuser});
+    mutationFn: ({ email, id }) => {
+      return sendEmailNotify({ email, id});
     },
     onSuccess: () => {
       // alert("Send email successfully!");
       console.log("HOOKS:        Send email successfully!");
+      queryClient.invalidateQueries(["getAllUserRole1AndNoOrder"]); // Invalidate the query to refetch the user data
     },
     onError: (error) => {
       console.error("Send email failed:", error);
@@ -144,6 +148,13 @@ const updateStatusUserMutation = useMutation({
     },
   });
 
+
+  // findUsersWithEmailNotificationDate10DaysAgo
+  const findUsersWithEmailNotificationDate10DaysAgoQuery = useQuery({
+    queryKey: ["findUsersWithEmailNotificationDate10DaysAgo"],
+    queryFn: () => findUsersWithEmailNotificationDate10DaysAgo(),
+    refetchOnWindowFocus: false,
+  });
 
   return {
     user_paging: userPaging,
@@ -169,12 +180,18 @@ const updateStatusUserMutation = useMutation({
     loadingUpdateUser: updateProfileUser.isLoading,
 
     // update
-    updateStatusUser: updateStatusUserMutation.mutate,  
+    updateStatusUser: updateStatusUserMutation.mutateAsync,  
     
     //send
-    sendEmailNotify: sendEmailNotifyMutation.mutate,
+    sendEmailNotify: sendEmailNotifyMutation.mutateAsync,
     sendEmailNotifyLoading: sendEmailNotifyMutation.isLoading,
+
     
+    // findUsersWithEmailNotificationDate10DaysAgo
+    findUsersWithEmailNotificationDate10DaysAgoData: findUsersWithEmailNotificationDate10DaysAgoQuery.data?.response || [],
+    findUsersWithEmailNotificationDate10DaysAgoError: findUsersWithEmailNotificationDate10DaysAgoQuery.error,
+    findUsersWithEmailNotificationDate10DaysAgoIsError: findUsersWithEmailNotificationDate10DaysAgoQuery.isError,
+
   };
 };
 export default useUser;

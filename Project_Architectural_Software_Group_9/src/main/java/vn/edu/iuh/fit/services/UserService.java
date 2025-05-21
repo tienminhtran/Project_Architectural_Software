@@ -86,4 +86,10 @@ public interface UserService {
     boolean updateStatusByIds(List<Long> ids);
 
 
+    // update ngay goi email thong bao la ngay gio hien tai theo iduser
+
+    void updateEmailNotificationDateById(Long id);
+
+    //findUsersWithEmailNotificationDate10DaysAgo
+    List<UserResponse> findUsersWithEmailNotificationDate10DaysAgo();
 }

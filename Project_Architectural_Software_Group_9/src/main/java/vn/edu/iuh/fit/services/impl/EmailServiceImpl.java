@@ -13,9 +13,13 @@ import org.springframework.mail.SimpleMailMessage;
 import org.springframework.mail.javamail.JavaMailSender;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import vn.edu.iuh.fit.entities.User;
+import vn.edu.iuh.fit.exception.ItemNotFoundException;
 import vn.edu.iuh.fit.exception.SendEmailException;
 import vn.edu.iuh.fit.repositories.UserRepository;
 import vn.edu.iuh.fit.services.EmailService;
+
+import java.time.LocalDateTime;
 
 /*
  * @description:
@@ -34,6 +38,9 @@ public class EmailServiceImpl implements EmailService {
     @Value("${spring.mail.username}")
     private String fromEmail;
 
+    @Autowired
+    private UserRepository userRepository;
+
     @Override
     public void sendEmailToVerifyAccount(String nameCustomer, String toEmail, String token) throws SendEmailException {
         String messageContent = "Hello " + nameCustomer + ",\n\n" +
@@ -41,7 +48,7 @@ public class EmailServiceImpl implements EmailService {
                 "[Verify Email] "+ host + "/api/v1/auth/verify?email="+toEmail+"&token=" + token + "\n\n" +
                 "If you didn’t sign up, please ignore this email. Thank you,\n" +
                 "Best,\n" +
-                "The Support Team";
+                "eTraDe Support Team";
         try {
             SimpleMailMessage message = new SimpleMailMessage();
             message.setSubject("New User Account Verification");
@@ -58,8 +65,10 @@ public class EmailServiceImpl implements EmailService {
     }
 
     @Override
-    public void sendEmailNotification(String name, String to) throws SendEmailException {
+    public void sendEmailNotification(Long id, String to) throws SendEmailException {
         try {
+            User user = userRepository.findById(id).orElseThrow(() -> new ItemNotFoundException("Can not find User with id: " + id));
+
             MimeMessage mimeMessage = mailSender.createMimeMessage();
             // true = multipart message
             MimeMessageHelper helper = new MimeMessageHelper(mimeMessage, true, "UTF-8");
@@ -70,7 +79,7 @@ public class EmailServiceImpl implements EmailService {
 
             // Nội dung email HTML, bạn có thể chỉnh sửa theo ý muốn
             String htmlMsg = "<html><body>" +
-                    "<p>Hello <b>" + name + "</b>,</p>" +
+                    "<p>Hello <b>" + user.getLastname() + " " + user.getFirstname() + "</b>,</p>" +
                     "<p>Thank you for registering an account on <a href='https://tranminhtien.io.vn'>eTraDe</a>!</p>" +
                     "<p><b>Your account on eTraDe will be <span style='color:red;'>locked after 10 days</span></b>, from the date of sending this email if you do not complete the verification or account activation process.</p>" +
                     "<p>If you did not make a <b>PURCHASE</b>, please ignore this email.</p>" +
@@ -83,8 +92,14 @@ public class EmailServiceImpl implements EmailService {
                     "</body></html>";
 
             helper.setText(htmlMsg, true); // true = gửi dưới dạng HTML
+            user.setEmailNotificationDate(LocalDateTime.now());
+            userRepository.save(user);
 
+            // cmt dong nay de hong goi mail
             mailSender.send(mimeMessage);
+
+
+
         } catch (Exception e) {
             throw new SendEmailException("Đã xảy ra lỗi khi gửi email thông báo:\n\n" + e.getMessage());
         }

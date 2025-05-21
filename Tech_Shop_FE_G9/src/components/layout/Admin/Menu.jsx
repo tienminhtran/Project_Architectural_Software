@@ -6,7 +6,9 @@ import {
     FaGift,
     FaHome,
     FaUserShield,
-    FaFileInvoice,FaRegPaperPlane
+    FaFileInvoice,FaRegPaperPlane,
+    FaRegCalendarAlt
+
 } from "react-icons/fa";
 import { BiCategoryAlt } from "react-icons/bi";
 import { IoIosArrowForward } from "react-icons/io";
@@ -241,7 +243,7 @@ const Menu = () => {
                        <MenuItem to="/admin/code" label="Task" icon={<FaRegPaperPlane />} />
                     )}
                     {localStorage.getItem("lastDashboard") === "admin" && (
-                       <MenuItem to="/admin/user-access" label="Uses permissions" icon={<FaRegPaperPlane />} />
+                       <MenuItem to="/admin/user-access" label="Uses permissions" icon={<FaRegCalendarAlt />} />
                     )}
                     {localStorage.getItem("lastDashboard") === "manager" &&
                         roles[1] === "ROLE_MANAGER" && (
