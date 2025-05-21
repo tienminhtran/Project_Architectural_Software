@@ -98,6 +98,7 @@ const OrderPayment = () => {
         voucherId: appliedVoucher ? appliedVoucher.id : null,
         addressId: addressId,
         orderDetails: orderDetails,
+        contentPayment: orderCode,
       };
 
       // Gọi createOrder
