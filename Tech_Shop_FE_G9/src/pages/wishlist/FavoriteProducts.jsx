@@ -9,6 +9,7 @@ import FooterUser from "../../components/layout/Footer";
 import useCart from "../../hooks/useCart";
 import useWishlist from "../../hooks/useWishlist";
 import HeaderUser from "../../components/layout/HeaderUser";
+import { formatPrice } from "../../utils/FormatPrice";
 
 export default function FavoriteProducts() {
   const { addItem } = useCart();
@@ -240,10 +241,10 @@ export default function FavoriteProducts() {
                     </td>
                     <td>{product.name}</td>
                     <td className="favorite-product__price">
-                      {product.price.toLocaleString()}₫
+                      {formatPrice(Number(product.price))}
                     </td>
                     <td className="favorite-product__original-price">
-                      {product.originalPrice.toLocaleString()}₫
+                      {formatPrice(Number(product.originalPrice))}
                     </td>
                     <td
                       style={{
