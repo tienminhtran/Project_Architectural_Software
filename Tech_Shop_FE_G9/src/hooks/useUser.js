@@ -8,6 +8,7 @@ import {
   getAllUserHasOrder,
   getAllUserRole1,
   getAllUserRole1AndNoOrder,
+  updateStatusUser,
 
 
   // getAllUsersNoPage,
@@ -111,20 +112,20 @@ const useUser = (pageNo, pageSize) => {
     refetchOnWindowFocus: false,
   });
 
-const useUpdateStatusUser = () => {
-  return useMutation({
-    mutationFn: ({ id, status }) => {
-      return updateStatusUser(id, status);
+const updateStatusUserMutation = useMutation({
+    mutationFn: ({ userId, status }) => {
+      return updateStatusUser(userId, status); // Use the correct service function
     },
     onSuccess: () => {
-      alert("Update status user successfully!");
+      // alert('Update status user successfully!');
+      console.log('HOOKS:        Update status user successfully!');
     },
     onError: (error) => {
-      console.error("Update status user failed:", error);
-      alert("Update status user failed. Please try again!");
+      console.error('Update status user failed:', error);
+      // alert('Update status user failed. Please try again!');
+      console.log('HOOKS:        Update status user failed. Please try again!');
     },
   });
-};
 
 
   return {
@@ -151,8 +152,7 @@ const useUpdateStatusUser = () => {
     loadingUpdateUser: updateProfileUser.isLoading,
 
     // update
-    updateStatusUser: useUpdateStatusUser,
-    
+    updateStatusUser: updateStatusUserMutation.mutate,     
     
   };
 };
