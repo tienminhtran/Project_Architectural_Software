@@ -9,6 +9,7 @@ import {
   getAllUserRole1,
   getAllUserRole1AndNoOrder,
   updateStatusUser,
+  sendEmailNotify
 
 
   // getAllUsersNoPage,
@@ -127,6 +128,22 @@ const updateStatusUserMutation = useMutation({
     },
   });
 
+  //send
+  const sendEmailNotifyMutation = useMutation({
+    mutationFn: ({ email, nameuser }) => {
+      return sendEmailNotify({ email, nameuser});
+    },
+    onSuccess: () => {
+      // alert("Send email successfully!");
+      console.log("HOOKS:        Send email successfully!");
+    },
+    onError: (error) => {
+      console.error("Send email failed:", error);
+      // alert("Send email failed. Please try again!");
+      console.log("HOOKS:        Send email failed. Please try again!");
+    },
+  });
+
 
   return {
     user_paging: userPaging,
@@ -152,7 +169,11 @@ const updateStatusUserMutation = useMutation({
     loadingUpdateUser: updateProfileUser.isLoading,
 
     // update
-    updateStatusUser: updateStatusUserMutation.mutate,     
+    updateStatusUser: updateStatusUserMutation.mutate,  
+    
+    //send
+    sendEmailNotify: sendEmailNotifyMutation.mutate,
+    sendEmailNotifyLoading: sendEmailNotifyMutation.isLoading,
     
   };
 };

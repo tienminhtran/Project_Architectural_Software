@@ -1,11 +1,14 @@
 import React, { useState } from 'react';
 import Swal from 'sweetalert2';
 import useUser from '../../../hooks/useUser'; // đường dẫn có thể thay đổi tùy bạn
+import { Button } from 'react-bootstrap';
+import { useMutation } from '@tanstack/react-query'; // hoặc react-query
 
 export default function UserAccess() {
   const {
     getAllUserRole1AndNoOrderPaging, // React Query hook lấy danh sách user
     updateStatusUser, // function update status user
+    sendEmailNotify, // function gửi email thông báo
   } = useUser();
 
   // Dữ liệu user từ API (React Query)
@@ -83,6 +86,70 @@ export default function UserAccess() {
     }
   };
 
+  // Mutation gửi email
+  const sendEmailNotifyMutation = useMutation({
+    mutationFn: ({ email, nameuser }) => sendEmailNotify({ email, nameuser }),
+    onSuccess: () => {
+      Swal.fire('Thành công', 'Gửi email thành công!', 'success');
+    },
+    onError: (error) => {
+      console.error('Send email failed:', error);
+      Swal.fire('Lỗi', 'Gửi email thất bại. Vui lòng thử lại!', 'error');
+    },
+  });
+
+
+  // Gửi email thông báo hàng loạt cho user bị lọc (hoặc all)
+  const handleSendBatchEmail = async () => {
+    const targetUsers = filteredUsers.length > 0 ? filteredUsers : userNoOrders;
+
+    if (targetUsers.length === 0) {
+      Swal.fire('Thông báo', 'Không có người dùng để gửi email!', 'info');
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: `Bạn có chắc muốn gửi email thông báo đến ${targetUsers.length} người dùng không?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Có, gửi ngay!',
+      cancelButtonText: 'Hủy',
+    });
+
+    if (!result.isConfirmed) return;
+
+    Swal.fire({
+      title: 'Đang gửi email...',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+
+    const errors = [];
+
+    // Gửi mail tuần tự (hoặc có thể Promise.all nếu API chịu được)
+    for (const user of targetUsers) {
+      const email = user.email;
+      const nameuser = `${user.firstname ?? ''} ${user.lastname ?? ''}`.trim();
+      console.log(`Gửi email đến ${email} (${nameuser})`);
+
+
+      try {
+        await sendEmailNotifyMutation.mutateAsync({ email, nameuser });
+      } catch (error) {
+        errors.push(`Lỗi gửi mail user ID ${user.id}: ${error.message}`);
+      }
+    }
+
+    Swal.close();
+
+    if (errors.length > 0) {
+      Swal.fire('Lỗi', `Có ${errors.length} email gửi không thành công. Vui lòng thử lại!`, 'error');
+      console.error(errors);
+    } else {
+      Swal.fire('Thành công', 'Đã gửi email thông báo đến tất cả người dùng!', 'success');
+    }
+  };
+
   // Hàm render bảng
   const renderTable = (data, title, includeOrder = false) => {
     const hasScroll = data.length > 7;
@@ -104,6 +171,7 @@ export default function UserAccess() {
                 <th style={styles.th}>Phone</th>
                 <th style={styles.th}>Email</th>
                 <th style={styles.th}>Created At</th>
+                <th style={styles.th}>Date send mail</th>
                 {includeOrder && <th style={styles.th}>No. Order</th>}
               </tr>
             </thead>
@@ -126,6 +194,9 @@ export default function UserAccess() {
                     <td style={styles.td}>{user.email}</td>
                     <td style={styles.td}>{new Date(user.createdAt).toLocaleDateString()}</td>
                     {includeOrder && <td style={styles.td}>{user.orderCount ?? 0}</td>}
+                    <td style={styles.td}>
+                      {user.emailNotificationDate ? new Date(user.emailNotificationDate).toLocaleString() : 'Chưa gửi mail'}
+                    </td>
                   </tr>
                 ))
               ) : (
@@ -154,7 +225,13 @@ export default function UserAccess() {
         />
         <button onClick={handleFilter}>Lọc</button>
       </div>
-
+      <button
+        onClick={handleSendBatchEmail}
+        variant="primary"
+        style={{ marginBottom: 10, backgroundColor: '#007bff', color: 'white', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer' }}
+      >
+        Thông báo Mail hủy tài khoản - 10 ngày
+      </button>
       <button onClick={handleCancelAccounts} style={{ marginBottom: 10, backgroundColor: '#d33', color: 'white', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer' }}>
         Hủy các tài khoản
       </button>
@@ -188,7 +265,10 @@ const styles = {
   table: {
     width: '100%',
     borderCollapse: 'collapse',
+    marginBottom: 20,
+    fontSize: 14,
   },
+
   th: {
     padding: '12px 16px',
     backgroundColor: '#f3f4f6',

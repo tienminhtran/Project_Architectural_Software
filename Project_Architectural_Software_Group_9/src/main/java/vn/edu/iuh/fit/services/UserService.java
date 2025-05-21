@@ -84,4 +84,6 @@ public interface UserService {
 
     // update status = false list user theo iduser
     boolean updateStatusByIds(List<Long> ids);
+
+
 }

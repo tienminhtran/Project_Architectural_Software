@@ -54,5 +54,8 @@ public class UserResponse implements Serializable {
 
     int orderCount;
 
+     LocalDateTime emailNotificationDate;
+
+
 
 }

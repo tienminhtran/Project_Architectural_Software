@@ -126,3 +126,11 @@ export const updateStatusUser = async (id, status) => {
   });
   return response.data;
 };
+
+//http://localhost:8080/api/v1/user/notify?email=tientot36@gmail.com&nameuser=12334
+export const sendEmailNotify = async ({ email, nameuser }) => {
+  const response = await axiosInstance.get(
+    `/user/notify?email=${email}&nameuser=${encodeURIComponent(nameuser)}`
+  );
+  return response.data;
+};

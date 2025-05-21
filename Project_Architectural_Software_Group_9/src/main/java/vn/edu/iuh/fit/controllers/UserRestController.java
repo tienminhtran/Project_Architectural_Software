@@ -29,10 +29,12 @@ import vn.edu.iuh.fit.exception.MissingTokenException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.security.jwt.JwtTokenProvider;
 import vn.edu.iuh.fit.services.CartService;
+import vn.edu.iuh.fit.services.EmailService;
 import vn.edu.iuh.fit.services.UserService;
 import vn.edu.iuh.fit.utils.FormatPhoneNumber;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -58,6 +60,8 @@ public class UserRestController {
 
     @Autowired
     private CartService cartService;
+    @Autowired
+    private EmailService emailService;
 
     @GetMapping("/{id}")
     public ResponseEntity<BaseResponse<UserResponse>> getUserById(@PathVariable Long id) {
@@ -473,5 +477,42 @@ public class UserRestController {
     }
 
     // TEST POST MAIN: localhost:8080/api/v1/user/updateStatus
+
+    @PreAuthorize("hasRole('ADMIN')")
+    @GetMapping("/notify")
+    public ResponseEntity<?> notifyUser(@RequestParam(name = "email") String email, @RequestParam(name="nameuser" ) String nameuser)
+                                       {
+        try {
+            emailService.sendEmailNotification(nameuser, email);
+            return ResponseEntity.ok(BaseResponse.builder()
+                    .status("SUCCESS")
+                    .message("Send email notification success")
+                    .build());
+        } catch (Exception e) {
+            return ResponseEntity.badRequest().body(BaseResponse.builder()
+                    .status("ERROR")
+                    .message("Send email notification failed: " + e.getMessage())
+                    .build());
+        }
+    }
+
+
+
+    // update ngay goi mail thong bao theo userid
+    @PutMapping("/emailNotificationDate/{id}")
+    public ResponseEntity<BaseResponse<?>> updateEmailNotificationDate(@PathVariable Long id) {
+        UserResponse userResponse = userService.findById(id);
+        if (userResponse == null) {
+            return ResponseEntity.notFound().build();
+        }
+        // Cập nhật ngày gửi email thông báo
+        userResponse.setEmailNotificationDate(LocalDateTime.now());
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Update email notification date success")
+                .build());
+    }
+
+    // test postmain: localhost:8080/api/v1/user/emailNotificationDate/1
 
 }
