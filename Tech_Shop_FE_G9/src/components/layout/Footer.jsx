@@ -103,8 +103,8 @@ const Footer = () => {
                 </a>
               </div>
               <div className="store-icons">
-                <img src="/public/images/icon/app-store.png" alt="App Store" />
-                <img src="/public/images/icon/google-play.png" alt="Google Play" />
+                <img src="https://upload.wikimedia.org/wikipedia/commons/thumb/3/3c/Download_on_the_App_Store_Badge.svg/2560px-Download_on_the_App_Store_Badge.svg.png" alt="App Store" />
+                <img src="https://higherlogicdownload.s3.amazonaws.com/NADP/932c62af-b1d9-4741-9d57-76fe04359af6/UploadedImages/CONVERGE/Google_Play_Store_badge_EN_svg.png" alt="Google Play" />
               </div>
             </div>
           </div>

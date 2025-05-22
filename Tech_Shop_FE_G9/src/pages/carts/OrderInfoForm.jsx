@@ -20,7 +20,7 @@ const OrderInfoForm = ({ userid }) => {
   const [note, setNote] = useState("");
   const [invoice, setInvoice] = useState(false);
   const [cartData, setCartData] = useState(null);
-  const [showAddressModal, setShowAddressModal] = useState(false);
+  const [showAddressModal, setShowAddressModal] = useState("");
   const [selectedAddress, setSelectedAddress] = useState("");
 
   // Lấy thông tin người dùng

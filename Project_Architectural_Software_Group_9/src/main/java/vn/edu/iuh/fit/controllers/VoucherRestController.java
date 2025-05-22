@@ -45,6 +45,7 @@ public class VoucherRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get all vouchers success").response(vouchers).build());
     }
 
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
     @GetMapping("")
     public ResponseEntity<BaseResponse<?>> getAllVouchers_Paging(@RequestParam(defaultValue = "0", required = false) Integer pageNo,
                                                                 @RequestParam(defaultValue = "10", required = false) Integer pageSize) {
