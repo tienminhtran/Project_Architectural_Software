@@ -39,7 +39,7 @@ export const getUsers_Auth = async () => {
   return response.data;
 };
 
-export const getCurrentUser= async () => {
+export const getCurrentUser = async () => {
   const accessToken = localStorage.getItem("accessToken");
   if (!accessToken) return;
 
@@ -106,7 +106,6 @@ export const getAllUserHasOrder = async () => {
   const response = await axiosInstance.get("/user/allUserHasOrder");
   return response.data;
 };
-
 
 export const getAllUserRole1 = async () => {
   const response = await axiosInstance.get("/user/allUserRole1");

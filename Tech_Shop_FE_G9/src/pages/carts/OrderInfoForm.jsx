@@ -10,6 +10,8 @@ import AddressBookModal from "../../../src/pages/common/user/AddressBookModal";
 import useUser from "../../hooks/useUser";
 import { formatPrice } from "../../utils/FormatPrice";
 import HeaderUser from "../../components/layout/HeaderUser";
+import { toast, ToastContainer } from "react-toastify";
+import "react-toastify/dist/ReactToastify.css";
 
 const OrderInfoForm = ({ userid }) => {
   const navigate = useNavigate();
@@ -25,8 +27,8 @@ const OrderInfoForm = ({ userid }) => {
   const { userInfor } = useUser(0, 1);
   const user = useMemo(() => userInfor || null, [userInfor]);
 
-  console.log("userInfor--------", userInfor);
-  console.log("user-----------------------------", user);
+  // console.log("userInfor--------", userInfor);
+  // console.log("user-----------------------------", user);
   // Lấy thông tin giỏ hàng từ sessionStorage
   useEffect(() => {
     const storedData = sessionStorage.getItem("cartData");
@@ -48,7 +50,10 @@ const OrderInfoForm = ({ userid }) => {
   // Kiểm tra tính hợp lệ của form
   const validateForm = () => {
     if (!name.trim()) {
-      alert("Vui lòng nhập họ tên.");
+      toast.error("Vui lòng nhập họ tên.", {
+        position: "top-center",
+        autoClose: 1000,
+      });
       return false;
     }
     const phoneRegex = /^(0|\+84)[0-9]{9}$/;
@@ -57,7 +62,10 @@ const OrderInfoForm = ({ userid }) => {
       return false;
     }
     if (!selectedAddress) {
-      alert("Vui lòng chọn địa chỉ giao hàng.");
+      toast.error("Vui lòng chọn địa chỉ giao hàng.", {
+        position: "top-center",
+        autoClose: 1000,
+      });
       return false;
     }
     return true;
@@ -92,6 +100,7 @@ const OrderInfoForm = ({ userid }) => {
 
   return (
     <div>
+      <ToastContainer />
       <HeaderUser showCategory={false} showBanner={false} />
       <div style={{ display: "flex" }}>
         <div>

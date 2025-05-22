@@ -10,14 +10,13 @@ import {
   getAllUserRole1AndNoOrder,
   updateStatusUser,
   sendEmailNotify,
-  findUsersWithEmailNotificationDate10DaysAgo
-
+  findUsersWithEmailNotificationDate10DaysAgo,
 
   // getAllUsersNoPage,
 } from "../services/userService";
 import usePaginationQuery from "./usePaginationQuery";
 import { resetPasswordService, getCurrentUser } from "../services/userService";
-
+import { toast } from "react-toastify";
 
 const useUser = (pageNo, pageSize) => {
   const queryClient = useQueryClient();
@@ -25,8 +24,7 @@ const useUser = (pageNo, pageSize) => {
   const getUser = useQuery({
     queryKey: ["getUser"], // Dùng user là username làm key của query
     queryFn: () => getCurrentUser(),
-    
-  
+
     refetchOnWindowFocus: false,
   });
 
@@ -40,14 +38,19 @@ const useUser = (pageNo, pageSize) => {
   const createRoleManager = useMutation({
     mutationFn: (formData) => createUserRoleManager(formData),
     onSuccess: () => {
-      alert("Create user role manager successfully!!");
+      toast.success("Create user role manager successfully!", {
+        position: "top-right",
+        autoClose: 1000,
+      });
     },
     onError: (error) => {
-      console.error("Create user role manager failed:", error);
-      alert("Create user role manager fail. Please try again!");
+      console.error("Create user role manager failed:2", error);
+      toast.error(error, {
+        position: "top-right",
+        autoClose: 1000,
+      });
     },
   });
-
 
   //sử dụng useMuntation để update thông tin user
   const updateProfileUser = useMutation({
@@ -95,7 +98,7 @@ const useUser = (pageNo, pageSize) => {
     },
   });
 
-  // getAllUserHasOrder 
+  // getAllUserHasOrder
   const getAllUserHasOrderPaging = useQuery({
     queryKey: ["getAllUserHasOrder"],
     queryFn: () => getAllUserHasOrder(),
@@ -116,25 +119,25 @@ const useUser = (pageNo, pageSize) => {
     refetchOnWindowFocus: false,
   });
 
-const updateStatusUserMutation = useMutation({
+  const updateStatusUserMutation = useMutation({
     mutationFn: ({ userId }) => {
       return updateStatusUser(userId); // Use the correct service function
     },
     onSuccess: () => {
       // alert('Update status user successfully!');
-      console.log('HOOKS:        Update status user successfully!');
+      console.log("HOOKS:        Update status user successfully!");
     },
     onError: (error) => {
-      console.error('Update status user failed:', error);
+      console.error("Update status user failed:", error);
       // alert('Update status user failed. Please try again!');
-      console.log('HOOKS:        Update status user failed. Please try again!');
+      console.log("HOOKS:        Update status user failed. Please try again!");
     },
   });
 
   //send
   const sendEmailNotifyMutation = useMutation({
     mutationFn: ({ email, id }) => {
-      return sendEmailNotify({ email, id});
+      return sendEmailNotify({ email, id });
     },
     onSuccess: () => {
       // alert("Send email successfully!");
@@ -147,7 +150,6 @@ const updateStatusUserMutation = useMutation({
       console.log("HOOKS:        Send email failed. Please try again!");
     },
   });
-
 
   // findUsersWithEmailNotificationDate10DaysAgo
   const findUsersWithEmailNotificationDate10DaysAgoQuery = useQuery({
@@ -180,18 +182,19 @@ const updateStatusUserMutation = useMutation({
     loadingUpdateUser: updateProfileUser.isLoading,
 
     // update
-    updateStatusUser: updateStatusUserMutation.mutateAsync,  
-    
+    updateStatusUser: updateStatusUserMutation.mutateAsync,
+
     //send
     sendEmailNotify: sendEmailNotifyMutation.mutateAsync,
     sendEmailNotifyLoading: sendEmailNotifyMutation.isLoading,
 
-    
     // findUsersWithEmailNotificationDate10DaysAgo
-    findUsersWithEmailNotificationDate10DaysAgoData: findUsersWithEmailNotificationDate10DaysAgoQuery.data?.response || [],
-    findUsersWithEmailNotificationDate10DaysAgoError: findUsersWithEmailNotificationDate10DaysAgoQuery.error,
-    findUsersWithEmailNotificationDate10DaysAgoIsError: findUsersWithEmailNotificationDate10DaysAgoQuery.isError,
-
+    findUsersWithEmailNotificationDate10DaysAgoData:
+      findUsersWithEmailNotificationDate10DaysAgoQuery.data?.response || [],
+    findUsersWithEmailNotificationDate10DaysAgoError:
+      findUsersWithEmailNotificationDate10DaysAgoQuery.error,
+    findUsersWithEmailNotificationDate10DaysAgoIsError:
+      findUsersWithEmailNotificationDate10DaysAgoQuery.isError,
   };
 };
 export default useUser;
