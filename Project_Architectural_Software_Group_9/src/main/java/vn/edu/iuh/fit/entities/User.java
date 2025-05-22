@@ -8,6 +8,7 @@ import lombok.experimental.FieldDefaults;
 import vn.edu.iuh.fit.enums.TypeProviderAuth;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -84,4 +85,8 @@ public class User extends TrackingDate {
 
     @OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
     private List<Rating> ratings;
+
+    // ngay goi mail het han
+    @Column(name = "email_notification_date", nullable = true)
+    private LocalDateTime emailNotificationDate;
 }

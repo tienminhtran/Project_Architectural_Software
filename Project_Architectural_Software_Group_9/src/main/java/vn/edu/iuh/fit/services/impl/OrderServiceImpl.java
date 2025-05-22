@@ -20,6 +20,7 @@ import vn.edu.iuh.fit.dtos.response.*;
 import vn.edu.iuh.fit.entities.*;
 import vn.edu.iuh.fit.entities.ids.OrderDetailId;
 import vn.edu.iuh.fit.enums.OrderStatus;
+import vn.edu.iuh.fit.exception.CancelOrderException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.repositories.*;
 import vn.edu.iuh.fit.services.OrderService;
@@ -185,10 +186,14 @@ public class OrderServiceImpl implements OrderService {
     }
 
     @Override
-    public String cancelOrder(Long orderId) {
+    public String cancelOrder(Long orderId) throws CancelOrderException {
         Order order = orderRepository.findById(orderId).orElseThrow(() -> new RuntimeException("Order not found"));
         if(order.getStatus() == OrderStatus.PENDING) {
             if(order.getPayment().getPaymentName().equals("cod")) {
+                LocalDateTime now = LocalDateTime.now();
+                if (order.getCreatedAt() != null && order.getCreatedAt().plusHours(24).isBefore(now)) {
+                    throw new CancelOrderException("Order cannot be cancelled after 24 hours");
+                }
                 order.setStatus(OrderStatus.CANCELLED);
                 orderRepository.save(order);
                 return "Order cancelled successfully";
@@ -377,6 +382,7 @@ public class OrderServiceImpl implements OrderService {
             order.setAddress(address);
             order.setVoucher(voucherEntity);
             order.setPayment(payment);
+            order.setContentPayment(orderRequest.getContentPayment());
             order.setOrderDetails(new ArrayList<>());
             order.setRatings(null);
 
@@ -457,6 +463,7 @@ public class OrderServiceImpl implements OrderService {
         response.setCreatedAt(order.getCreatedAt());
         response.setUpdatedAt(order.getUpdatedAt());
         response.setStatus(order.getStatus());
+        response.setContentPayment(order.getContentPayment());
 
         // Chuyển đổi User sang UserResponse
         if (order.getUser() != null) {
@@ -488,13 +495,44 @@ public class OrderServiceImpl implements OrderService {
     @Override
     public List<OrderResponse> findByIDUser(Long idUser) {
         List<Order> orders = orderRepository.findByIDUser(idUser);
-        return orders.stream().map(this::convertToDto).collect(Collectors.toList());
+        return orders.stream().map(order -> {
+            OrderResponse response = convertToDto(order);
+
+            int totalProduct = orderRepository.getTotalProductByOrderId(order.getId());
+            Double totalPrice = orderRepository.calculateTotalAmountByOrderId(order.getId());
+
+            response.setTotalProduct(totalProduct);
+            response.setTotalPrice(totalPrice);
+
+            return response;
+        }).collect(Collectors.toList());
     }
 
     @Override
     public List<OrderResponse> findByPhoneNumber(String phoneNumber) {
         List<Order> orders = orderRepository.findByPhoneNumber(phoneNumber);
         return orders.stream().map(this::convertToDto).collect(Collectors.toList());
+    }
+
+    @Override
+    public List<OrderResponse> findByUserIdAndStatus(Long userId, OrderStatus status) {
+        UserResponse user = userService.findById(userId);
+        if (user == null) {
+            throw new IllegalArgumentException("User not found with ID: " + userId);
+        }
+
+        List<Order> orders = orderRepository.findByUserIdAndStatus(user.getId(), status);
+        return orders.stream().map(order -> {
+            OrderResponse response = convertToDto(order);
+
+            int totalProduct = orderRepository.getTotalProductByOrderId(order.getId());
+            Double totalPrice = orderRepository.calculateTotalAmountByOrderId(order.getId());
+
+            response.setTotalProduct(totalProduct);
+            response.setTotalPrice(totalPrice);
+
+            return response;
+        }).collect(Collectors.toList());
     }
 
 //    @Override

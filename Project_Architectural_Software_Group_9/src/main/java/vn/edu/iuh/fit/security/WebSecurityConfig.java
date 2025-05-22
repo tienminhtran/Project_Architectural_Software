@@ -101,7 +101,8 @@ public class WebSecurityConfig {
                                 .requestMatchers(HttpMethod.GET, "/api/v1/user","/api/v1/user/**").hasAnyRole("ADMIN", "USER", "MANAGER")
                                 .requestMatchers("/api/v1/cart/**", "/api/v1/cart/me/**").authenticated()
 
-                                .requestMatchers(HttpMethod.GET, "/api/v1/voucher","/api/v1/voucher/**").hasAnyRole("ADMIN", "MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/voucher").hasAnyRole("USER","ADMIN", "MANAGER")
+                                .requestMatchers(HttpMethod.GET, "/api/v1/voucher/**").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.POST, "/api/v1/voucher").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.DELETE, "/api/v1/voucher/**").hasAnyRole("ADMIN", "MANAGER")
                                 .requestMatchers(HttpMethod.GET, "/api/v1/products/**").hasAnyRole("ADMIN", "MANAGER")

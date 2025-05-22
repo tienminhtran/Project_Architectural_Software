@@ -28,4 +28,7 @@ public class OrderResponse implements Serializable {
     AddressResponse address;
     OrderStatus status;
     List<RatingResponse> ratings;
+    int totalProduct;
+    Double totalPrice;
+    String contentPayment;
 }

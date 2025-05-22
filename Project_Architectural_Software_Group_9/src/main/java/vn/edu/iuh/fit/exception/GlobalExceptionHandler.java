@@ -101,4 +101,15 @@ public class GlobalExceptionHandler extends ResponseEntityExceptionHandler {
                                 .build()
                 );
     }
+    @ExceptionHandler(CancelOrderException.class)
+    public ResponseEntity<BaseResponse<?>> invalidTokenExceptionHandler(CancelOrderException ex) {
+        return ResponseEntity
+                .status(HttpStatus.BAD_REQUEST)
+                .body(
+                        BaseResponse.builder()
+                                .status("FAILED")
+                                .message(ex.getMessage())
+                                .build()
+                );
+    }
 }

@@ -9,6 +9,8 @@ import FooterUser from "../../components/layout/Footer";
 import useOrder from "../../hooks/useOrder";
 import { v4 as uuidv4 } from "uuid";
 import HeaderUser from "../../components/layout/HeaderUser";
+import Swal from "sweetalert2";
+import useCart from "../../hooks/useCart";
 // Helper function to format currency
 const formatCurrency = (amount) => {
   return amount.toLocaleString("vi-VN", { style: "currency", currency: "VND" });
@@ -38,6 +40,7 @@ const OrderPayment = () => {
   const [cartData, setCartData] = useState(null);
   const [isLoading, setIsLoading] = useState(false);
   const orderCode = "G-Nice-" + Date.now(); // random mã đơn hàng
+  const { deleteItem } = useCart();
 
   //   console.log("Location state:", location.state);
   // Lấy thông tin người dùng từ location state
@@ -64,24 +67,33 @@ const OrderPayment = () => {
 
       // Kiểm tra thông tin người dùng
       if (!userId) {
-        alert("Vui lòng đăng nhập để thanh toán.");
+        toast.error("Vui lòng đăng nhập để thanh toán.", {
+          position: "top-center",
+          autoClose: 1000,
+        });
         return;
       }
 
       // Kiểm tra địa chỉ giao hàng
       if (!addressId) {
-        alert("Vui lòng chọn địa chỉ giao hàng trước khi thanh toán.");
+        toast.error("Vui lòng chọn địa chỉ giao hàng.", {
+          position: "top-center",
+          autoClose: 1000,
+        });
         return;
       }
 
       // Lấy voucher đã áp dụng từ sessionStorage
       const appliedVoucher = cartData.appliedVoucher;
 
-      console.log("appliedVoucher", appliedVoucher);
+      // console.log("appliedVoucher", appliedVoucher);
 
       // Kiểm tra giỏ hàng có sản phẩm không
       if (!cartData || !cartData.cartItems || cartData.cartItems.length === 0) {
-        alert("Giỏ hàng trống! Vui lòng thêm sản phẩm trước khi thanh toán.");
+        toast.error("Giỏ hàng của bạn không có sản phẩm nào.", {
+          position: "top-center",
+          autoClose: 1000,
+        });
         return;
       }
 
@@ -98,6 +110,7 @@ const OrderPayment = () => {
         voucherId: appliedVoucher ? appliedVoucher.id : null,
         addressId: addressId,
         orderDetails: orderDetails,
+        contentPayment: `${orderCode}`,
       };
 
       // Gọi createOrder
@@ -105,6 +118,23 @@ const OrderPayment = () => {
 
       // Lấy dữ liệu đơn hàng từ phản hồi
       const orderData = response.response;
+
+      // Xóa các sản phẩm khỏi giỏ hàng
+      if (cartData && cartData.cartItems && cartData.cartItems.length > 0) {
+        // Xóa từng sản phẩm trong giỏ hàng
+        for (const item of cartData.cartItems) {
+          if (item.productId) {
+            try {
+              deleteItem(item.productId);
+            } catch (deleteError) {
+              console.error(
+                `Failed to delete item ${item.productId} from cart:`,
+                deleteError
+              );
+            }
+          }
+        }
+      }
 
       const addressData = orderData.address;
       const formattedAddress = addressData
@@ -132,7 +162,7 @@ const OrderPayment = () => {
       sessionStorage.removeItem("cartData");
       sessionStorage.removeItem("orderInfo");
 
-      alert("Đặt hàng thành công!");
+      Swal.fire("Thành công", "Tạo hóa đơn thành công", "success");
       navigate("/order-complete", {
         state: {
           orderInfo: orderCompleteData,
@@ -140,7 +170,10 @@ const OrderPayment = () => {
       });
     } catch (error) {
       console.error("Error creating order:", error);
-      toast.error("Đặt hàng thất bại! Vui lòng thử lại.");
+      toast.error("Đã xảy ra lỗi khi tạo đơn hàng. Vui lòng thử lại.", {
+        position: "top-center",
+        autoClose: 2000,
+      });
     } finally {
       setIsLoading(false);
     }
@@ -189,7 +222,7 @@ const OrderPayment = () => {
       <div style={{ display: "flex" }}>
         <div>
           <img
-            src="../../../public/images/bg/thu-cu-doi-moi.png"
+            src="https://file.hstatic.net/200000722513/file/thang_04_pc_tang_man_banner_side_web.jpg"
             alt="Logo"
             className="CartBuy-OrderBox__logo"
             style={{ width: "160px" }}
@@ -240,6 +273,7 @@ const OrderPayment = () => {
                 />
                 Thanh toán qua PayPal
               </label>
+              {/* momo */}
             </div>
 
             {selectedMethod === "bank" && (
@@ -304,7 +338,7 @@ const OrderPayment = () => {
 
         <div>
           <img
-            src="../../../public/images/bg/mua-he-ruc-ro.png"
+            src="https://file.hstatic.net/200000722513/file/gearvn-laptop-t4-banner-side.jpg"
             alt="Logo"
             className="CartBuy-OrderBox__logo"
             style={{ width: "160px" }}

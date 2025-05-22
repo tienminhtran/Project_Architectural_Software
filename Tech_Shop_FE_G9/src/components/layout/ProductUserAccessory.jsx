@@ -13,6 +13,7 @@ import useWishlist from "../../hooks/useWishlist";
 import useCart from "../../hooks/useCart";
 import { toast } from "react-toastify";
 import { filterProductByCategory } from "../../services/productService";
+import { formatPrice } from "../../utils/FormatPrice";
 
 const ACCESSORY_CATEGORY_ID = "3"; // Thay bằng category id thực tế nếu cần
 
@@ -149,8 +150,7 @@ const ProductUserAccessory = () => {
     <div className="product-user__product-container">
       <div className="product-user__product-header">
         <h2>
-          <FaShoppingCart className="product-user__products-icon" /> Our
-          Products Accessory
+          <FaShoppingCart className="product-user__products-icon" /> Phụ kiện
         </h2>
         <div className="brand-list">
           {brands.map((brand, index) => (
@@ -177,7 +177,7 @@ const ProductUserAccessory = () => {
             <div
               className="product-user__product-card"
               key={index}
-              onClick={() => navigate(`/product/${product.id}`)}
+              onClick={() => navigate(`/product/${btoa(product.id)}`)}
             >
               <div className="product-user__product-img-wrapper">
                 <img
@@ -213,16 +213,17 @@ const ProductUserAccessory = () => {
                 </div>
               </div>
 
-              <div className="product-user__product-info">
-                <h5>{product.productName}</h5>
+              <div className="product-user__product-info" style={{ height: "20%"}}>
+                <h5  className="product-user__product-name">{product.productName}</h5>
                 <p>
                   <span className="product-user__price-new">
-                    {product.price} ₫
+                    {formatPrice(Number(product.price))}
                   </span>{" "}
                   <del className="product-user__price-old">
-                    {product.oldPrice} ₫
+                    {formatPrice(Number(product.price) + 200000)}
                   </del>
                 </p>
+                
                 <button
                   className="product-user__add-to-cart"
                   onClick={(e) => {

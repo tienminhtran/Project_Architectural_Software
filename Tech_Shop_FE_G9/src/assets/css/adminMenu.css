@@ -3,6 +3,7 @@
   height: 100vh;
   background-color: #e4e4e4;
 }
+
 /* Header */
 .admin-header {
   display: flex;
@@ -13,6 +14,7 @@
   border-bottom: 1px solid #ddd;
   /* height: 100px; */
 }
+
 /* Thanh tìm kiếm */
 .search-container {
   flex-grow: 1;
@@ -62,6 +64,7 @@
   box-shadow: 2px 0 5px rgba(0, 0, 0, 0.1);
   padding: 20px;
 }
+
 /* Sidebar */
 .sidebar {
   width: 300px;
@@ -89,6 +92,9 @@
   padding: 0;
   margin: 0;
   width: 300px;
+  overflow-y: auto;
+  overflow-x: hidden;
+  max-height: calc(100vh - 100px);
 }
 
 .menu ul {
@@ -112,7 +118,8 @@
   color: #333;
   border-radius: 8px;
   position: relative;
-  flex-wrap: wrap; /* Cho phép xuống dòng */
+  flex-wrap: wrap;
+  /* Cho phép xuống dòng */
   width: 100%;
 }
 
@@ -121,6 +128,7 @@
   color: #333;
   font-weight: bold;
 }
+
 .menu li:hover {
   background-color: #FAF1E6;
 }
@@ -150,11 +158,13 @@
   list-style: none;
   padding-left: 20px;
   margin: 0;
-  display: none; /* Mặc định ẩn */
+  display: none;
+  /* Mặc định ẩn */
 }
 
 .menu-item.open .submenu {
-  display: block; /* Hiển thị khi mở */
+  display: block;
+  /* Hiển thị khi mở */
 }
 
 .menu-item:hover .submenu {
@@ -178,6 +188,7 @@
   /* padding: 20px; */
   background-color: #095caf;
 }
+
 .active-link {
   font-weight: bold;
   color: #007bff !important;
@@ -187,7 +198,7 @@
   display: inline-block;
 }
 
-.menu-item.active > a,
+.menu-item.active>a,
 .menu-item.active {
   background-color: #e6f0ff;
 }

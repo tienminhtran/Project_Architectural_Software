@@ -19,7 +19,7 @@ const useVoucher = (pageNo, pageSize, voucherSearch) => {
     },
     onError: (error) => {
       console.error("Create voucher failed:", error);
-      alert("Create voucher fail. Please try again!");
+      // alert("Create voucher fail. Please try again!");
     },
   });
 
@@ -35,7 +35,7 @@ const useVoucher = (pageNo, pageSize, voucherSearch) => {
     },
     onError: (error) => {
       console.error("Update voucher failed:", error);
-      alert("Update voucher fail. Please try again!");
+      // alert("Update voucher fail. Please try again!");
     },
   });
 
@@ -64,8 +64,8 @@ const useVoucher = (pageNo, pageSize, voucherSearch) => {
       pageNo,
       pageSize
     ),
-    createVoucher: create.mutate,
-    updateVoucher: update.mutate,
+    createVoucher: create.mutateAsync,
+    updateVoucher: update.mutateAsync,
     deleteVoucher: deleteVou.mutate,
     search_paging: usePaginationQuery(
       "searchVoucher",

@@ -106,7 +106,8 @@ const OrderComplete = () => {
                     <strong>Địa chỉ:</strong> {orderInfo.deliveryAddress}
                   </p>
                   <p>
-                    <strong>Ghi chú:</strong> {orderInfo.customerNote}
+                    <strong>Ghi chú:</strong>{" "}
+                    {orderInfo.customerNote || "Không có"}
                   </p>
                   {/* <DeliveryWithGeolocation /> Hiển thị bản đồ và thông tin giao hàng */}
                 </div>

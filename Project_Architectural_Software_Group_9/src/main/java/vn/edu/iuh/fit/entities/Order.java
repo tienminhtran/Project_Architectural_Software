@@ -51,4 +51,7 @@ public class Order extends TrackingDate {
 
     @OneToMany(mappedBy = "order")
     private List<Rating> ratings;
+
+    @Column(name = "content_payment")
+    private String contentPayment;
 }

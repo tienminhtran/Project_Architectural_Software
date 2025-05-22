@@ -11,14 +11,14 @@ const ProductUser = () => {
   const productData = [
     {
       name: "Dell G15",
-      image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
+      image: "https://file.hstatic.net/200000722513/file/layout_web_-09_d2c2f20ee0af491b8bf40d032ff74dbf.png",
       newPrice: "15.000.000",
       oldPrice: "18.000.000",
       discount: "20%",
     },
     {
       name: "HP ProBook",
-      image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
+      image: "https://file.hstatic.net/200000722513/file/thang_04_layout_web_-08.png",
       newPrice: "12.000.000",
       oldPrice: "14.400.000",
       discount: "20%",
@@ -26,7 +26,7 @@ const ProductUser = () => {
     },
     {
       name: "HP ProBook",
-      image: "../../../public/images/product/oppo-a38-black-1.jpeg",
+      image: "https://file.hstatic.net/200000722513/file/thang_04_layout_web_-07.png",
       newPrice: "12.000.000",
       oldPrice: "14.400.000",
       discount: "10%",
@@ -34,7 +34,7 @@ const ProductUser = () => {
     },
     {
       name: "HP ProBook",
-      image: "../../../public/images/product/samsung-galaxy-z-flip6.jpg",
+      image: "https://file.hstatic.net/200000722513/file/thang_04_layout_web_-06.png",
       newPrice: "12.000.000",
       oldPrice: "14.400.000",
       discount: "20%",
@@ -42,14 +42,14 @@ const ProductUser = () => {
     }, 
     {
         name: "Dell G15",
-        image: "../../../public/images/product/samsung-galaxy-z-flip6-2.jpg",
+        image: "https://product.hstatic.net/200000722513/product/lenovo_v14_g4_iru_ct1_09_cec3749729ee42f3ab1b318c2348639e_1024x1024.png",
         newPrice: "15.000.000",
         oldPrice: "18.000.000",
         discount: "20%",
       },
       {
         name: "HP ProBook",
-        image: "../../../public/images/product/iphone-12-1-2-750x500.jpg",
+        image: "https://product.hstatic.net/200000722513/product/1024_5b3ad2cff4444235bdb9897806ebbc40_1024x1024.png",
         newPrice: "12.000.000",
         oldPrice: "14.400.000",
         discount: "20%",
@@ -57,7 +57,7 @@ const ProductUser = () => {
       },
       {
         name: "HP ProBook",
-        image: "../../../public/images/product/oppo-a38-black-1.jpeg",
+        image: "https://product.hstatic.net/200000722513/product/1024_5b3ad2cff4444235bdb9897806ebbc40_1024x1024.png",
         newPrice: "12.000.000",
         oldPrice: "14.400.000",
         discount: "10%",
@@ -65,7 +65,7 @@ const ProductUser = () => {
       },
       {
         name: "HP ProBook",
-        image: "../../../public/images/product/samsung-galaxy-z-flip6.jpg",
+        image: "https://product.hstatic.net/200000722513/product/thumbchuot_319f928f991a4303a119531a028fca35_caa118908bcb4634847506512cb92ce8_1024x1024.png",
         newPrice: "12.000.000",
         oldPrice: "14.400.000",
         discount: "20%",
@@ -105,7 +105,7 @@ const ProductUser = () => {
     <div className="products-viewed">
     <div className="products-viewed__products">
         <h2>
-            <FaGetPocket className="products-viewed__products-icon" /> Products you viewed
+            <FaGetPocket className="products-viewed__products-icon" /> Sản phẩm đã xem
         </h2>
     </div>
     <div className="products-viewed__products-container-wrapper">

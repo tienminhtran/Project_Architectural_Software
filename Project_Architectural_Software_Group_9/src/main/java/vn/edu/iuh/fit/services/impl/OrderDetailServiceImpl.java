@@ -36,6 +36,7 @@ public class OrderDetailServiceImpl implements OrderDetailService {
 
         return new OrderItemResponse(
                 orderDetail.getProduct().getProductName(),
+                orderDetail.getId().getOrderId(), 
                 orderDetail.getQuantity(),
                 unitPrice,
                 totalPrice

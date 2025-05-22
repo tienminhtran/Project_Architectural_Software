@@ -16,7 +16,7 @@ const AddUserPage = () => {
     dob: "",
     role: 3,
     active: true,
-    gender: "Active",
+    gender: "Male",
     password: "",
     confirm_password: "",
     profilePicture: null,
@@ -78,6 +78,7 @@ const AddUserPage = () => {
       },
       onError: (error) => {
         console.error("Create user role manager failed:", error);
+        alert("Create user role manager failed:", error);
       },
     });
   };

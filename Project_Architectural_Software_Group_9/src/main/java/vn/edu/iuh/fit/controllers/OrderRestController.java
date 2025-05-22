@@ -18,9 +18,11 @@ import vn.edu.iuh.fit.dtos.response.OrderResponse;
 import vn.edu.iuh.fit.dtos.response.PageResponse;
 import vn.edu.iuh.fit.dtos.response.RecentOrderResponse;
 import vn.edu.iuh.fit.enums.OrderStatus;
+import vn.edu.iuh.fit.exception.CancelOrderException;
 import vn.edu.iuh.fit.exception.UserAlreadyExistsException;
 import vn.edu.iuh.fit.services.OrderService;
 
+import java.util.Collections;
 import java.util.List;
 
 /*
@@ -94,7 +96,7 @@ public class OrderRestController {
     }
 
     @PutMapping("/{orderId}/cancel")
-    public ResponseEntity<BaseResponse<?>> cancelOrder(@PathVariable Long orderId) {
+    public ResponseEntity<BaseResponse<?>> cancelOrder(@PathVariable Long orderId) throws CancelOrderException {
 
         String message = orderService.cancelOrder(orderId);
         if (message == null) {
@@ -271,4 +273,48 @@ public class OrderRestController {
         return ResponseEntity.ok(BaseResponse.builder().status("SUCCESS").message("Get orders by phone number").response(orderResponses).build());
     }
     // link API: http://localhost:8080/api/v1/orders/me/phone/0987654321
+
+    @PreAuthorize("hasAnyRole('ADMIN', 'MANAGER', 'USER')")
+    @GetMapping("/user/{userId}")
+    public ResponseEntity<BaseResponse<?>> getOrdersByUserIdAndStatus(@PathVariable Long userId, @RequestParam(required = false) String status) {
+        List<OrderResponse> orderResponses;
+
+        if (status == null || status.equalsIgnoreCase("TẤT CẢ")) {
+            orderResponses = orderService.findByIDUser(userId);
+        } else {
+            OrderStatus orderStatus = mapStatusFromVietnamese(status);
+            orderResponses = orderService.findByUserIdAndStatus(userId, orderStatus);
+        }
+
+        if (orderResponses.isEmpty()) {
+            return ResponseEntity.ok(BaseResponse.builder()
+                    .status("SUCCESS")
+                    .message("No orders found")
+                    .response(Collections.emptyList())
+                    .build());
+        }
+
+        return ResponseEntity.ok(BaseResponse.builder()
+                .status("SUCCESS")
+                .message("Get orders by user id and status")
+                .response(orderResponses)
+                .build());
+    }
+
+    private OrderStatus mapStatusFromVietnamese(String vietnameseStatus) {
+        switch (vietnameseStatus) {
+            case "CHƯA XỬ LÝ":
+                return OrderStatus.PENDING;
+            case "VẬN CHUYỂN":
+                return OrderStatus.DELIVERED;
+            case "HOÀN TRẢ":
+                return OrderStatus.REFUND;
+            case "HOÀN THÀNH":
+                return OrderStatus.COMPLETED;
+            case "HUỶ":
+                return OrderStatus.CANCELLED;
+            default:
+                return null;
+        }
+    }
 }

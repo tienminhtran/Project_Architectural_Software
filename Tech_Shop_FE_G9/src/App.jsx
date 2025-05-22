@@ -52,6 +52,7 @@ import "../src/components/layout/ContactFrom";
 import ContactForm from "../src/components/layout/ContactFrom";
 import RecruitmentPage from "../src/components/layout/RecruitmentPage"; // Import RecruitmentPage component
 import HomeSearch from "./pages/common/user/search/HomeSearch";
+import UserAccess from "./pages/common/user/UserAccess"; // Import UserAccess component
 // Reusable Layout Component
 const DashboardLayout = ({ children }) => (
   <div className="axil-signin-area">
@@ -85,6 +86,9 @@ function App() {
       </div>
 
       <Routes>
+        <Route path="/recruitment" element={<RecruitmentPage />} />
+          <Route path="/contact" element={<ContactForm />} />
+
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
         <Route path="/forgot-password" element={<ForgotPasswordPage />} />
@@ -136,6 +140,16 @@ function App() {
               </DashboardLayout>
             }
           />
+          <Route
+            path="/admin/user-access"
+            element={
+              <DashboardLayout>
+                <UserAccess />
+              </DashboardLayout>
+            } 
+          />
+
+
         </Route>
         {/* Common Page (admin and manager)*/}
         <Route
@@ -294,10 +308,8 @@ function App() {
           />
 
           <Route path="/my-account" element={<AccountPage />} />
-          <Route path="/contact" element={<ContactForm />} />
 
           <Route path="/favorite-products" element={<FavoriteProducts />} />
-          <Route path="/recruitment" element={<RecruitmentPage />} />
           <Route path="/search" element={<HomeSearch />} />
         </Route>
       </Routes>

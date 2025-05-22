@@ -9,6 +9,7 @@ import FooterUser from "../../components/layout/Footer";
 import useCart from "../../hooks/useCart";
 import useWishlist from "../../hooks/useWishlist";
 import HeaderUser from "../../components/layout/HeaderUser";
+import { formatPrice } from "../../utils/FormatPrice";
 
 export default function FavoriteProducts() {
   const { addItem } = useCart();
@@ -105,7 +106,7 @@ export default function FavoriteProducts() {
       <div style={{ display: "flex" }}>
         <div>
           <img
-            src="../../../public/images/bg/thu-cu-doi-moi.png"
+            src="https://file.hstatic.net/200000722513/file/thang_04_pc_tang_man_banner_side_web.jpg"
             alt="Logo"
             className="CartBuy-OrderBox__logo"
             style={{ width: "160px" }}
@@ -115,24 +116,80 @@ export default function FavoriteProducts() {
         <div className="favorite-products">
           <h2 className="favorite-product__title">Sản phẩm yêu thích</h2>
 
-          {selectedItems.length > 0 && (
-            <div className="favorite-product__top-actions">
-              <button
-                className="favorite-product__btn favorite-product__btn--add"
-                onClick={() => {
-                  selectedItems.forEach((id) => {
-                    const product = wishlistItems.find((p) => p.id === id);
-                    if (product) {
-                      handleAddtoCart(product);
-                    }
-                  });
-                  setSelectedItems([]);
-                }}
-              >
-                <FaCartPlus /> Thêm vào giỏ hàng
-              </button>
-            </div>
-          )}
+          <div style={{ display: "flex", justifyContent: "flex-end" }}>
+            {selectedItems.length > 0 && (
+              <div className="favorite-product__top-actions">
+                <button
+                  className="favorite-product__btn favorite-product__btn--remove"
+                  onClick={() => {
+                    confirmAlert({
+                      title: "Xác nhận xóa",
+                      message:
+                        "Bạn có chắc chắn muốn xóa các sản phẩm đã chọn khỏi danh sách yêu thích?",
+                      buttons: [
+                        {
+                          label: "Có",
+                          onClick: () => {
+                            selectedItems.forEach((id) => {
+                              const product = wishlistItems.find(
+                                (p) => p.id === id
+                              );
+                              if (product) {
+                                deleteItem(product.id, {
+                                  onSuccess: () => {
+                                    toast.success(
+                                      "Đã xóa sản phẩm khỏi danh sách yêu thích",
+                                      {
+                                        position: "top-right",
+                                        autoClose: 2000,
+                                      }
+                                    );
+                                  },
+                                  onError: () => {
+                                    toast.error(
+                                      "Lỗi khi xóa sản phẩm khỏi danh sách yêu thích",
+                                      {
+                                        position: "top-right",
+                                        autoClose: 2000,
+                                      }
+                                    );
+                                  },
+                                });
+                              }
+                            });
+                            setSelectedItems([]);
+                          },
+                        },
+                        {
+                          label: "Không",
+                        },
+                      ],
+                    });
+                  }}
+                >
+                  <FaRegTrashAlt /> Xóa tất cả sản phẩm
+                </button>
+              </div>
+            )}
+            {selectedItems.length > 0 && (
+              <div className="favorite-product__top-actions">
+                <button
+                  className="favorite-product__btn favorite-product__btn--add"
+                  onClick={() => {
+                    selectedItems.forEach((id) => {
+                      const product = wishlistItems.find((p) => p.id === id);
+                      if (product) {
+                        handleAddtoCart(product);
+                      }
+                    });
+                    setSelectedItems([]);
+                  }}
+                >
+                  <FaCartPlus /> Thêm vào giỏ hàng
+                </button>
+              </div>
+            )}
+          </div>
 
           <table className="favorite-product__table">
             <thead>
@@ -184,10 +241,10 @@ export default function FavoriteProducts() {
                     </td>
                     <td>{product.name}</td>
                     <td className="favorite-product__price">
-                      {product.price.toLocaleString()}₫
+                      {formatPrice(Number(product.price))}
                     </td>
                     <td className="favorite-product__original-price">
-                      {product.originalPrice.toLocaleString()}₫
+                      {formatPrice(Number(product.originalPrice))}
                     </td>
                     <td
                       style={{
@@ -222,27 +279,11 @@ export default function FavoriteProducts() {
               {showAll ? "Thu gọn" : "Xem thêm"}
             </button>
           </div>
-
-          {selectedItems.length > 0 && (
-            <div className="favorite-product__mini-cart">
-              <h3>Giỏ hàng nhanh</h3>
-              <ul>
-                {selectedItems.map((id) => {
-                  const product = wishlistItems.find((p) => p.id === id);
-                  return (
-                    <li key={id}>
-                      {product.name} – {product.price.toLocaleString()}₫
-                    </li>
-                  );
-                })}
-              </ul>
-            </div>
-          )}
         </div>
 
         <div>
           <img
-            src="../../../public/images/bg/mua-he-ruc-ro.png"
+            src="https://file.hstatic.net/200000722513/file/gearvn-laptop-t4-banner-side.jpg"
             alt="Logo"
             className="CartBuy-OrderBox__logo"
             style={{ width: "160px" }}

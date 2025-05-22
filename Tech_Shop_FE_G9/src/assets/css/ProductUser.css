@@ -66,6 +66,7 @@
 
 .product-user__product-card {
   min-width: 250px;
+  max-width: 250px;
   background: white;
   border-radius: 8px;
   box-shadow: 0 0 8px rgba(0, 0, 0, 0.1);
@@ -94,6 +95,13 @@
   font-size: 12px;
   border-radius: 4px;
 }
+.product-user__product-name{
+  width: 120px; /* hoặc bất kỳ độ rộng cố định nào */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
 
 .product-user__product-actions {
   position: absolute;

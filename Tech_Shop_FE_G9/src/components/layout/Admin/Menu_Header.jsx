@@ -7,6 +7,7 @@ import { logout } from "../../../store/slices/AuthSlice";
 import { removeAccessToken } from "../../../services/authService";
 
 import useUser from "../../../hooks/useUser";
+import { FaRegUserCircle } from "react-icons/fa";
 
 
 const Menu_Header = () => {
@@ -67,11 +68,30 @@ const Menu_Header = () => {
 
             {/* Avatar + Dropdown Menu */}
             <div className="menu-container" ref={menuRef}>
-                <img src='../../../../public/images/avatar/hello.png'alt="User Avatar" className="avatar-hello" />
-
-                <span className="username">{userInfor.lastname} {userInfor.firstname}</span>
-                
-        
+                {/* <img src='../../../../public/images/avatar/hello.png'alt="User Avatar" className="avatar-hello" /> */}
+                <div
+                    style={{
+                        display: "flex",
+                        alignItems: "center",
+                        gap: "10px",
+                        padding: "10px 20px",
+                        background: "linear-gradient(135deg,rgb(173, 255, 244),rgb(24, 148, 138))",
+                        color: "white",
+                        transform: "skew(-10deg)",
+                        borderRadius: "12px",
+                        boxShadow: "0 4px 12px rgba(0, 0, 0, 0.2)",
+                        width: "fit-content",
+                        margin: "5px auto",
+                    }}
+                    onClick={toggleMenu}
+                    >
+                    <div style={{ transform: "skew(10deg)", display: "flex", alignItems: "center", gap: "10px" }}>
+                        <FaRegUserCircle size={40} className="user-icon" />
+                        <span style={{ fontSize: "18px", whiteSpace: "nowrap" }}>
+                        {userInfor.lastname} {userInfor.firstname}
+                        </span>
+                    </div>
+                </div>
                 <div className="avatar" onClick={toggleMenu}>
                     <img src={imageName} alt="User Avatar" className="avatar-img" />
                     <span className="status-indicator"></span>

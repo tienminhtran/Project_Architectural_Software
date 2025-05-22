@@ -18,7 +18,6 @@ const Brand = () => {
                 <h2>
                     <FaTags className="brand-icon" /> Brands
                 </h2>
-                <h1>Browse by Brands</h1>
             </div>
             <div className="brand-sliders">
                 <Swiper spaceBetween={20} slidesPerView={5} navigation={true} pagination={true}>

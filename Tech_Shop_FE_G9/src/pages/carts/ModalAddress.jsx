@@ -10,19 +10,21 @@ const ModalAddress = ({ isOpen, onClose, onSelect, userId }) => {
   const [isModalAddEditOpen, setIsModalAddEditOpen] = useState(false);
   const [editAddress, setEditAddress] = useState(null); // State to track address being edited
 
-  useEffect(() => {
-    if (isOpen && userId) {
-      const fetchAddresses = async () => {
-        try {
-          const data = await getAddressById(userId);
-          setAddressData(data.response);
-        } catch (error) {
-          console.error("Error fetching addresses:", error);
-        }
-      };
-      fetchAddresses();
-    }
-  }, [isOpen, userId]);
+useEffect(() => {
+  if (isOpen && userId) {
+    const fetchAddresses = async () => {
+      try {
+        const data = await getAddressById(userId);
+        setAddressData(data?.response || []);
+      } catch (error) {
+        console.error("Error fetching addresses:", error);
+        setAddressData([]); // fallback an toàn
+      }
+    };
+    fetchAddresses();
+  }
+}, [isOpen, userId]);
+
 
   const formatAddress = (address) =>
     `${address.detailLocation}, ${address.street}, ${address.district}, ${address.city}`;

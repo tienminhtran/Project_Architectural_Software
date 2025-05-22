@@ -19,7 +19,7 @@ import VoucherModal from "./VoucherModal";
 import { formatPrice } from "../../utils/FormatPrice";
 import useCart from "../../hooks/useCart";
 
-const CartBuyOrderBox = ({ cartItems, product_checked }) => {
+const CartBuyOrderBox = ({ cartItems, product_checked, accessory_ids }) => {
   console.log("cartItems 2", cartItems);
   const navigate = useNavigate();
   const { deleteItem, updateQuantity, error } = useCart();
@@ -76,10 +76,17 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
         setDiscount(parsedCartData.appliedVoucher.value / 100);
       }
     } else if (cartItems && product_checked) {
+      if(accessory_ids) {
+        console.log("accessory_ids", accessory_ids);
+        setSelectedRows([product_checked, ...accessory_ids]);
+
+      } else {
+
+        setSelectedRows([product_checked]);
+      }
       // Nếu không có cartData nhưng có product_checked
-      setSelectedRows([product_checked]);
-    }
-  }, [cartItems, product_checked]);
+    } 
+  }, [cartItems, product_checked, accessory_ids]);
 
   const handleQuantityChange = (id_product, newQuantity) => {
     if (newQuantity < 1) return;
@@ -122,6 +129,7 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
             );
             setCartItems(updatedItems);
             deleteItem(id_product); // Gọi hàm xóa sản phẩm từ giỏ hàng
+            
             toast.success(`${productName} đã được xóa thành công!`, {
               position: "top-center",
               autoClose: 3000,
@@ -164,13 +172,6 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
 
   // Lưu dữ liệu giỏ hàng vào sessionStorage khi nhấn vào "NHẬP THÔNG TIN KHÁCH HÀNG"
   const handleCheckout = () => {
-    if (!selectedRows || selectedRows.length === 0) {
-      toast.error("Vui lòng chọn ít nhất một sản phẩm trước khi tiếp tục!", {
-        position: "top-center",
-        autoClose: 1000,
-      });
-      return;
-    }
 
     const selectedItems = items.filter((item) =>
       selectedRows.includes(item.id_product)
@@ -193,6 +194,13 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
           }
         : null,
     };
+    if (!selectedRows || selectedRows.length === 0 || finalPrice === 0) {
+      toast.error("Vui lòng chọn ít nhất một sản phẩm trước khi tiếp tục!", {
+        position: "top-center",
+        autoClose: 1000,
+      });
+      return;
+    }
 
     // Lưu trữ dữ liệu vào sessionStorage
     sessionStorage.setItem("cartData", JSON.stringify(cartData));
@@ -249,7 +257,7 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
     <div style={{ display: "flex" }}>
       <div>
         <img
-          src="../../../public/images/bg/thu-cu-doi-moi.png"
+          src="https://file.hstatic.net/200000722513/file/thang_04_pc_tang_man_banner_side_web.jpg"
           alt="Logo"
           className="CartBuy-OrderBox__logo"
           style={{ width: "160px" }}
@@ -421,8 +429,8 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
 
       <div>
         <img
-          src="../../../public/images/bg/mua-he-ruc-ro.png"
-          alt="Logo"
+           src="https://file.hstatic.net/200000722513/file/gearvn-laptop-t4-banner-side.jpg"          
+           alt="Logo"
           className="CartBuy-OrderBox__logo"
           style={{ width: "160px" }}
         />

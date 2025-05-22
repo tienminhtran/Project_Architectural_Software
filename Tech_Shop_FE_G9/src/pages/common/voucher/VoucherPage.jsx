@@ -153,6 +153,7 @@ const VoucherPage = () => {
                       type="checkbox"
                       checked={selectedRows.includes(voucher.id)}
                       onChange={() => handleSelectRow(voucher.id)}
+                      className="form-check-input"
                     />
                   </td>
                   <td>{voucher.name}</td>

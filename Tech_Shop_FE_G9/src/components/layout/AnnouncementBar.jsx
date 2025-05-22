@@ -37,7 +37,7 @@ const AnnouncementBar = () => {
       <div className="announcement-bar___marquee">
         <FaArrowLeft className="announcement-bar___icon" />
         <span className="announcement-bar___text marquee-animation">
-          {currentMessage.text}
+          {currentMessage?.text}
         </span>
         <FaArrowRight className="announcement-bar___icon" />
       </div>

@@ -72,4 +72,24 @@ public interface UserService {
     UserResponse getUserByEmail(String email);
 
     void updatePassword(String phoneNumber, String password);
+
+    // lấy danh sách người dùng và so oder
+//    public Map<UserResponse, Integer> getUserOrderCountMap() ;
+
+    // lay danh sach user có role = 1
+    public List<UserResponse> getAllUserRole1();
+    List<UserResponse> getUserOrderCountList();
+    // lay danh sach user có role = 1 và chưa có order
+    public List<UserResponse> getAllUserRole1AndNoOrder();
+
+    // update status = false list user theo iduser
+    boolean updateStatusByIds(List<Long> ids);
+
+
+    // update ngay goi email thong bao la ngay gio hien tai theo iduser
+
+    void updateEmailNotificationDateById(Long id);
+
+    //findUsersWithEmailNotificationDate10DaysAgo
+    List<UserResponse> findUsersWithEmailNotificationDate10DaysAgo();
 }

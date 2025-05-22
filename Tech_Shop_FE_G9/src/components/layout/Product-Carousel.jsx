@@ -12,6 +12,7 @@ import useCart from "../../hooks/useCart";
 import { toast } from "react-toastify";
 import { getAccessToken } from "../../services/authService";
 import useWishlist from "../../hooks/useWishlist";
+import { formatPrice } from "../../utils/FormatPrice";
 
 const ProductUser = ({ products, brands, name }) => {
   const navigate = useNavigate();
@@ -173,13 +174,15 @@ const ProductUser = ({ products, brands, name }) => {
             </div>
 
             <div className="product-user__product-info">
-              <h5>{product.productName}</h5>
+              <h5 className="product-user__product-name">
+                {product.productName}
+              </h5>
               <p>
                 <span className="product-user__price-new">
-                  {product.price} ₫
+                  {formatPrice(Number(product.price))}
                 </span>{" "}
                 <del className="product-user__price-old">
-                  {product.oldPrice} ₫
+                  {formatPrice(Number(product.price) + 1000000)}
                 </del>
               </p>
               <ul className="product-user__product-specs">

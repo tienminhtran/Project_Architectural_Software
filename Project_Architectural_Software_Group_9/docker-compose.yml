@@ -1,0 +1,31 @@
+version: "3.8"
+
+services:
+  db:
+    image: mariadb:10.7
+    container_name: mariadb
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: tech_shop
+    ports:
+      - "3306:3306"
+    networks:
+      - app-network
+
+  app:
+    image: vinh14124374/tech-shop-backend:latest
+    container_name: tech-shop-backend
+    depends_on:
+      - db
+    ports:
+      - "8080:8080"
+    environment:
+      SPRING_DATASOURCE_URL: jdbc:mariadb://db:3306/tech_shop
+      SPRING_DATASOURCE_USERNAME: root
+      SPRING_DATASOURCE_PASSWORD: root
+    networks:
+      - app-network
+
+networks:
+  app-network:
+    driver: bridge
