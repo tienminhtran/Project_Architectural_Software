@@ -213,8 +213,8 @@ const ProductUserAccessory = () => {
                 </div>
               </div>
 
-              <div className="product-user__product-info">
-                <h5>{product.productName}</h5>
+              <div className="product-user__product-info" style={{ height: "20%"}}>
+                <h5  className="product-user__product-name">{product.productName}</h5>
                 <p>
                   <span className="product-user__price-new">
                     {formatPrice(Number(product.price))}
@@ -223,6 +223,7 @@ const ProductUserAccessory = () => {
                     {formatPrice(Number(product.price) + 200000)}
                   </del>
                 </p>
+                
                 <button
                   className="product-user__add-to-cart"
                   onClick={(e) => {
