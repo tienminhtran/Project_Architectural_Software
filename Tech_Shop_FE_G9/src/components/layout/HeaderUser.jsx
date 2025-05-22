@@ -27,12 +27,17 @@ import useCategorie from "../../hooks/useCategorie.js";
 
 import SearchBox from "../../pages/common/user/search/SearchBox.jsx";
 
-const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => {
+const HeaderUser = ({
+  showCategory,
+  showBanner,
+  currentTab,
+  currentCategory,
+}) => {
   const navigate = useNavigate();
   const dispatch = useDispatch();
 
   const [showCategories, setShowCategories] = useState(showCategory);
-  
+
   const { getCategories_NoPaging } = useCategorie();
   const { recentlyProduct } = useDashboardData();
   const { carts } = useCart();
@@ -103,7 +108,7 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
   //   if (Array.isArray(products_response)) {
   //     setProductsSearch(products_response);
   //   }
-  // }, [products_response]);  
+  // }, [products_response]);
 
   const handleLogout = () => {
     confirmAlert({
@@ -115,6 +120,8 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
             dispatch(logout());
             removeAccessToken();
             localStorage.removeItem("lastDashboard");
+            sessionStorage.removeItem("orderInfo");
+            sessionStorage.removeItem("cartData");
             navigate("/");
             window.location.reload();
             toast.success("Đăng xuất thành công", {
@@ -130,7 +137,6 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
       ],
     });
   };
-
 
   return (
     <div>
@@ -174,8 +180,14 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
 
           {/* Menu điều hướng & danh mục */}
           <div className="row align-items-center mt-3 bg-light">
-            <div className="col-3 text-center text-md-start" style={{padding: "0"}}>
-              <div className="header-user__category-header" onClick={() => setShowCategories(!showCategories)}>
+            <div
+              className="col-3 text-center text-md-start"
+              style={{ padding: "0" }}
+            >
+              <div
+                className="header-user__category-header"
+                onClick={() => setShowCategories(!showCategories)}
+              >
                 <FaBars className="header-user__menu-icon" />
                 Danh mục
               </div>
@@ -183,24 +195,52 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
             <div className="col-7">
               <ul className="header-user__menu">
                 <li>
-                  <a onClick={() => navigate("/")} className={currentTab === "Home" ? "active" : ""}>
+                  <a
+                    onClick={() => navigate("/")}
+                    className={currentTab === "Home" ? "active" : ""}
+                  >
                     Trang chủ
                   </a>
                 </li>
                 <li>
-                <a onClick={() => navigate("/shop")} className={currentTab === "Shop" ? "active" : ""}>Cửa hàng</a>
+                  <a
+                    onClick={() => navigate("/shop")}
+                    className={currentTab === "Shop" ? "active" : ""}
+                  >
+                    Cửa hàng
+                  </a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("/pages")} className={currentTab === "Pages" ? "active" : ""}>Trang</a>
+                  <a
+                    onClick={() => navigate("/pages")}
+                    className={currentTab === "Pages" ? "active" : ""}
+                  >
+                    Trang
+                  </a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("/recruitment")} className={currentTab === "Recruitment" ? "active" : ""}>Tuyển dụng</a>
+                  <a
+                    onClick={() => navigate("/recruitment")}
+                    className={currentTab === "Recruitment" ? "active" : ""}
+                  >
+                    Tuyển dụng
+                  </a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("/blogs/all")} className={currentTab === "Blog" ? "active" : ""}>Blog</a>
+                  <a
+                    onClick={() => navigate("/blogs/all")}
+                    className={currentTab === "Blog" ? "active" : ""}
+                  >
+                    Blog
+                  </a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("/contact")} className={currentTab === "Contact" ? "active" : ""}>Liên hệ</a>
+                  <a
+                    onClick={() => navigate("/contact")}
+                    className={currentTab === "Contact" ? "active" : ""}
+                  >
+                    Liên hệ
+                  </a>
                 </li>
               </ul>
             </div>
@@ -301,92 +341,104 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
               </div>
             </div>
           </div>
-
         </div>
-          {/* Banner chính */}
-          <div className="row">
-            {/* Danh sách danh mục */}
-              <div className="col-3 text-md-start" style={{ position: !showBanner ? "fixed" : "relative",backgroundColor: "white", zIndex: 1, width: !showBanner ? "16%" : "", boxShadow: !showBanner ? "0 0 5px rgba(0, 0, 0, 0.1)" : "" }}>
-                {showCategories && (
-                  <ul className="header-user__category-list">
-                    {getCategories_NoPaging &&
-                      getCategories_NoPaging.map((category) => (
-                        <li
-                          key={category.id}
-                          className={`header-user__category-item ${currentCategory === category.id ? "active" : ""}`}
-                          onClick={() =>
-                            navigate(`/categories/${category.name.toLowerCase()}`, {
-                              state: { categoryId: category.id },
-                            })
-                          }
-                        >
-                          {category.name}
-                          <FaChevronDown className="header-user__chevron-icon" />
-                        </li>
-                      ))}
-                  </ul>
-                )}
-              </div>
+        {/* Banner chính */}
+        <div className="row">
+          {/* Danh sách danh mục */}
+          <div
+            className="col-3 text-md-start"
+            style={{
+              position: !showBanner ? "fixed" : "relative",
+              backgroundColor: "white",
+              zIndex: 1,
+              width: !showBanner ? "16%" : "",
+              boxShadow: !showBanner ? "0 0 5px rgba(0, 0, 0, 0.1)" : "",
+            }}
+          >
+            {showCategories && (
+              <ul className="header-user__category-list">
+                {getCategories_NoPaging &&
+                  getCategories_NoPaging.map((category) => (
+                    <li
+                      key={category.id}
+                      className={`header-user__category-item ${
+                        currentCategory === category.id ? "active" : ""
+                      }`}
+                      onClick={() =>
+                        navigate(`/categories/${category.name.toLowerCase()}`, {
+                          state: { categoryId: category.id },
+                        })
+                      }
+                    >
+                      {category.name}
+                      <FaChevronDown className="header-user__chevron-icon" />
+                    </li>
+                  ))}
+              </ul>
+            )}
+          </div>
 
-            {/* Banner chính ở giữa */}
-            {showBanner && (
-              <>
-                <div className="col-7">
-                  {banners.length > 0 && (
-                    <div className="header-user__macbook-card">
-                      <div className="header-user__macbook-content">
-                        <div className="header-user__category">
-                          <span className="header-user__icon">
-                            {banners[activeIndex].icon}
-                          </span>{" "}
-                          {banners[activeIndex].category}
-                        </div>
-                        <h2 className="header-user__title">
-                          {banners[activeIndex].title.split("\n").map((line, i) => (
+          {/* Banner chính ở giữa */}
+          {showBanner && (
+            <>
+              <div className="col-7">
+                {banners.length > 0 && (
+                  <div className="header-user__macbook-card">
+                    <div className="header-user__macbook-content">
+                      <div className="header-user__category">
+                        <span className="header-user__icon">
+                          {banners[activeIndex].icon}
+                        </span>{" "}
+                        {banners[activeIndex].category}
+                      </div>
+                      <h2 className="header-user__title">
+                        {banners[activeIndex].title
+                          .split("\n")
+                          .map((line, i) => (
                             <React.Fragment key={i}>
                               {line}
                               <br />
                             </React.Fragment>
                           ))}
-                        </h2>
-                        <button className="header-user__shop-button">
-                          Shop Now →
-                        </button>
-                        <div className="header-user__dots">
-                          {banners.map((_, index) => (
-                            <span
-                              key={index}
-                              className={`header-user__dot ${
-                                index === activeIndex ? "active" : ""
-                              }`}
-                            ></span>
-                          ))}
-                        </div>
+                      </h2>
+                      <button className="header-user__shop-button">
+                        Shop Now →
+                      </button>
+                      <div className="header-user__dots">
+                        {banners.map((_, index) => (
+                          <span
+                            key={index}
+                            className={`header-user__dot ${
+                              index === activeIndex ? "active" : ""
+                            }`}
+                          ></span>
+                        ))}
                       </div>
-                      <img
-                        src={banners[activeIndex].img}
-                        alt={banners[activeIndex].title}
-                        className="header-user__macbook-img"
-                      />
                     </div>
-                  )}
-                  <SaleTopPrice />
-                </div>
-                {/* Sản phẩm nổi bật */}
-                <div className="col-2 text-end">
-                  <div className="header-user__bag-card">
                     <img
-                      src="/images/product/samsung-galaxy-z-flip6-2.jpg"
-                      alt="Yantiti Leather Bag"
-                      className="header-user__bag-img"
+                      src={banners[activeIndex].img}
+                      alt={banners[activeIndex].title}
+                      className="header-user__macbook-img"
                     />
-                    <p className="header-user__bag-name">Yantiti Leather Bags</p>
-                    <p className="header-user__bag-price">500.000 VNĐ</p>
                   </div>
+                )}
+                <SaleTopPrice />
+              </div>
+              {/* Sản phẩm nổi bật */}
+              <div className="col-2 text-end">
+                <div className="header-user__bag-card">
+                  <img
+                    src="/images/product/samsung-galaxy-z-flip6-2.jpg"
+                    alt="Yantiti Leather Bag"
+                    className="header-user__bag-img"
+                  />
+                  <p className="header-user__bag-name">Yantiti Leather Bags</p>
+                  <p className="header-user__bag-price">500.000 VNĐ</p>
                 </div>
-              </>
-            )}
-          </div>
+              </div>
+            </>
+          )}
+        </div>
         {/* Liên hệ nhân viên */}
         {showBanner && (
           <div className="contact-container">
