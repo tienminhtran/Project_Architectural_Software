@@ -190,7 +190,7 @@ const OrderPage = () => {
           >
             <option value="">All Payments</option>
             <option value="COD">COD</option>
-            <option value="VNPAY">VNPay</option>
+            <option value="BANK">Bank</option>
             <option value="PAYPAL">PayPal</option>
           </select>
 

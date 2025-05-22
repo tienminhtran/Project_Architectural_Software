@@ -148,7 +148,7 @@ const OrderDetailModal = ({ show, onHide, order }) => {
               </div>
             </div>
             {/* Payment Content (Chuyển khoản) */}
-            {order.payment && order.payment.paymentName !== "COD" && (
+            {order.payment && order.payment.paymentName !== "Bank" && (
               <div className="row">
                 <div className="col-12">
                   <p className="fs-6 mb-2">
@@ -164,7 +164,7 @@ const OrderDetailModal = ({ show, onHide, order }) => {
                     </p>
                   ) : (
                     <p className="fs-6 mb-2">
-                      <strong>Payment Content:</strong> N/A
+                      <strong>Payment Content:</strong> Không có nội dung
                     </p>
                   )}
                 </div>
