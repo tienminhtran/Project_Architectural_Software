@@ -11,7 +11,7 @@ import { useLocation } from "react-router-dom";
 import HeaderUser from "../../components/layout/HeaderUser";
 const HomeCart = () => {
     const location = useLocation();
-    const { product_id } = location.state || {};
+    const { product_id, accessory_ids } = location.state || {};
 
     const { carts, isLoading } = useCart();
     console.log("carts", carts);
@@ -26,7 +26,7 @@ const HomeCart = () => {
         <div>
             <HeaderUser showCategory={false} showBanner={false} />
 
-            <CartBuyOrderBox cartItems={cartItems} product_checked={product_id} />
+            <CartBuyOrderBox cartItems={cartItems} product_checked={product_id} accessory_ids = {accessory_ids} />
 
             <FooterUser />
             <Loading isLoading={isLoading} />

@@ -92,7 +92,17 @@ const ProductDetail = ({product}) => {
       };
       addItem(request);
 
-      navigate("/cart", { state: { product_id: product?.id } });
+      selectedItems.forEach((itemId) => {
+        const selected = accessoryProducts.find((item) => item.id === itemId);
+        if (selected) {
+          const accessoryRequest = {
+            id_product: selected.id,
+            quantity: 1,
+          };
+          addItem(accessoryRequest);
+        }
+      });
+      navigate("/cart", { state: { product_id: product?.id, accessory_ids : selectedItems } });
 
     } catch (error) {
       console.error("Error adding to cart:", error);

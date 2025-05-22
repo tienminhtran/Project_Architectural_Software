@@ -177,30 +177,30 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
             <div className="col-3 text-center text-md-start" style={{padding: "0"}}>
               <div className="header-user__category-header" onClick={() => setShowCategories(!showCategories)}>
                 <FaBars className="header-user__menu-icon" />
-                Category
+                Danh mục
               </div>
             </div>
             <div className="col-7">
               <ul className="header-user__menu">
                 <li>
                   <a onClick={() => navigate("/")} className={currentTab === "Home" ? "active" : ""}>
-                    Home
+                    Trang chủ
                   </a>
                 </li>
                 <li>
-                <a onClick={() => navigate("/shop")} className={currentTab === "Shop" ? "active" : ""}>Shop</a>
+                <a onClick={() => navigate("/shop")} className={currentTab === "Shop" ? "active" : ""}>Cửa hàng</a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("/pages")} className={currentTab === "Pages" ? "active" : ""}>Pages</a>
+                  <a onClick={() => navigate("/pages")} className={currentTab === "Pages" ? "active" : ""}>Trang</a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("/recruitment")} className={currentTab === "Recruitment" ? "active" : ""}>Recruitment</a>
+                  <a onClick={() => navigate("/recruitment")} className={currentTab === "Recruitment" ? "active" : ""}>Tuyển dụng</a>
                 </li>
                 <li>
                   <a onClick={() => navigate("/blogs/all")} className={currentTab === "Blog" ? "active" : ""}>Blog</a>
                 </li>
                 <li>
-                  <a onClick={() => navigate("/contact")} className={currentTab === "Contact" ? "active" : ""}>Contact</a>
+                  <a onClick={() => navigate("/contact")} className={currentTab === "Contact" ? "active" : ""}>Liên hệ</a>
                 </li>
               </ul>
             </div>
@@ -242,7 +242,7 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
                             className="btn btn-primary rounder-3"
                             onClick={() => navigate("/login")}
                           >
-                            Login
+                            Đăng nhập
                           </button>
                           <div
                             className="d-flex justify-content-center align-items-center mt-2 gap-2"
@@ -252,13 +252,13 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
                               className="text-muted"
                               style={{ fontSize: "12px" }}
                             >
-                              No account yet?
+                              Chưa có tài khoản?
                             </span>
                             <button
                               className="btn btn-danger w-50"
                               onClick={() => navigate("/register")}
                             >
-                              Register
+                              Đăng ký
                             </button>
                           </div>
                         </div>
@@ -268,7 +268,7 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
                             className="header-user__dropdown-item"
                             onClick={() => navigate("/my-account")}
                           >
-                            My Account
+                            Tài khoản của tôi
                           </div>
                           {userInfor.role.code === "ADMIN" && (
                             <div
@@ -291,7 +291,7 @@ const HeaderUser = ({showCategory, showBanner, currentTab, currentCategory}) => 
                             className="header-user__dropdown-item"
                             onClick={handleLogout}
                           >
-                            Logout
+                            Đăng xuất
                           </div>
                         </div>
                       )}

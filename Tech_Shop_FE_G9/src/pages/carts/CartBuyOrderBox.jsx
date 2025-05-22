@@ -19,7 +19,7 @@ import VoucherModal from "./VoucherModal";
 import { formatPrice } from "../../utils/FormatPrice";
 import useCart from "../../hooks/useCart";
 
-const CartBuyOrderBox = ({ cartItems, product_checked }) => {
+const CartBuyOrderBox = ({ cartItems, product_checked, accessory_ids }) => {
   console.log("cartItems 2", cartItems);
   const navigate = useNavigate();
   const { deleteItem, updateQuantity, error } = useCart();
@@ -76,10 +76,17 @@ const CartBuyOrderBox = ({ cartItems, product_checked }) => {
         setDiscount(parsedCartData.appliedVoucher.value / 100);
       }
     } else if (cartItems && product_checked) {
+      if(accessory_ids) {
+        console.log("accessory_ids", accessory_ids);
+        setSelectedRows([product_checked, ...accessory_ids]);
+
+      } else {
+
+        setSelectedRows([product_checked]);
+      }
       // Nếu không có cartData nhưng có product_checked
-      setSelectedRows([product_checked]);
-    }
-  }, [cartItems, product_checked]);
+    } 
+  }, [cartItems, product_checked, accessory_ids]);
 
   const handleQuantityChange = (id_product, newQuantity) => {
     if (newQuantity < 1) return;
