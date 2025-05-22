@@ -23,7 +23,6 @@ export default function OrderByPhone() {
     setSearchPhone(phoneInput.trim());
   };
 
-  // CSS inline style
   const styles = {
     container: {
       maxWidth: 600,
@@ -71,6 +70,8 @@ export default function OrderByPhone() {
     },
     ordersContainer: {
       marginTop: 20,
+      maxHeight: 300, // Thêm giới hạn chiều cao
+      overflowY: "auto", // Thêm thanh trượt dọc
     },
     orderCard: {
       border: "1px solid #ccc",

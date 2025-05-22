@@ -87,11 +87,11 @@ const ProductInformation = ({product}) => {
       <div className="productinfo__right">
         <h2>Tin tức về công nghệ</h2>
         <ul className="productinfo__news">
-          <li><img src="../../../public/images/product/oppo-a38-black-1.jpeg" alt="" /> Bỏ túi cách lấy nick Tiktok cũ bằng ID siêu đơn giản, ai cũng làm được</li>
-          <li><img src="../../../public/images/product/oppo-a38-black-1.jpeg" alt="" /> Hướng dẫn sử dụng Shakker AI tạo ảnh AI chi tiết trong vài bước</li>
-          <li><img src="../../../public/images/product/oppo-a38-black-1.jpeg" alt="" /> Reminder là gì? 7 app nhắc nhở công việc hằng ngày hiệu quả</li>
-          <li><img src="../../../public/images/product/oppo-a38-black-1.jpeg" alt="" /> Tổng hợp FULL code Combat Warriors mới nhất tháng 04/2025</li>
-          <li><img src="../../../public/images/product/oppo-a38-black-1.jpeg"alt="" /> Blox Fruits Stock là gì? Mẹo thêm Blox Fruits Stock vào Discord Server</li>
+          <li><img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/s25-home-moi.png" alt="" /> Bỏ túi cách lấy nick Tiktok cũ bằng ID siêu đơn giản, ai cũng làm được</li>
+          <li><img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/tivi-xiaomi-new.jpg" alt="" /> Hướng dẫn sử dụng Shakker AI tạo ảnh AI chi tiết trong vài bước</li>
+          <li><img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/iphone-16-pro-max-thu-cu-moi-home.jpg" alt="" /> Reminder là gì? 7 app nhắc nhở công việc hằng ngày hiệu quả</li>
+          <li><img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/m4-len-doi-tang-airpods-4.jpg" alt="" /> Tổng hợp FULL code Combat Warriors mới nhất tháng 04/2025</li>
+          <li><img src="https://cdn2.cellphones.com.vn/insecure/rs:fill:690:300/q:90/plain/https://dashboard.cellphones.com.vn/storage/asus.jpg"alt="" /> Blox Fruits Stock là gì? Mẹo thêm Blox Fruits Stock vào Discord Server</li>
         </ul>
       </div>
     </div>
