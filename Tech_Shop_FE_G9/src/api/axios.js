@@ -6,8 +6,8 @@ import {
 } from "../services/authService";
 // const API_URL = "http://13.213.62.201:8082/api/v1";
 
-const API_URL = "https://api.tranminhtien.io.vn/api/v1";
-// const API_URL = "http://localhost:8080/api/v1";
+// const API_URL = "https://api.tranminhtien.io.vn/api/v1";
+const API_URL = "http://localhost:8080/api/v1";
 
 // Tạo một instance của axios với baseURL là API_URL
 const axiosInstance = axios.create({
