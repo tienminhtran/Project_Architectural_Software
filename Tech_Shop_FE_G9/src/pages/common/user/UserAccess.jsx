@@ -1,19 +1,57 @@
- import React, { useState } from 'react';
-import useUser from '../../../hooks/useUser'; // adjust the path if needed
+import React, { useState, useEffect } from 'react';
+import Swal from 'sweetalert2';
+import useUser from '../../../hooks/useUser'; // đường dẫn có thể thay đổi tùy bạn
+import { Button } from 'react-bootstrap';
+import { useMutation } from '@tanstack/react-query'; // hoặc react-query
 
 export default function UserAccess() {
-  const { getAllUserRole1AndNoOrderPaging } = useUser();
+  const {
+    getAllUserRole1AndNoOrderPaging, // React Query hook lấy danh sách user
+    updateStatusUser, // function update status user
+    sendEmailNotify, // function gửi email thông báo
+    findUsersWithEmailNotificationDate10DaysAgoData, // function tìm user đã gửi email
+  } = useUser();
+
+  // Dữ liệu user từ API (React Query)
   const userNoOrders = getAllUserRole1AndNoOrderPaging.data?.response ?? [];
+  const refetchUsers = getAllUserRole1AndNoOrderPaging.refetch;
+  
+
+  console.log('userNoOrders', userNoOrders);
 
   const [days, setDays] = useState('');
   const [filteredUsers, setFilteredUsers] = useState([]);
 
+
+
+  useEffect(() => {
+  if (!days || isNaN(days)) {
+    setFilteredUsers([]);
+    return;
+  }
+
+  const now = new Date();
+  const thresholdDate = new Date();
+  thresholdDate.setDate(now.getDate() - Number(days));
+
+  const filtered = userNoOrders.filter(user => {
+    const createdDate = new Date(user.createdAt);
+    return createdDate <= thresholdDate;
+  });
+
+  setFilteredUsers(filtered);
+}, [days, userNoOrders]);
+
+
+  // Hàm lọc theo ngày tạo
   const handleFilter = () => {
     if (!days || isNaN(days)) return;
 
     const now = new Date();
     const thresholdDate = new Date();
     thresholdDate.setDate(now.getDate() - Number(days));
+    console.log('Threshold date:', thresholdDate);
+    console.log('User no orders:', userNoOrders);
 
     const filtered = userNoOrders.filter(user => {
       const createdDate = new Date(user.createdAt);
@@ -21,17 +59,148 @@ export default function UserAccess() {
     });
 
     setFilteredUsers(filtered);
+    console.log('Filtered users:');
   };
 
+  // Hàm xử lý hủy tài khoản (update status)
+  const handleCancelAccounts = async () => {
+    const cancelUsers = filteredUsers.length > 0 ? filteredUsers : userNoOrders;
+
+    if (cancelUsers.length === 0) {
+      Swal.fire('Thông báo', 'Không có thành viên nào để hủy!', 'info');
+      return;
+    }
+
+    // Xác nhận với người dùng
+    const result = await Swal.fire({
+      title: `Bạn có chắc muốn hủy ${cancelUsers.length} thành viên không?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Có, hủy ngay!',
+      cancelButtonText: 'Hủy',
+    });
+
+    if (result.isConfirmed) {
+      Swal.fire({
+        title: 'Đang xử lý...',
+        allowOutsideClick: false,
+        didOpen: () => Swal.showLoading(),
+      });
+
+      const errors = [];
+
+      // Lặp gọi API update status user
+      await Promise.all(
+        cancelUsers.map(async (user) => {
+          try {
+            // Lưu ý hàm updateStatusUser nhận (id, status)
+            await updateStatusUser({userId: user.id});
+          } catch (error) {
+            errors.push(`Thất bại user ID ${user.id}: ${error.message}`);
+          }
+        })
+      );
+
+      Swal.close();
+
+      if (errors.length > 0) {
+        Swal.fire('Lỗi', `Hủy tài khoản thất bại với ${errors.length} user. Vui lòng thử lại!`, 'error');
+        console.error(errors);
+      } else {
+        Swal.fire('Thành công', 'Hủy các tài khoản thành công!', 'success');
+        setFilteredUsers([]); // reset filter nếu cần
+        refetchUsers(); // load lại danh sách user mới
+      }
+    }
+  };
+
+
+
+  // Gửi email thông báo hàng loạt cho user bị lọc (hoặc all)
+  const handleSendBatchEmail = async () => {
+    const targetUsers = filteredUsers.length > 0 ? filteredUsers : userNoOrders;
+
+    if (targetUsers.length === 0) {
+      Swal.fire('Thông báo', 'Không có người dùng để gửi email!', 'info');
+      return;
+    }
+
+    const result = await Swal.fire({
+      title: `Bạn có chắc muốn gửi email thông báo đến ${targetUsers.length} người dùng không?`,
+      icon: 'warning',
+      showCancelButton: true,
+      confirmButtonText: 'Có, gửi ngay!',
+      cancelButtonText: 'Hủy',
+    });
+
+    if (!result.isConfirmed) return;
+
+    Swal.fire({
+      title: 'Đang gửi email...',
+      allowOutsideClick: false,
+      didOpen: () => Swal.showLoading(),
+    });
+
+    const errors = [];
+
+    // Gửi mail tuần tự (hoặc có thể Promise.all nếu API chịu được)
+    for (const user of targetUsers) {
+      const email = user.email;
+      const nameuser = `${user.firstname ?? ''} ${user.lastname ?? ''}`.trim();
+      console.log(`Gửi email đến ${email} (${nameuser})`);
+
+
+      try {
+        await sendEmailNotify({ email, id: user?.id });
+        handleFilter(); // Cập nhật lại danh sách người dùng sau khi gửi email
+      } catch (error) {
+        errors.push(`Lỗi gửi mail user ID ${user.id}: ${error.message}`);
+      }
+    }
+
+    Swal.close();
+
+    if (errors.length > 0) {
+      Swal.fire('Lỗi', `Có ${errors.length} email gửi không thành công. Vui lòng thử lại!`, 'error');
+      console.error(errors);
+    } else {
+      Swal.fire('Thành công', 'Đã gửi email thông báo đến tất cả người dùng!', 'success');
+    }
+  };
+  // http://localhost:8080/api/v1/user/findUsersWithEmailNotificationDate10DaysAgo
+  const handleFindUsersWithEmailNotificationDate10DaysAgo = async () => {
+    // const result = await Swal.fire({
+    //   title: 'Đang tìm kiếm người dùng...',
+    //   allowOutsideClick: false,
+    //   didOpen: () => Swal.showLoading(),
+    // });
+
+    try {
+      const response = findUsersWithEmailNotificationDate10DaysAgoData;
+      console.log('Response:', response);
+      if (response) {
+        // Swal.fire('Thành công', 'Tìm kiếm thành công!', 'success');
+        console.log('Filtered users:', response);
+        setFilteredUsers(response);
+      } else {
+        // Swal.fire('Không tìm thấy người dùng nào đã gửi email thông báo!', '', 'info');
+        console.log('Không tìm thấy người dùng nào đã gửi email thông báo!');
+      }
+    } catch (error) {
+      console.error('Error:', error);
+      Swal.fire('Lỗi', 'Có lỗi xảy ra trong quá trình tìm kiếm!', 'error');
+    }
+  }
+
+
+  // Hàm render bảng
   const renderTable = (data, title, includeOrder = false) => {
     const hasScroll = data.length > 7;
     return (
       <div style={styles.tableWrapper}>
         <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
           <div style={{ fontSize: 18, fontWeight: 'bold' }}>{title}</div>
-          <div style={{ fontSize: 14, color: '#888' }}>
-            Tổng số người dùng: {data.length}
-          </div>
+          <div style={{ fontSize: 14, color: '#888' }}>Tổng số người dùng: {data.length}</div>
         </div>
         <div style={{ maxHeight: hasScroll ? 300 : 'auto', overflowY: hasScroll ? 'scroll' : 'visible' }}>
           <table style={styles.table}>
@@ -45,6 +214,7 @@ export default function UserAccess() {
                 <th style={styles.th}>Phone</th>
                 <th style={styles.th}>Email</th>
                 <th style={styles.th}>Created At</th>
+                <th style={styles.th}>Date send mail</th>
                 {includeOrder && <th style={styles.th}>No. Order</th>}
               </tr>
             </thead>
@@ -54,7 +224,11 @@ export default function UserAccess() {
                   <tr key={user.id}>
                     <td style={styles.td}>{user.id}</td>
                     <td style={styles.td}>
-                      <img src={user.image || user.profile || 'https://via.placeholder.com/40'} alt="avatar" style={styles.img} />
+                      <img
+                        src={user.image || user.profile || 'https://via.placeholder.com/40'}
+                        alt="avatar"
+                        style={styles.img}
+                      />
                     </td>
                     <td style={styles.td}>{user.firstname}</td>
                     <td style={styles.td}>{user.lastname}</td>
@@ -63,6 +237,9 @@ export default function UserAccess() {
                     <td style={styles.td}>{user.email}</td>
                     <td style={styles.td}>{new Date(user.createdAt).toLocaleDateString()}</td>
                     {includeOrder && <td style={styles.td}>{user.orderCount ?? 0}</td>}
+                    <td style={styles.td}>
+                      {user.emailNotificationDate ? new Date(user.emailNotificationDate).toLocaleString() : 'Chưa gửi mail'}
+                    </td>
                   </tr>
                 ))
               ) : (
@@ -80,88 +257,50 @@ export default function UserAccess() {
   };
 
   return (
-    <div>
-      <div
-        style={{
-          padding: 20,
-          backgroundColor: '#f9fafb',
-          borderRadius: 8,
-          boxShadow: '0 2px 6px rgba(0,0,0,0.05)',
-          fontFamily: 'Segoe UI, Tahoma, sans-serif',
-        }}
-      >
-        {/* Nhập số ngày muốn lọc quá hạn so với ngày tạo và ngày hiện tại */}
+    <div style={{ padding: 20 }}>
+      <div style={{ marginBottom: 10 }}>
         <input
-          type="number"
-          placeholder="Nhập số ngày quá hạn"
+          type="text"
+          placeholder="Nhập số ngày để lọc"
           value={days}
           onChange={e => setDays(e.target.value)}
-          style={{
-            padding: '8px 12px',
-            borderRadius: 6,
-            border: '1px solid #d1d5db',
-            width: '100%',
-            maxWidth: 250,
-            marginBottom: 12,
-            fontSize: 14,
-          }}
+          style={{ marginRight: 10, padding: 5 }}
         />
-        <button
-          onClick={handleFilter}
-          style={{
-            backgroundColor: '#2563eb',
-            color: '#fff',
-            padding: '10px 16px',
-            borderRadius: 6,
-            border: 'none',
-            cursor: 'pointer',
-            fontSize: 14,
-            marginBottom: 12,
-          }}
-        >
-          Lọc
-        </button>
-
-        <div style={{ display: 'flex', gap: 12 }}>
-          <button
-            style={{
-              backgroundColor: '#2563eb',
-              color: '#fff',
-              padding: '10px 16px',
-              borderRadius: 6,
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: 14,
-            }}
-            onMouseOver={e => (e.currentTarget.style.backgroundColor = '#1e40af')}
-            onMouseOut={e => (e.currentTarget.style.backgroundColor = '#2563eb')}
-          >
-            Thông báo user, 10 ngày sau hủy tài khoản
-          </button>
-          <button
-            style={{
-              backgroundColor: '#ef4444',
-              color: '#fff',
-              padding: '10px 16px',
-              borderRadius: 6,
-              border: 'none',
-              cursor: 'pointer',
-              fontSize: 14,
-            }}
-            onMouseOver={e => (e.currentTarget.style.backgroundColor = '#b91c1c')}
-            onMouseOut={e => (e.currentTarget.style.backgroundColor = '#ef4444')}
-          >
-            Hủy các tài khoản ngay
-          </button>
-        </div>
+        {/* <button onClick={handleFilter}>Lọc</button> */}
       </div>
+      <button
+        onClick={handleSendBatchEmail}
+        variant="primary"
+        style={{ marginBottom: 10, backgroundColor: '#007bff', color: 'white', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer', marginRight: 10 }}
+      >
+        Thông báo Mail hủy tài khoản - 10 ngày
+      </button>
+      <button onClick={handleCancelAccounts} style={{ marginRight:10, marginBottom: 10, backgroundColor: '#d33', color: 'white', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer' }}>
+        Hủy các tài khoản
+      </button>
+      <button 
+        onClick={handleFindUsersWithEmailNotificationDate10DaysAgo}
+       style={{ marginRight:10, marginBottom: 10, backgroundColor: '#3ae2fc', color: 'black', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer' }}>
+        Các tài khoản cần xóa
+      </button>
+      {/* tra ve danh sach chua loc */}
+      <button
+        onClick={() => {
+            setDays('');        // xóa input ngày
+            setFilteredUsers([]); // reset bộ lọc
+            refetchUsers();     // gọi lại API lấy dữ liệu mới
+          }}        
+        style={{ marginBottom: 10, backgroundColor: '#28a745', color: 'white', padding: '8px 15px', border: 'none', borderRadius: 4, cursor: 'pointer' }}
+      >
+        Làm mới danh sách
+      </button>
+      
 
-      <div style={styles.container}>
-        {renderTable(filteredUsers.length > 0 ? filteredUsers : userNoOrders, 'Bảng người dùng USER chưa có đơn hàng')}
-      </div>
+      {renderTable(filteredUsers.length > 0 ? filteredUsers : userNoOrders, 'Danh sách người dùng')}
     </div>
   );
 }
+ 
 const styles = {
   container: {
     padding: 24,
@@ -186,7 +325,10 @@ const styles = {
   table: {
     width: '100%',
     borderCollapse: 'collapse',
+    marginBottom: 20,
+    fontSize: 14,
   },
+
   th: {
     padding: '12px 16px',
     backgroundColor: '#f3f4f6',

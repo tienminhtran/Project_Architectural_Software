@@ -8,6 +8,9 @@ import {
   getAllUserHasOrder,
   getAllUserRole1,
   getAllUserRole1AndNoOrder,
+  updateStatusUser,
+  sendEmailNotify,
+  findUsersWithEmailNotificationDate10DaysAgo
 
 
   // getAllUsersNoPage,
@@ -22,6 +25,8 @@ const useUser = (pageNo, pageSize) => {
   const getUser = useQuery({
     queryKey: ["getUser"], // Dùng user là username làm key của query
     queryFn: () => getCurrentUser(),
+    
+  
     refetchOnWindowFocus: false,
   });
 
@@ -111,7 +116,45 @@ const useUser = (pageNo, pageSize) => {
     refetchOnWindowFocus: false,
   });
 
+const updateStatusUserMutation = useMutation({
+    mutationFn: ({ userId }) => {
+      return updateStatusUser(userId); // Use the correct service function
+    },
+    onSuccess: () => {
+      // alert('Update status user successfully!');
+      console.log('HOOKS:        Update status user successfully!');
+    },
+    onError: (error) => {
+      console.error('Update status user failed:', error);
+      // alert('Update status user failed. Please try again!');
+      console.log('HOOKS:        Update status user failed. Please try again!');
+    },
+  });
 
+  //send
+  const sendEmailNotifyMutation = useMutation({
+    mutationFn: ({ email, id }) => {
+      return sendEmailNotify({ email, id});
+    },
+    onSuccess: () => {
+      // alert("Send email successfully!");
+      console.log("HOOKS:        Send email successfully!");
+      queryClient.invalidateQueries(["getAllUserRole1AndNoOrder"]); // Invalidate the query to refetch the user data
+    },
+    onError: (error) => {
+      console.error("Send email failed:", error);
+      // alert("Send email failed. Please try again!");
+      console.log("HOOKS:        Send email failed. Please try again!");
+    },
+  });
+
+
+  // findUsersWithEmailNotificationDate10DaysAgo
+  const findUsersWithEmailNotificationDate10DaysAgoQuery = useQuery({
+    queryKey: ["findUsersWithEmailNotificationDate10DaysAgo"],
+    queryFn: () => findUsersWithEmailNotificationDate10DaysAgo(),
+    refetchOnWindowFocus: false,
+  });
 
   return {
     user_paging: userPaging,
@@ -135,7 +178,20 @@ const useUser = (pageNo, pageSize) => {
     isCheckPhoneError,
     checkPhoneError,
     loadingUpdateUser: updateProfileUser.isLoading,
+
+    // update
+    updateStatusUser: updateStatusUserMutation.mutateAsync,  
     
+    //send
+    sendEmailNotify: sendEmailNotifyMutation.mutateAsync,
+    sendEmailNotifyLoading: sendEmailNotifyMutation.isLoading,
+
+    
+    // findUsersWithEmailNotificationDate10DaysAgo
+    findUsersWithEmailNotificationDate10DaysAgoData: findUsersWithEmailNotificationDate10DaysAgoQuery.data?.response || [],
+    findUsersWithEmailNotificationDate10DaysAgoError: findUsersWithEmailNotificationDate10DaysAgoQuery.error,
+    findUsersWithEmailNotificationDate10DaysAgoIsError: findUsersWithEmailNotificationDate10DaysAgoQuery.isError,
+
   };
 };
 export default useUser;

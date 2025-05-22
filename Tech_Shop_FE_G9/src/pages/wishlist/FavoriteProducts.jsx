@@ -9,6 +9,7 @@ import FooterUser from "../../components/layout/Footer";
 import useCart from "../../hooks/useCart";
 import useWishlist from "../../hooks/useWishlist";
 import HeaderUser from "../../components/layout/HeaderUser";
+import { formatPrice } from "../../utils/FormatPrice";
 
 export default function FavoriteProducts() {
   const { addItem } = useCart();
@@ -105,7 +106,7 @@ export default function FavoriteProducts() {
       <div style={{ display: "flex" }}>
         <div>
           <img
-            src="../../../public/images/bg/thu-cu-doi-moi.png"
+            src="https://file.hstatic.net/200000722513/file/thang_04_pc_tang_man_banner_side_web.jpg"
             alt="Logo"
             className="CartBuy-OrderBox__logo"
             style={{ width: "160px" }}
@@ -240,10 +241,10 @@ export default function FavoriteProducts() {
                     </td>
                     <td>{product.name}</td>
                     <td className="favorite-product__price">
-                      {product.price.toLocaleString()}₫
+                      {formatPrice(Number(product.price))}
                     </td>
                     <td className="favorite-product__original-price">
-                      {product.originalPrice.toLocaleString()}₫
+                      {formatPrice(Number(product.originalPrice))}
                     </td>
                     <td
                       style={{
@@ -282,7 +283,7 @@ export default function FavoriteProducts() {
 
         <div>
           <img
-            src="../../../public/images/bg/mua-he-ruc-ro.png"
+            src="https://file.hstatic.net/200000722513/file/gearvn-laptop-t4-banner-side.jpg"
             alt="Logo"
             className="CartBuy-OrderBox__logo"
             style={{ width: "160px" }}

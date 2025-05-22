@@ -98,6 +98,7 @@ const OrderPayment = () => {
         voucherId: appliedVoucher ? appliedVoucher.id : null,
         addressId: addressId,
         orderDetails: orderDetails,
+        contentPayment: orderCode,
       };
 
       // Gọi createOrder
@@ -189,7 +190,7 @@ const OrderPayment = () => {
       <div style={{ display: "flex" }}>
         <div>
           <img
-            src="../../../public/images/bg/thu-cu-doi-moi.png"
+            src="https://file.hstatic.net/200000722513/file/thang_04_pc_tang_man_banner_side_web.jpg"
             alt="Logo"
             className="CartBuy-OrderBox__logo"
             style={{ width: "160px" }}
@@ -240,6 +241,8 @@ const OrderPayment = () => {
                 />
                 Thanh toán qua PayPal
               </label>
+              {/* momo */}
+           
             </div>
 
             {selectedMethod === "bank" && (
@@ -276,7 +279,8 @@ const OrderPayment = () => {
                 <strong>{cartData ? formatCurrency(totalAmount) : "0đ"}</strong>
               </div>
             </div>
-
+        
+ 
             {selectedMethod === "paypal" ? (
               <PayPalButton
                 amount={totalAmount.toFixed(2)} // Ensure the amount is correctly formatted for PayPal
@@ -304,7 +308,7 @@ const OrderPayment = () => {
 
         <div>
           <img
-            src="../../../public/images/bg/mua-he-ruc-ro.png"
+            src="https://file.hstatic.net/200000722513/file/gearvn-laptop-t4-banner-side.jpg"
             alt="Logo"
             className="CartBuy-OrderBox__logo"
             style={{ width: "160px" }}

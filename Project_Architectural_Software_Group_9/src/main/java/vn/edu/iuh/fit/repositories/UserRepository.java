@@ -6,8 +6,11 @@
 
 package vn.edu.iuh.fit.repositories;
 
+import jakarta.transaction.Transactional;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
+import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 import vn.edu.iuh.fit.entities.User;
 
@@ -49,11 +52,23 @@ public interface UserRepository extends JpaRepository<User, Long> {
     @Query("SELECT u FROM User u JOIN u.role r WHERE r.id = 1")
     List<User> findAllUserWithRole1();
 
-    @Query("SELECT u FROM User u JOIN u.role r WHERE r.id = 1 AND u.active = true AND u.id NOT IN (SELECT o.user.id FROM Order o)")
+    @Query("SELECT u FROM User u JOIN u.role r WHERE r.id = 1 AND u.active = TRUE AND u.id NOT IN (SELECT o.user.id FROM Order o)")
     List<User> findUsersWithRole1AndNoOrders();
 
-    //update  status = false list user theo iduser
+    @Modifying
+    @Transactional
     @Query("UPDATE User u SET u.active = false WHERE u.id IN :ids")
-    void updateStatusByIds(List<Long> ids);
+    void updateStatusByIds(@Param("ids") List<Long> ids);
+
+    //update ngay goi email thong bao la ngay gio hien tai theo iduser
+    @Modifying
+    @Transactional
+    @Query("UPDATE User u SET u.emailNotificationDate = CURRENT_TIMESTAMP WHERE u.id = :id")
+    void updateEmailNotificationDate(@Param("id") Long id);
+
+    @Query("SELECT u FROM User u WHERE u.emailNotificationDate IS NOT NULL AND DATEDIFF(CURRENT_DATE, u.emailNotificationDate) >= 10")
+    List<User> findUsersWithEmailNotificationDate10DaysAgo();
+
+
 
 }

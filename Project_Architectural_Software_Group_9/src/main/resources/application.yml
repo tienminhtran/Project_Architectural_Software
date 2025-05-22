@@ -37,7 +37,7 @@ spring:
       mail.smtp.ssl.enable: true
       mail.smtp.starttls.enable: false
     verify:
-      host: http://localhost:${SERVER_PORT}
+      host: https://api.tranminhtien.io.vn
 
 
 

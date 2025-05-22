@@ -1,8 +1,10 @@
 import React from "react";
 import { Modal, Button, Spinner } from "react-bootstrap";
 import useOrderDetail from "../../../hooks/useOrderDetail";
+import { useNavigate } from "react-router-dom";
 
 const OrderDetailModal = ({ show, onHide, order }) => {
+  const navigate = useNavigate();
   const { getOrderDetailByOrderId, isLoading, isError } = useOrderDetail(
     order?.id
   );
@@ -100,9 +102,20 @@ const OrderDetailModal = ({ show, onHide, order }) => {
                         <tr key={index}>
                           <td>{index + 1}</td>
                           <td>
-                            <a href="#" style={{ textDecoration: "none" }}>
+                            <span
+                              style={{
+                                textDecoration: "underline",
+                                color: "#1976d2",
+                                cursor: "pointer",
+                              }}
+                              onClick={() =>
+                                navigate(`/product/${btoa(item.productId)}`, {
+                                  state: { item },
+                                })
+                              }
+                            >
                               {item.productName || "Unknown Product"}
-                            </a>
+                            </span>
                           </td>
                           <td>{item.quantity || 0}</td>
                           <td>
@@ -134,6 +147,29 @@ const OrderDetailModal = ({ show, onHide, order }) => {
                 </p>
               </div>
             </div>
+            {/* Payment Content (Chuyển khoản) */}
+            {order.payment && order.payment.paymentName !== "COD" && (
+              <div className="row">
+                <div className="col-12">
+                  <p className="fs-6 mb-2">
+                    <strong>Payment Method:</strong> {order.payment.paymentName}
+                  </p>
+                  {order.contentPayment !== undefined &&
+                  order.contentPayment !== null ? (
+                    <p className="fs-6 mb-2">
+                      <strong>Payment Content:</strong>{" "}
+                      {order.contentPayment.trim() !== ""
+                        ? order.contentPayment
+                        : "N/A"}
+                    </p>
+                  ) : (
+                    <p className="fs-6 mb-2">
+                      <strong>Payment Content:</strong> N/A
+                    </p>
+                  )}
+                </div>
+              </div>
+            )}
           </>
         )}
       </Modal.Body>

@@ -9,6 +9,7 @@ import {
 import useOrder from "../../../hooks/useOrder";
 import "../../../assets/css/OrderPage.css";
 import OrderDetailModal from "./OrderDetailModal";
+import Swal from "sweetalert2";
 
 const OrderPage = () => {
   const [pageNo, setPageNo] = useState(0);
@@ -56,7 +57,6 @@ const OrderPage = () => {
     mutationFn: deleteOrderService,
     onSuccess: () => {
       queryClient.invalidateQueries(["getAllOrder_Paging"]);
-      alert("Delete order successfully!!");
     },
     onError: (error) => {
       console.error("Delete order failed:", error);
@@ -65,9 +65,19 @@ const OrderPage = () => {
   });
 
   const handleDelete = (id) => {
-    if (window.confirm("Are you sure you want to delete this order?")) {
-      deleteOrderMutation.mutate(id);
-    }
+    Swal.fire({
+      title: "Bạn có chắc chắn?",
+      text: "Bạn sẽ không thể khôi phục lại đơn hàng này!",
+      icon: "warning",
+      showCancelButton: true,
+      confirmButtonText: "Vâng!",
+      cancelButtonText: "Không",
+    }).then((result) => {
+      if (result.isConfirmed) {
+        deleteOrderMutation.mutate(id);
+        setSelectedRows((prev) => prev.filter((rowId) => rowId !== id));
+      }
+    });
   };
 
   const handlePageChange = (selectedItem) => {

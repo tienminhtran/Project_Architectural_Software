@@ -30,4 +30,5 @@ public class OrderResponse implements Serializable {
     List<RatingResponse> ratings;
     int totalProduct;
     Double totalPrice;
+    String contentPayment;
 }

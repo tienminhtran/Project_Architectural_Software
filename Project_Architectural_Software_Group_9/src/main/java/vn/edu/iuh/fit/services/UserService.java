@@ -83,5 +83,13 @@ public interface UserService {
     public List<UserResponse> getAllUserRole1AndNoOrder();
 
     // update status = false list user theo iduser
-    public void updateStatusByIds(List<Long> ids);
+    boolean updateStatusByIds(List<Long> ids);
+
+
+    // update ngay goi email thong bao la ngay gio hien tai theo iduser
+
+    void updateEmailNotificationDateById(Long id);
+
+    //findUsersWithEmailNotificationDate10DaysAgo
+    List<UserResponse> findUsersWithEmailNotificationDate10DaysAgo();
 }

@@ -89,7 +89,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private CloudinaryService cloudinaryService;
 
+
     private final Map<String, EmailVerifyEntry> emailVerifyMap = new ConcurrentHashMap<>();
+
 
     // Phương thức chuyển đổi User sang DTO với kiểu generic T
     private <T> T convertToDto(User user, Class<T> targetClass) {
@@ -505,15 +507,31 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void updateStatusByIds(List<Long> ids) {
-        List<User> users = userRepository.findAllById(ids);
+    public boolean updateStatusByIds(List<Long> ids) {
+        if (ids == null || ids.isEmpty()) return false;
+        userRepository.updateStatusByIds(ids);
+        return true;
+    }
+
+    @Override
+    public void updateEmailNotificationDateById(Long ids) {
+        User user = userRepository.findById(ids).orElseThrow(() -> new ItemNotFoundException("Can not find User with id: " + ids));
+        user.setEmailNotificationDate(LocalDateTime.now());
+        userRepository.save(user);
+
+
+    }
+
+    @Override
+    public List<UserResponse> findUsersWithEmailNotificationDate10DaysAgo() {
+        List<User> users = userRepository.findUsersWithEmailNotificationDate10DaysAgo();
         if (users != null) {
-            userRepository.updateStatusByIds(ids);
+            return users.stream()
+                    .map(user -> this.convertToDto(user, UserResponse.class))
+                    .toList();
         }
-        for (User user : users) {
-            user.setActive(false);
-            userRepository.save(user);
-        }
+        return null;
+
     }
 
 
@@ -527,6 +545,7 @@ public class UserServiceImpl implements UserService {
         }
         return null;
     }
+
 
 
 }

@@ -6,6 +6,7 @@ import useOrderDetail from "../../../hooks/useOrderDetail";
 import Modal from "react-bootstrap/Modal";
 import Button from "react-bootstrap/Button";
 import { toast } from "react-toastify";
+import { useNavigate } from "react-router-dom";
 
 const tabs = [
   "TẤT CẢ",
@@ -17,6 +18,7 @@ const tabs = [
 ];
 
 const OrderManagement = () => {
+  const navigate = useNavigate();
   const [activeTab, setActiveTab] = useState("TẤT CẢ");
   const [search, setSearch] = useState("");
 
@@ -430,7 +432,20 @@ const OrderManagement = () => {
                       {dataOrderDetail.items &&
                         dataOrderDetail.items.map((item, index) => (
                           <tr key={index}>
-                            <td>{item.productName}</td>
+                            <td
+                              style={{
+                                textDecoration: "underline",
+                                color: "#1976d2",
+                                cursor: "pointer",
+                              }}
+                              onClick={() =>
+                                navigate(`/product/${btoa(item.productId)}`, {
+                                  state: { item },
+                                })
+                              }
+                            >
+                              {item.productName}
+                            </td>
                             <td>{item.quantity}</td>
                             <td>{formatCurrency(item.unitPrice)}</td>
                             <td>{formatCurrency(item.totalPrice)}</td>
