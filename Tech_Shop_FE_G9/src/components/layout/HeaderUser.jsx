@@ -189,7 +189,7 @@ const HeaderUser = ({
                 onClick={() => setShowCategories(!showCategories)}
               >
                 <FaBars className="header-user__menu-icon" />
-                Category
+                Danh mục
               </div>
             </div>
             <div className="col-7">
@@ -199,7 +199,7 @@ const HeaderUser = ({
                     onClick={() => navigate("/")}
                     className={currentTab === "Home" ? "active" : ""}
                   >
-                    Home
+                    Trang chủ
                   </a>
                 </li>
                 <li>
@@ -207,7 +207,7 @@ const HeaderUser = ({
                     onClick={() => navigate("/shop")}
                     className={currentTab === "Shop" ? "active" : ""}
                   >
-                    Shop
+                    Cửa hàng
                   </a>
                 </li>
                 <li>
@@ -215,7 +215,7 @@ const HeaderUser = ({
                     onClick={() => navigate("/pages")}
                     className={currentTab === "Pages" ? "active" : ""}
                   >
-                    Pages
+                    Trang
                   </a>
                 </li>
                 <li>
@@ -223,7 +223,7 @@ const HeaderUser = ({
                     onClick={() => navigate("/recruitment")}
                     className={currentTab === "Recruitment" ? "active" : ""}
                   >
-                    Recruitment
+                    Tuyển dụng
                   </a>
                 </li>
                 <li>
@@ -239,7 +239,7 @@ const HeaderUser = ({
                     onClick={() => navigate("/contact")}
                     className={currentTab === "Contact" ? "active" : ""}
                   >
-                    Contact
+                    Liên hệ
                   </a>
                 </li>
               </ul>
@@ -282,7 +282,7 @@ const HeaderUser = ({
                             className="btn btn-primary rounder-3"
                             onClick={() => navigate("/login")}
                           >
-                            Login
+                            Đăng nhập
                           </button>
                           <div
                             className="d-flex justify-content-center align-items-center mt-2 gap-2"
@@ -292,13 +292,13 @@ const HeaderUser = ({
                               className="text-muted"
                               style={{ fontSize: "12px" }}
                             >
-                              No account yet?
+                              Chưa có tài khoản?
                             </span>
                             <button
                               className="btn btn-danger w-50"
                               onClick={() => navigate("/register")}
                             >
-                              Register
+                              Đăng ký
                             </button>
                           </div>
                         </div>
@@ -308,7 +308,7 @@ const HeaderUser = ({
                             className="header-user__dropdown-item"
                             onClick={() => navigate("/my-account")}
                           >
-                            My Account
+                            Tài khoản của tôi
                           </div>
                           {userInfor.role.code === "ADMIN" && (
                             <div
@@ -331,7 +331,7 @@ const HeaderUser = ({
                             className="header-user__dropdown-item"
                             onClick={handleLogout}
                           >
-                            Logout
+                            Đăng xuất
                           </div>
                         </div>
                       )}
