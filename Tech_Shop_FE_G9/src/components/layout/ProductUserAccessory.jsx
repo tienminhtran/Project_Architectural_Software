@@ -150,8 +150,7 @@ const ProductUserAccessory = () => {
     <div className="product-user__product-container">
       <div className="product-user__product-header">
         <h2>
-          <FaShoppingCart className="product-user__products-icon" /> Our
-          Products Accessory
+          <FaShoppingCart className="product-user__products-icon" /> Phụ kiện
         </h2>
         <div className="brand-list">
           {brands.map((brand, index) => (

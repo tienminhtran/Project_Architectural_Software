@@ -105,7 +105,7 @@ const ProductUser = () => {
     <div className="products-viewed">
     <div className="products-viewed__products">
         <h2>
-            <FaGetPocket className="products-viewed__products-icon" /> Products you viewed
+            <FaGetPocket className="products-viewed__products-icon" /> Sản phẩm đã xem
         </h2>
     </div>
     <div className="products-viewed__products-container-wrapper">

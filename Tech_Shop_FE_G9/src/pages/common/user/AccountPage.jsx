@@ -89,10 +89,10 @@ const AccountPage = () => {
       case "info":
         return (
           <>
-            <h2>User information</h2>
+            <h2>Thông tin người dùng</h2>
 
             <div className="account-page__form-group">
-              <label>FirstName</label>
+              <label>Tên</label>
               <input
                 type="text"
                 disabled={!isEditing}
@@ -103,7 +103,7 @@ const AccountPage = () => {
             </div>
 
             <div className="account-page__form-group">
-              <label>LastName</label>
+              <label>Họ</label>
               <input
                 type="text"
                 disabled={!isEditing}
@@ -114,7 +114,7 @@ const AccountPage = () => {
             </div>
 
             <div className="account-page__form-group">
-              <label>Gender</label>
+              <label>Giới tính</label>
               <div className="account-page__gender-group">
                 <label>
                   <input
@@ -128,7 +128,7 @@ const AccountPage = () => {
                     }
                     // readOnly={!isEditing}
                   />
-                  Male
+                  Nam
                 </label>
                 <label>
                   <input
@@ -142,16 +142,16 @@ const AccountPage = () => {
                     }
                     // readOnly={!isEditing}
                   />{" "}
-                  Female
+                  Nữ
                 </label>
               </div>
             </div>
 
             <div className="account-page__form-group">
-              <label>Phone Number</label>
+              <label>Số điện thoại</label>
               <input
                 type="text"
-                placeholder="Enter phone number...."
+                placeholder="Nhập số điện thoại...."
                 disabled={!isEditing}
                 name="phone_number"
                 value={formData.phone_number}
@@ -172,7 +172,7 @@ const AccountPage = () => {
             </div>
 
             <div className="account-page__form-group">
-              <label>Date of Birth</label>
+              <label>Ngày sinh</label>
               <input
                 type="date"
                 placeholder="Chọn ngày sinh"
@@ -186,15 +186,15 @@ const AccountPage = () => {
 
             {!isEditing ? (
               <button className="" onClick={handleEdit}>
-                Update
+                Cập nhật
               </button>
             ) : (
               <>
                 <button className="account-page__btn-save me-2" onClick={handleSubmit}>
-                  Save
+                  Lưu thay đổi
                 </button>
                 <button className="" onClick={handleCancel}>
-                  Cancel
+                  Hủy
                 </button>
               </>
             )}
